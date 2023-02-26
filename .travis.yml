@@ -1,0 +1,29 @@
+dist: trusty
+
+services:
+  - docker
+
+language: python
+
+python:
+  - 3.9
+
+
+install:
+  # install fuse-med-ml
+  - pip install fuse-med-ml
+  
+  # install fuse-drug with examples
+  - pip install -e .[examples]
+
+script:
+
+  # run unit tests
+  - python ./run_all_unit_tests.py
+
+  # TODO open style checkers
+
+  # static type and style checkers
+  # - python -m black . --check --diff --color
+  # - python -m mypy .
+  # - python -m flake8 .

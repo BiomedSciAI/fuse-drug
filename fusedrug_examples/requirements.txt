@@ -1,0 +1,19 @@
+paccmann_predictor @ git+https://git@github.com/PaccMann/paccmann_predictor#egg=paccmann-predictor
+<<<<<<< .merge_file_ONjZZV
+pytoda @ git+https://git@github.com/PaccMann/paccmann_datasets/@0.2.5#egg=pytoda
+=======
+>>>>>>> .merge_file_FwAUB5
+tensorflow
+dscript
+dgl
+pysmiles
+deepchem
+mol2vec @ git+https://github.com/samoturk/mol2vec
+<<<<<<< .merge_file_ONjZZV
+=======
+
+# new depdencies for design/amp example
+modlamp
+torchtext==0.3.1 # old version of tokenizer - need to replace with another tokenizer and remove this
+biopython
+>>>>>>> .merge_file_FwAUB5
