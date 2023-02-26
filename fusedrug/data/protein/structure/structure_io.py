@@ -60,6 +60,8 @@ from openfold.utils.tensor_utils import tree_map
 
 from fusedrug.data.protein.structure.utils import aa_sequence_from_aa_integers, get_structure_file_type
     
+#TODO: split this into pdb related and mmcif related functions
+
 def save_structure_file(*, #prevent positional args
     output_filename_extensionless:str, 
     pdb_id:str,     
@@ -75,6 +77,22 @@ def save_structure_file(*, #prevent positional args
     mask:Optional[List] = None,
 
     ):
+        """
+        A helper function allowing to save single or multi chain structure into pdb and/or mmcif format.
+
+        Args:
+            output_filename_extensionless:str - the name of the output file, without extension. For example: /tmp/my_pred
+            pdb_id:str - pdb_id of the structure
+            chain_to_atom14:Dict[str,torch.Tensor] - a dictionary mapping from chain_id to atom14 (heavy atom) [..., 14, 3] tensor
+            
+            chain_to_aa_str_seq:Optional[Dict[str,str]] - a dictionary mapping from chain_id to amino acid string
+            chain_to_aa_index_seq:Optional[Dict[str,torch.Tensor]] - a dictionary mapping from chain_id to residues (as integers tensors)
+            save_pdb:bool - should it store pdb format
+            save_cif - should it store mmCIF format (newer, and no length limits)
+            b_factors - 
+            reference_cif_filename:Optional[str] - for mmCIF outputs you must provide an mmCIF reference file (you can use the ground truth one)
+            mask:Optional[List] - a mask describing which residues to store
+        """
         assert save_pdb or save_cif
         assert len(chain_to_atom14) > 0
         if chain_to_aa_index_seq is not None:
@@ -145,6 +163,8 @@ def save_structure_file(*, #prevent positional args
 
 def get_chain_native_features(native_structure_filename:str, chain_id:str, pdb_id:str, device='cpu'):
     '''
+    Extracts ground truth features from a given filename. Note - only mmCIF is tested 
+    (using pdb will trigger an exception)
 
     chain_id:
         can be a single character (example: 'A')
@@ -277,6 +297,9 @@ def pdb_to_openfold_protein(filename:str, chain_id:Optional[str]=None) -> protei
 
 
 def get_available_chain_ids_in_pdb(filename:str) -> List[str]:    
+    """
+    Will return all available chain ids in a pdb file, performs some filtering to get protein chains and not other chains    
+    """
     filename = get_pdb_native_full_name(filename)
     pdb_str = read_file_raw_string(filename)
 
@@ -339,9 +362,17 @@ def extract_single_chain(full_structure:Structure, chain_id:str) -> Structure:
 
 
 def is_pdb_id(pdb_id:str):
+    """
+    Checks if the given string is a pdb id 
+    Currently only checks for string length. 
+    NOTE: in the future pdb ids will be 8 characters long
+    """
     return 4==len(pdb_id)
 
 def get_pdb_native_full_name(pdb_id, strict=False):
+    """
+    Uses the PDB_DIR environment variable to get a full path filename from pdb_id    
+    """
     if not is_pdb_id(pdb_id):
         if strict:
             raise Exception(f'pdb_id is expected to be 4 letters long, but got {pdb_id} - note, 8 letters pdb id is not supported yet.')
@@ -355,6 +386,9 @@ def get_pdb_native_full_name(pdb_id, strict=False):
 
 
 def read_file_raw_string(filename:str) -> str:
+    """
+    Gets a raw string of a file, supports gz compression 
+    """
     use_open = open
     if filename.endswith('.gz'):
         use_open = gzip.open
@@ -422,15 +456,7 @@ def save_pdb_file(
 
 
 
-#code based on alpha/open fold data_modules.py
-
-def read_file_raw_string(filename:str) -> str:
-    use_open = open
-    if filename.endswith('.gz'):
-        use_open = gzip.open
-    with use_open(filename, 'rt') as f:
-        loaded = f.read()
-    return loaded
+#code heavily inspired on alpha/open fold data_modules.py
 
 def parse_mmcif(filename:str, unique_file_id:str, handle_residue_id_duplication:bool=True, quiet_parsing:bool=False):
     """
