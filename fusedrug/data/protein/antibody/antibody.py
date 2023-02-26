@@ -4,7 +4,11 @@ import pandas as pd
 from collections import namedtuple
 Antibody = namedtuple('Antibody', 'pdb_id index_within_pdb light_chain_id heavy_chain_id antigen_chain_id')
 
-def get_antibodies_info(antibodies_pdb_ids:List[str]):
+def get_antibodies_info(antibodies_pdb_ids:List[str]) -> List[Antibody]:
+    """
+    Collects information on all provided antibodies_pdb_ids based on SabDab DB.
+    
+    """
     sabdab_df = load_sabdab_dataframe()
     antibodies = []
     for pdb_id in antibodies_pdb_ids:
