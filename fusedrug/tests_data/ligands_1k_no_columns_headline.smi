@@ -1,0 +1,1000 @@
+Cc1nc(CN2CCN(CC2)c2c(Cl)cnc3[nH]c(nc23)-c2cn(C)nc2C)no1	US9447092, 3
+COCCN(C(=O)Nc1c(Cl)c(OC)cc(OC)c1Cl)c1cc(Nc2ccccc2NC(=O)C=C)ncn1	US10537571, Compound 116::US9434697, 116::US9730931, Compound 116
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccc(CN(C)C)cc3NC(=O)C=C)ncn2)c1Cl	US10537571, Compound 113::US9434697, 113::US9730931, Compound 113
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccc(cc3NC(=O)C=C)C3CCN(C)CC3)ncn2)c1Cl	US10537571, Compound 112::US9434697, 112::US9730931, Compound 112
+CCN1CCC(CC1)c1ccc(Nc2cc(ncn2)N(C)C(=O)Nc2c(Cl)c(OC)cc(OC)c2Cl)c(NC(=O)C=C)c1	US10537571, Compound 111::US9434697, 111::US9730931, Compound 111
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccccc3NC(=O)C(F)=C)ncn2)c1Cl	US10537571, Compound 110::US9434697, 110::US9730931, Compound 110
+CCN1CCN(CC1)c1ccc(Nc2cc(ncn2)N(C)C(=O)Nc2c(Cl)c(OC)cc(OC)c2Cl)c(NC(=O)C=C)c1	US10537571, Compound 108::US9434697, 108::US9730931, Compound 108
+COc1cc(OC)c(Cl)c(NC(=O)N(Cc2cccnc2)c2cc(Nc3ccccc3NC(=O)C=C)ncn2)c1Cl	US10537571, Compound 107::US9434697, 107::US9730931, Compound 107
+COc1cc(NC(=O)N(C)c2cc(Nc3ccccc3NC(=O)C=C)ncn2)c(Cl)c(OC)c1	US10537571, Compound 105::US9434697, 105::US9730931, Compound 105
+COc1cccc(NC(=O)N(C)c2cc(Nc3ccccc3NC(=O)C=C)ncn2)c1Cl	US10537571, Compound 103::US9434697, 103::US9730931, Compound 103
+COc1cc(NC(=O)N(C)c2cc(Nc3ccccc3NC(=O)C=C)ncn2)cc(OC)c1	US10537571, Compound 102::US9434697, 102::US9730931, Compound 102
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccccc3NC(=O)C=C)ncn2)c1Cl	US10537571, Compound 100::US9434697, 100::US9730931, Compound 100
+CC[C@](O)(C1CCN(CCC(O)=O)CC1)c1cc2C(=O)N(Cc3ccc(Cl)cc3)C(OC)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 137
+CC[C@](O)(C1CCN(CCC(=O)OC)CC1)c1cc2C(=O)N(Cc3ccc(Cl)cc3)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 136
+CC[C@](O)(C1CCN(CC(O)=O)CC1)c1cc2C(=O)N(Cc3ccc(Cl)cc3)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 135
+CC[C@@](O)(C1CCN(CC(O)=O)CC1)c1cc2C(=O)N(Cc3ccc(Cl)cc3)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 134
+CC[C@@](O)(C1CCN(CC(=O)OC(C)(C)C)CC1)c1cc2C(=O)N(Cc3ccc(Cl)cc3)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 133
+CC[C@](O)(C1CCN(CC(=O)OC(C)(C)C)CC1)c1cc2C(=O)N(Cc3ccc(Cl)cc3)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 132
+CCC(O)(c1cc2C(=O)N([C@@H](CC(O)=O)c3ccc(Cl)cc3)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1)C1(F)CCN(C)CC1	US10544132, Example 131
+CC[C@](O)(C1CCN(C)CC1)c1cc2C(=O)N(Cc3ccc(cc3)C#N)C(O[C@@H]3C[C@H](O)C3)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 130
+CCC(O)(c1cc2C(=O)N(Cc3ccc(Cl)cc3S(C)(=O)=O)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1)C1(F)CCNCC1	US10544132, Example 129
+CC[C@](O)(c1cc2C(=O)N([C@@H](CC(O)=O)c3ccc(Cl)cc3)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1)c1ccccn1	(3S)-3-(4-chlorophenyl)-3-[(1R)-1-(4-chlorophenyl)-7-fluoro-5-[1-hydroxy-1-(pyridin-2-yl)propyl]-1-methoxy-3-oxo-2,3-dihydro-1H-isoindol-2-yl]propanoic Acid::US10544132, Example 128
+CC[C@@](O)(c1cc2C(=O)N([C@@H](CC(O)=O)c3ccc(Cl)cc3)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1)c1ccccn1	(3S)-3-(4-chlorophenyl)-3-[(1R)-1-(4-chlorophenyl)-7-fluoro-5-[1-hydroxy-1-(pyridin-2-yl)propyl]-1-methoxy-3-oxo-2,3-dihydro-1H-isoindol-2-yl]propanoic Acid::US10544132, Example 127
+CC[C@@](C)(O)c1cc2C(=O)N([C@@H](CC(O)=O)c3ccc(Cl)cc3)[C@](OCC3(F)COC3)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 126
+CC[C@](C)(O)c1cc2C(=O)N([C@@H](CC(O)=O)c3ccc(Cl)cc3)[C@](OCC3(F)COC3)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 125
+CC[C@](O)(C1CCOCC1)c1cc2C(=O)N([C@@H]([C@H](C)C(O)=O)c3ccc(Cl)cc3)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 124
+CC[C@@](O)(C1CCOCC1)c1cc2C(=O)N(Cc3ccc(Cl)cc3CC(O)=O)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 123
+CC[C@](O)(C1CCOCC1)c1cc2C(=O)N(Cc3ccc(Cl)cc3CC([O-])=O)C(OC)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 122
+CC[C@](O)(C1CCOCC1)c1cc2C(=O)N(Cc3ccc(Cl)cc3C(C)(C)C([O-])=O)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 121
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccccc3NC(=O)C#C)ncn2)c1Cl	US10537571, Compound 114::US9434697, 114::US9730931, Compound 114
+COc1cc(OC)c(Cl)c(NC(=O)N(CCCN(C)C)c2cc(Nc3ccccc3NC(=O)C=C)ncn2)c1Cl	US10537571, Compound 120::US9434697, 120::US9730931, Compound 120
+CC[C@@](O)(c1cc2C(=O)N(Cc3ccc(C)cc3C(O)=O)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1)C1(F)CCOCC1	US10544132, Example 119
+COc1cc(OC)c(Cl)c(NC(=O)N(CCCN2CCN(C)CC2)c2cc(Nc3ccccc3NC(=O)C=C)ncn2)c1Cl	US10537571, Compound 121::US9434697, 121::US9730931, Compound 121
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccc(cc3NC(=O)C=C)N3CCN(CC3)C(C)C)ncn2)c1Cl	US10537571, Compound 151::US9434697, 151::US9730931, Compound 151
+CCN1CCN(CC1)C(=O)c1ccc(Nc2cc(ncn2)N(C)C(=O)Nc2c(Cl)c(OC)cc(OC)c2Cl)c(NC(=O)C=C)c1	US10537571, Compound 150::US9434697, 150::US9730931, Compound 150
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccc(cc3NC(=O)C=C)C(=O)N(C)C)ncn2)c1Cl	US10537571, Compound 149::US9434697, 149::US9730931, Compound 149
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccc(cc3NC(=O)C=C)C(=O)N3CCN(C)CC3)ncn2)c1Cl	US10537571, Compound 148::US9434697, 148::US9730931, Compound 148
+COCc1ccc(Nc2cc(ncn2)N(C)C(=O)Nc2c(Cl)c(OC)cc(OC)c2Cl)c(NC(=O)C=C)c1	US10537571, Compound 147::US9434697, 147::US9730931, Compound 147
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccc(CO)cc3NC(=O)C=C)ncn2)c1Cl	US10537571, Compound 145::US9434697, 145::US9730931, Compound 145
+CCN1CCN(CC1)c1ccc(Nc2cc(ncn2)N(C)C(=O)Nc2c(F)c(OC)cc(OC)c2Cl)c(NC(=O)C=C)c1	US10537571, Compound 144::US9434697, 144::US9730931, Compound 144
+CCN1CCN(CC1)c1ccc(Nc2cc(ncn2)N(C)C(=O)Nc2c(F)c(OC)cc(OC)c2F)c(NC(=O)C=C)c1	US10537571, Compound 143::US9434697, 143::US9730931, Compound 143
+COCCOc1ccc(Nc2cc(ncn2)N(C)C(=O)Nc2c(Cl)c(OC)cc(OC)c2Cl)c(NC(=O)C=C)c1	US10537571, Compound 142::US9434697, 142::US9730931, Compound 142
+CCN1CCN(CC1)c1ccc(Nc2cc(ncn2)N(C)C(=O)Nc2cc(OC)cc(OC)c2Cl)c(NC(=O)C=C)c1	US10537571, Compound 141::US9434697, 141::US9730931, Compound 141
+CCN1CCN(CC1)c1ccc(Nc2cc(ncn2)N(C)C(=O)Nc2c(Cl)cccc2Cl)c(NC(=O)C=C)c1	US10537571, Compound 140::US9434697, 140::US9730931, Compound 140
+CCN1CCN(CC1)c1ccc(Nc2cc(ncn2)N(C)C(=O)Nc2cc(OC)cc(OC)c2)c(NC(=O)C=C)c1	US10537571, Compound 139::US9434697, 139::US9730931, Compound 139
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3cc(CCN(C)C)ccc3NC(=O)C=C)ncn2)c1Cl	US10537571, Compound 137::US9434697, 137::US9730931, Compound 137
+COc1cc(OC)c(Cl)c(NC(=O)N(Cc2cc(C)no2)c2cc(Nc3ccccc3NC(=O)C=C)ncn2)c1Cl	US10537571, Compound 136::US9434697, 136::US9730931, Compound 136
+CCN1CCN(Cc2ccc(Nc3cc(ncn3)N(C)C(=O)Nc3c(Cl)c(OC)cc(OC)c3Cl)c(NC(=O)C=C)c2)CC1	US10537571, Compound 135::US9434697, 135::US9730931, Compound 135
+CCN1CCN(CC1)c1ccc(NC(=O)C=C)c(Nc2cc(ncn2)N(C)C(=O)Nc2c(Cl)c(OC)cc(OC)c2Cl)c1	US10537571, Compound 133::US9434697, 133::US9730931, Compound 133
+COc1cc(OC)c(Cl)c(NC(=O)N(Cc2ccncc2)c2cc(Nc3ccccc3NC(=O)C=C)ncn2)c1Cl	US10537571, Compound 132::US9434697, 132::US9730931, Compound 132
+COc1cc(OC)c(Cl)c(NC(=O)N(Cc2ccccn2)c2cc(Nc3ccccc3NC(=O)C=C)ncn2)c1Cl	US10537571, Compound 131::US9434697, 131::US9730931, Compound 131
+COc1cc(OC)c(Cl)c(NC(=O)N(Cc2ccccc2)c2cc(Nc3ccccc3NC(=O)C=C)ncn2)c1Cl	US10537571, Compound 130::US9434697, 130::US9730931, Compound 130
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccccc3NC(=O)\C=C\C)ncn2)c1Cl	US10537571, Compound 129::US9434697, 129::US9730931, Compound 129
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccccc3NC(=O)C#CC)ncn2)c1Cl	US10537571, Compound 128::US9434697, 128::US9730931, Compound 128
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccc(OCCN(C)C)cc3NC(=O)C=C)ncn2)c1Cl	US10537571, Compound 127::US9434697, 127::US9730931, Compound 127
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccc(CCCN(C)C)cc3NC(=O)C=C)ncn2)c1Cl	US10537571, Compound 126::US9434697, 126::US9730931, Compound 126
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccc(cc3NC(=O)C=C)N3CCN(CC3)S(C)(=O)=O)ncn2)c1Cl	US10537571, Compound 125::US9434697, 125::US9730931, Compound 125
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccc(cc3NC(=O)C=C)N3C[C@H](C)N[C@H](C)C3)ncn2)c1Cl	US10537571, Compound 124::US9434697, 124::US9730931, Compound 124
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccc(cc3NC(=O)C=C)N3CCOCC3)ncn2)c1Cl	US10537571, Compound 123::US9434697, 123::US9730931, Compound 123
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccc(cc3NC(=O)C=C)C3CCNCC3)ncn2)c1Cl	US10537571, Compound 122::US9434697, 122::US9730931, Compound 122
+CC[C@@](O)(c1cc2C(=O)N(Cc3ccc(OC)cc3C([O-])=O)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1)C1(F)CCOCC1	US10544132, Example 120
+CCO[C@]1(N(Cc2ccc(Cl)cc2C(O)=O)C(=O)c2cc(cc(F)c12)[C@](O)(CC)C1CCOCC1)c1ccc(Cl)cc1	US10544132, Example 118
+CN(C)C(=O)[C@@](C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1)[C@@]2(OCC1(CO)CC1)c1ccc(Cl)cc1	US10544132, Example 56
+C[C@](O)(C1CCOCC1)c1cc2C(=O)N(Cc3ccc(Cl)cc3S(C)(=O)=O)[C@](OCC3(CC3)C(N)=O)(c2c(F)c1)c1ccc(Cl)cc1	1-({[(1R)-2-[(4-chloro-2-methanesulfonylphenyl)methyl]-1-(4-chlorophenyl)-7-fluoro-5-[1-hydroxy-1-(oxan-4-yl)ethyl]-3-oxo-2,3-dihydro-1H-isoindol-1-yl]oxy}methyl)cyclopropane-1-carboxamide::US10544132, Example 86
+CS(=O)(=O)c1cc(Cl)ccc1CN1C(=O)c2cc(cc(F)c2[C@]1(OCC1(CO)CC1)c1ccc(Cl)cc1)[C@H](O)C1CCOCC1	(3R)-2-[(4-chloro-2-methanesulfonylphenyl)methyl]-3-(4-chlorophenyl)-4-fluoro-6-[hydroxy(oxan-4-yl)methyl]-3-{[1-(hydroxymethyl)cyclopropyl]methoxy}-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 84
+CS(=O)(=O)c1cc(Cl)ccc1CN1C(=O)c2cc(cc(F)c2[C@]1(OCC1(CO)CC1)c1ccc(Cl)cc1)[C@@H](O)C1CCOCC1	(3R)-2-[(4-chloro-2-methanesulfonylphenyl)methyl]-3-(4-chlorophenyl)-4-fluoro-6-[hydroxy(oxan-4-yl)methyl]-3-{[1-(hydroxymethyl)cyclopropyl]methoxy}-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 83
+CC(C)(O)c1cc2C(=O)N(Cc3ccc(Cl)cc3P(C)(C)=O)[C@](OCC3(CO)CC3)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 82
+CN1CCC(CC1)[C@@](C)(O)c1cc2C(=O)N(Cc3ccc(Cl)cc3S(C)(=O)=O)[C@](OCC3(CO)CC3)(c2c(F)c1)c1ccc(Cl)cc1	(3R)-2-[(4-chloro-2-methanesulfonylphenyl)methyl]-3-(4-chlorophenyl)-4-fluoro-6-[1-hydroxy-1-(1-methylpiperidin-4-yl)ethyl]-3-{[1-(hydroxymethyl)cyclopropyl]methoxy}-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 81
+CN1CCC(CC1)[C@](C)(O)c1cc2C(=O)N(Cc3ccc(Cl)cc3S(C)(=O)=O)[C@](OCC3(CO)CC3)(c2c(F)c1)c1ccc(Cl)cc1	(3R)-2-[(4-chloro-2-methanesulfonylphenyl)methyl]-3-(4-chlorophenyl)-4-fluoro-6-[1-hydroxy-1-(1-methylpiperidin-4-yl)ethyl]-3-{[1-(hydroxymethyl)cyclopropyl]methoxy}-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 80
+CC(C)(O)c1cc2C(=O)N(Cc3ccc(Cl)cc3C(O)=O)[C@](OCC3(CC3)C#N)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 79
+CN1CCN(C[C@](C)(O)c2cc3C(=O)N(Cc4ccc(Cl)cc4S(C)(=O)=O)[C@](OCC4(CO)CC4)(c3c(F)c2)c2ccc(Cl)cc2)CC1	(3R)-2-[(4-chloro-2-methanesulfonylphenyl)methyl]-3-(4-chlorophenyl)-4-fluoro-6-[2-hydroxy-1-(4-methylpiperazin-1-yl)propan-2-yl]-3-{[1-(hydroxymethyl)cyclopropyl]methoxy}-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 78
+CN1CCN(C[C@@](C)(O)c2cc3C(=O)N(Cc4ccc(Cl)cc4S(C)(=O)=O)[C@](OCC4(CO)CC4)(c3c(F)c2)c2ccc(Cl)cc2)CC1	(3R)-2-[(4-chloro-2-methanesulfonylphenyl)methyl]-3-(4-chlorophenyl)-4-fluoro-6-[2-hydroxy-1-(4-methylpiperazin-1-yl)propan-2-yl]-3-{[1-(hydroxymethyl)cyclopropyl]methoxy}-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 77
+Cn1cc(cn1)[C@](C)(O)c1cc2C(=O)N(Cc3ccc(Cl)cc3S(C)(=O)=O)[C@](OCC3(O)CC3)(c2c(F)c1)c1ccc(Cl)cc1	(3R)-2-[(4-chloro-2-methanesulfonylphenyl)methyl]-3-(4-chlorophenyl)-4-fluoro-6-[1-hydroxy-1-(1-methyl-1H-pyrazol-4-yl)ethyl]-3-[(1-hydroxycyclopropyl)methoxy]-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 76
+Cn1cc(cn1)[C@@](C)(O)c1cc2C(=O)N(Cc3ccc(Cl)cc3S(C)(=O)=O)[C@](OCC3(O)CC3)(c2c(F)c1)c1ccc(Cl)cc1	(3R)-2-[(4-chloro-2-methanesulfonylphenyl)methyl]-3-(4-chlorophenyl)-4-fluoro-6-[1-hydroxy-1-(1-methyl-1H-pyrazol-4-yl)ethyl]-3-[(1-hydroxycyclopropyl)methoxy]-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 75
+Cn1cc(cn1)[C@](C)(O)c1cc2C(=O)N(Cc3ccc(Cl)cc3S(C)(=O)=O)[C@](OCC3(CC3)C(N)=O)(c2c(F)c1)c1ccc(Cl)cc1	1-({[(1R)-2-[(4-chloro-2-methanesulfonylphenyl)methyl]-1-(4-chlorophenyl)-7-fluoro-5-[1-hydroxy-1-(1-methyl-1H-pyrazol-4-yl)ethyl]-3-oxo-2,3-dihydro-1H-isoindol-1-yl]oxy}methyl)cyclopropane-1-carboxamide::US10544132, Example 74
+Cn1cc(cn1)[C@@](C)(O)c1cc2C(=O)N(Cc3ccc(Cl)cc3S(C)(=O)=O)[C@](OCC3(CC3)C(N)=O)(c2c(F)c1)c1ccc(Cl)cc1	1-({[(1R)-2-[(4-chloro-2-methanesulfonylphenyl)methyl]-1-(4-chlorophenyl)-7-fluoro-5-[1-hydroxy-1-(1-methyl-1H-pyrazol-4-yl)ethyl]-3-oxo-2,3-dihydro-1H-isoindol-1-yl]oxy}methyl)cyclopropane-1-carboxamide::US10544132, Example 73
+CC(C)(O)c1cc2C(=O)N(Cc3ccc(Cl)cc3CO)[C@](OCC3(CC3)C#N)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 72
+CC(C)(O)c1cc2C(=O)N([C@@H](CC(O)=O)c3ccc(Cl)cc3)[C@](O[C@H]3CCOC3)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 71
+CN1CCN(C[C@@](C)(O)c2cc3C(=O)N(Cc4ccc(Cl)cc4S(C)(=O)=O)[C@](O[C@H]4CCOC4)(c3c(F)c2)c2ccc(Cl)cc2)CC1	US10544132, Example 70
+CN1CCN(C[C@](C)(O)c2cc3C(=O)N(Cc4ccc(Cl)cc4S(C)(=O)=O)[C@](O[C@H]4CCOC4)(c3c(F)c2)c2ccc(Cl)cc2)CC1	US10544132, Example 69
+CN1CCN(C[C@@](C)(O)c2cc3C(=O)N(Cc4ccc(Cl)cc4S(C)(=O)=O)[C@](O[C@@H]4CCOC4)(c3c(F)c2)c2ccc(Cl)cc2)CC1	US10544132, Example 68
+CN1CCN(C[C@](C)(O)c2cc3C(=O)N(Cc4ccc(Cl)cc4S(C)(=O)=O)[C@](O[C@@H]4CCOC4)(c3c(F)c2)c2ccc(Cl)cc2)CC1	US10544132, Example 67
+C[C@](O)(CO)c1cc2C(=O)N(Cc3ccc(Cl)cc3S(C)(=O)=O)[C@](OCC3(CO)CC3)(c2c(F)c1)c1ccc(Cl)cc1	(3R)-2-[(4-Chloro-2-methanesulfonylphenyl)methyl]-3-(4-chlorophenyl)-6-(1,2-dihydroxypropan-2-yl)-4-fluoro-3-{[1-(hydroxymethyl)cyclopropyl]methoxy}-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 66
+C[C@@](O)(CO)c1cc2C(=O)N(Cc3ccc(Cl)cc3S(C)(=O)=O)[C@](OCC3(CO)CC3)(c2c(F)c1)c1ccc(Cl)cc1	(3R)-2-[(4-Chloro-2-methanesulfonylphenyl)methyl]-3-(4-chlorophenyl)-6-(1,2-dihydroxypropan-2-yl)-4-fluoro-3-{[1-(hydroxymethyl)cyclopropyl]methoxy}-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 65
+COC[C@](C)(O)c1cc2C(=O)N(Cc3ccc(Cl)cc3S(C)(=O)=O)[C@](OCC3(CO)CC3)(c2c(F)c1)c1ccc(Cl)cc1	(3R)-2-[(4-Chloro-2-methanesulfonylphenyl)methyl]-3-(4-chlorophenyl)-4-fluoro-6-(2-hydroxy-1-methoxypropan-2-yl)-3-{[1-(hydroxymethyl)cyclopropyl]methoxy}-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 64
+COC[C@@](C)(O)c1cc2C(=O)N(Cc3ccc(Cl)cc3S(C)(=O)=O)[C@](OCC3(CO)CC3)(c2c(F)c1)c1ccc(Cl)cc1	(3R)-2-[(4-Chloro-2-methanesulfonylphenyl)methyl]-3-(4-chlorophenyl)-4-fluoro-6-(2-hydroxy-1-methoxypropan-2-yl)-3-{[1-(hydroxymethyl)cyclopropyl]methoxy}-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 63
+C[S@@](=O)c1cc(Cl)ccc1CN1C(=O)c2cc(cc(F)c2[C@]1(OCC1(CO)CC1)c1ccc(Cl)cc1)C(C)(C)O	(3R)-2-[(4-Chloro-2-methanesulfinylphenyl)methyl]-3-(4-chlorophenyl)-4-fluoro-3-{[1-(hydroxymethyl)cyclopropyl]methoxy}-6-(2-hydroxypropan-2-yl)-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 62
+C[S@](=O)c1cc(Cl)ccc1CN1C(=O)c2cc(cc(F)c2[C@]1(OCC1(CO)CC1)c1ccc(Cl)cc1)C(C)(C)O	(3R)-2-[(4-Chloro-2-methanesulfinylphenyl)methyl]-3-(4-chlorophenyl)-4-fluoro-3-{[1-(hydroxymethyl)cyclopropyl]methoxy}-6-(2-hydroxypropan-2-yl)-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 61
+CSc1cc(Cl)ccc1CN1C(=O)c2cc(cc(F)c2[C@]1(OCC1(CO)CC1)c1ccc(Cl)cc1)C(C)(C)O	US10544132, Example 60
+CNC(=O)[C@](C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1)[C@@]2(OCC1(CO)CC1)c1ccc(Cl)cc1	2-[(1R)-1-(4-Chlorophenyl)-2-[(4-chlorophenyl)methyl]-1-{[1-(hydroxymethyl)cyclopropyl]methoxy}-3-oxo-2,3-dihydro-1H-isoindol-5-yl]-2-hydroxy-N-methylpropanamide::US10544132, Example 59
+CNC(=O)[C@@](C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1)[C@@]2(OCC1(CO)CC1)c1ccc(Cl)cc1	2-[(1R)-1-(4-Chlorophenyl)-2-[(4-chlorophenyl)methyl]-1-{[1-(hydroxymethyl)cyclopropyl]methoxy}-3-oxo-2,3-dihydro-1H-isoindol-5-yl]-2-hydroxy-N-methylpropanamide::US10544132, Example 58
+C[C@@](O)(C1CCOCC1)c1cc2C(=O)N(Cc3ccc(Cl)cc3S(C)(=O)=O)[C@](OCC3(CC3)C(N)=O)(c2c(F)c1)c1ccc(Cl)cc1	1-({[(1R)-2-[(4-chloro-2-methanesulfonylphenyl)methyl]-1-(4-chlorophenyl)-7-fluoro-5-[1-hydroxy-1-(oxan-4-yl)ethyl]-3-oxo-2,3-dihydro-1H-isoindol-1-yl]oxy}methyl)cyclopropane-1-carboxamide::US10544132, Example 85
+CO[C@]1(N(Cc2ccc(Cl)cc2C(O)=O)C(=O)c2cc(cc(F)c12)C(C)(O)C1CCN(C)CC1)c1ccc(Cl)cc1	US10544132, Example 87
+CC[C@@](O)(C1CCOCC1)c1cc2C(=O)N(Cc3ccc(Cl)cc3C(O)=O)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 117
+CO[C@]1(N([C@@H](CC(O)=O)c2ccc(Cl)cc2)C(=O)c2cc(cc(F)c12)[C@@](C)(O)C1CCOCC1)c1ccc(Cl)cc1	(3S)-3-(4-chlorophenyl)-3-[(1R)-1-(4-chlorophenyl)-7-fluoro-5-[1-hydroxy-1-(oxan-4-yl)ethyl]-1-methoxy-3-oxo-2,3-dihydro-1H-isoindol-2-yl]propanoic Acid::US10544132, Example 88
+CC[C@](O)(C1CCOCC1)c1cc2C(=O)N(Cc3ccc(Cl)cc3C(O)=O)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 116
+CC[C@@](O)(c1cc2C(=O)N(Cc3ccc(Cl)cc3OCC([O-])=O)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1)C1(F)CCOCC1	US10544132, Example 115
+CCC(O)([C@H]1CC[C@H](O)CC1)c1cc2C(=O)N([C@@H](CCC(O)=O)c3ccc(Cl)cc3)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 114
+CC[C@@](O)(c1cc2C(=O)N([C@@H](CCC(O)=O)c3ccc(OC)cc3)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1)C1(F)CCOCC1	US10544132, Example 113
+CCO[C@]1(N([C@@H](CC(O)=O)c2ccc(Cl)cc2)C(=O)c2cc(cc(F)c12)[C@](O)(CC)C1(F)CCOCC1)c1ccc(Cl)cc1	US10544132, Example 111
+CC[C@@](O)(c1cc2C(=O)N([C@@H](CC(O)=O)c3ccc(Cl)cc3)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1)C1(F)CCOCC1	(3S)-3-(4-chlorophenyl)-3-[(1R)-1-(4-chlorophenyl)-7-fluoro-5-[1-(4-fluorooxan-4-yl)-1-hydroxypropyl]-1-methoxy-3-oxo-2,3-dihydro-1H-isoindol-2-yl]propanoic Acid::US10544132, Example 102::US10544132, Example 110
+CC[C@@](O)(c1cc2C(=O)N([C@@H](CCC([O-])=O)c3ccc(Cl)cc3)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1)C1(F)CCOCC1	US10544132, Example 109
+CC[C@@](O)(C1CCOCC1)c1cc2C(=O)N([C@@H](CCC(O)=O)c3ccc(Cl)cc3)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 108
+CC[C@](O)(C1CCOCC1)c1cc2C(=O)N([C@@H](CCC(O)=O)c3ccc(Cl)cc3)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 107
+CC[C@@](O)(C1CCOCC1)c1cc2C(=O)N([C@@H](CC(O)=O)c3ccc(Cl)cc3)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 106
+CC[C@](O)(C1CCOCC1)c1cc2C(=O)N([C@H](CC(O)=O)c3ccc(Cl)cc3)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 105
+CO[C@]1(N([C@@H](CC(O)=O)c2ccc(Cl)cc2)C(=O)c2cc(cc(F)c12)[C@@](C)(O)C1CCC1)c1ccc(Cl)cc1	(3S)-3-(4-chlorophenyl)-3-[(1R)-1-(4-chlorophenyl)-5-(1-cyclobutyl-1-hydroxyethyl)-7-fluoro-1-methoxy-3-oxo-2,3-dihydro-1H-isoindol-2-yl]propanoic Acid::US10544132, Example 104
+CO[C@]1(N([C@@H](CC(O)=O)c2ccc(Cl)cc2)C(=O)c2cc(cc(F)c12)[C@](C)(O)C1CCC1)c1ccc(Cl)cc1	(3S)-3-(4-chlorophenyl)-3-[(1R)-1-(4-chlorophenyl)-5-(1-cyclobutyl-1-hydroxyethyl)-7-fluoro-1-methoxy-3-oxo-2,3-dihydro-1H-isoindol-2-yl]propanoic Acid::US10544132, Example 103
+CC[C@](O)(c1cc2C(=O)N([C@@H](CC(O)=O)c3ccc(Cl)cc3)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1)C1(F)CCOCC1	(3S)-3-(4-chlorophenyl)-3-[(1R)-1-(4-chlorophenyl)-7-fluoro-5-[1-(4-fluorooxan-4-yl)-1-hydroxypropyl]-1-methoxy-3-oxo-2,3-dihydro-1H-isoindol-2-yl]propanoic Acid::US10544132, Example 101
+CCC(O)(c1ccn(C)n1)c1cc2C(=O)N([C@@H](CCC(O)=O)c3ccc(Cl)cc3)[C@](OC)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 100
+CO[C@]1(N([C@H](CC(O)=O)c2ccc(Cl)cc2)C(=O)c2cc(cc(F)c12)[C@@](C)(O)C1(F)CCOCC1)c1ccc(Cl)cc1	(3S)-3-(4-chlorophenyl)-3-[(1R)-1-(4-chlorophenyl)-7-fluoro-5-[1-(4-fluorooxan-4-yl)-1-hydroxyethyl]-1-methoxy-3-oxo-2,3-dihydro-1H-isoindol-2-yl]propanoic Acid::US10544132, Example 99
+CO[C@]1(N([C@H](CC(O)=O)c2ccc(Cl)cc2)C(=O)c2cc(cc(F)c12)[C@](C)(O)C1(F)CCOCC1)c1ccc(Cl)cc1	(3S)-3-(4-chlorophenyl)-3-[(1R)-1-(4-chlorophenyl)-7-fluoro-5-[1-(4-fluorooxan-4-yl)-1-hydroxyethyl]-1-methoxy-3-oxo-2,3-dihydro-1H-isoindol-2-yl]propanoic Acid::US10544132, Example 98
+CC[C@](O)(c1cn(C)cn1)c1cc2C(=O)N(Cc3ccc(cc3)C#N)[C@](O[C@H]3CCOC3)(c2c(F)c1)c1ccc(Cl)cc1	4-{[(1R)-1-(4-chlorophenyl)-7-fluoro-5-[I-hydroxy-1-(1-methyl-1H-imidazol-4-yl)propyl]-3-oxo-1-[(3S)-oxolan-3-yloxy]-2,3-dihydro-1H-isoindol-2-yl]methyl}benzonitrile::US10544132, Example 97
+CC[C@@](O)(c1cn(C)cn1)c1cc2C(=O)N(Cc3ccc(cc3)C#N)[C@](O[C@H]3CCOC3)(c2c(F)c1)c1ccc(Cl)cc1	4-{[(1R)-1-(4-chlorophenyl)-7-fluoro-5-[I-hydroxy-1-(1-methyl-1H-imidazol-4-yl)propyl]-3-oxo-1-[(3S)-oxolan-3-yloxy]-2,3-dihydro-1H-isoindol-2-yl]methyl}benzonitrile::US10544132, Example 96
+CC[C@](O)(c1cn(C)cn1)c1cc2C(=O)N(Cc3ccc(cc3)C#N)[C@](OCC3(CO)CC3)(c2c(F)c1)c1ccc(Cl)cc1	4-{[(1R)-1-(4-chlorophenyl)-7-fluoro-5-[1-hydroxy-1-(1-methyl-1H-imidazol-4-yl)propyl]-1-{[1-(hydroxymethyl)cyclopropyl]methoxy}-3-oxo-2,3-dihydro-1H-isoindol-2-yl]methyl}benzonitrile::US10544132, Example 95
+CC[C@@](O)(c1cn(C)cn1)c1cc2C(=O)N(Cc3ccc(cc3)C#N)[C@](OCC3(CO)CC3)(c2c(F)c1)c1ccc(Cl)cc1	4-{[(1R)-1-(4-chlorophenyl)-7-fluoro-5-[1-hydroxy-1-(1-methyl-1H-imidazol-4-yl)propyl]-1-{[1-(hydroxymethyl)cyclopropyl]methoxy}-3-oxo-2,3-dihydro-1H-isoindol-2-yl]methyl}benzonitrile::US10544132, Example 94
+CC[C@](O)(c1cn(C)cn1)c1cc2C(=O)N(Cc3ccc(cc3CO)C#N)[C@](O[C@H]3CCOC3)(c2c(F)c1)c1ccc(Cl)cc1	4-{[(1R)-1-(4-chlorophenyl)-7-fluoro-5-[I-hydroxy-1-(1-methyl-1H-imidazol-4-yl)propyl]-3-oxo-1-[(3S)-oxolan-3-yloxy]-2,3-dihydro-1H-isoindol-2-yl]methyl}-3-(hydroxymethyl)benzonitrile::US10544132, Example 93
+CC[C@@](O)(c1cn(C)cn1)c1cc2C(=O)N(Cc3ccc(cc3CO)C#N)[C@](O[C@H]3CCOC3)(c2c(F)c1)c1ccc(Cl)cc1	4-{[(1R)-1-(4-chlorophenyl)-7-fluoro-5-[I-hydroxy-1-(1-methyl-1H-imidazol-4-yl)propyl]-3-oxo-1-[(3S)-oxolan-3-yloxy]-2,3-dihydro-1H-isoindol-2-yl]methyl}-3-(hydroxymethyl)benzonitrile::US10544132, Example 92
+CC[C@](O)(c1cn(C)cn1)c1cc2C(=O)N([C@@H](CO)c3ccc(cc3)C#N)[C@](O[C@H]3CCOC3)(c2c(F)c1)c1ccc(Cl)cc1	4-[(1R)-1-[(1R)-1-(4-Chlorophenyl)-7-fluoro-5-[1-hydroxy-1-(1-methyl-1H-imidazol-4-yl)propyl]-3-oxo-1-[(3S)-oxolan-3-yloxy]-2,3-dihydro-1H-isoindol-2-yl]-2-hydroxyethyl]benzonitrile::US10544132, Example 91
+CC[C@@](O)(c1cn(C)cn1)c1cc2C(=O)N([C@@H](CO)c3ccc(cc3)C#N)[C@](O[C@H]3CCOC3)(c2c(F)c1)c1ccc(Cl)cc1	4-[(1R)-1-[(1R)-1-(4-Chlorophenyl)-7-fluoro-5-[1-hydroxy-1-(1-methyl-1H-imidazol-4-yl)propyl]-3-oxo-1-[(3S)-oxolan-3-yloxy]-2,3-dihydro-1H-isoindol-2-yl]-2-hydroxyethyl]benzonitrile::US10544132, Example 90
+CO[C@]1(N([C@@H](CC(O)=O)c2ccc(Cl)cc2)C(=O)c2cc(cc(F)c12)[C@](C)(O)C1CCOCC1)c1ccc(Cl)cc1	(3S)-3-(4-chlorophenyl)-3-[(1R)-1-(4-chlorophenyl)-7-fluoro-5-[1-hydroxy-1-(oxan-4-yl)ethyl]-1-methoxy-3-oxo-2,3-dihydro-1H-isoindol-2-yl]propanoic Acid::US10544132, Example 89
+CCN1CCN(CC1)c1ccc(Nc2cc(ncn2)N(C)C(=O)Nc2c(Cl)c(OC)cc(OC)c2Cl)c(c1)N(C)C(=O)C=C	US10537571, Compound 152::US9434697, 152::US9730931, Compound 152
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccc(cc3NC(=O)C=C)N3CCN(CC3)C(C)=O)ncn2)c1Cl	US10537571, Compound 154::US9434697, 154::US9730931, Compound 154
+COC(C)c1ccc(Nc2cc(ncn2)N(C)C(=O)Nc2c(Cl)c(OC)cc(OC)c2Cl)c(NC(=O)C=C)c1	US10537571, Compound 155::US9434697, 155::US9730931, Compound 155
+ONC(=O)c1cccc(Nc2nc3cc(C#C)c(cc3[nH]2)C(F)(F)F)c1	US10538496, Compound 33-17
+ONC(=O)c1cccc(Nc2nc3cc(Cl)c(Cl)cc3[nH]2)c1	3-((5,6-dichloro-1H-benzo[d]imidazol-2- yl)amino)-N-hydroxybenzamide::US10508088, Example 33-14::US10538496, Compound 33-14
+COc1cc2[nH]c(Nc3cccc(c3)C(=O)NO)nc2cc1O	US10538496, Compound 33-13
+Cc1cc2[nH]c(Nc3cccc(c3)C(=O)NO)nc2cc1Br	3-((5-bromo-6-methyl-1H- benzo[d]imidazol-2-yl)amino)-N- hydroxybenzamide::US10508088, Example 33-12::US10538496, Compound 33-12
+Cc1cc(Nc2nc3cc(Br)c(cc3o2)C(F)(F)F)cc(c1)C(=O)NO	US10538496, Compound 33-11
+Cc1cc2[nH]c(Nc3cccc(c3)C(=O)NO)nc2cc1F	3-((5-fluoro-6-methyl-1H- benzo[d]imidazol-2-yl)amino)-N- hydroxybenzamide::US10508088, Example 33-10::US10538496, Compound 33-10
+ONC(=O)c1cccc(Nc2nc3cc4OCCOc4cc3[nH]2)c1	3-((6,7-dihydro-1H- [1,4]dioxino[2',3':4,5] benzo[1,2-d]imidazol- 2-yl)amino)-N-hydroxybenzamide::US10508088, Example 33-9::US10538496, Compound 33-9
+ONC(=O)c1cccc(Nc2nc3cc4OCCCOc4cc3[nH]2)c1	3-((7,8-dihydro-1H,6H- [1,4]dioxepino[2',3':4,5]benzo[1,2- d]imidazol-2-yl)amino)-N- hydroxybenzamide::US10508088, Example 33-8::US10538496, Compound 33-8
+ONC(=O)c1cccc(Nc2nc3cc(Br)c(cc3[nH]2)C(F)(F)F)c1	3-((5-bromo-6-(trifluoromethyl)-1H- benzo[d]imidazol-2-yl)amino)-N- hydroxybenzamide::US10508088, Example 33-11::US10538496, Compound 33-7
+ONC(=O)c1cccc(Nc2nc3cc(Cl)c(cc3[nH]2)C(F)(F)F)c1	3-((5-chloro-6-(trifluoromethyl)-1H- benzo[d]imidazol-2-yl)amino)-N- hydroxybenzamide::US10508088, Example 33-6::US10538496, Compound 33-6
+ONC(=O)c1cccc(Nc2nc3cc(F)c(cc3[nH]2)C(F)(F)F)c1	3-((5-fluoro-6-(trifluoromethyl)-1H- benzo[d]imidazol-2-yl)amino)-N- hydroxybenzamide::US10508088, Example 33-5::US10538496, Compound 33-5
+ONC(=O)c1cccc(Nc2nc3cc4OCOc4cc3[nH]2)c1	3-((5H-[1,3]dioxolo[4',5':4,5]benzo[1,2- d]imidazol-6-yl)amino)-N- hydroxybenzamide::US10508088, Example 33-4::US10538496, Compound 33-4
+ONC(=O)c1cccc(Nc2nc3cc(F)c(F)cc3[nH]2)c1	3-((5,6-difluoro-1H-benzo[d]imidazol-2- yl)amino)-N-hydroxybenzamide::US10508088, Example 33-3::US10538496, Compound 33-3
+Cc1cc2[nH]c(Nc3cccc(c3)C(=O)NO)nc2cc1Cl	3-((5-chloro-6-methyl-1H- benzo[d]imidazol-2-yl)amino)-N- hydroxybenzamide::US10508088, Example 33-2::US10538496, Compound 33-2
+ONC(=O)c1cccc(Nc2nc3cc(F)c(Cl)cc3[nH]2)c1	3-((6-chloro-5-fluoro-1H- benzo[d]imidazol- 2-yl)amino)-N-hydroxybenzamide::US10508088, Example 33-1::US10538496, Compound 33-1
+ONC(=O)c1cccc(Nc2nc3ncc(cc3o2)C(F)(F)F)c1	N-hydroxy-3-((6- (trifluoromethyl)oxazolo[4,5-b]pyridin-2- yl)amino)benzamide::US10508088, Example 32-2::US10538496, Compound 32-2
+ONC(=O)c1cccc(Nc2nc3ncccc3o2)c1	N-hydroxy-3-(oxazolo[4,5-b]pyridin-2- ylamino)benzamide::US10508088, Example 32-1::US10538496, Compound 32-1
+ONC(=O)c1cccc(Nc2nc3cc(Cl)c(Cl)cc3o2)n1	6-((5,6-dichlorobenzo[d]oxazol-2- yl)amino)-N-hydroxypicolinamide::US10508088, Example 31-1::US10538496, Compound 31-1
+ONC(=O)c1cccc(Nc2nc3cncnc3[nH]2)c1	3-((9H-purin-8-yl)amino)-N- hydroxybenzamide::US10508088, Example 30-1::US10538496, Compound 30-1
+ONC(=O)c1cccc(Nc2nc3nccnc3[nH]2)c1	3-((1H-imidazo[4,5-b]pyrazin-2-yl)amino)- N-hydroxybenzamide::US10508088, Example 29-1::US10538496, Compound 29-1
+ONC(=O)c1cccc(Nc2cc3cc(Cl)c(Cl)cc3[nH]2)c1	3-((5,6-dichloro-1H-indol-2-yl)amino)-N- hydroxybenzamide::US10508088, Example 28-1::US10538496, Compound 28-1
+ONC(=O)c1cccc(Cc2nc3cc(Cl)c(Cl)cc3[nH]2)c1	3-((5,6-dichloro-1H-benzo[d]imidazol-2- yl)methyl)-N-hydroxybenzamide::US10508088, Example 27-2::US10538496, Compound 27-2
+ONC(=O)c1cccc(Cc2nc3cc(C#N)c(cc3[nH]2)C(F)(F)F)c1	3-((5-cyano-6-(trifluoromethyl)-1H- benzo[d]imidazol-2-yl)methyl)-N- hydroxybenzamide::US10508088, Example 27-1::US10538496, Compound 27-1
+COCCn1c(Nc2cccc(c2)C(=O)NO)nc2cc(C#N)c(cc12)C(F)(F)F	3-((5-cyano-1-(2-methoxyethyl)-6- (trifluoromethyl)-1H-benzo[d]imidazol-2- yl)amino)-N-hydroxybenzamide::US10508088, Example 19-1::US10538496, Compound 26-1
+COCCn1c(Nc2cccc(c2)C(=O)NO)nc2ccccc12	N-hydroxy-3-((1-(2-methoxyethyl)-1H- benzo[d]imidazol-2-yl)amino)benzamide::US10508088, Example 23-1::US10538496, Compound 25-1
+COCCn1c(Nc2cccc(c2)C(=O)NO)nc2cccc(OC)c12	N-hydroxy-3-((7-methoxy-1-(2- methoxyethyl)-1H-benzo[d]imidazol-2- yl)amino)benzamide::US10508088, Example 24-2::US10538496, Compound 24-2
+COCCn1c(Nc2cccc(c2)C(=O)NO)nc2c(OC)cccc12	N-hydroxy-3-((4-methoxy-1-(2- methoxyethyl)-1H-benzo[d]imidazol-2- yl)amino)benzamide::US10508088, Example 24-1::US10538496, Compound 24-1
+Cc1cc2nc(Nc3cccc(c3)C(=O)NO)[nH]c2cc1C	3-((5,6-dimethyl-1H-benzo[d]imidazol-2- yl)amino)-N-hydroxybenzamide::US10508088, Example 23-4::US10538496, Compound 23-4
+ONC(=O)c1cccc(Nc2nc3cc(F)c(Br)cc3[nH]2)c1	3-((6-bromo-5-fluoro-1H- benzo[d]imidazol- 2-yl)amino)-N-hydroxybenzamide::US10508088, Example 33-16::US10538496, Compound 33-16
+ONC(=O)c1cccc(Nc2nc3cc4OCC(=O)Nc4cc3[nH]2)c1	US10538496, Compound 33-18
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccc(cc3NC(=O)C=C)C(C)O)ncn2)c1Cl	US10537571, Compound 156::US9434697, 156::US9730931, Compound 156
+COc1cc2nc(Nc3cccc(c3)C(=O)NO)[nH]c2cc1Cl	3-((6-chloro-5-methoxy-1H- benzo[d]imidazol-2-yl)amino)-N- hydroxybenzamide::US10508088, Example 33-19::US10538496, Compound 33-19
+Cn1ncc2ccc(cc12)-c1cc2[nH]c(Nc3cccc(c3)C(=O)NO)nc2cc1C(F)(F)F	N-hydroxy-3-((6-(1-methyl-1H-indazol-6- yl)-5-(trifluoromethyl)-1H- benzo[d]imidazol-2-yl)amino)benzamide::US10508088, Example 36-17::US10538496, Compound 36-17
+COCc1cccc(c1)-c1cc2[nH]c(Nc3cccc(c3)C(=O)NO)nc2cc1C(F)(F)F	N-hydroxy-3-((6-(3- (methoxymethyl)phenyl)-5- (trifluoromethyl)-1H-benzo[d]imidazol-2- yl)amino)benzamide::US10508088, Example 36-16::US10538496, Compound 36-16
+OCc1ccc(F)cc1-c1cc2[nH]c(Nc3cccc(c3)C(=O)NO)nc2cc1C(F)(F)F	3-((6-(5-fluoro-2- (hydroxymethyl)phenyl)- 5-(trifluoromethyl)-1H- benzo[d]imidazol-2- yl)amino)-N-hydroxybenzamide::US10508088, Example 36-15::US10538496, Compound 36-15
+ONC(=O)c1cccc(Nc2nc3cc(c(cc3[nH]2)-c2cccc(c2)C(=O)N2CCOCC2)C(F)(F)F)c1	N-hydroxy-3-((6-(3-(morpholine-4- carbonyl)phenyl)-5-(trifluoromethyl)-1H- benzo[d]imidazol-2-yl)amino)benzamide::US10508088, Example 36-14::US10538496, Compound 36-14
+ONC(=O)c1cccc(Nc2nc3cc(c(cc3[nH]2)-c2cnc(nc2)N2CCOCC2)C(F)(F)F)c1	N-hydroxy-3-((6-(2-morpholinopyrimidin- 5-yl)-5-(trifluoromethyl)-1H- benzo[d]imidazol-2-yl)amino)benzamide::US10508088, Example 36-13::US10538496, Compound 36-13
+CN(C)c1ccc(cn1)-c1cc2[nH]c(Nc3cccc(c3)C(=O)NO)nc2cc1C(F)(F)F	3-((6-(6-(dimethylamino)pyridin-3-yl)-5- (trifluoromethyl)-1H-benzo[d]imidazol-2- yl)amino)-N-hydroxybenzamide::US10508088, Example 36-12::US10538496, Compound 36-12
+OCc1ccccc1-c1cc2[nH]c(Nc3cccc(c3)C(=O)NO)nc2cc1C(F)(F)F	N-hydroxy-3-((6-(2- (hydroxymethyl)phenyl)-5- (trifluoromethyl)-1H-benzo[d]imidazol-2- yl)amino)benzamide::US10508088, Example 36-11::US10538496, Compound 36-11
+ONC(=O)c1cccc(Nc2nc3cc(c(cc3[nH]2)-c2cccc(O)c2)C(F)(F)F)c1	N-hydroxy-3-((6-(3-hydroxyphenyl)-5- (trifluoromethyl)-1H-benzo[d]imidazol-2- yl)amino)benzamide::US10508088, Example 36-10::US10538496, Compound 36-10
+ONC(=O)c1cccc(Nc2nc3cc(c(cc3[nH]2)-c2ccc3occoc3c2)C(F)(F)F)c1	US10538496, Compound 36-9
+ONC(=O)c1cccc(Nc2nc3cc(c(cc3[nH]2)-c2ccc3ncccc3c2)C(F)(F)F)c1	N-hydroxy-3-((6-(quinolin-6-yl)-5- (trifluoromethyl)-1H-benzo[d]imidazol-2- yl)amino)benzamide::US10508088, Example 36-8::US10538496, Compound 36-8
+COCc1ccc(cc1)-c1cc2[nH]c(Nc3cccc(c3)C(=O)NO)nc2cc1C(F)(F)F	N-hydroxy-3-((6-(4- (methoxymethyl)phenyl)-5- (trifluoromethyl)-1H-benzo[d]imidazol-2- yl)amino)benzamide::US10508088, Example 36-7::US10538496, Compound 36-7
+CN(C)C(=O)c1ccc(cc1)-c1cc2[nH]c(Nc3cccc(c3)C(=O)NO)nc2cc1C(F)(F)F	4-(2-((3- (hydroxycarbamoyl)phenyl)amino)-5- (trifluoromethyl)-1H-benzo[d]imidazol-6- yl)-N,N-dimethylbenzamide::US10508088, Example 36-6::US10538496, Compound 36-6
+CSc1ccc(cc1)-c1cc2[nH]c(Nc3cccc(c3)C(=O)NO)nc2cc1C(F)(F)F	N-hydroxy-3-((6-(4- (methylthio)phenyl)-5- (trifluoromethyl)-1H-benzo[d]imidazol-2- yl)amino)benzamide::US10508088, Example 36-5::US10538496, Compound 36-5
+CCOc1cccc(c1)-c1cc2[nH]c(Nc3cccc(c3)C(=O)NO)nc2cc1C(F)(F)F	3-((6-(3-ethoxyphenyl)- 5-(trifluoromethyl)- 1H-benzo[d]imidazol-2-yl)amino)-N- hydroxybenzamide::US10508088, Example 36-4::US10538496, Compound 36-4
+ONC(=O)c1cccc(Nc2nc3cc(-c4ccncc4)c(cc3[nH]2)C(F)(F)F)c1	N-hydroxy-3-((5-(pyridin-4-yl)-6- (trifluoromethyl)-1H-benzo[d]imidazol-2- yl)amino)benzamide::US10508088, Example 36-3::US10538496, Compound 36-3
+ONC(=O)c1cccc(Nc2nc3cc(c(cc3[nH]2)-c2cccnc2)C(F)(F)F)c1	N-hydroxy-3-((6-(pyridin-3-yl)-5- (trifluoromethyl)-1H-benzo[d]imidazol-2- yl)amino)benzamide::US10508088, Example 36-2::US10538496, Compound 36-2
+ONC(=O)c1cccc(Nc2nc3cc(-c4ccccc4)c(cc3[nH]2)C(F)(F)F)c1	N-hydroxy-3-((5-phenyl-6- (trifluoromethyl)-1H-benzo[d]imidazol-2- yl)amino)benzamide::US10508088, Example 36-1::US10538496, Compound 36-1
+Cn1c(Nc2cccc(c2)C(=O)NO)nc2cc(c(cc12)-c1ccccc1)C(F)(F)F	N-hydroxy-3-((1-methyl-6-phenyl-5- (trifluoromethyl)-1H-benzo[d]imidazol-2- yl)amino)benzamide::US10508088, Example 35-3::US10538496, Compound 35-3
+Cn1c(Nc2cccc(c2)C(=O)NO)nc2cc(c(cc12)-c1cccnc1)C(F)(F)F	N-hydroxy-3-((1- methyl-6-(pyridin-3-yl)-5- (trifluoromethyl)-1H-benzo[d]imidazol-2- yl)amino)benzamide::US10508088, Example 35-2::US10538496, Compound 35-2
+Cn1c(Nc2cccc(c2)C(=O)NO)nc2cc(-c3cccnc3)c(cc12)C(F)(F)F	N-hydroxy-3-((1- methyl-5-(pyridin-3-yl)-6- (trifluoromethyl)-1H-benzo[d]imidazol-2- yl)amino)benzamide::US10508088, Example 35-1::US10538496, Compound 35-1
+CN(c1nc2cc(c(cc2n1C)-c1ccccc1)C(F)(F)F)c1cccc(c1)C(=O)NO	N-hydroxy-3-(methyl(1- methyl-6-phenyl-5- (trifluoromethyl)-1H-benzo[d]imidazol-2- yl)amino)benzamide::US10508088, Example 34-3::US10538496, Compound 34-3
+CN(c1nc2cc(c(cc2n1C)-c1cccnc1)C(F)(F)F)c1cccc(c1)C(=O)NO	N-hydroxy-3-(methyl(1-methyl-6-(pyridin- 3-yl)-5-(trifluoromethyl)-1H- benzo[d]imidazol-2-yl)amino)benzamide::US10508088, Example 34-2::US10538496, Compound 34-2
+CN(c1nc2cc(-c3cccnc3)c(cc2n1C)C(F)(F)F)c1cccc(c1)C(=O)NO	N-hydroxy-3-(methyl(1-methyl-5-(pyridin- 3-yl)-6-(trifluoromethyl)-1H- benzo[d]imidazol-2-yl)amino)benzamide::US10508088, Example 34-1::US10538496, Compound 34-1
+NS(=O)(=O)c1ccc2[nH]c(Nc3cccc(c3)C(=O)NO)nc2c1	N-hydroxy-3-((5-sulfamoyl-1H- benzo[d]imidazol-2-yl)amino)benzamide::US10508088, Example 33-24::US10538496, Compound 33-24
+CS(O)(=O)c1ccc2[nH]c(Nc3cccc(c3)C(=O)NO)nc2c1	US10538496, Compound 33-23
+ONC(=O)c1cccc(Nc2nc3cc(ccc3[nH]2)C(F)(F)F)c1	N-hydroxy-3-((5-(trifluoromethyl)-1H- benzo[d]imidazol-2-yl)amino)benzamide::US10508088, Example 33-22::US10538496, Compound 33-22
+ONC(=O)c1cccc(Nc2nc3cc(Cl)ccc3[nH]2)c1	3-((5-chloro-1H-benzo[d]imidazol-2- yl)amino)-N-hydroxybenzamide::US10508088, Example 33-20::US10538496, Compound 33-20
+COCCn1c(Nc2cc(C(=O)NO)c3ccccc3c2)nc2ccccc12	N-hydroxy-3-((1-(2-methoxyethyl)-1H- benzo[d]imidazol-2-yl)amino)-1- naphthamide::US10508088, Example 23-3::US10538496, Compound 23-3
+ONC(=O)c1cc(Nc2nc3ccccc3[nH]2)cc2ccccc12	3-((1H-benzo[d]imidazol-2-yl)amino)-N- hydroxy-1-naphthamide::US10508088, Example 23-2::US10538496, Compound 23-2
+NCCCCCn1c(Nc2cccc(c2)C(=O)NO)nc2cc(Cl)c(F)cc12	3-((1-(5-aminopentyl)-5-chloro-6-fluoro- 1H-benzo[d]imidazol-2-yl)amino)-N- hydroxybenzamide::US10508088, Example 22-2::US10538496, Compound 22-2
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3cccc(OC)c3NC(=O)C=C)ncn2)c1Cl	US10537571, Compound 186::US9434697, 186::US9730931, Compound 186
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3cccc(F)c3NC(=O)C=C)ncn2)c1Cl	US10537571, Compound 185::US9434697, 185::US9730931, Compound 185
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3cccc(C)c3NC(=O)C=C)ncn2)c1Cl	US10537571, Compound 184::US9434697, 184::US9730931, Compound 184
+COc1cc(OC)c(Cl)c(NC(=O)N(CCNC(C)C)c2cc(Nc3ccccc3NC(=O)C=C)ncn2)c1Cl	US10537571, Compound 183::US9434697, 183::US9730931, Compound 183
+CCN1CCN(CC1)c1ccc(Nc2cc(ncn2)N(C)C(=O)Nc2c(Cl)c(OC)cc(OC)c2Cl)c(NC(=O)\C=C/Cl)c1	US10537571, Compound 181::US9434697, 181::US9730931, Compound 181
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccccc3NC(=O)C(C)=C)ncn2)c1Cl	US10537571, Compound 175::US9434697, 175::US9730931, Compound 175
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccccc3NC(=O)\C=C/C)ncn2)c1Cl	US10537571, Compound 172::US9434697, 172::US9730931, Compound 172
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccccc3NC(=O)\C=C/Cl)ncn2)c1Cl	US10537571, Compound 171::US9730931, Compound 171
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccccc3NC(=O)\C=C\Cl)ncn2)c1Cl	US10537571, Compound 170::US9434697, 170::US9434697, 171::US9730931, Compound 170
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccc(cc3NC(=O)C=C)N3CCN(CCO)CC3)ncn2)c1Cl	US10537571, Compound 168::US9434697, 168::US9730931, Compound 168
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3c(Cl)cccc3NC(=O)C=C)ncn2)c1Cl	US10537571, Compound 167::US9434697, 167::US9730931, Compound 167
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3c(NC(=O)C=C)cccc3OC)ncn2)c1Cl	US10537571, Compound 166::US9434697, 166::US9730931, Compound 166
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3c(C)cccc3NC(=O)C=C)ncn2)c1Cl	US10537571, Compound 165::US9434697, 165::US9730931, Compound 165
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccc(OCCO)cc3NC(=O)C=C)ncn2)c1Cl	US10537571, Compound 164::US9434697, 164::US9730931, Compound 164
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccc(CCN(C)C)cc3NC(=O)C=C)ncn2)c1Cl	US10537571, Compound 163::US9434697, 163::US9730931, Compound 163
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3c(F)cccc3NC(=O)C=C)ncn2)c1Cl	US10537571, Compound 162::US9434697, 162::US9730931, Compound 162
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccc(cc3NC(=O)C=C)N3CCN(CCN)CC3)ncn2)c1Cl	US10537571, Compound 161::US9434697, 161::US9730931, Compound 161
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccc(cc3NC(=O)C=C)C(C)N)ncn2)c1Cl	US10537571, Compound 160::US9434697, 160::US9730931, Compound 160
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccc(cc3NC(=O)C=C)N3CCN(C)CC3)ncn2)c1Cl	US10537571, Compound 159::US9434697, 159::US9730931, Compound 159
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccc(cc3NC(=O)C=C)N(C)CCO)ncn2)c1Cl	US10537571, Compound 158::US9434697, 158::US9730931, Compound 158
+COc1cc(OC)c(Cl)c(NC(=O)N(C)c2cc(Nc3ccc(cc3NC(=O)C=C)N3CCNCC3)ncn2)c1Cl	US10537571, Compound 157::US9434697, 157::US9730931, Compound 157
+ONC(=O)c1cccc(Nc2nc3cc(Cl)c(Cl)cc3o2)c1	US10508088, Example 1-1::US10508088, ID HDTK010::US10538496, Compound 1-1
+ONC(=O)c1cccc(Nc2nc3cc(c(cc3o2)C#C)C(F)(F)F)c1	US10538496, Compound 2-1
+ONC(=O)c1cccc(Nc2nc3cc(c(cc3o2)-c2ccccc2)C(F)(F)F)c1	N-hydroxy-3-((6-phenyl-5- (trifluoromethyl)benzo[d]oxazol-2- yl)amino)benzamide::US10508088, Example 3-1::US10538496, Compound 3-1
+Cn1c(Nc2cccc(c2)C(=O)NO)nc2cc(F)c(cc12)C#N	3-((6-cyano-5-fluoro-1-methyl-1H- benzo[d]imidazol-2-yl)amino)-N- hydroxybenzamide::US10508088, Example 12-1::US10538496, Compound 12-1
+NCCCCCn1c(Nc2cccc(c2)C(=O)NO)nc2cc(Cl)c(Cl)cc12	3-((1-(5-aminopentyl)-5,6-dichloro-1H- benzo[d]imidazol-2-yl)amino)-N- hydroxybenzamide::US10508088, Example 22-1::US10538496, Compound 22-1
+CCCCCCn1c(Nc2cccc(c2)C(=O)NO)nc2cc(C#N)c(cc12)C(F)(F)F	US10538496, Compound 21-1
+COCCn1c(Nc2cccc(c2)C(=O)NO)nc2cc(-c3ccccc3)c(cc12)C(F)(F)F	N-hydroxy-3-((1-(2-methoxyethyl)-5- phenyl-6-(trifluoromethyl)-1H- benzo[d]imidazol-2-yl)amino)benzamide::US10508088, Example 20-2::US10538496, Compound 20-2
+COCCn1c(Nc2cccc(c2)C(=O)NO)nc2cc(c(cc12)-c1ccccc1)C(F)(F)F	N-hydroxy-3-((1-(2-methoxyethyl)-6- phenyl-5-(trifluoromethyl)-1H- benzo[d]imidazol-2-yl)amino)benzamide::US10508088, Example 20-1::US10538496, Compound 20-1
+CC(C)n1c(Nc2cccc(c2)C(=O)NO)nc2cc(c(cc12)C#N)C(F)(F)F	3-((6-cyano-1-isopropyl-5- (trifluoromethyl)-1H-benzo[d]imidazol-2- yl)amino)-N-hydroxybenzamide::US10508088, Example 14-1::US10538496, Compound 18-1
+CC(C)n1c(Nc2cccc(c2)C(=O)NO)nc2cc(Cl)c(Cl)cc12	3-((5,6-dichloro-1-isopropyl-1H- benzo[d]imidazol-2-yl)amino)-N- hydroxybenzamide::US10508088, Example 17-1::US10538496, Compound 17-1
+CC(C)n1c(Nc2cccc(c2)C(=O)NO)nc2cc(-c3ccccc3)c(cc12)C(F)(F)F	N-hydroxy-3-((1-isopropyl-5-phenyl-6- (trifluoromethyl)-1H-benzo[d]imidazol-2- yl)amino)benzamide::US10508088, Example 16-2::US10538496, Compound 16-2
+CC(C)n1c(Nc2cccc(c2)C(=O)NO)nc2cc(c(cc12)-c1ccccc1)C(F)(F)F	N-hydroxy-3-((1-isopropyl-6-phenyl-5- (trifluoromethyl)-1H-benzo[d]imidazol-2- yl)amino)benzamide::US10508088, Example 16-1::US10538496, Compound 16-1
+CC(C)n1c(Nc2cccc(c2)C(=O)NO)nc2cc(C#N)c(cc12)C(F)(F)F	3-((5-cyano-1-isopropyl-6- (trifluoromethyl)-1H-benzo[d]imidazol-2- yl)amino)-N-hydroxybenzamide::US10508088, Example 15-1::US10538496, Compound 15-1
+Cn1c(Nc2cccc(c2)C(=O)NO)nc2cc(Cl)c(Cl)cc12	3-((5,6-dichloro-1-methyl-1H- benzo[d]imidazol-2-yl)amino)-N- hydroxybenzamide::US10508088, Example 13-1::US10538496, Compound 13-1
+Cn1c(Nc2cccc(c2)C(=O)NO)nc2cc(c(cc12)C#N)C(F)(F)F	3-((6-cyano-1-methyl-5-(trifluoromethyl)- 1H-benzo[d]imidazol-2-yl)amino)-N- hydroxybenzamide::US10508088, Example 11-1::US10538496, Compound 11-1
+ONC(=O)c1cc(Nc2nc3cc(Cl)c(Cl)cc3o2)ccc1F	5-((5,6-dichlorobenzo[d]oxazol-2- yl)amino)-2-fluoro-N-hydroxybenzamide::US10508088, Example 4-1::US10538496, Compound 4-1
+Cn1c(Nc2cccc(c2)C(=O)NO)nc2cc(C#N)c(cc12)C(F)(F)F	3-((5-cyano-1-methyl-6-(trifluoromethyl)- 1H-benzo[d]imidazol-2-yl)amino)-N- hydroxybenzamide::US10508088, Example 10-1::US10538496, Compound 10-1
+CN(c1nc2cc(C#N)c(cc2[nH]1)C(F)(F)F)c1cccc(c1)C(=O)NO	3-((5-cyano-6-(trifluoromethyl)-1H- benzo[d]imidazol-2-yl)(methyl)amino)-N- hydroxybenzamide::US10508088, Example 9-1::US10538496, Compound 9-1
+ONC(=O)c1cccc(Nc2nc3ccccc3[nH]2)c1	3-((1H-benzo[d]imidazol-2-yl)amino)-N- hydroxybenzamide::US10508088, Example 8-1::US10538496, Compound 8-1
+CS(=O)(=O)c1cc2nc(Nc3cccc(c3)C(=O)NO)[nH]c2cc1C(F)(F)F	N-hydroxy-3-((5-(methylsulfonyl)-6- (trifluoromethyl)-1H-benzo[d]imidazol-2- yl)amino)benzamide::US10508088, Example 7-1::US10538496, Compound 7-1
+CS(=O)(=O)c1cc2nc(Nc3cccc(c3)C(=O)NO)[nH]c2cc1C#N	3-((6-cyano-5-(methylsulfonyl)-1H- benzo[d]imidazol-2-yl)amino)-N- hydroxybenzamide::US10508088, Example 6-1::US10538496, Compound 6-1
+ONC(=O)c1cccc(Nc2nc3cc(Cl)c(Cl)cc3s2)c1	3-((5,6-dichlorobenzo[d]thiazol-2- yl)amino)-N-hydroxybenzamide::US10508088, Example 5-1::US10538496, Compound 5-1
+ONC(=O)c1ccnc(Nc2nc3cc(Cl)c(Cl)cc3o2)n1	2-((5,6-dichlorobenzo[d]oxazol-2- yl)amino)-N-hydroxypyrimidine-4- carboxamide::US10508088, Example 4-8::US10538496, Compound 4-8
+ONC(=O)c1cc(Nc2nc3cc(Cl)c(Cl)cc3o2)ncn1	US10538496, Compound 4-7
+ONC(=O)c1cc(Nc2nc3cc(Cl)c(Cl)cc3o2)cnn1	US10538496, Compound 4-6
+ONC(=O)c1cncc(Nc2nc3cc(Cl)c(Cl)cc3o2)c1	5-((5,6-dichlorobenzo[d]oxazol-2- yl)amino)-N-hydroxynicotinamide::US10508088, Example 4-5::US10538496, Compound 4-5
+ONC(=O)c1ccc(F)c(Nc2nc3cc(Cl)c(Cl)cc3o2)c1	3-((5,6-dichlorobenzo[d]oxazol-2- yl)amino)-4-fluoro-N-hydroxybenzamide::US10508088, Example 4-3::US10538496, Compound 4-3
+Cc1c(Nc2nc3cc(Cl)c(Cl)cc3o2)cccc1C(=O)NO	US10538496, Compound 4-2
+CN(C)C(=O)[C@](C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1)[C@@]2(OCC1(CO)CC1)c1ccc(Cl)cc1	US10544132, Example 57
+CC(O)(C(=O)N1CCCC1)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1)[C@@]2(OCC1(CO)CC1)c1ccc(Cl)cc1	(3R)-3-(4-chlorophenyl)-2-[(4-chlorophenyl)methyl]-6-[2-hydroxy-1-oxo-1-(pyrrolidin-1-yl)propan-2-yl]-3-{[1-(hydroxymethyl)cyclopropyl]methoxy}-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 54
+NC(=O)c1c(Nc2ccc(cc2)N2CCCC(CC(O)=O)C2)nc(nc1C=N)N1CCCCCC1	2-(1-(4-((2-(azepan-1-yl)-5-oxo-5,6- dihydropyrimido[4,5-d]pyridazin-4-yl) amino)phenyl)piperidin-3-yl)acetic acid::US10183944, Example 232::US10183944, Example 233::US10647720, Ex. # 233
+Cc1cc(cc(C)c1Cl)C1CCN(CC1)C(=O)CC[C@@]1(C)NC(=O)NC1=O	(5R)-5-[3-[4- (4-chloro-3,5- dimethyl- phenyl)-1- piperidyl]-3- oxo-propyl]-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 93
+COc1cc(Cl)c(C)cc1C1CCN(CC1)C(=O)CC[C@@]1(C)NC(=O)NC1=O	(5R)-5-[3-[4- (4-chloro-2- methoxy-5- methyl- phenyl)-1- piperidyl]-3- oxo-propyl]-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 89
+CCOc1cc(cc(OC)c1Cl)C1CCN(CC1)C(=O)CC[C@H]1NC(=O)NC1=O	(5R)-5-[3-[4- (4-chloro-3- ethoxy-5- methoxy- phenyl)-1- piperidyl]-3- oxo-propyl] imidaz olidine- 2,4-dione::US10550100, Compound 88
+CCOc1cc(cc(OC)c1Cl)C1CCN(CC1)C(=O)CC[C@@]1(C)NC(=O)NC1=O	(5R)-5-[3-[4- (4-chloro-3- ethoxy-5- methoxy- phenyl)-1- piperidyl]-3- oxo-propyl]-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 87
+COc1c(Cl)cccc1C1CCN(CC1)C(=O)CC[C@@]1(C)NC(=O)NC1=O	(5R)-5-[3-[4- (3-chloro-2- methoxy- phenyl)-1- piperidyl]-3- oxo-propyl]-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 86
+COc1cc(ccc1Cl)C1CCN(CC1)C(=O)CC[C@@]1(C)NC(=O)NC1=O	(5R)-5-[3-[4- (4-chloro-3- methoxy- phenyl)-1- piperidyl]-3- oxo-propyl]-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 85
+COc1cc(cc(F)c1Cl)C1CCN(CC1)C(=O)CC[C@@]1(C)NC(=O)NC1=O	(5R)-5-[3-[4- (4-chloro-3- fluoro-5- methoxy- phenyl)-1- piperidyl]-3- oxo-propyl]-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 84
+COc1cc(cc(OC)c1F)C1CCN(CC1)C(=O)CC[C@H]1NC(=O)NC1=O	(5R)-5-[3-[4- (4-fluoro-3,5- dimethoxy- phenyl)-1- piperidyl]-3- oxo-propyl] imidazolidine- 2,4-dione::US10550100, Compound 82
+COc1cc(cc(OC)c1F)C1CCN(CC1)C(=O)CC[C@@]1(C)NC(=O)NC1=O	(5R)-5-[3-[4- (4-fluoro-3,5- dimethoxy- phenyl)-1- piperidyl]-3- oxo-propyl]-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 81
+COc1cc(cc(Cl)c1F)C1CCN(CC1)C(=O)CC[C@@]1(C)NC(=O)NC1=O	(5R)-5-[3-[4- (3-chloro-4- fluoro-5- methoxy- phenyl)-1- piperidyl]-3- oxo-propyl]- 5-methyl- imidazolidine- 2,4-dione::US10550100, Compound 80
+COc1cc(Cl)ccc1C1CCN(CC1)C(=O)CC[C@@]1(C)NC(=O)NC1=O	(5R)-5-[3-[4- (4-chloro-2- methoxy- phenyl)-1- piperidyl]-3- oxo-propyl]-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 79
+C[C@H]1CN(CC[C@H]1c1ccc(F)c(F)c1)C(=O)CC[C@]1(NC(=O)NC1=O)C1CC1	(S)-5-cyclopropyl-5- (3-((3R,4R)-4- (3,4- difluorophenyl)- 3-methylpiperidin- 1-yl)-3-oxopropyl) imidazolidine- 2,4-dione::US10550100, Compound 78
+C[C@H]1CN(CC[C@@H]1c1ccc(F)c(F)c1)C(=O)CC[C@]1(NC(=O)NC1=O)C1CC1	(S)-5-cyclopropyl-5- (3-((3R,4S)-4- (3,4- difluorophenyl)- 3-methylpiperidin- 1-yl)-3-oxopropyl) imidazolidine- 2,4-dione::US10550100, Compound 77
+C[C@H]1CN(CC[C@H]1c1ccc(F)c(F)c1)C(=O)CCC1(NC(=O)NC1=O)C1CC1	5-cyclopropyl- 5-(3-((3R,4R)- 4-(3,4- difluorophenyl)- 3- methylpiperidin- 1-yl)-3-oxopropyl) imidazolidine-2,4- dione::US10550100, Compound 76
+COc1c(Cl)cccc1C1CCN(CC1)C(=O)CCC1(C)NC(=O)NC1=O	5-(3-(4-(3- chloro-2- methoxyphenyl) piperidin-1- yl)-3- oxopropyl)-5- methylimidazolidine- 2,4-dione::US10550100, Compound 75
+COc1c(Cl)cccc1C1CCN(CC1)C(=O)CC[C@H]1NC(=O)NC1=O	(R)-5-(3-(4-(3- chloro-2- methoxyphenyl) piperidin-1- yl)-3- oxopropyl) imidazolidine-2,4- dione::US10550100, Compound 74
+COc1cc(cc(Cl)c1F)C1CCN(CC1)C(=O)CCC1(C)NC(=O)NC1=O	5-(3-(4-(3- chloro-4- fluoro-5- methoxyphenyl) piperidin-1- yl)-3- oxopropyl)-5- methylimidazolidine- 2,4-dione::US10550100, Compound 73
+COc1cc(cc(OC)c1F)C1CCN(CC1)C(=O)CCC1(C)NC(=O)NC1=O	5-(3-(4-(4- fluoro-3,5- dimethoxyphenyl) piperidin- 1-yl)-3- oxopropyl)-5- yl)propionic methylimidazolidine- 2,4-dione::US10550100, Compound 72
+Cc1cc(Cl)c(Cl)cc1C1CCN(CC1)C(=O)CCC1(C)NC(=O)NC1=O	5-(3-(4-(4,5- dichloro-2- methylphenyl) piperidin-1- yl)-3- oxopropyl)-5- methylimidazolidine- 2,4-dione::US10550100, Compound 71
+COc1c(Cl)cc(Cl)cc1C1CCN(CC1)C(=O)CC[C@H]1NC(=O)NC1=O	(R)-5-(3-(4- (3,5-dichloro-2- methoxyphenyl) piperidin-1- oxopropyl) imidazolidine-2,4- dione::US10550100, Compound 70
+COc1cc(cc(Cl)c1Cl)C1CCN(CC1)C(=O)CC[C@H]1NC(=O)NC1=O	(R)-5-(3-(4- (3,4-dichloro-5- methoxyphenyl) piperidin-1- yl)-3-oxopropyl) imidazolidine-2,4- dione::US10550100, Compound 69
+COc1cc(cc(Cl)c1Cl)C1CCN(CC1)C(=O)CC[C@@]1(C)NC(=O)NC1=O	(R)-5-(3-(4- (3,4-dichloro-5- methoxyphenyl) piperidin-1- yl)-3- oxopropyl)-5- methylimidazolidine- 2,4-dione::US10550100, Compound 68
+COc1cc(Cl)cc(c1)C1CCN(CC1)C(=O)CC[C@H]1NC(=O)NC1=O	(R)-5-(3-(4-(3- chloro-5- methoxyphenyl) piperidin-1- yl)-3- oxopropyl) imidazolidine-2,4- dione::US10550100, Compound 67
+COc1cc(Cl)cc(c1)C1CCN(CC1)C(=O)CC[C@@]1(C)NC(=O)NC1=O	(R)-5-(3-(4-(3- chloro-5- methoxyphenyl) piperidin-1- yl)-3- oxopropyl)-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 66
+COc1c(Cl)cc(Cl)cc1C1CCN(CC1)C(=O)CC[C@@]1(C)NC(=O)NC1=O	(R)-5-(3-(4- (3,5-dichloro- 2-methoxy phenyl)piperidin- 1-yl)-3-oxo propyl)-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 65
+Cc1cc(Cl)c(F)cc1C1CCN(CC1)C(=O)CCC1(C)NC(=O)NC1=O	5-(3-(4-(4- chloro-5- fluoro-2- methylphenyl) piperidin-1- yl)-3- oxopropyl)-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 64
+Cc1cc(Cl)c(F)cc1C1CCN(CC1)C(=O)CC[C@H]1NC(=O)NC1=O	(R)-5-(3-(4-(4- chloro-5- fluoro-2- methylphenyl) piperidin-1- yl)-3- oxopropyl) imidazolidine-2,4- dione::US10550100, Compound 63
+COc1cc(Cl)c(Cl)cc1C1CCN(CC1)C(=O)CCC1(C)NC(=O)NC1=O	5-(3-(4-(4,5- dichloro-2- methoxyphenyl) piperidin-1- yl)-3- oxopropyl)-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 62
+COc1cc(cc(N(C)C)c1Cl)C1CCN(CC1)C(=O)CC[C@@]1(C)NC(=O)NC1=O	(5R)-5-[3-[4- [4-chloro-3- (dimethylamino)- 5-methoxy- phenyl]-1- piperidyl]-3- oxo-propyl]-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 90
+COc1cc(Cl)c(Cl)cc1C1CCN(CC1)C(=O)CC[C@@]1(C)NC(=O)NC1=O	(5R)-5-[3-[4- (4,5-dichloro- 2-methoxy- phenyl)-1- piperidyl]-3- oxo-propyl]-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 96
+Cc1cc(Cl)ccc1C1CCN(CC1)C(=O)CCC1(C)NC(=O)NC1=O	5-(3-(4-(4- chloro-2- methylphenyl) piperidin-1- yl)-3- oxopropyl)-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 60
+COc1cc(Cl)ccc1C1CCN(CC1)C(=O)[C@@H](C)C[C@@]1(C)NC(=O)NC1=O	5-[3-[4-(4- chloro-2- methoxy- phenyl)-1- piperidyl]-2- methyl-3-oxo- propyl]-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 110::US10550100, Compound 97
+Fc1cccc(c1)C1CCN(CC1)C(=O)CCC1(NC(=O)NC1=O)C1CC1	5-cyclopropyl- 5-(3-(4-(3- fluorophenyl) piperidin-1-yl)- 3- oxopropyl) imidazolidine- 2,4-dione::US10550100, Compound 19
+Clc1cccc(c1)C1CCN(CC1)C(=O)CCC1(NC(=O)NC1=O)C1CC1	5-(3-(4-(3- chlorophenyl) piperidin-1- yl)-3- oxopropyl)-5- cyclopropyl- imidazolidine- 2,4-dione::US10550100, Compound 18
+Clc1cc(Cl)cc(c1)C1CCN(CC1)C(=O)CCC1(NC(=O)NC1=O)C1CC1	5-cyclopropyl- 5-(3-(4-(3,5- dichlorophenyl) piperidin-1- yl)-3- oxopropyl) imidazolidine- 2,4-dione::US10550100, Compound 17
+O=C(CCC1(NC(=O)NC1=O)c1cccnc1)N1CCC(CC1)c1ccccc1	5-(3-oxo-3-(4- phenyl- piperidin-1-yl) propyl)- 5-(pyridin-3- yl)imidazolidine- 2,4-dione::US10550100, Compound 16
+CC1(CCC(=O)N2CCC(CC2)c2ccc(Cl)cc2)NC(=O)NC1=O	5-(3-(4-(4- chlorophenyl) piperidin-1- yl)-3- oxopropyl)-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 12
+CC1(CCC(=O)N2CCC(CC2)c2cccc(Cl)c2)NC(=O)NC1=O	5-(3-(4-(3- chlorophenyl) piperidin-1- yl)-3- oxopropyl)-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 11
+CC1(CCC(=O)N2CCC(CC2)c2ccc(F)cc2)NC(=O)NC1=O	5-(3-(4-(4- fluorophenyl) piperidin-1-yl)- 3-oxopropyl)- 5-methyl- imidazolidine- 2,4-dione::US10550100, Compound 10
+CC1(CCC(=O)N2CCC(CC2)c2cc(Cl)cc(Cl)c2)NC(=O)NC1=O	5-(3-(4-(3,5- dichlorophenyl) piperidin-1- yl)-3- oxopropyl)-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 9
+O=C(CCC1(NC(=O)NC1=O)C1CC1)N1CCC(CC1)c1ccccc1	5-cyclopropyl- 5-(3-oxo-3-(4- phenylpiperidin- 1-yl)propyl) imidazolidine- 2,4-dione::US10550100, Compound 7
+COc1cc(cc(C)c1Cl)C1CCN(CC1)C(=O)CC[C@H]1NC(=O)NC1=O	(5R)-5-[3-[4- (4-chloro-3- methoxy-5- methyl- phenyl)-1- piperidyl]-3- oxo-propyl] imidazolidine- 2,4-dione::US10550100, Compound 115
+COC[C@]1(C[C@H](C)C(=O)N2CCC(CC2)c2cc(C)c(Cl)c(OC)c2)NC(=O)NC1=O	5-[3-[4-(4- chloro-3- methoxy-5- methyl- phenyl)-1- piperidyl]-2- methyl-3-oxo- propyl]-5- (methoxymethyl) imidazolidine- 2,4-dione::US10550100, Compound 114
+COc1cc(cc(C)c1Cl)C1CCN(CC1)C(=O)[C@@H](C)C[C@@]1(C)NC(=O)NC1=O	5-[3-[4-(4- chloro-3- methoxy-5- methyl- phenyl)-1- piperidyl]-2- methyl-3-oxo- propyl]-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 113
+CC1(CCC(=O)N2CCC(CC2)c2ccc(s2)-c2ccccc2F)NC(=O)NC1=O	5-[3-[4-[5-(2- fluorophenyl)- 2-thienyl]-1- piperidyl]-3- oxo-propyl]-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 112
+COc1cc(F)c(Cl)cc1C1CCN(CC1)C(=O)[C@@H](C)C[C@@]1(C)NC(=O)NC1=O	5-[3-[4-(5- chloro-4- fluoro-2- methoxy- phenyl)-1- piperidyl]-2- methyl-3-oxo- propyl]-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 111
+COC[C@]1(C[C@H](C)C(=O)N2CCC(CC2)c2cc(F)c(Cl)cc2OC)NC(=O)NC1=O	5-[3-[4-(4- chloro-5- fluoro-2- methoxy- phenyl)-1- piperidyl]-2- methyl-3-oxo- propyl]-5- (methoxymethyl) imidazolidine- 2,4-dione::US10550100, Compound 109
+COC[C@]1(C[C@H](C)C(=O)N2CCC(CC2)c2ccc(Cl)cc2OC)NC(=O)NC1=O	5-[3-[4-(4- chloro-2- methoxy- phenyl)-1- piperidyl]-2- methyl-3-oxo- propyl]-5- (methoxymethyl) imidazolidine- 2,4-dione::US10550100, Compound 108
+COC[C@]1(C[C@H](C)C(=O)N2CCC(CC2)c2cc(Cl)c(F)cc2OC)NC(=O)NC1=O	5-[3-[4-(5- chloro-4- fluoro-2- methoxy- phenyl)-1- piperidyl]-2- methyl-3-oxo- propyl]-5- (methoxymethyl) imidazolidine- 2,4-dione::US10550100, Compound 107
+CCc1cc(cc(OC)c1Cl)C1CCN(CC1)C(=O)CC[C@@]1(COC)NC(=O)NC1=O	(5R)-5-[3-[4- (4-chloro-3- ethyl-5- methoxy- phenyl)-1- piperidyl]-3- oxo-propyl] imidazolidine- 2,4-dione::US10550100, Compound 106
+CCc1cc(cc(OC)c1Cl)C1CCN(CC1)C(=O)CC[C@@]1(C)NC(=O)NC1=O	(5R)-5-[3-[4- (4-chloro-3- ethyl-5-methoxy- phenyl)-1- piperidyl]-3- oxo-propyl]-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 105
+CCc1cc(cc(OC)c1Cl)C1CCN(CC1)C(=O)[C@@H](C)C[C@@]1(COC)NC(=O)NC1=O	5-[3-[4-(4- chloro-3-ethyl- 5-methoxy- phenyl)-1- piperidyl]-2- methyl-3-oxo- propyl]-5- (methoxymethyl) imidazolidine- 2,4-dione::US10550100, Compound 104
+COC[C@]1(C[C@H](C)C(=O)N2CCC(CC2)c2cc(F)c(Cl)c(OC)c2)NC(=O)NC1=O	5-[3-[4-(4- chloro-3- fluoro-5- methoxy- phenyl)-1- piperidyl]-2- methyl-3-oxo- propyl]-5- (methoxymethyl) imidazolidine- 2,4-dione::US10550100, Compound 103
+COc1cc(cc(F)c1Cl)C1CCN(CC1)C(=O)[C@@H](C)C[C@@]1(C)NC(=O)NC1=O	5-[3-[4-(4- chloro-3- fluoro-5- methoxy- phenyl)-1- piperidyl]-2- methyl-3-oxo- methyl- imidazolidine- 2,4-dione::US10550100, Compound 102
+COc1cc(F)c(Cl)cc1C1CCN(CC1)C(=O)CC[C@@]1(C)NC(=O)NC1=O	(5R)-5-[3-[4- (5-chloro-4- fluoro-2- methoxy- phenyl)-1- piperidyl]-3- oxo-propyl]-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 101
+COc1cc(Cl)c(F)cc1C1CCN(CC1)C(=O)CC[C@@]1(C)NC(=O)NC1=O	(5R)-5-[3-[4- (4-chloro-5- fluoro-2- methoxy- phenyl)-1- piperidyl]-3- oxo-propyl]-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 100
+C[C@H]1CN(CC[C@H]1c1ccc(F)c(F)c1)C(=O)CC[C@@]1(C)NC(=O)NC1=O	(5R)-5-[3- [(3R,4R)-4- (3,4- difluorophenyl)- 3-methyl-1- piperidyl]-3- oxo-propyl]-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 99
+COc1cc(cc(C)c1Cl)C1CCN(CC1)C(=O)CC[C@@]1(C)NC(=O)NC1=O	(5R)-5-[3-[4- (4-chloro-3- methoxy-5- methyl- phenyl)-1- piperidyl]-3- oxo-propyl]-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 98
+COc1cc(Cl)c(Cl)cc1C1CCN(CC1)C(=O)CC[C@H]1NC(=O)NC1=O	(R)-5-(3-(4- (4,5-dichloro- 2- methoxyphenyl) piperidin-1- tl)-3- oxopropyl) imidazolidine- 2,4-dione::US10550100, Compound 61
+Cc1ccccc1C1CCN(CC1)C(=O)CC[C@H]1NC(=O)NC1=O	(R)-5-(3-oxo- 3-(4-o- tolylpiperidin- 1- yl)propyl) imidazolidine- 2,4-dione::US10550100, Compound 58
+CC(C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1)[C@@]2(OC[C@H]1CC[C@@H]1CO)c1ccc(Cl)cc1	US10544132, Example 53
+C[C@@H](C[C@@]1(C)NC(=O)NC1=O)C(=O)N1CCC(CC1)c1cccc(C)c1	5-methyl-5-(2- methyl-3-oxo- 3-(4-m- tolylpiperidin- yl)propyl) imidazolidine- 2,4-dione::US10550100, Compound 27
+C[C@@H](C[C@@]1(C)NC(=O)NC1=O)C(=O)N1CCC(CC1)c1cc(Cl)cc(Cl)c1	5-(3-(4-(3,5- dichlorophenyl) piperidin-1- yl)-2-methyl- 3-oxopropyl)- 5-methyl- imidazolidine- 2,4-dione::US10550100, Compound 25
+C[C@@H](C[C@@]1(C)NC(=O)NC1=O)C(=O)N1CCC(CC1)c1ccc(Cl)cc1	5-(3-(4-(4- chlorophenyl) piperidin-1- yl)-2-methyl- 3-oxopropyl)- 5-methyl imidazolidine- 2,4-dione::US10550100, Compound 24
+C[C@@H](C[C@@]1(C)NC(=O)NC1=O)C(=O)N1CCC(CC1)c1ccccc1	(R)-5-methyl- 5-((S)-2- methyl-3-oxo- 3-(4- phenylpiperidin-1- yl)propyl) imidazolidine- 2,4-dione::US10550100, Compound 23
+COc1cc(cc(OC)c1Cl)C1CCN(CC1)C(=O)CCC1(C)NC(=O)NC1=O	5-(3-(4-(4- chloro-3,5- dimethoxy- phenyl)piperidin- 1-yl)-3- oxopropyl)-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 22
+COc1cc(cc(OC)c1Cl)C1CCN(CC1)C(=O)CC[C@H]1NC(=O)NC1=O	(R)-5-(3-(4-(4- chloro-3,5- dimethoxy- phenyl)piperidin- 1-yl)-3- oxopropyl) imidazolidine- 2,4-dione::US10550100, Compound 21
+C[C@@H](C[C@]1(NC(=O)NC1=O)C1CC1)C(=O)N1CCC(CC1)c1ccccc1	5-cyclopropyl- 52-methyl-3- oxo-3-(4- phenylpiperidin-1- yl)propyl) imidazolidine- 2,4-dione::US10550100, Compound 20
+Cc1cccc(c1)C1CCN(CC1)C(=O)CCC1(C)NC(=O)NC1=O	5-methyl-5-(3- oxo-3-(4-m- tolylpiperidin- 1- yl)propyl) imidazolidine- 2,4-dione::US10550100, Compound 15
+CC1(CCC(=O)N2CCC(CC2)c2ccccc2F)NC(=O)NC1=O	5-(3-(4-(2- fluorophenyl) piperidin-1-yl)- 3-oxopropyl)- 5-methyl- imidazolidine- 2,4-dione::US10550100, Compound 14
+CC1(CCC(=O)N2CCC(CC2)c2cccc(F)c2)NC(=O)NC1=O	5-(3-(4-(3- fluorophenyl) piperidin-1-yl)- 3-oxopropyl)- 5-methyl- imidazolidine- 2,4-dione::US10550100, Compound 13
+Cc1ccc(cc1)C1CCN(CC1)C(=O)CCC1(C)NC(=O)NC1=O	5-methyl-5-(3- oxo-3-(4-p- tolylpiperidin-  1-yl)propyl) imidazolidine- 2,4-dione::US10550100, Compound 8
+COc1ccccc1C1CCN(CC1)C(=O)CCC1(C)NC(=O)NC1=O	5-(3-(4-(2- methoxyphenyl) piperidin-1- yl)-3-oxo propyl)-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 6
+CC(C)C1(CCC(=O)N2CCC(CC2)c2ccccc2)NC(=O)NC1=O	5-isopropyl-5- (3-oxo-3-(4- phenylpiperidin-1- yl)propyl) imidazolidine- 2,4-dione::US10550100, Compound 5
+CC1(CCC(=O)N2CCC(CC2)c2ccccc2)NC(=O)NC1=O	5-methyl-5-(3- oxo-3-(4- phenylpiperidin-1- yl)propyl) imidazolidine- 2,4-dione::US10550100, Compound 4
+O=C(CCC1(NC(=O)NC1=O)c1ccccc1)N1CCC(CC1)c1ccccc1	5-(3-oxo-3-(4- phenylpiperidin- 1-yl)propyl)- 5-phenyl imidazolidine- 2,4-dione::US10550100, Compound 3
+O=C(CCC1NC(=O)NC1=O)N1CCC(CC1)c1ccccc1	5-[3-oxo-3-(4- phenyl-1- piperidyl) propyl] imidazolidine- 2,4-dione::US10550100, Compound 2
+O=C(CC[C@@H]1NC(=O)NC1=O)N1CCC(CC1)c1ccccc1	(S)-5-[(3-oxo- 3-((4S)- phenylpiperidin- 1-yl)propyl]) imidazolidine- 2,4-dione::US10550100, Compound 1
+OC(c1ncn[nH]1)c1ccc(F)cc1N1CCCC1	US10550089, Example 64
+C[C@@H](C[C@@]1(C)NC(=O)NC1=O)C(=O)N1CCC(CC1)c1ccc(F)cc1	5-(3-(4-(4- fluorophenyl) piperidin-1-yl)- 2-methyl-3- oxopropyl)-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 26
+C[C@@H](C[C@@]1(C)NC(=O)NC1=O)C(=O)N1CCC(CC1)c1cccc(F)c1	5-(3-(4-(3- fluorophenyl) piperidin-1-yl)- 2-methyl-3- oxopropyl)-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 28
+Cc1ccccc1C1CCN(CC1)C(=O)CCC1(C)NC(=O)NC1=O	5-methyl-5-(3- oxo-3-(4-o- tolylpiperidin-1- yl)propyl) imidazolidine-2,4- dione::US10550100, Compound 57
+C[C@@H](C[C@@]1(C)NC(=O)NC1=O)C(=O)N1CCC(CC1)c1cccc(Cl)c1	5-(3-(4-(3- chlorophenyl) piperidin-1- yl)-2-methyl- 3-oxopropyl)- 5-methyl- imidazolidine- 2,4-dione::US10550100, Compound 29
+CC1(CCC(=O)N2CCC(CC2)c2ccc(F)c(F)c2)NC(=O)NC1=O	5-(3-(4-(3,4- difluorophenyl) piperidin-1- yl)-3- oxopropyl)-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 56
+COc1cc(ccc1F)C1CCN(CC1)C(=O)CCC1(C)NC(=O)NC1=O	5-(3-(4-(4- fluoro-3- methoxyphenyl) piperidin-1- yl)-3- oxopropyl)-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 55
+CC1(CCC(=O)N2CCC(CC2)c2ccc(Cl)c(F)c2)NC(=O)NC1=O	5-(3-(4-(4- chloro-3- fluorophenyl) piperidin-1-yl)- 3-oxopropyl)- 5-methyl- imidazolidine- 2,4-dione::US10550100, Compound 54
+Fc1ccc(cc1F)C1CCN(CC1)C(=O)CC[C@H]1NC(=O)NC1=O	(R)-5-(3-(4- (3,4- difluorophenyl) piperidin-1- yl)-3- oxopropyl) imidazolidine- 2,4-dione::US10550100, Compound 53
+COc1cc(ccc1F)C1CCN(CC1)C(=O)CC[C@H]1NC(=O)NC1=O	(R)-5-(3-(4-(4- fluoro-3- methoxyphenyl) piperidin-1- yl)-3- oxopropyl) imidazolidine- 2,4-dione::US10550100, Compound 52
+Fc1cc(ccc1Cl)C1CCN(CC1)C(=O)CC[C@H]1NC(=O)NC1=O	(R)-5-(3-(4-(4- chloro-3- fluorophenyl) piperidin-1- yl)-3-oxopropyl) imidazolidine- 2,4-dione::US10550100, Compound 51
+COc1cc(F)cc(c1)C1CCN(CC1)C(=O)CCC1(C)NC(=O)NC1=O	5-(3-(4-(3- fluoro-5- methoxyphenyl) piperidin-1- yl)-3- oxopropyl)-5- methyl- imidazolidine-2,4- dione::US10550100, Compound 50
+Cc1c(Cl)cc(Cl)cc1C1CCN(CC1)C(=O)CCC1(C)NC(=O)NC1=O	5-(3-(4-(3,5- dichloro-2- methylphenyl) piperidin-1- yl)-3- oxopropyl)-5- methyl- imidazolidine-2,4- dione::US10550100, Compound 49
+Cc1c(Cl)cc(Cl)cc1C1CCN(CC1)C(=O)CC[C@H]1NC(=O)NC1=O	(R)-5-(3-(4- (3,5-dichloro- 2- methylphenyl) piperidin-1- yl)-3- oxopropyl) imidazolidine-2,4- dione::US10550100, Compound 48
+COc1cc(cc(F)c1Cl)C1CCN(CC1)C(=O)CCC1(C)NC(=O)NC1=O	5-(3-(4-(4- chloro-3- fluoro-5- methoxyphenyl) piperidin-1- yl)-3- oxopropyl)-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 47
+COc1cc(cc(F)c1Cl)C1CCN(CC1)C(=O)CC[C@H]1NC(=O)NC1=O	(R)-5-(3-(4-(4- chloro-3- fluoro-5- methoxyphenyl) piperidin-1- yl)-3-oxopropyl) imidazolidine-2,4- dione::US10550100, Compound 46
+COc1cc(cc(F)c1F)C1CCN(CC1)C(=O)CCC1(C)NC(=O)NC1=O	5-(3-(4-(3,4- difluoro-5- methoxyphenyl) piperidin-1- yl)-3- oxopropyl)-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 45
+COc1cc(Cl)ccc1C1CCN(CC1)C(=O)CCC1(C)NC(=O)NC1=O	5-(3-(4-(4- chloro-2- methoxyphenyl) piperidin-1- yl)-3- oxopropyl)-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 44
+COc1cc(cc(F)c1F)C1CCN(CC1)C(=O)CC[C@H]1NC(=O)NC1=O	(R)-5-(3-(4- (3,4-difluoro- 5-methoxy- phenyl)piperidin-1- yl)-3- oxopropyl) imidazolidine- 2,4-dione::US10550100, Compound 43
+COc1cc(Cl)ccc1C1CCN(CC1)C(=O)CC[C@H]1NC(=O)NC1=O	(R)-5-(3-(4-(4- chloro-2- methoxy- phenyl)piperidin-1- yl)-3- oxopropyl) imidazolidine- 2,4-dione::US10550100, Compound 42
+COc1ccc(Cl)cc1C1CCN(CC1)C(=O)CCC1(C)NC(=O)NC1=O	5-(3-(4-(5- chloro-2- methoxy- phenyl)piperidin-1- yl)-3- oxopropyl)-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 41
+COc1ccc(Cl)cc1C1CCN(CC1)C(=O)CC[C@H]1NC(=O)NC1=O	(R)-5-(3-(4-(5- chloro-2- methoxy- phenyl)piperidin-1- yl)-3- oxopropyl) imidazolidine- 2,4-dione::US10550100, Compound 40
+COc1ccc(OC)c(c1)C1CCN(CC1)C(=O)CCC1(C)NC(=O)NC1=O	5-(3-(4-(2,5- dimethoxy- phenyl)piperidin- 1-yl)-3- oxopropyl)-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 39
+COc1cc(OC)cc(c1)C1CCN(CC1)C(=O)CCC1(C)NC(=O)NC1=O	5-(3-(4-(3,5- dimethoxy- phenyl)piperidin- 1-yl)-3- oxopropyl)-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 38
+COc1cc(C2CCN(CC2)C(=O)CCC2(C)NC(=O)NC2=O)c(C)cc1Cl	5-(3-(4-(4- chloro-5- methoxy-2- methylphenyl) piperidin-1- yl)-3- oxopropyl)-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 37
+COc1cc(ccc1Cl)C1CCN(CC1)C(=O)CCC1(C)NC(=O)NC1=O	5-(3-(4-(4- chloro-3- methoxyl- phenyl)piperidin-1- yl)-3- oxopropyl)-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 36
+COc1ccc(OC)c(c1)C1CCN(CC1)C(=O)CC[C@H]1NC(=O)NC1=O	(R)-5-(3-(4- (2,5-dimethoxy- phenyl)piperidin- 1-yl)-3- oxopropyl) imidazolidine- 2,4-dione::US10550100, Compound 35
+COc1cc(OC)cc(c1)C1CCN(CC1)C(=O)CC[C@H]1NC(=O)NC1=O	(R)-5-(3-(4- (3,5-dimethoxy- phenyl)piperidin- 1-yl)-3- oxopropyl) imidazolidine- 2,4-dione::US10550100, Compound 34
+COc1cc(C2CCN(CC2)C(=O)CC[C@H]2NC(=O)NC2=O)c(C)cc1Cl	(R)-5-(3-(4-(4- chloro-5- methoxy-2- methylphenyl) piperidin-1- yl)-3- oxopropyl) imidazolidine- 2,4-dione::US10550100, Compound 33
+COc1cc(ccc1Cl)C1CCN(CC1)C(=O)CC[C@H]1NC(=O)NC1=O	(R)-5-(3-(4-(4- chloro-3- methoxyphenyl) piperidin-1- yl)-3- oxopropyl) imidazolidine- 2,4-dione::US10550100, Compound 32
+COc1ccc(cc1)C1CCN(CC1)C(=O)CCC1(C)NC(=O)NC1=O	5-(3-(4-(4- methoxyphenyl) piperidin-1- yl)-3- oxopropyl)-5- methyl- imidazolidine- 2,4-dione::US10550100, Compound 31
+COc1ccc(cc1)C1CCN(CC1)C(=O)CC[C@H]1NC(=O)NC1=O	(R)-5-(3-(4-(4- methoxyphenyl) piperidin-1- yl)-3- oxopropyl) imidazolidine- 2,4-dione::US10550100, Compound 30
+CC(C)(O)c1cc2C(=O)N(Cc3ccc(cc3)C#C)[C@](OCC3(CO)CC3)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 21::US10544132, Example 24
+CC(C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1)[C@@]2(OCC1(CNS(C)(=O)=O)CC1)c1ccc(Cl)cc1	US10544132, Example 19
+CC(C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1)[C@@]2(OCC1(CC1)C#N)c1ccc(Cl)cc1	US10544132, Example 18
+CC(C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1)C2(OCc1cn[nH]c1)c1ccc(Cl)cc1	US10544132, Example 17
+CC(C)(O)CCO[C@]1(N(Cc2ccc(Cl)cc2)C(=O)c2cc(ccc12)C(C)(C)O)c1ccc(Cl)cc1	US10544132, Example 16
+C[C@H](N1C(=O)c2cc(ccc2[C@]1(OCC1(CO)CC1)c1ccc(Cl)cc1)C(C)(O)CO)c1ccc(Cl)cc1	US10544132, Example 15
+CC(C)(O)c1ccc2c(c1)C(=O)N([C@@H](CC(O)=O)c1ccc(Cl)cc1)[C@@]2(OCC1(CO)CC1)c1ccc(Cl)cc1	US10544132, Example 14
+CN(C)C[C@@](C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1)[C@@]2(OCC1(CO)CC1)c1ccc(Cl)cc1	(3R)-3-(4-chlorophenyl)-2-[(4-chlorophenyl)methyl]-6-[1-(dimethylamino)-2-hydroxypropan-2-yl]-3-{[1-(hydroxymethyl)cyclopropyl]methoxy}-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 13
+CN(C)C[C@](C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1)[C@@]2(OCC1(CO)CC1)c1ccc(Cl)cc1	(3R)-3-(4-chlorophenyl)-2-[(4-chlorophenyl)methyl]-6-[1-(dimethylamino)-2-hydroxypropan-2-yl]-3-{[1-(hydroxymethyl)cyclopropyl]methoxy}-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 12
+COC[C@@](C)(O)c1ccc2c(c1)C(=O)N([C@@H](C)c1ccc(Cl)cc1)[C@@]2(OCC1(CO)CC1)c1ccc(Cl)cc1	(3R)-3-(4-chlorophenyl)-2-[(1S)-1-(4-chlorophenyl)ethyl]-6-(2-hydroxy-1-methoxypropan-2-yl)-3-{[1-(hydroxymethyl)cyclopropyl]methoxy}-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 11
+COC[C@](C)(O)c1ccc2c(c1)C(=O)N([C@@H](C)c1ccc(Cl)cc1)[C@@]2(OCC1(CO)CC1)c1ccc(Cl)cc1	(3R)-3-(4-chlorophenyl)-2-[(1S)-1-(4-chlorophenyl)ethyl]-6-(2-hydroxy-1-methoxypropan-2-yl)-3-{[1-(hydroxymethyl)cyclopropyl]methoxy}-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 10
+C[C@@](O)(CO)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1)[C@@]2(OCC1(CO)CC1)c1ccc(Cl)cc1	(3R)-3-(4-chlorophenyl)-2-[(4-chlorophenyl)methyl]-6-(1,2-dihydroxypropan-2-yl)-3-{[1-(hydroxymethyl)cyclopropyl]methoxy}-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 9
+C[C@](O)(CO)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1)[C@@]2(OCC1(CO)CC1)c1ccc(Cl)cc1	(3R)-3-(4-chlorophenyl)-2-[(4-chlorophenyl)methyl]-6-(1,2-dihydroxypropan-2-yl)-3-{[1-(hydroxymethyl)cyclopropyl]methoxy}-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 8
+C[C@H](N1C(=O)c2cc(ccc2[C@]1(OCC1(CO)CC1)c1ccc(Cl)cc1)C(C)(C)O)c1ccc(Cl)cc1	US10544132, Example 7
+C[C@H](N1C(=O)c2cc(ccc2[C@]1(OCC(C)(O)CO)c1ccc(Cl)cc1)C(C)(C)O)c1ccc(Cl)cc1	US10544132, Example 6
+CC(C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1)[C@@]2(OCC1(CC1)C(O)=O)c1ccc(Cl)cc1	US10544132, Example 5
+CC(C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1)[C@@]2(OCC1(CO)COC1)c1ccc(Cl)cc1	US10544132, Example 4
+CC(C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1)[C@@]2(OCCO)c1ccc(Cl)cc1	US10544132, Example 3
+CC(C)(O)c1cc2C(=O)N(Cc3ccc(Cl)cc3)[C@](OCC3(CO)CC3)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 2
+CC(C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1)[C@@]2(OCC1(CO)CC1)c1ccc(Cl)cc1	US10544132, Example 1::US10544132, Example 48
+CC(C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(cc1)C#C)[C@@]2(OCC1(CO)CC1)c1ccc(Cl)cc1	US10544132, Example 20
+C[C@](O)(CO)c1cc2C(=O)N(Cc3ccc(cc3)C#C)[C@](OCC3(CO)CC3)(c2c(F)c1)c1ccc(Cl)cc1	(3R)-3-(4-chlorophenyl)-6-(1,2-dihydroxypropan-2-yl)-2-[(4-ethynylphenyl)methyl]-4-fluoro-3-{[1-(hydroxymethyl)cyclopropyl]methoxy}-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 22
+CC(C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1)[C@@]2(OC[C@H]1CC[C@H]1CO)c1ccc(Cl)cc1	US10544132, Example 52
+CC(C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1)[C@@]2(OCC(F)(F)CO)c1ccc(Cl)cc1	US10544132, Example 51
+CC(C)(O)c1cc2C(=O)N(Cc3ccc(Cl)cc3S(C)(=O)=O)[C@](OCC3(CO)CC3)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 50
+CC(C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1)[C@@]2(OCCCO)c1ccc(Cl)cc1	US10544132, Example 49
+CO[C@]1(N(Cc2ccc(Cl)cc2)C(=O)c2cc(ccc12)C(C)(C)O)c1ccc(Cl)cc1	US10544132, Example 47
+C[C@H](N1C(=O)c2cc(ccc2[C@]1(OC1COC[C@@H]1O)c1ccc(Cl)cc1)C(C)(C)O)c1ccc(Cl)cc1	(3R)-3-(4-Chlorophenyl)-2-[(1S)-1-(4-chlorophenyl)ethyl]-3-{[(3S,4R)-4-hydroxyoxolan-3-yl]oxy}-6-(2-hydroxypropan-2-yl)-2,3-dihydro-1H-isoindol-1-one and (3R)-3-(4-chlorophenyl)-2-[(1S)-1-(4-chlorophenyl)ethyl]-3-{[(3R,4S)-4-hydroxyoxolan-3-yl]oxy}-6-(2-hydroxypropan-2-yl)-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 46
+C[C@H](N1C(=O)c2cc(ccc2[C@]1(OC1COC[C@H]1O)c1ccc(Cl)cc1)C(C)(C)O)c1ccc(Cl)cc1	(3R)-3-(4-Chlorophenyl)-2-[(1S)-1-(4-chlorophenyl)ethyl]-3-{[(3S,4R)-4-hydroxyoxolan-3-yl]oxy}-6-(2-hydroxypropan-2-yl)-2,3-dihydro-1H-isoindol-1-one and (3R)-3-(4-chlorophenyl)-2-[(1S)-1-(4-chlorophenyl)ethyl]-3-{[(3R,4S)-4-hydroxyoxolan-3-yl]oxy}-6-(2-hydroxypropan-2-yl)-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 45
+C[C@](O)(CN1CCNCC1)c1cc2C(=O)N(Cc3ccc(Cl)cc3S(C)(=O)=O)[C@](OCC3(CO)CC3)(c2c(F)c1)c1ccc(Cl)cc1	(3R)-2-[(4-chloro-2-methanesulfonylphenyl)methyl]-3-(4-chlorophenyl)-4-fluoro-6-[2-hydroxy-1-(piperazin-1-yl)propan-2-yl]-3-{[1-(hydroxymethyl)cyclopropyl]methoxy}-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 44
+C[C@@](O)(CN1CCNCC1)c1cc2C(=O)N(Cc3ccc(Cl)cc3S(C)(=O)=O)[C@](OCC3(CO)CC3)(c2c(F)c1)c1ccc(Cl)cc1	(3R)-2-[(4-chloro-2-methanesulfonylphenyl)methyl]-3-(4-chlorophenyl)-4-fluoro-6-[2-hydroxy-1-(piperazin-1-yl)propan-2-yl]-3-{[1-(hydroxymethyl)cyclopropyl]methoxy}-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 43
+C[C@](O)(C1CCOCC1)c1cc2C(=O)N(Cc3ccc(Cl)cc3S(C)(=O)=O)[C@](OCC3(CO)CC3)(c2c(F)c1)c1ccc(Cl)cc1	(3R)-2-[(4-chloro-2-methanesulfonylphenyl)methyl]-3-(4-chlorophenyl)-4-fluoro-6-[1-hydroxy-1-(oxan-4-yl)ethyl]-3-{[1-(hydroxymethyl)cyclopropyl]methoxy}-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 42
+C[C@@](O)(C1CCOCC1)c1cc2C(=O)N(Cc3ccc(Cl)cc3S(C)(=O)=O)[C@](OCC3(CO)CC3)(c2c(F)c1)c1ccc(Cl)cc1	(3R)-2-[(4-chloro-2-methanesulfonylphenyl)methyl]-3-(4-chlorophenyl)-4-fluoro-6-[1-hydroxy-1-(oxan-4-yl)ethyl]-3-{[1-(hydroxymethyl)cyclopropyl]methoxy}-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 41
+CC(C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1)[C@@]2(OC[C@@H]1CCOC1)c1ccc(Cl)cc1	(3R)-3-(4-chlorophenyl)-2-[(4-chlorophenyl)methyl]-6-(2-hydroxypropan-2-yl)-3-[(oxolan-3-yl)methoxy]-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 40
+CC(C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1)[C@@]2(OC[C@H]1CCOC1)c1ccc(Cl)cc1	(3R)-3-(4-chlorophenyl)-2-[(4-chlorophenyl)methyl]-6-(2-hydroxypropan-2-yl)-3-[(oxolan-3-yl)methoxy]-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 39
+CC(C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1)[C@@]2(O[C@H]1CCOC1)c1ccc(Cl)cc1	(3R)-3-(4-Chlorophenyl)-2-[(4-chlorophenyl)methyl]-6-(2-hydroxypropan-2-yl)-3-(oxolan-3-yloxy)-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 38
+CC(C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1)[C@@]2(O[C@@H]1CCOC1)c1ccc(Cl)cc1	(3R)-3-(4-Chlorophenyl)-2-[(4-chlorophenyl)methyl]-6-(2-hydroxypropan-2-yl)-3-(oxolan-3-yloxy)-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 37
+CC(C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1S(C)(=O)=O)[C@@]2(OCC1(CO)CC1)c1ccc(Cl)cc1	 (3R)-2-[(4-chloro-2-methanesulfonylphenyl)methyl]-3-(4-chlorophenyl)-3-({1-[hydroxy(2H2)methyl]cyclopropyl}(2H2)methoxy)-6-(2-hydroxypropan-2-yl)-2,3-dihydro-1H-isoindol-1-one::US10544132, Example 36
+CC(C)(O)c1cc2C(=O)N(Cc3ccc(Cl)cc3S(C)(=O)=O)C(OCC3(CC3)C(N)=O)(c2c(F)c1)c1ccc(Cl)cc1	US10544132, Example 35
+CC(C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1S(=O)(=O)N1CCOCC1)[C@@]2(OCC1(CO)CC1)c1ccc(Cl)cc1	US10544132, Example 34
+CC(C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1C(O)=O)[C@@]2(OCC1(CO)CC1)c1ccc(Cl)cc1	US10544132, Example 33
+COCC1(CO[C@]2(N(Cc3ccc(Cl)cc3)C(=O)c3cc(ccc23)C(C)(C)O)c2ccc(Cl)cc2)CC1	US10544132, Example 31
+CN(C)C(=O)CO[C@]1(N(Cc2ccc(Cl)cc2)C(=O)c2cc(ccc12)C(C)(C)O)c1ccc(Cl)cc1	US10544132, Example 30
+CC(C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1)[C@@]2(OCC1(O)CC1)c1ccc(Cl)cc1	US10544132, Example 29
+CC(O)(CO)c1ccc2c(c1)C(=O)N(Cc1ccc(cc1)C#N)[C@]2(C)OCC1(CO)CC1	4-{[(1R)-1-(4-chlorophenyl)-5-(1,2-dihydroxypropan-2-yl)-1-{[1-(hydroxymethyl)cyclopropyl]methoxy}-3-oxo-2,3-dihydro-1H-isoindol-2-yl]methyl}benzonitrile::US10544132, Example 28
+C[C@](O)(CO)c1ccc2c(c1)C(=O)N(Cc1ccc(cc1)C#N)[C@]2(C)OCC1(CO)CC1	4-{[(1R)-1-(4-chlorophenyl)-5-(1,2-dihydroxypropan-2-yl)-1-{[1-(hydroxymethyl)cyclopropyl]methoxy}-3-oxo-2,3-dihydro-1H-isoindol-2-yl]methyl}benzonitrile::US10544132, Example 27
+CC(C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(Cl)cc1)[C@@]2(OCC1(C)COC1)c1ccc(Cl)cc1	US10544132, Example 26
+CC(C)(O)c1ccc2c(c1)C(=O)N(Cc1ccc(cc1)C#N)[C@@]2(OCC1(CO)CC1)c1ccc(Cl)cc1	US10544132, Example 25
+CN(C)C(=O)c1cccc(c1)-c1cc2[nH]c(Nc3cccc(c3)C(=O)NO)nc2cc1C(F)(F)F	3-(2-((3- (hydroxycarbamoyl)phenyl)amino)-5- (trifluoromethyl)-1H-benzo[d]imidazol-6- yl)-N,N-dimethylbenzamide::US10508088, Example 36-18::US10538496, Compound 36-18
+ONC(=O)c1cccc(Nc2nc3cc(c(cc3[nH]2)-c2ccc(cc2)N2CCOCC2)C(F)(F)F)c1	N-hydroxy-3-((6-(4-morpholinophenyl)-5- (trifluoromethyl)-1H-benzo[d]imidazol-2- yl)amino)benzamide::US10508088, Example 36-19::US10538496, Compound 36-19
+ONC(=O)c1cccc(Nc2nc3cc(c(cc3[nH]2)-c2ccoc2)C(F)(F)F)c1	3-((6-(furan-3-yl)-5-(trifluoromethyl)-1H- benzo[d]imidazol-2-yl)amino)-N- hydroxybenzamide::US10508088, Example 36-20::US10538496, Compound 36-20
+Nc1nnc([nH]1)N1CCC(CC1)N1CCCCC1Cc1ccc(Cl)cc1	(R)-5-(2-(4-chlorobenzyl)-[1,4&#8242;-bipiperidin]-1&#8242;-yl)-4H-1,2,4-triazol-3-amine ::US10208020, Example 15::US10538508, Example 15::US9944624, Ex. 15
+COC(C)(C)[C@H]1CN(C(Cc2ccc(Cl)cc2)CO1)C1CCN(CC1)c1nnc(N)[nH]1	5-(4-((2R,5S)-5-(4-chlorobenzyl)-2-(2-methoxypropan-2-yl)morpholino)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10208020, Example 14::US10538508, Example 14::US9944624, Ex. 14
+CC(C)(O)[C@H]1CN(C(Cc2ccc(Cl)cc2)CO1)C1CCN(CC1)c1nnc(N)[nH]1	2-((2R,5S)-4-(1-(5-amino-4H-1,2,4-triazol-3-yl)piperidin-4-yl)-5-(4-chlorobenzyl)morpholin-2-yl)propan-2-ol ::US10208020, Example 13::US10538508, Example 13::US9944624, Ex. 13
+CNC(=O)[C@H]1CN(C(Cc2ccc(Cl)cc2)CO1)C1CCN(CC1)c1nnc(N)[nH]1	(2R,5S)-4-(1-(5-amino-4H-1,2,4-triazol-3-yl)piperidin-4-yl)-5-(4-chlorobenzyl)-N-methylmorpholine-2-carboxamide ::US10208020, Example 12::US10538508, Example 12::US9944624, Ex. 12
+CCOC[C@H]1CN(C(Cc2ccc(Cl)cc2)CO1)C1CCN(CC1)c1nnc(N)[nH]1	5-(4-((2R,5S)-5-(4-chlorobenzyl)-2-(ethoxymethyl)morpholino)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10208020, Example 11::US10538508, Example 11::US9944624, Ex. 11
+COC[C@H]1CN(C(Cc2ccc(Cl)cc2)CO1)C1CCN(CC1)c1nnc(N)[nH]1	5-(4-((2R,5S)-5-(4-chlorobenzyl)-2-(methoxymethyl)morpholino)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10208020, Example 10::US10538508, Example 10::US9944624, Ex. 10
+NC(=O)[C@H]1CN(C(Cc2ccc(Cl)cc2)CO1)C1CCN(CC1)c1nnc(N)[nH]1	(2R,5S)-4-(1-(5-amino-4H-1,2,4-triazol-3-yl)piperidin-4-yl)-5-(4-chlorobenzyl)morpholine-2-carboxamide ::US10208020, Example 9::US10538508, Example 9::US9944624, Ex. 9
+NC(=O)[C@@H]1CN(C(Cc2ccc(Cl)cc2)CO1)C1CCN(CC1)c1nnc(N)[nH]1	Synthesis of (2S,5S)-4-(1-(5-amino-4H-1,2,4-triazol-3-yl)piperidin-4-yl)-5-(4-chlorobenzyl)morpholine-2-carboxamide ::US10208020, Example 8::US10538508, Example 8::US9944624, Ex. 8
+CC(C)C[C@H]1CN(C(Cc2ccc(Cl)cc2)CO1)C1CCN(CC1)c1nnc(N)[nH]1	Synthesis of 5-(4-((2S,5S)-5-(4-chlorobenzyl)-2-isobutylmorpholino)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10208020, Example 7::US10538508, Example 7::US9944624, Ex. 7
+CC(C)[C@H]1CN(C(Cc2ccc(Cl)cc2)CO1)C1CCN(CC1)c1nnc(N)[nH]1	Synthesis of 5-(4-((2S,5S)-5-(4-chlorobenzyl)-2-isopropylmorpholino)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10208020, Example 6::US10538508, Example 6::US9944624, Ex. 6
+CC[C@H]1CN(C(Cc2ccc(Cl)cc2)CO1)C1CCN(CC1)c1nnc(N)[nH]1	Synthesis of 5-(4-((2S,5S)-5-(4-chlorobenzyl)-2-ethylmorpholino)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10208020, Example 5::US10538508, Example 5::US9944624, Ex. 5
+C[C@H]1CN(C(Cc2ccc(Cl)cc2)CO1)C1CCN(CC1)c1nnc(N)[nH]1	Synthesis of 5-(4-((2S,5S)-5-(4-chlorobenzyl)-2-methylmorpholino)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10208020, Example 4::US10538508, Example 4::US9944624, Ex. 4
+Nc1nnc([nH]1)N1CCC(CC1)N1CCOCC1Cc1ccc(Br)cc1	Synthesis of (S)-5-(4-(3-(4-bromobenzyl)morpholino)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10208020, Example 3::US10538508, Example 3::US9944624, Ex. 3
+Nc1nnc([nH]1)N1CCC(CC1)N1CCOCC1Cc1ccc(Cl)cc1	(S)-5-(4-(3-(4- chlorobenzyl)morpholino) piperidin-1-yl)-4H-1,2,4- triazol-3-amine::US10208020, Example 1::US10208020, Example 2::US10538508, Example 2::US9944624, Ex. 2
+CCOC(=O)C1CCC(Cc2ccc(Cl)cc2)N(C1)C1CCN(CC1)c1nnc(N)[nH]1	US10208020, Example 16::US10538508, Example 16::US9944624, Ex. 16::ethyl (6R)-1&#8242;-(5-amino-4H-1,2,4-triazol-3-yl)-6-(4-chlorobenzyl)-[1,4&#8242;-bipiperidine]-3-carboxylate 
+CS(=O)(=O)NCCOc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	US10538497, Example 214
+CN1CC(Cc2ccc(Cl)cc2)N(C[C@@H]1CO)C1CCN(CC1)c1nnc(N)[nH]1	((2R,5S)-4-(1-(5-amino-4H-1,2,4-triazol-3-yl)piperidin-4-yl)-5-(4-chlorobenzyl)-1-methylpiperazin-2-yl)methanol ::US10538508, Example 30::US9944624, Ex. 30
+CC(C)CN1CCN(C(Cc2ccc(Cl)cc2)C1)C1CCN(CC1)c1nnc(N)[nH]1	(S)-5-(4-(2-(4-chlorobenzyl)-4-isobutylpiperazin-1-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10538508, Example 29::US9944624, Ex. 29
+CN1CCN(C(Cc2ccc(Cl)cc2)C1)C1CCN(CC1)c1nnc(N)[nH]1	(S)-5-(4-(2-(4-chlorobenzyl)-4-methylpiperazin-1-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10538508, Example 28::US9944624, Ex. 28
+C[C@H]1CN(C(Cc2ccc(Cl)cc2)CN1C)C1CCN(CC1)c1nnc(N)[nH]1	5-(4-((2S,5S)-2-(4-chlorobenzyl)-4,5-dimethylpiperazin-1-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10538508, Example 27::US9944624, Ex. 27
+Nc1nnc([nH]1)N1CCC(CC1)N1CCNCC1Cc1ccc(Cl)cc1	(S)-5-(4-(2-(4-chlorobenzyl)piperazin-1-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10538508, Example 26::US9944624, Ex. 26
+Nc1nnc([nH]1)N1CCC(CC1)N1CC(=O)NCC1Cc1ccc(Cl)cc1	(S)-4-(1-(5-amino-4H-1,2,4-triazol-3-yl)piperidin-4-yl)-5-(4-chlorobenzyl)piperazin-2-one ::US10208020, Example 25::US10538508, Example 25::US9944624, Ex. 25
+Nc1nnc([nH]1)N1CCC(CC1)N1CCC[C@@H]1c1cccc(Cl)c1	(R)-5-(4-(2-(4-chlorobenzyl)pyrrolidin-1-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10538508, Example 24
+Nc1nnc([nH]1)N1CCC(CC1)N1C[C@@H](F)[C@@H]1Cc1ccc(Cl)cc1	5-(4-((2S,3R)-2-(4-chlorobenzyl)-3-fluoroazetidin-1-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10208020, Example 23::US10538508, Example 23::US9944624, Ex. 23
+CO[C@H]1CN([C@H]1Cc1ccc(Cl)cc1)C1CCN(CC1)c1nnc(N)[nH]1	5-(4-((2S,3S)-2-(4-chlorobenzyl)-3-methoxyazetidin-1-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10208020, Example 22::US10538508, Example 22::US9944624, Ex. 22
+Nc1nnc([nH]1)N1CCC(CC1)N1CCCCC1C(O)c1ccc(Cl)cc1	(1&#8242;-(5-amino-4H-1,2,4-triazol-3-yl)-[1,4&#8242;-bipiperidin]-2-yl)(4-chlorophenyl)methanol ::US10208020, Example 21::US10538508, Example 21::US9944624, Ex. 21
+CO[C@H]1CCN(C(Cc2ccc(Cl)cc2)C1)C1CCN(CC1)c1nnc(N)[nH]1	5-((2S,4S)-2-(4-chlorobenzyl)-4-methoxy-[1,4&#8242;-bipiperidin]-1&#8242;-yl)-4H-1,2,4-triazol-3-amine ::US10208020, Example 20::US10538508, Example 20::US9944624, Ex. 20
+CO[C@@H]1CCN(C(Cc2ccc(Cl)cc2)C1)C1CCN(CC1)c1nnc(N)[nH]1	5-((2S,4R)-2-(4-chlorobenzyl)-4-methoxy-[1,4&#8242;-bipiperidin]-1&#8242;-yl)-4H-1,2,4-triazol-3-amine ::US10208020, Example 19::US10538508, Example 19::US9944624, Ex. 19
+CC1(CCC(Cc2ccc(Cl)cc2)N(C1)C1CCN(CC1)c1nnc(N)[nH]1)C(O)=O	(6R)-1&#8242;-(5-amino-4H-1,2,4-triazol-3-yl)-6-(4-chlorobenzyl)-3-methyl-[1,4&#8242;-bipiperidine]-3-carboxylic acid ::US10208020, Example 18::US10538508, Example 18::US9944624, Ex. 18
+Nc1nnc([nH]1)N1CCC(CC1)N1CC(CCC1Cc1ccc(Cl)cc1)C(O)=O	(6R)-1&#8242;-(5-amino-4H-1,2,4-triazol-3-yl)-6-(4-chlorobenzyl)-[1,4&#8242;-bipiperidine]-3-carboxylic acid ::US10208020, Example 17::US10538508, Example 17::US9944624, Ex. 17
+NCCOc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	US10538497, Example 213
+FC(F)(F)c1cc2[nH]c(Nc3cccc(c3)C(=O)NOC(=O)NCc3ccccc3)nc2cc1-c1ccccc1	N-((benzylcarbamoyl)oxy)-3-((5-phenyl-6- (trifluoromethyl)-1H-benzo[d]imidazol-2- yl)amino)benzamide::US10508088, Example 37-1::US10538496, Compound 37-1
+NS(=O)(=O)NCCSc1nonc1\C(Nc1ccc(F)c(c1)C#N)=N\O	N-(3-cyano-4-fluorophenyl)-N'- hydroxy-4-{[2- (sulfamoylamino)ethyl]sulfanyl}- 1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 181
+C[C@H](CSc1nonc1\C(Nc1ccc(F)c(c1)C#N)=N\O)NC(C)=O	N-[(1R)-2-({4-[N-(3-cyano-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)-1- methylethyl]acetamide::US10538497, Example 179
+O\N=C(/Nc1ccc(F)c(c1)C#N)c1nonc1SCCNS(=O)(=O)C1CC1	N-(3-cyano-4-fluorophenyl)-4- ({2- [(cyclopropylsulfonyl)amino] ethyl}sulfanyl)-N'-hydroxy-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 178
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCC(=O)N[C@@H]1C[C@H](O)[C@H](O)C1	2-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2.5- oxadiazol-3-yl}sulfanyl)-N- [(1r,3R,4S)-3,4- dihydroxycyclopentyl]acetamide::US10538497, Example 177
+CC(O)C(CO)NC(=O)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	2-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)-N-[2- hydroxy-1- (hydroxymethyl)propyl]acetamide::US10538497, Example 176
+OC[C@@H](O)CNC(=O)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	2-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiaxol-3-yl}sulfanyl)-N- [(2S)-2,3- dihydroxypropyl]acetamide::US10538497, Example 175
+CC(CO)(CO)NC(=O)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	2-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)-N-[2- hydroxy-1-(hydroxymethyl)-1- methylethyl]acetamide::US10538497, Example 174
+CC(=O)N[C@H](CO)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	N-[(1R)-2-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)-1- (hydroxymethyl)ethyl]acetamide::US10538497, Example 173
+Fc1ccc(NC(=N)c2nonc2SCCn2ccnc2)cc1Br	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-{[2-(1H-imidazol-1- yl)ethyl]sulfanyl}-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 172
+CS(=O)(=O)NCCSc1nonc1\C(Nc1ccc(F)c(c1)C#N)=N\O	N-(3-cyano-4-fluorophenyl)-N'- hydroxy-4-({2- [(methylsulfonyl)amino]ethyl} sulfanyl)-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 171
+OC[C@H](O)CSc1nonc1\C(Nc1ccc(F)c(Cl)c1)=N\O	N-(3-chloro-4-fluorophenyl)-4- {[(2S)-2,3- dihydroxypropyl]sulfanyl}-N'- hydroxy-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 170
+OC[C@@H](O)CSc1nonc1\C(Nc1ccc(F)c(Cl)c1)=N\O	N-(3-chloro-4-fluorophenyl)-4- {[(2R)-2,3- dihydroxypropyl]sulfanyl}-N'- hydroxy-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 169
+OC[C@@H](O)CSc1nonc1\C(Nc1ccc(F)c(c1)C(F)F)=N\O	N-[3-(difluoromethyl)-4- fluorophenyl]-4-{[(2R)-2,3- dihydroxypropyl]sulfanyl}-N'- hydroxy-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 168
+OC[C@H](O)CSc1nonc1\C(Nc1ccc(F)c(c1)C(F)F)=N\O	N-[3-(difluoromethyl)-4- fluorophenyl]-4-{[(2S)-2,3- dihydroxypropyl]sulfanyl}-N'- hydroxy-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 167
+OC[C@H](O)CSc1nonc1\C(Nc1ccc(F)c(c1)C(F)(F)F)=N\O	4-{[(2S)-2,3- dihydroxypropyl]sulfanyl}-N-[4- fluoro-3- (trifluoromethyl)phenyl]-N'- hydroxy-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 166
+OC[C@@H](O)CSc1nonc1\C(Nc1ccc(F)c(c1)C(F)(F)F)=N\O	4-{[(2R)-2,3- dihydroxypropyl]sulfanyl}-N-[4- fluoro-3- (trifluoromethyl)phenyl]-N'- hydroxy-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 165
+CN1CCN(CCSc2nonc2C(=N)Nc2ccc(F)c(Br)c2)CC1	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-{[2-(4- methvlpiperazin-1- yl)ethyl]sulfanyl}-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 164
+Fc1ccc(NC(=N)c2nonc2SCCN2CCNCC2)cc1Br	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-[(2-piperazin-1- ylethyl)sulfanyl]-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 163
+Fc1ccc(NC(=N)c2nonc2SCC2CCOCC2)cc1Br	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-[(tetrahydro-2H- pyran-4-ylmethyl)sulfanyl]- 1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 162
+CC#CCSc1nonc1C(=N)Nc1ccc(F)c(Br)c1	N-(3-bromo-4-fluorophenyl)-4- (but-2-yn-1-ylsulfanyl)-N'- hydroxy-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 161
+FCCSc1nonc1C(=N)Nc1ccc(F)c(Br)c1	N-(3-bromo-4-fluorophenyl)-4- [(2-fluoroethyl)sulfanyl]-N'- hydroxy-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 160
+Fc1ccc(NC(=N)c2nonc2SCc2c[nH]cn2)cc1Br	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-[(1H-imidazol-4- ylmethyl)sulfanyl]-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 159
+Fc1ccc(NC(=N)c2nonc2SCC2CCCNC2)cc1Br	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-[(piperidin-3- ylmethyl)sulfanyl]-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 158
+Fc1ccc(NC(=N)c2nonc2SCc2nccs2)cc1Br	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-[(1,3-thiazol-2- ylmethyl)sulfanyl]-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 157
+Fc1ccc(NC(=N)c2nonc2SCc2ncon2)cc1Br	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-[(1,2,4-oxadiazol-3- ylmethyl)sulfanyl]-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 156
+Cc1nc(CSc2nonc2C(=N)Nc2ccc(F)c(Br)c2)no1	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-{[(5-methyl-1,2,4- oxadiazol-3-yl)methyl]sulfanyl}- 1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 155
+Fc1ccc(NC(=N)c2nonc2SCCn2cncn2)cc1Br	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-{[2-(1H-1,2,4-triazol- 1-yl)ethyl]sulfanyl}-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 154
+Cn1ccnc1CSc1nonc1C(=N)Nc1ccc(F)c(Br)c1	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-{[(1-methyl-1H- imidazol-2-yl)methyl]sulfanyl}- 1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 153
+C[C@@H](CSc1nonc1\C(Nc1ccc(F)c(c1)C#N)=N\O)NC(C)=O	N-[(1S)-2-({4-[N-(3-cyano-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)-1- methylethyl]acetamide::US10538497, Example 180
+OCC(=O)NCCSc1nonc1\C(Nc1ccc(F)c(c1)C#N)=N\O	N-[2-({4-[N-(3-cyano-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)ethyl]- 2-hydroxyacetamide::US10538497, Example 182
+NS(=O)(=O)NCCOc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	US10538497, Example 212
+CS(=O)(=O)NCCSc1nonc1\C(Nc1ccc(F)c(c1)C(F)F)=N\O	N-[3-(difluoromethyl)-4- fluorophenyl]-N'-hydroxy-4-({2- [(methylsulfonyl)amino]ethyl} sulfanyl)-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 183
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nsnc1SCCNc1c(NC2CC2)c(=O)c1=O	N-(3-bromo-4-fluorophenyl)-4- [(2-{[2-(cyclopropylamino)-3,4- dioxocyclobut-1-en-1- yl]amino}ethyl)sulfanyl]-N'- hydroxy-1,2,5-thiadiazole-3- carboximidamide::US10538497, Example 211
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nsnc1SCCNc1c(NCC2CC2)c(=O)c1=O	N-(3-bromo-4-fluorophenyl)-4- {[2-({2- [(cyclopropylmethyl)amino]-3,4- dioxocyclobut-1-en-1- yl}amino)ethyl]sulfanyl}-N'- hydroxy-1,2,5-thiadiazole-3- carboximidamide::US10538497, Example 210
+CN(C)CCSc1nsnc1\C(Nc1ccc(F)c(Br)c1)=N\O	N-(3-bromo-4-fluorophenyl)-4- {[2- (dimethylamino)ethyl]sulfanyl}- N'-hydroxy-1,2,5-thiadiazole-3- carboximidamide::US10538497, Example 209
+CC(C)(NC(=O)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O)C(O)CO	2-((4-(N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl)-1,2,5- oxadiazol-3-yl)thio)-N-(3,4- dihydroxy-2-methylbutan-2- yl)acetamide::US10538497, Example 208
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCC(=O)NCC(O)CN1CCOCC1	2-((4-(N-(3-bromo-4- fluorophenyl)-N''- hydroxycarbamimidoyl)-1,2,5- oxadiazol-3-yl)thio)-N-(2- hydroxy-3- morpholinopropyl)acetamide (peak 1)::US10538497, Example 206::US10538497, Example 207
+C[C@@H](CO)NC(=O)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	(S)-2-((4-(N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl)-1,2,5- oxadiazol-3-yl)thio)-N-(1- hydroxypropan-2-yl)acetamide::US10538497, Example 205
+CC(C)(Sc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O)C(=O)NC[C@@H](O)CO	(R)-2-((4-(N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl)-1,2,5- oxadiazol-3-yl)thio)-N-(2,3- dihydroxypropyl)-2- methylpropanamide::US10538497, Example 204
+C[C@H](O)CNC(=O)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	(S)-2-((4-(N-(3-bromo-4- fluorophenyl)-N''- hydroxycarbamimidoyl)-1,2,5- oxadiazol-3-yl)thio)-N-(2- hydroxypropyl)acetamide::US10538497, Example 200::US10538497, Example 203
+OCC1(CC1)NC(=O)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	2-((4-(N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl)-1,2,5- oxadiazol-3-yl)thio)-N-(1- (hydroxymethyl)cyclopropyl) acetamide::US10538497, Example 202
+C[C@@H](O)CNC(=O)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	(R)-2-((4-(N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl)-1,2,5- oxadiazol-3-yl)thio)-N-(2- hydroxypropyl)acetamide::US10538497, Example 201
+CNS(=O)(=O)NC(=O)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	2-((4-(N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl)-1,2,5- oxadiazol-3-yl)thio)-N-(N- methylsulfamoyl)acetamide::US10538497, Example 199
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCC(=O)N[C@H]1CCOC[C@H]1O	2-((4-(N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl)-1,2,5- oxadiazol-3-yl)thio)-N-((3S,4S)- 3-hydroxytetrahydro-2H-pyran- 4-yl)acetamide::US10538497, Example 198
+C[C@H](CO)NC(=O)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	(R)-2-((4-(N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl)-1,2,5- oxadiazol-3-yl)thio)-N-(1- hydroxypropan-2-yl)acetamide::US10538497, Example 197
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCC(=O)N1CC[C@H](O)[C@@H](O)C1	N-(3-bromo-4-fluorophenyl)-4- ((2-((3S,4S)-3,4- dihydroxypiperidin-1-yl)-2- oxoethyl)thio)-N'-hydroxy-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 196
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCC(=O)N1C[C@H](O)[C@H](O)C1	N-(3-bromo-4-fluorophenyl)-4- ((2-((3S,4R)-3,4- dihydroxypyrrolidin-1-yl)-2- oxoethyl)thio)-N'-hydroxy-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 195
+NS(=O)(=O)N[C@H](CO)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-{[(2R)-3-hydroxy-2- (sulfamoylamino)propyl]sulfanyl}- 1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 194
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCC(=O)N1CCOCC1	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-[(2-morpholin-4-yl-2- oxoethyl)sulfanyl]-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 193
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCc1nnc[nH]1	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-[(4H-1,2,4-triazol-3- ylmethyl)sulfanyl]-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 191
+CC(C)(O)C(O)CSc1nonc1\C(Nc1ccc(F)c(Cl)c1)=N\O	N-(3-chloro-4-fluorophenyl)-4- [(2,3-dihydroxy-3- methylbutyl)sulfanyl]-N''- hydroxy-1,2,5-oxadiazole-3- carboximidamide (peak 1)::US10538497, Example 189::US10538497, Example 190
+O\N=C(/Nc1ccc(F)c(c1)C#N)c1nonc1SCCNC(=O)[C@@H]1CC1(F)F	(1S)-N-[2-({4-[N-(3-cyano-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)ethyl]- 2,2- difluorocyclopropanecarboxamide::US10538497, Example 188
+O\N=C(/Nc1ccc(F)c(c1)C#N)c1nonc1SCCNC(=O)[C@H]1CC1(F)F	(1R)-N-[2-({4-[N-(3-cyano-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)ethyl]- 2,2- difluorocyclopropanecarboxamide::US10538497, Example 187
+O\N=C(/Nc1ccc(F)c(c1)C#N)c1nonc1SCC(=O)NC1COC1	2-({4-[N-(3-cyano-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)-N- oxetan-3-ylacetamide::US10538497, Example 186
+CNC(=O)CSc1nonc1\C(Nc1ccc(F)c(c1)C#N)=N\O	2-({4-[N-(3-cyano-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)-N- methylacetamide::US10538497, Example 185
+CS(=O)(=O)NCCSc1nonc1\C(Nc1ccc(F)c(Cl)c1)=N\O	N-(3-chloro-4-fluorophenyl)-N'- hydroxy-4-({2- [(methylsulfonyl)amino]ethyl} sulfanyl)-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 184
+CN1CC(Cc2ccc(Cl)cc2)N(C[C@@H]1Cc1ccc(Cl)cc1)C1CCN(CC1)c1nnc(N)[nH]1	5-(4-((2S,5S)-2,5-bis(4-chlorobenzyl)-4-methylpiperazin-1-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10538508, Example 31::US9944624, Ex. 31
+CC(C)NCCNc1ccc(nc1C1CCN(CC1)c1ncnc2NC(=O)C(C)(C)c12)-c1noc(n1)C(F)(F)F	US10538528, Compound 42
+CC(C)(C)NCCNc1ccc(nc1C1CCN(CC1)c1ncnc2NC(=O)C(C)(C)c12)-c1nnc(s1)C1CC1	US10538528, Compound 40
+CC(C)NCCNc1ccc(nc1C1CCN(CC1)c1ncnc2NC(=O)C(C)(C)c12)-c1nnc(s1)C(F)F	US10538528, Compound 39
+CC(C)(C)NCCNc1ccc(nc1C1CCN(CC1)c1ncnc2NC(=O)C(C)(C)c12)-c1nnc(s1)C(F)F	US10538528, Compound 37
+CN(CCNc1ccc(nc1C1CCN(CC1)c1ncnc2NC(=O)C(C)(C)c12)-c1nnc(o1)C(F)(F)F)C(C)(C)C	US10538528, Compound 34
+CC(C)NCCNc1ccc(nc1C1CCN(CC1)c1ncnc2NC(=O)C(C)(C)c12)-c1nnc(o1)C(F)(F)F	US10538528, Compound 33
+CC(C)(C)NCCNc1ccc(nc1C1CCN(CC1)c1ncnc2NC(=O)C(C)(C)c12)-c1nnc(o1)C(F)(F)F	US10538528, Compound 32
+CC(C)NCCNc1ccc(nc1C1CCN(CC1)c1ncnc2NC(=O)C(C)(C)c12)-c1nnc(o1)C(F)F	US10538528, Compound 31
+CC1(C)C(=O)Nc2ncnc(N3CCC(CC3)c3nc(ccc3NCCN3CCCC3)-c3nnc(o3)C(F)F)c12	US10538528, Compound 30
+CC1C(=O)Nc2ncnc(N3CCC(CC3)c3cc(cnc3NCCN3CCCC3)-c3cc(nn3C)C(F)(F)F)c12	US10538528, Compound 27
+CC1C(=O)Nc2ncnc(N3CCC(CC3)c3nc(ccc3NCCN3CCCC3)-c3ncco3)c12	US10538528, Compound 25
+CC1C(=O)Nc2ncnc(N3CCC(CC3)c3nc(ccc3NCCN3CCCC3)-c3nccs3)c12	US10538528, Compound 24
+CC1C(=O)Nc2ncnc(N3CCC(CC3)c3nc(ccc3NCCN(C)C)-c3ccsc3)c12	US10538528, Compound 23
+CC1C(=O)Nc2ncnc(N3CCC(CC3)c3nc(ccc3NCCN3CCCC3)-c3cccnc3C)c12	US10538528, Compound 22
+COc1cncc(c1)-c1ccc(NCCN(C)C)c(n1)C1CCN(CC1)c1ncnc2NC(=O)C(C)c12	US10538528, Compound 21
+CC1C(=O)Nc2ncnc(N3CCC(CC3)c3nc(ccc3NCCN3CCCC3)-c3cc(nn3C)C(F)(F)F)c12	US10538528, Compound 20
+CC1C(=O)Nc2ncnc(N3CCC(CC3)c3nc(ccc3NCCN3CCCC3)-c3cncc(F)c3)c12	US10538528, Compound 19
+CC1C(=O)Nc2ncnc(N3CCC(CC3)c3nc(ccc3NCCN3CCCC3)-c3ccsc3)c12	US10538528, Compound 18
+CC1C(=O)Nc2ncnc(N3CCC(CC3)c3nc(ccc3NCCN3CCCC3)-c3cccnc3F)c12	US10538528, Compound 17
+COc1cc(c(F)cn1)-c1ccc(NCCN2CCCC2)c(n1)C1CCN(CC1)c1ncnc2NC(=O)C(C)c12	US10538528, Compound 16
+COc1cncc(c1)-c1ccc(NCCNC(C)C)c(n1)C1CCN(CC1)c1ncnc2NC(=O)C(C)c12	US10538528, Compound 15
+CC1C(=O)Nc2ncnc(N3CCC(CC3)c3nc(ccc3NCCN3CCCC3)-c3ccoc3)c12	US10538528, Compound 14
+CC1C(=O)Nc2ncnc(N3CCC(CC3)c3nc(ccc3NCCN3CCCC3)-c3ccnc(F)c3)c12	US10538528, Compound 13
+CC(C)NCCNc1ccc(nc1C1CCN(CC1)c1ncnc2NC(=O)C(C)(C)c12)-c1cc(Cl)nn1C	US10538528, Compound 11
+CC(C)NCCNc1ccc(nc1C1CCN(CC1)c1ncnc2NC(=O)C(C)(C)c12)-c1cnc(F)c(F)c1	US10538528, Compound 5
+CC(C)(C)NCCNc1ccc(nc1C1CCN(CC1)c1ncnc2NC(=O)C(C)(C)c12)-c1cncc(F)c1	US10538528, Compound 1
+Nc1nnc([nH]1)N1CCC(CC1)N1Cc2ccncc2OC[C@@H]1Cc1ccc(Cl)cc1	(S)-5-(4-(3-(4-chlorobenzyl)-2,3-dihydropyrido[4,3-f][1,4]oxazepin-4(5H)-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10208020, Example 63::US10538508, Example 63::US9944624, Ex. 63
+CC(C)(C)NCCNc1ccc(nc1C1CCN(CC1)c1ncnc2NC(=O)C(C)(C)c12)-c1noc(n1)C(F)F	US10538528, Compound 41
+CC(C)(C)NCCNc1ccc(nc1C1CCN(CC1)c1ncnc2NC(=O)C(C)(C)c12)-c1nc(no1)C(F)(F)F	US10538528, Compound 43
+CN1CC(Cc2ccc(Cl)cc2)N(C[C@@H]1CC1CCCCC1)C1CCN(CC1)c1nnc(N)[nH]1	5-(4-((2S,5S)-2-(4-chlorobenzyl)-5-(cyclohexylmethyl)-4-methylpiperazin-1-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10538508, Example 32::US9944624, Ex. 32
+CC1(C)C(=O)Nc2ncnc(N3CCC(CC3)c3nc(ccc3NCCN3CCCC3)-c3nc(no3)C(F)(F)F)c12	US10538528, Compound 44
+COc1cc(OC)c(Cl)c(c1)-c1cc2cnc(NCC(C)(C)O)nc2n(CCc2cccc(NC(=O)C(=CC(C)(C)C)C#N)c2)c1=O	N-(3-(2-(6-(2-chloro-3,5-dimethoxyphenyl)-2-((2-hydroxy-2-methylpropyl)amino)-7-oxopyrido[2,3-d]pyrimidin-8(7H)-yl)ethyl)phenyl)-2-cyano-4,4-dimethylpent-2-enamide::US10538517, Compound Table 2.52
+CNc1ncc2cc(-c3cc(OC)cc(OC)c3Cl)c(=O)n(CCc3cccc(c3)N(C)C(=O)C(=CC(C)(C)N)C#N)c2n1	4-amino-N-(3-(2-(6-(2-chloro-3,5-dimethoxyphenyl)-2-(methylamino)-7-oxopyrido[2,3-d]pyrimidin-8(7H)-yl)ethyl)phenyl)-2-cyano-N,4-dimethylpent-2-enamide::US10538517, Compound Table 2.26
+CNc1ncc2cc(-c3c(Cl)c(OC)cc(OC)c3Cl)c(=O)n(CCc3cccc(NC(=O)C(=CC(C)C)C#N)c3)c2n1	2-cyano-N-(3-(2-(6-(2,6-dichloro-3,5-dimethoxyphenyl)-2-(methylamino)-7-oxopyrido[2,3-d]pyrimidin-8(7H)-yl)ethyl)phenyl)-4-methylpent-2-enamide::US10538517, Compound Table 2.7
+COc1cc(OC)c(Cl)c(c1)-c1cc2cnc(N)nc2n(CCc2cccc(NC(=O)C(=CC(C)(C)C)C#N)c2)c1=O	N-(3-(2-(2-amino-6-(2-chloro-3,5-dimethoxyphenyl)-7-oxopyrido[2,3-d]pyrimidin-8(7H)-yl)ethyl)phenyl)-2-cyano-4,4-dimethylpent-2-enamide::US10538517, Compound Table 2.50
+CNc1ncc2cc(-c3cc(OC)cc(OC)c3Cl)c(=O)n(CCc3ccc(NC(=O)C(=CC(C)(C)N)C#N)nc3)c2n1	4-amino-N-(5-(2-(6-(2-chloro-3,5-dimethoxyphenyl)-2-(methylamino)-7-oxopyrido[2,3-d]pyrimidin-8(7H)-yl)ethyl)pyridin-2-yl)-2-cyano-4-methylpent-2-enamide::US10538517, Compound Table 2.21
+CCN(CC)CCCCNc1ncc2cc(-c3c(Cl)c(OC)cc(OC)c3Cl)c(=O)n(Cc3cccc(NC(=O)C(=CC(C)C)C#N)c3)c2n1	2-cyano-N-(3-((6-(2,6-dichloro-3,5-dimethoxyphenyl)-2-((4-(diethylamino)butyl)amino)-7-oxopyrido[2,3-d]pyrimidin-8(7H)-yl)methyl)phenyl)-4-methylpent-2-enamide::US10538517, Compound Table 2.5
+CNc1ncc2cc(-c3cc(OC)cc(OC)c3Cl)c(=O)n(CCc3cccc(NC(=O)C(=CC(C)(C)N(C)C4COC4)C#N)c3)c2n1	N-(3-(2-(6-(2-chloro-3,5-dimethoxyphenyl)-2-(methylamino)-7-oxopyrido[2,3-d]pyrimidin-8(7H)-yl)ethyl)phenyl)-2-cyano-4-methyl-4-(methyl(oxetan-3-yl)amino)pent-2-enamide::US10538517, Compound Table 2.43
+CNc1ncc2cc(-c3cc(OC)cc(OC)c3Cl)c(=O)n(CCc3ccnc(NC(=O)C(=CC(C)(C)N)C#N)c3)c2n1	4-amino-N-(4-(2-(6-(2-chloro-3,5-dimethoxyphenyl)-2-(methylamino)-7-oxopyrido[2,3-d]pyrimidin-8(7H)-yl)ethyl)pyridin-2-yl)-2-cyano-4-methylpent-2-enamide::US10538517, Compound Table 2.20
+CCN(CC)CCCCNc1ncc2cc(-c3c(Cl)c(OC)cc(OC)c3Cl)c(=O)n(CCc3ccc(NC(=O)C(=CC(C)C)C#N)cc3)c2n1	2-cyano-N-(4-(2-(6-(2,6-dichloro-3,5-dimethoxyphenyl)-2-((4-(diethylamino)butyl)amino)-7-oxopyrido[2,3-d]pyrimidin-8(7H)-yl)ethyl)phenyl)-4-methylpent-2-enamide::US10538517, Compound Table 2.4
+CNc1ncc2cc(-c3cc(OC)cc(OC)c3Cl)c(=O)n(CCc3cccc(c3)N(C)C(=O)C(=CC(C)(C)N(C)C)C#N)c2n1	N-(3-(2-(6-(2-chloro-3,5-dimethoxyphenyl)-2-(methylamino)-7-oxopyrido[2,3-d]pyrimidin-8(7H)-yl)ethyl)phenyl)-2-cyano-4-(dimethylamino)-N,4-dimethylpent-2-enamide::US10538517, Compound Table 2.39
+CNc1ncc2cc(-c3cc(OC)cc(OC)c3Cl)c(=O)n(CCc3cccc(NC(=O)C(=CC(C)(C)N)C#N)n3)c2n1	4-amino-N-(6-(2-(6-(2-chloro-3,5-dimethoxyphenyl)-2-(methylamino)-7-oxopyrido[2,3-d]pyrimidin-8(7H)-yl)ethyl)pyridin-2-yl)-2-cyano-4-methylpent-2-enamide::US10538517, Compound Table 2.17
+CCN(CC)CCCCNc1ncc2cc(-c3ccccc3Cl)c(=O)n(CCc3cccc(NC(=O)C(=CC(C)C)C#N)c3)c2n1	N-(3-(2-(6-(2-chlorophenyl)-2-((4-(diethylamino)butyl)amino)-7-oxopyrido[2,3-d]pyrimidin-8(7H)-yl)ethyl)phenyl)-2-cyano-4-methylpent-2-enamide::US10538517, Compound Table 2.3
+CNc1ncc2cc(-c3cc(OC)cc(OC)c3Cl)c(=O)n(CCc3ccc(NC(=O)C(=CC(C)(C)N4CC5(COC5)C4)C#N)cc3)c2n1	N-(4-(2-(6-(2-chloro-3,5-dimethoxyphenyl)-2-(methylamino)-7-oxopyrido[2,3-d]pyrimidin-8(7H)-yl)ethyl)phenyl)-2-cyano-4-methyl-4-(2-oxa-6-azaspiro[3.3]heptan-6-yl)pent-2-enamide::US10538517, Compound Table 2.31
+CNc1ncc2cc(-c3cc(OC)cc(OC)c3Cl)c(=O)n(CCc3cccc(NC(=O)C(=CC(C)(C)C)C#N)n3)c2n1	N-(6-(2-(6-(2-chloro-3,5-dimethoxyphenyl)-2-(methylamino)-7-oxopyrido[2,3-d]pyrimidin-8(7H)-yl)ethyl)pyridin-2-yl)-2-cyano-4,4-dimethylpent-2-enamide::US10538517, Compound Table 2.16
+CCN(CC)CCCCNc1ncc2cc(-c3ccccc3Cl)c(=O)n(CCC3CCCN(C3)C(=O)C(=CC(C)C)C#N)c2n1	2-(3-(2-(6-(2-chlorophenyl)-2-((4-(diethylamino)butyl)amino)-7-oxopyrido[2,3-d]pyrimidin-8(7H)-yl)ethyl)piperidine-1-carbonyl)-4-methylpent-2-enenitrile::US10538517, Compound Table 1.1::US10538517, Compound Table 2.2
+CNc1ncc2cc(-c3c(Cl)c(OC)cc(OC)c3Cl)c(=O)n(CCOC3CN(C3)C(=O)C(=CC(C)(C)C)C#N)c2n1	2-(3-(2-(6-(2,6-dichloro-3,5-dimethoxyphenyl)-2-(methylamino)-7-oxopyrido[2,3-d]pyrimidin-8(7H)-yl)ethoxy)azetidine-1-carbonyl)-4,4-dimethylpent-2-enenitrile::US10538517, Compound Table 1.8
+CNc1ncc2cc(-c3cc(OC)cc(OC)c3Cl)c(=O)n(CCN3CCC(CC3)NC(=O)C(=CC(C)(C)C)C#N)c2n1	N-(1-(2-(6-(2-chloro-3,5-dimethoxyphenyl)-2-(methylamino)-7-oxopyrido[2,3-d]pyrimidin-8(7H)-yl)ethyl)piperidin-4-yl)-2-cyano-4,4-dimethylpent-2-enamide::US10538517, Compound Table 1.4
+CNc1ncc2cc(-c3c(Cl)c(OC)cc(OC)c3Cl)c(=O)n(CCCN3CCN(CC3)C(=O)C(=CC(C)(C)C)C#N)c2n1	2-(4-(3-(6-(2,6-dichloro-3,5-dimethoxyphenyl)-2-(methylamino)-7-oxopyrido[2,3-d]pyrimidin-8(7H)-yl)propyl)piperazine-1-carbonyl)-4,4-dimethylpent-2-enenitrile::US10538517, Compound Table 1.7
+CNc1ncc2cc(-c3c(Cl)c(OC)cc(OC)c3Cl)c(=O)n(CCN3CCN(CC3)C(=O)C(=CC(C)(C)C)C#N)c2n1	2-(4-(2-(6-(2,6-dichloro-3,5-dimethoxyphenyl)-2-(methylamino)-7-oxopyrido[2,3-d]pyrimidin-8(7H)-yl)ethyl)piperazine-1-carbonyl)-4,4-dimethylpent-2-enenitrile::US10538517, Compound Table 1.3
+CNc1ncc2cc(-c3c(Cl)c(OC)cc(OC)c3Cl)c(=O)n(CCOC3CCN(C3)C(=O)C(=CC(C)(C)C)C#N)c2n1	2-(3-(2-(6-(2,6-dichloro-3,5-dimethoxyphenyl)-2-(methylamino)-7-oxopyrido[2,3-d]pyrimidin-8(7H)-yl)ethoxy)pyrrolidine-1-carbonyl)-4,4-dimethylpent-2-enenitrile::US10538517, Compound Table 1.10
+CNc1ncc2cc(-c3cc(OC)cc(OC)c3Cl)c(=O)n(CCN3C[C@H]4CN(C[C@H]4C3)C(=O)C(=CC(C)(C)C)C#N)c2n1	2-((3aR,6aS)-5-(2-(6-(2-chloro-3,5-dimethoxyphenyl)-2-(methylamino)-7-oxopyrido[2,3-d]pyrimidin-8(7H)-yl)ethyl)octahydropyrrolo[3,4-c]pyrrole-2-carbonyl)-4,4-dimethylpent-2-enenitrile::US10538517, Compound Table 1.6
+CNc1ncc2cc(-c3cc(OC)cc(OC)c3Cl)c(=O)n(CCN3CCN(CC3)C(=O)C(=CC(C)(C)C)C#N)c2n1	2-(4-(2-(6-(2-chloro-3,5-dimethoxyphenyl)-2-(methylamino)-7-oxopyrido[2,3-d]pyrimidin-8(7H)-yl)ethyl)piperazine-1-carbonyl)-4,4-dimethylpent-2-enenitrile::US10538517, Compound Table 1.2
+CNc1ncc2cc(-c3c(Cl)c(OC)cc(OC)c3Cl)c(=O)n(CCOC3CCCN(C3)C(=O)C(=CC(C)(C)C)C#N)c2n1	2-(3-(2-(6-(2,6-dichloro-3,5-dimethoxyphenyl)-2-(methylamino)-7-oxopyrido[2,3-d]pyrimidin-8(7H)-yl)ethoxy)piperidine-1-carbonyl)-4,4-dimethylpent-2-enenitrile::US10538517, Compound Table 1.9
+CNc1ncc2cc(-c3cc(OC)cc(OC)c3Cl)c(=O)n(CCCN3CCN(CC3)C(=O)C(=CC(C)(C)C)C#N)c2n1	2-(4-(3-(6-(2-chloro-3,5-dimethoxyphenyl)-2-(methylamino)-7-oxopyrido[2,3-d]pyrimidin-8(7H)-yl)propyl)piperazine-1-carbonyl)-4,4-dimethylpent-2-enenitrile::US10538517, Compound Table 1.5
+CC(C)(C)NCCn1cc(nc1C1CCN(CC1)c1ncnc2NC(=O)C(C)(C)c12)-c1cncc(F)c1	US10538528, Compound B
+CN(C)CCn1cc(nc1C1CCN(CC1)c1ncnc2NC(=O)C(C)(C)c12)-c1ccc(F)c(c1)C(F)(F)F	US10538528, Compound A
+Nc1nnc([nH]1)N1CCC(CC1)N1Cc2cc(Cl)cc(Cl)c2OC[C@@H]1Cc1ccc(Cl)cc1	(S)-5-(4-(7,9-dichloro-3-(4-chlorobenzyl)-2,3-dihydrobenzo[f][1,4]oxazepin-4(5H)-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10208020, Example 62::US10538508, Example 62::US9944624, Ex. 62
+Nc1nnc([nH]1)N1CCC(CC1)N1Cc2cc(Cl)ccc2OC[C@@H]1Cc1ccc(Cl)cc1	(S)-5-(4-(7-chloro-3-(4-chlorobenzyl)-2,3-dihydrobenzo[f][1,4]oxazepin-4(5H)-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10208020, Example 61::US10538508, Example 61::US9944624, Ex. 61
+C[C@@H]1CN(C(Cc2ccc(Cl)cc2)CO1)C1CCN(CC1)c1nnc(N)[nH]1	5-(4-((2R,5S)-5-(4-chlorobenzyl)-2-methylmorpholino)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10538508, Example 45::US9944624, Ex. 44::US9944624, Ex. 45
+Nc1nnc([nH]1)N1CCC(CC1)N1CCS(=O)(=O)CC1Cc1ccc(Cl)cc1	(S)-4-(1-(5-amino-4H-1,2,4-triazol-3-yl)piperidin-4-yl)-3-(4-chlorobenzyl)thiomorpholine 1,1-dioxide ::US10538508, Example 43::US9944624, Ex. 43
+Nc1nnc([nH]1)N1CCC(CC1)N1CCNC(=O)C1Cc1ccc(Cl)cc1	(S)-4-(1-(5-amino-4H-1,2,4-triazol-3-yl)piperidin-4-yl)-3-(4-chlorobenzyl)piperazin-2-one ::US10538508, Example 42::US9944624, Ex. 42
+C[C@H]1CN(C(Cc2ccc(Cl)cc2)CN1CC(O)=O)C1CCN(CC1)c1nnc(N)[nH]1	2-((2S,5S)-4-(1-(5-amino-4H-1,2,4-triazol-3-yl)piperidin-4-yl)-5-(4-chlorobenzyl)-2-methylpiperazin-1-yl)acetic acid ::US10538508, Example 41::US9944624, Ex. 41
+COC(=O)CN1CC(Cc2ccc(Cl)cc2)N(C[C@@H]1C)C1CCN(CC1)c1nnc(N)[nH]1	US10538508, Example 40::US9944624, Ex. 40::methyl 2-((2S,5S)-4-(1-(5-amino-4H-1,2,4-triazol-3-yl)piperidin-4-yl)-5-(4-chlorobenzyl)-2-methylpiperazin-1-yl)acetate 
+COC(=O)N1CC(Cc2ccc(Cl)cc2)N(C[C@@H]1C)C1CCN(CC1)c1nnc(N)[nH]1	US10538508, Example 39::US9944624, Ex. 39::methyl (2S,5S)-4-(1-(5-amino-4H-1,2,4-triazol-3-yl)piperidin-4-yl)-5-(4-chlorobenzyl)-2-methylpiperazine-1-carboxylate 
+C[C@H]1CN(C(Cc2ccc(Cl)cc2)CN1C(C)=O)C1CCN(CC1)c1nnc(N)[nH]1	1-((2S,5S)-4-(1-(5-amino-4H-1,2,4-triazol-3-yl)piperidin-4-yl)-5-(4-chlorobenzyl)-2-methylpiperazin-1-yl)ethanone ::US10538508, Example 38::US9944624, Ex. 38
+C[C@H]1CN(C(Cc2ccc(Cl)cc2)CN1S(C)(=O)=O)C1CCN(CC1)c1nnc(N)[nH]1	5-(4-((2S,5S)-2-(4-chlorobenzyl)-5-methyl-4-(methylsulfonyl)piperazin-1-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10538508, Example 37::US9944624, Ex. 37
+CS(=O)(=O)N1CC(Cc2ccc(Cl)cc2)N(C[C@@H]1Cc1ccc(Cl)cc1)C1CCN(CC1)c1nnc(N)[nH]1	5-(4-((2S,5S)-2,5-bis(4-chlorobenzyl)-4-(methylsulfonyl)piperazin-1-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10538508, Example 36::US9944624, Ex. 36
+Cc1ccc(cc1)S(=O)(=O)N1CCN(C(Cc2ccc(Cl)cc2)C1)C1CCN(CC1)c1nnc(N)[nH]1	(S)-5-(4-(2-(4-chlorobenzyl)-4-tosylpiperazin-1-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10538508, Example 35::US9944624, Ex. 35
+CS(=O)(=O)N1CCN(C(Cc2ccc(Cl)cc2)C1)C1CCN(CC1)c1nnc(N)[nH]1	(S)-5-(4-(2-(4-chlorobenzyl)-4-(methylsulfonyl)piperazin-1-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10538508, Example 34::US9944624, Ex. 34
+CC(C)C[C@H]1CN(C(Cc2ccc(Cl)cc2)CN1C)C1CCN(CC1)c1nnc(N)[nH]1	5-(4-((2S,5S)-2-(4-chlorobenzyl)-5-isobutyl-4-methylpiperazin-1-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10538508, Example 33::US9944624, Ex. 33
+CO[C@H]1C[C@H](Cc2ccc(Cl)cc2)N(C1)C1CCN(CC1)c1nnc(N)[nH]1	5-(4-((2S,4S)-2-(4-chlorobenzyl)-4-methoxypyrrolidin-1-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10208020, Example 46::US10538508, Example 46::US9944624, Ex. 46
+Nc1nnc([nH]1)N1CCC(CC1)N1C[C@@H](O)C[C@@H]1Cc1ccc(Cl)cc1	(3S,5S)-1-(1-(5-amino-4H-1,2,4-triazol-3-yl)piperidin-4-yl)-5-(4-chlorobenzyl)pyrrolidin-3-ol ::US10208020, Example 47::US10538508, Example 47::US9944624, Ex. 47
+CO[C@H]1CN(CCC1N1C[C@H](C)OCC1Cc1ccc(Cl)cc1)c1n[nH]c(N)n1	3-((3 S,4S)-4-((2S,5S)-5-(4-chlorobenzyl)-2-methylmorpholino)-3-methoxypiperidin-1-yl)-1H-1,2,4-triazol-5-amine ::US10538508, Example 54::US9944624, Ex. 54
+Nc1nnc([nH]1)N1CCC(CC1)N1Cc2cc(F)ccc2OC[C@@H]1Cc1ccc(Cl)cc1	(S)-5-(4-(3-(4-chlorobenzyl)-7-fluoro-2,3-dihydrobenzo[f][1,4]oxazepin-4(5H)-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10208020, Example 60::US10538508, Example 60::US9944624, Ex. 60
+Nc1nnc([nH]1)N1CCC(CC1)N1Cc2ccccc2OC[C@@H]1Cc1ccc(Cl)cc1	(S)-5-(4-(3-(4-chlorobenzyl)-2,3-dihydrobenzo[f][1,4]oxazepin-4(5H)-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10208020, Example 59::US10538508, Example 59::US9944624, Ex. 59
+CN1C[C@H](Cc2ccc(Cl)cc2)N(Cc2cc(Cl)ccc12)C1CCN(CC1)c1nnc(N)[nH]1	(S)-5-(4-(7-chloro-3-(4-chlorobenzyl)-1-methyl-2,3-dihydro-1H-benzo[e][1,4]diazepin-4(5H)-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10208020, Example 58::US10538508, Example 58::US9944624, Ex. 58
+CN1C[C@H](Cc2ccc(Cl)cc2)N(Cc2ccccc12)C1CCN(CC1)c1nnc(N)[nH]1	(S)-5-(4-(3-(4-chlorobenzyl)-1-methyl-2,3-dihydro-1H-benzo[e][1,4]diazepin-4(5H)-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10208020, Example 57::US10538508, Example 57::US9944624, Ex. 57
+CN1CCCN(C2CCN(CC2)c2nnc(N)[nH]2)[C@@H](Cc2ccc(Cl)cc2)C1	(S)-5-(4-(2-(4-chlorobenzyl)-4-methyl-1,4-diazepan-1-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10208020, Example 56::US10538508, Example 56::US9944624, Ex. 56
+Nc1nnc([nH]1)N1CCC(CC1)N1CC(=C)COC[C@@H]1Cc1ccc(Cl)cc1	(S)-5-(4-(3-(4-chlorobenzyl)-6-methylene-1,4-oxazepan-4-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10208020, Example 55::US10538508, Example 55::US9944624, Ex. 55
+C[C@H]1CN(C2CCN(CC2)c2nnc(N)[nH]2)C(Cc2ccc(Cl)cc2)C(C)(C)O1	5-(4-((3S,6S)-3-(4-chlorobenzyl)-2,2,6-trimethylmorpholino)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10538508, Example 53::US9944624, Ex. 53
+CC1(C)OCCN(C2CCN(CC2)c2nnc(N)[nH]2)C1Cc1ccc(Cl)cc1	(S)-5-(4-(3-(4-chlorobenzyl)-2,2-dimethylmorpholino)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10538508, Example 52::US9944624, Ex. 52
+CO[C@@H]1C[C@H](Cc2ccc(Cl)cc2)N(C1)C1CCN(CC1)c1n[nH]c(N)n1	3-(4-((2S,4R)-2-(4-chlorobenzyl)-4-methoxypyrrolidin-1-yl)piperidin-1-yl)-1H-1,2,4-triazol-5-amine ::US10208020, Example 51::US10538508, Example 51::US9944624, Ex. 51
+Nc1nc(n[nH]1)N1CCC(CC1)N1C[C@H](O)C[C@@H]1Cc1ccc(Cl)cc1	(3R,5S)-1-(1-(5-amino-1H-1,2,4-triazol-3-yl)piperidin-4-yl)-5-(4-chlorobenzyl)pyrrolidin-3-ol ::US10208020, Example 50::US10538508, Example 50::US9944624, Ex. 50
+Nc1nnc([nH]1)N1CCC(CC1)N1C[C@@H]2CCCN2CC1Cc1ccc(Cl)cc1	5-(4-((3S,8aS)-3-(4-chlorobenzyl)hexahydropyrrolo[1,2-a]pyrazin-2(1H)-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10538508, Example 49::US9944624, Ex. 49
+CC1(O)C[C@H](Cc2ccc(Cl)cc2)N(C1)C1CCN(CC1)c1nnc(N)[nH]1	(5S)-1-(1-(5-amino-4H-1,2,4-triazol-3-yl)piperidin-4-yl)-5-(4-chlorobenzyl)-3-methylpyrrolidin-3-ol ::US10208020, Example 48::US10538508, Example 48::US9944624, Ex. 48
+Fc1ccc(NC(=N)c2nonc2SCCc2cscn2)cc1Br	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-{[2-(1,3-thiazol-4- yl)ethyl]sulfanyl}-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 152
+Cc1nccn1CCSc1nonc1C(=N)Nc1ccc(F)c(Br)c1	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-{[2-(2-methyl-1H- imidazol-1-yl)ethyl]sulfanyl}- 1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 151
+CN1[C@@H](CSc2nonc2\C(Nc2ccc(F)c(c2)C#N)=N\O)CNC1=O	N-(3-cyano-4-fluorophenyl)-N'- hydroxy-4-({[(4R)-3-methyl-2- oxoimidazolidin-4- yl]methyl}sulfanyl)-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 150
+ONC(=O)c1cccc2CC3(CCN(C3=O)c3cccc(c3)C(F)(F)F)CCc12	US10508088, Example II-89::US10538496, Compound II-89
+ONC(=O)c1cccc2CC3(CCN(Cc4ccc(Cl)cc4)C3=O)CCc12	US10508088, Example II-87::US10538496, Compound II-87
+ONC(=O)c1cccc2CC3(CCN(Cc4ccc(c(F)c4)C(F)(F)F)C3=O)CCc12	US10508088, Example II-86::US10538496, Compound II-86
+ONC(=O)c1cccc2CC3(CCN(Cc4ccc(cc4)C(F)(F)F)C3=O)CCc12	US10508088, Example II-85::US10538496, Compound II-85
+ONC(=O)c1cccc2CC3(CCN(Cc4ccc(Cl)c(c4)C(F)(F)F)C3=O)CCc12	US10508088, Example II-84::US10538496, Compound II-84
+Cc1ccc(cc1F)N1CCC2(CC1)CCc1cccc(C(=O)NO)c1O2	US10508088, Example II-83::US10538496, Compound II-83
+ONC(=O)c1cccc2CCC3(CCN(CC3)c3ccc(cn3)C(F)(F)F)Oc12	N-hydroxy-1&#8242;-(5-(trifluoromethyl)pyridin-2-yl)spiro[chromane-2,4&#8242;-piperidine]-8-carboxamide::US10508088, Example II-82::US10538496, Compound II-82
+ONC(=O)c1cccc2CCC3(CCN(CC3)C3CCCCC3)Oc12	US10508088, Example II-81::US10538496, Compound II-81
+ONC(=O)c1cccc2CCC3(CCN(Cc4ccc(F)cc4)CC3)Oc12	1&#8242;-(4-fluorobenzyl)-N-hydroxyspiro[chromane-2,4&#8242;-piperidine]-8-carboxamide::US10508088, Example II-80::US10538496, Compound II-80
+ONC(=O)c1cccc2CCC3(CCN(CC3)C(=O)Cc3ccccc3)Oc12	US10508088, Example II-79::US10538496, Compound II-79
+ONC(=O)c1cccc2CCC3(CCN(CC3)C(=O)C3(CC3)c3cccc(c3)C(F)(F)F)Oc12	US10508088, Example II-78::US10538496, Compound II-78
+CC1(CCOCC1)C(=O)N1CCC2(CC1)CCc1cccc(C(=O)NO)c1O2	US10508088, Example II-77::US10538496, Compound II-77
+ONC(=O)c1cccc2CCC3(CCN(CC3)S(=O)(=O)C3CCCCC3)Oc12	US10508088, Example II-76::US10538496, Compound II-76
+ONC(=O)c1cccc2CCC3(CCN(CC3)C(=O)c3ccc(F)cc3)Oc12	US10508088, Example II-75::US10538496, Compound II-75
+CN(C)C(=O)N1CCC2(CC1)CCc1cccc(C(=O)NO)c1O2	N8-hydroxy-N1&#8242;,N1&#8242;-dimethylspiro[chromane-2,4&#8242;-piperidine]-1&#8242;,8-dicarboxamide::US10508088, Example II-74::US10538496, Compound II-74
+ONC(=O)c1cccc2CCC3(CCN(C3=O)c3ccccc3C(F)(F)F)Cc12	N-hydroxy-2&#8242;-oxo-1&#8242;-(2-(trifluoromethyl)phenyl)-3,4-dihydro-1H-spiro[naphthalene-2,3&#8242;-pyrrolidine]-8-carboxamide::US10508088, Example II-73::US10538496, Compound II-73
+ONC(=O)c1cccc2CCC3(CCN(C3=O)c3cccc(c3)C(F)(F)F)Cc12	N-hydroxy-2&#8242;-oxo-1&#8242;-(3-(trifluoromethyl)phenyl)-3,4-dihydro-1H-spiro[naphthalene-2,3&#8242;-pyrrolidine]-8-carboxamide::US10508088, Example II-72::US10538496, Compound II-72
+ONC(=O)c1cccc2CCC3(CCN(C3=O)c3ccc(cc3)C(F)(F)F)Cc12	N-hydroxy-2&#8242;-oxo-1&#8242;-(4-(trifluoromethyl)phenyl)-3,4-dihydro-1H-spiro[naphthalene-2,3&#8242;-pyrrolidine]-8-carboxamide::US10508088, Example II-71::US10538496, Compound II-71
+ONC(=O)c1cccc2CCC3(CCN(Cc4ccc(cc4)C(F)(F)F)C3=O)Cc12	N-hydroxy-2&#8242;-oxo-1&#8242;-(4-(trifluoromethyl)benzyl)-3,4-dihydro-1H-spiro[naphthalene-2,3&#8242;-pyrrolidine]-8-carboxamide::US10508088, Example II-70::US10538496, Compound II-70
+ONC(=O)c1cccc2CCC3(CCN(Cc4ccc(Cl)cc4)C3=O)Cc12	US10508088, Example II-69::US10538496, Compound II-69
+ONC(=O)c1cccc2CCC3(CCN(Cc4ccc(c(F)c4)C(F)(F)F)C3=O)Cc12	US10508088, Example II-68::US10538496, Compound II-68
+ONC(=O)c1cccc2CCC3(CCN(Cc4ccc(Cl)c(c4)C(F)(F)F)C3=O)Cc12	1&#8242;-(4-chloro-3-(trifluoromethyl)benzyl)-N-hydroxy-2&#8242;-oxo-3,4-dihydro-1H-spiro[naphthalene-2,3&#8242;-pyrrolidine]-8-carboxamide::US10508088, Example II-67::US10538496, Compound II-67
+ONC(=O)c1cccc2C(O)C3(Cc12)CCN(Cc1ccccc1)CC3	US10508088, Example II-66::US10538496, Compound II-66
+ONC(=O)c1cccc2C(=O)C3(Cc12)CCN(Cc1ccccc1)CC3	1&#8242;-benzyl-N-hydroxy-1-oxo-1,3-dihydrospiro[indene-2,4&#8242;-piperidine]-4-carboxamide::US10508088, Example II-65::US10538496, Compound II-65
+ONC(=O)c1cccc2CC3(Cc12)CCN(Cc1ccccc1)CC3	1&#8242;-benzyl-N-hydroxy-1,3-dihydrospiro[indene-2,4&#8242;-piperidine]-4-carboxamide::US10508088, Example II-64::US10538496, Compound II-64
+ONC(=O)c1cccc2CC3(Cc12)CCN(CC3)C1CC1	1&#8242;-cyclopropyl-N-hydroxy-1,3-dihydrospiro[indene-2,4&#8242;-piperidine]-4-carboxamide::US10508088, Example II-63::US10538496, Compound II-63
+ONC(=O)c1cccc2CC3(Cc12)CCN(Cc1ccc(Cl)cc1)CC3	1&#8242;-(4-chlorobenzyl)-N-hydroxy-1,3-dihydrospiro[indene-2,4&#8242;-piperidine]-4-carboxamide::US10508088, Example II-62::US10538496, Compound II-62
+ONC(=O)c1cccc2CC3(Cc12)CCN(CC3)C(=O)c1ccc(Cl)cc1	1&#8242;-(4-chlorobenzoyl)-N-hydroxy-1,3-dihydrospiro[indene-2,4&#8242;-piperidine]-4-carboxamide::US10508088, Example II-61::US10538496, Compound II-61
+ONC(=O)c1cccc2CC3(CCN(C3=O)c3ccc(cc3)C(F)(F)F)CCc12	US10508088, Example II-88::US10538496, Compound II-88
+ONC(=O)c1cccc2CC3(CCN(C3=O)c3ccccc3C(F)(F)F)CCc12	US10508088, Example II-90::US10538496, Compound II-90
+CC(C)(CO)NC(=O)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	US10538497, Example 27
+CC(=O)N1CCC2(CC1)CCc1c(O2)cccc1C(=O)NO	US10508088, Example II-91::US10538496, Compound II-91
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCC1CNC1	(Z)-4-((azetidin-3- ylmethyl)thio)-N-(3-bromo-4- fluorophenyl)-N'-hydroxy- 1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 25
+CCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	(Z)-N-(3-bromo-4- fluorophenyl)-4-(ethylthio)-N'- hydroxy-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 24
+CCCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	(Z)-N-(3-bromo-4- fluorophenyl)-N'-hydroxy-4- (propylthio)-1,2,5-oxadiazole- 3-carboximidamide::US10538497, Example 23
+COC(=O)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	Methyl (Z)-2-((4-(N-(3-bromo- 4-fluorophenyl)-N'- hydroxycarbamimidoyl)-1,2,5- oxadiazol-3-yl)thio)acetate::US10538497, Example 22
+COC(=O)C1(CCC1)Sc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	Methyl (Z)-1-((4-(N-(3-bromo- 4-fluorophenyl)-N'- hydroxycarbamimidoyl)-1,2,5- oxadiazol-3- yl)thio)cyclobutane-1- carboxylate::US10538497, Example 21
+OCCCCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	(Z)-N-(3-bromo-4- fluorophenyl)-N'-hydroxy-4- ((4-hydroxybutyl)thio)-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 20
+OCCCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	(Z)-N-(3-bromo-4- fluorophenyl)-N'-hydroxy-4- ((3-hydroxypropyl)thio)-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 19
+CC(O)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	(Z)-N-(3-bromo-4- fluorophenyl)-N'-hydroxy-4- ((2-hydroxypropyl)thio)-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 18
+OCC(O)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	(Z)-N-(3-bromo-4- fluorophenyl)-4-((2,3- dihydroxypropyl)thio)-N''- hydroxy-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 17::US10538497, Example 63::US10538497, Example 64
+CC(Sc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O)C(O)=O	(Z)-2-((4-(N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl)-1,2,5- oxadiazol-3-yl)thio)propanoic acid::US10538497, Example 16
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCC(O)=O	(Z)-2-((4-(N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl)-1,2,5- oxadiazol-3-yl)thio)acetic acid::US10538497, Example 15
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCCC(O)=O	(Z)-3-((4-(N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl)-1,2,5- oxadiazol-3-yl)thio)propanoic acid::US10538497, Example 14
+CCOC(=O)CCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	Ethyl (Z)-3-((4-(N-(3-bromo- 4-fluorophenyl)-N'- hydroxycarbamimidoyl)-1,2,5- oxadiazol-3-yl)thio)propanoate::US10538497, Example 13
+COC(=O)NCCSc1nsnc1\C(Nc1ccc(F)c(Br)c1)=N\O	US10538497, Example 12
+CC(=O)NCCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	US10538497, Example 11
+CC(C)OC(=O)OCOP(=O)(CCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O)OCOC(=O)OC(C)C	US10538497, Example 10
+CC(C)OC(=O)OCOP(O)(=O)CCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	US10538497, Example 9
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCCP(O)(O)=O	US10538497, Example 8
+CCOP(=O)(CCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O)OCC	US10538497, Example 7
+OCCNC(=O)COc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	US10538497, Example 6
+CC(=O)NCCOc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	US10538497, Example 5
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1O	US10538497, Example 4
+NS(=O)(=O)NCCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	US10538497, Example 3
+NCCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	US10538497, Example 2
+CC(C)(C)OC(=O)NCCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	US10538497, Example 1
+ONC(=O)c1cccc2OC3(CCN(CC3)c3ccc(F)cc3)CCc12	US10508088, Example II-93::US10538496, Compound II-93
+ONC(=O)c1cccc2OC3(CCN(CC3)c3ccccc3)CCc12	US10508088, Example II-92::US10538496, Compound II-92
+CC(=O)N1CCC2(Cc3cccc(C(=O)NO)c3C2)CC1	1&#8242;-acetyl-N-hydroxy-1,3-dihydrospiro[indene-2,4&#8242;-piperidine]-4-carboxamide::US10508088, Example II-60::US10538496, Compound II-60
+CC(=O)N1CCC2(C1)Cc1cccc(C(=O)NO)c1C2	1&#8242;-acetyl-N-hydroxy-1,3-dihydrospiro[indene-2,3&#8242;-pyrrolidine]-4-carboxamide::US10508088, Example II-59::US10538496, Compound II-59
+ONC(=O)c1cccc2CC3(CCN(C3)C(=O)c3ccc(cc3)C(F)(F)F)Cc12	N-hydroxy-1&#8242;-(4-(trifluoromethyl)benzoyl)-1,3-dihydrospiro[indene-2,3&#8242;-pyrrolidine]-4-carboxamide::US10508088, Example II-58::US10538496, Compound II-58
+ONC(=O)c1cccc2CC3(CCN(C3)C3CC3)Cc12	1&#8242;-cyclopropyl-N-hydroxy-1,3-dihydrospiro[indene-2,3&#8242;-pyrrolidine]-4-carboxamide::US10508088, Example II-57::US10538496, Compound II-57
+ONC(=O)c1cccc2CC3(CCN(Cc4cccc(F)c4)C3=O)Cc12	US10508088, Example II-26::US10538496, Compound II-26
+ONC(=O)c1cccc2CC3(CCN(Cc4ccccc4Cl)C3=O)Cc12	US10508088, Example II-25::US10538496, Compound II-25
+ONC(=O)c1cccc2CC3(CCN(Cc4cccnc4)C3=O)Cc12	US10508088, Example II-24::US10538496, Compound II-24
+Cc1ccccc1CN1CCC2(Cc3cccc(C(=O)NO)c3C2)C1=O	US10508088, Example II-23::US10538496, Compound II-23
+ONC(=O)c1cccc2CC3(CCN(Cc4cccc(Cl)c4Cl)C3=O)Cc12	US10508088, Example II-22::US10538496, Compound II-22
+ONC(=O)c1cccc2CC3(CCN(Cc4c(Cl)cccc4Cl)C3=O)Cc12	US10508088, Example II-21::US10538496, Compound II-21
+COc1cccc(CN2CCC3(Cc4cccc(C(=O)NO)c4C3)C2=O)c1	US10508088, Example II-20::US10538496, Compound II-20
+COc1ccc(CN2CCC3(Cc4cccc(C(=O)NO)c4C3)C2=O)cc1	US10508088, Example II-19::US10538496, Compound II-19
+ONC(=O)c1cccc2CC3(CCN(Cc4cccc(c4)-c4ccccc4)C3=O)Cc12	US10508088, Example II-18::US10538496, Compound II-18
+Cc1cccc(CN2CCC3(Cc4cccc(C(=O)NO)c4C3)C2=O)c1	US10508088, Example II-17::US10538496, Compound II-17
+ONC(=O)c1cccc2CC3(CCN(Cc4ccc(cc4)-c4ccccc4)C3=O)Cc12	US10508088, Example II-16::US10538496, Compound II-16
+ONC(=O)c1cccc2CC3(CCN(CCCc4ccccc4)C3=O)Cc12	US10508088, Example II-15::US10538496, Compound II-15
+ONC(=O)c1cccc2CC3(CCN(Cc4ccccc4)C3=O)Cc12	1&#8242;-benzyl-N-hydroxy-2&#8242;-oxo-1,3-dihydrospiro[indene-2,3&#8242;-pyrrolidine]-4-carboxamide::US10508088, Example II-14::US10538496, Compound II-14
+ONC(=O)c1cccc2CC3(CCN(C3=O)c3ccccc3C(F)(F)F)Cc12	US10508088, Example II-13::US10538496, Compound II-13
+ONC(=O)c1cccc2CC3(CCN(C3=O)c3cccc(c3)C(F)(F)F)Cc12	N-hydroxy-2&#8242;-oxo-1&#8242;-(3-(trifluoromethyl)phenyl)-1,3-dihydrospiro[indene-2,3&#8242;-pyrrolidine]-4-carboxamide::US10508088, Example II-12::US10538496, Compound II-12
+ONC(=O)c1cccc2CC3(CCN(C3=O)c3ccc(cc3)C(F)(F)F)Cc12	N-hydroxy-2&#8242;-oxo-1&#8242;-(4-(trifluoromethyl)phenyl)-1,3-dihydrospiro[indene-2,3&#8242;-pyrrolidine]-4-carboxamide::US10508088, Example II-11::US10538496, Compound II-11
+ONC(=O)c1cccc2CC3(CCN(CC4CCC4)C3=O)Cc12	US10538496, Compound II-10
+ONC(=O)c1cccc2CC3(CCN(C4CC4)C3=O)Cc12	1&#8242;-cyclopropyl-N-hydroxy-2&#8242;-oxo-1,3-dihydrospiro[indene-2,3&#8242;-pyrrolidine]-4-carboxamide::US10508088, Example II-9::US10538496, Compound II-9
+CS(=O)(=O)c1ccc(CN2CCC3(Cc4cccc(C(=O)NO)c4C3)C2=O)cc1	US10508088, Example II-54::US10538496, Compound II-54
+ONC(=O)c1cccc2CC3(CCN(Cc4ccc(F)cc4)C3=O)Cc12	US10508088, Example II-7::US10538496, Compound II-7
+ONC(=O)c1cccc2CC3(CCN(Cc4ccc(cc4)C(F)(F)F)C3=O)Cc12	US10508088, Example II-6::US10538496, Compound II-6
+ONC(=O)c1cccc2CC3(CCN(Cc4ccc(c(F)c4)C(F)(F)F)C3=O)Cc12	US10538496, Compound II-5
+ONC(=O)c1cccc2C[C@@]3(CCN(Cc4ccc(Cl)c(c4)C(F)(F)F)C3=O)Cc12	US10538496, Compound II-4
+ONC(=O)c1cccc2C[C@]3(CCN(Cc4ccc(Cl)c(c4)C(F)(F)F)C3=O)Cc12	(R)-1&#8242;-(4-chloro-3-(trifluoromethyl)benzyl)-N-hydroxy-2&#8242;-oxo-1,3-dihydrospiro[indene-2,3&#8242;-pyrrolidine]-4-carboxamide::US10508088, Example II-3::US10538496, Compound II-3
+CN1CCC2(Cc3cccc(C(=O)NO)c3C2)C1=O	US10508088, Example II-2::US10538496, Compound II-2
+ONC(=O)c1cccc2CC3(CCN(Cc4ccc(Cl)cc4)C3=O)Cc12	1&#8242;-(4-chlorobenzyl)-N-hydroxy-2&#8242;-oxo-1,3-dihydrospiro[indene-2,3&#8242;-pyrrolidine]-4-carboxamide::US10508088, Example II-1::US10538496, Compound II-1
+CN(c1nc2cc(C#N)c(cc2[nH]1)C(F)(F)F)c1cccc(c1)C(=O)NOC(=O)NCc1ccccc1	N-((benzylcarbamoyl)oxy)-3-((5-cyano-6- (trifluoromethyl)-1H-benzo[d]imidazol-2- yl)(methyl)amino)benzamide::US10508088, Example 37-2::US10538496, Compound 37-2
+ONC(=O)c1cccc2CC3(CCN(Cc4ccc(OC(F)(F)F)cc4)C3=O)Cc12	US10508088, Example II-27::US10538496, Compound II-27
+ONC(=O)c1cccc2CC3(CCN(Cc4cc(F)cc(F)c4)C3=O)Cc12	US10508088, Example II-28::US10538496, Compound II-28
+ONC(=O)c1cccc2CC3(CCN(Cc4ccccc4C(F)(F)F)C3=O)Cc12	US10508088, Example II-29::US10538496, Compound II-29
+ONC(=O)c1cccc2CC3(CCN(CC4CCCCC4)C3=O)Cc12	US10508088, Example II-44::US10538496, Compound II-44
+ONC(=O)c1cccc2CC3(CCN(Cc4ccc(cc4)C(F)(F)F)C3)Cc12	N-hydroxy-1&#8242;-(4-(trifluoromethyl)benzyl)-1,3-dihydrospiro[indene-2,3&#8242;-pyrrolidine]-4-carboxamide::US10508088, Example II-56::US10538496, Compound II-56
+ONC(=O)c1cccc2CC3(CCN(CC4CC4)C3=O)Cc12	US10508088, Example II-55::US10538496, Compound II-55
+ONC(=O)c1cccc2CC3(CCN(Cc4cn(nn4)-c4ccccc4)C3=O)Cc12	US10508088, Example II-53::US10538496, Compound II-53
+ONC(=O)c1cccc2CC3(CCN(CCN4CCOCC4)C3=O)Cc12	US10508088, Example II-52::US10538496, Compound II-52
+ONC(=O)c1cccc2CC3(CCN(Cc4cccc(n4)C(F)(F)F)C3=O)Cc12	US10508088, Example II-51::US10538496, Compound II-51
+Cc1noc(C)c1CN1CCC2(Cc3cccc(C(=O)NO)c3C2)C1=O	US10508088, Example II-50::US10538496, Compound II-50
+ONC(=O)c1cccc2CC3(CCN(Cc4noc(n4)C4CCOCC4)C3=O)Cc12	US10508088, Example II-49::US10538496, Compound II-49
+ONC(=O)c1cccc2CC3(CCN(Cc4ccc(nc4)C(F)(F)F)C3=O)Cc12	US10508088, Example II-48::US10538496, Compound II-48
+ONC(=O)c1cccc2CC3(CCN(Cc4ccc(nc4)-n4cccn4)C3=O)Cc12	US10508088, Example II-47::US10538496, Compound II-47
+ONC(=O)c1cccc2CC3(CCN(Cc4cc(no4)-c4ccccc4)C3=O)Cc12	US10508088, Example II-46::US10538496, Compound II-46
+ONC(=O)c1cccc2CC3(CCN(Cc4cc(Cl)ccc4Cl)C3=O)Cc12	US10508088, Example II-45::US10538496, Compound II-45
+ONC(=O)c1cccc2CC3(CCN(Cc4cccc(c4F)C(F)(F)F)C3=O)Cc12	US10508088, Example II-43::US10538496, Compound II-43
+ONC(=O)c1cccc2CC3(CCN(Cc4cccc(Cl)c4)C3=O)Cc12	US10508088, Example II-30::US10538496, Compound II-30
+ONC(=O)c1cccc2CC3(CCN(Cc4cccc(OC(F)(F)F)c4)C3=O)Cc12	US10508088, Example II-42::US10538496, Compound II-42
+ONC(=O)c1cccc2CC3(CCN(Cc4ccc(OCc5ccccc5)cc4)C3=O)Cc12	US10508088, Example II-41::US10538496, Compound II-41
+COc1cc(CN2CCC3(Cc4cccc(C(=O)NO)c4C3)C2=O)cc(OC)c1	US10508088, Example II-40::US10538496, Compound II-40
+Cc1ccc(CN2CCC3(Cc4cccc(C(=O)NO)c4C3)C2=O)cc1C	US10508088, Example II-39::US10538496, Compound II-39
+ONC(=O)c1cccc2CC3(CCN(Cc4ccc(Cl)c(Cl)c4)C3=O)Cc12	US10508088, Example II-38::US10538496, Compound I-38
+ONC(=O)c1cccc2CC3(CCN(Cc4ccccc4-c4ccccc4)C3=O)Cc12	US10508088, Example II-37::US10538496, Compound II-37
+COc1ccccc1CN1CCC2(Cc3cccc(C(=O)NO)c3C2)C1=O	US10508088, Example II-36::US10538496, Compound II-36
+ONC(=O)c1cccc2CC3(CCN(Cc4ccc(F)cc4F)C3=O)Cc12	US10508088, Example II-35::US10538496, Compound II-35
+ONC(=O)c1cccc2CC3(CCN(Cc4csc(n4)-c4ccccc4)C3=O)Cc12	US10508088, Example II-34::US10538496, Compound II-34
+ONC(=O)c1cccc2CC3(CCN(Cc4cccc(Br)c4)C3=O)Cc12	US10508088, Example II-33::US10538496, Compound II-33
+ONC(=O)c1cccc2CC3(CCN(Cc4ccccc4OC(F)(F)F)C3=O)Cc12	US10508088, Example II-32::US10538496, Compound II-32
+ONC(=O)c1cccc2CC3(CCN(Cc4cccc(c4)C(F)(F)F)C3=O)Cc12	US10508088, Example II-31::US10538496, Compound II-31
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SC1CNC1	(Z)-4-(azetidin-3-ylthio)-N-(3- bromo-4-fluorophenyl)-N'- hydroxy-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 26
+CC(C)(O)CNC(=O)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	US10538497, Example 28
+O\N=C(/Nc1ccc(F)c(c1)C#N)c1nonc1SC[C@@H]1CCC(=O)N1	N-(3-cyano-4-fluorophenyl)-N'- hydroxy-4-({[(2S)-5- oxopyrrolidin-2- yl]methyl}sulfanyl)-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 149
+CCOC(=O)CNP(=O)(CCCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O)Oc1ccccc1	US10538497, Example 119::ethyl N-{[3-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxyarbamimidoyl]-1,2,5- oxadiazol-3- yl}sulfanyl)propy](phenoxy) phosphoryl]glycinate
+CNP(=O)(CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O)NC	4- ({[bis(methylamino)phosphoryl] methyl}sulfanyl)-N-(3-bromo-4- fluorophenyl)-N'-hydroxy-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 117
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCCP(=O)(NCc1ccccc1)NCc1ccccc1	4-({2- [bis(benzylamino)phosphoryl] ethyl}sulfanyl)-N-(3-bromo-4- fluorophenyl)-N'-hydroxy-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 116
+CC(=O)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-[(2- oxopropyl)sulfanyl]-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 115
+Fc1ccc(NC(=N)c2nonc2SCC(=O)NC2CCC2)cc1Br	2-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)-N- cyclobutylacetamide::US10538497, Example 114
+Fc1ccc(NC(=N)c2nonc2SCC(=O)NC2CC2)cc1Br	2-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)-N- cyclopropylacetamide::US10538497, Example 113
+OCCNC(=O)CSc1nonc1C(=N)Nc1ccc(F)c(Br)c1	2-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)-N-(2- hydroxyethyl)acetamide::US10538497, Example 112
+CN(C)C(=O)CSc1nonc1C(=N)Nc1ccc(F)c(Br)c1	2-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)-N,N- dimethylacetamide::US10538497, Example 111
+CCNC(=O)CSc1nonc1C(=N)Nc1ccc(F)c(Br)c1	2-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)-N- ethylacetamide::US10538497, Example 110
+CC(C)OC(=O)OCOP(=O)(CCCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O)OCOC(=O)OC(C)C	US10538497, Example 109::bis({[(1- methylethoxy)carbonyl]oxy} methyl) [3-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3- yl}sulfanyl)propyl]phosphonate
+CCOC(=O)CNP(=O)(CCCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O)NCC(=O)OCC	US10538497, Example 108::ethyl 4-[3-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)propyl]- 7-oxo-8-oxa-3,5-diaza-4- phosphadecan-1-oate 4-oxide (non-preferred name)
+OCCNC(=O)CCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	3-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)-N-(2- hydroxyethyl)propanamide::US10538497, Example 107
+COCCNC(=O)CCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	3-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)-N-(2- methoxyethyl)propanamide::US10538497, Example 106
+CCOC(=O)CNP(=O)(CC)NCCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	US10538497, Example 105::ethyl N-[{[2-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3- yl}sulfanyl)ethyl]amino}(ethyl) phosphoryl]glycinate
+CNC(=O)N1CCC(CC1)Sc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	4-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)-N- methylpiperidine-1-carboxamide::US10538497, Example 104
+CNP(=O)(CCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O)NC	4-({2- [bis(methylamino)phosphoryl] ethyl}sulfanyl)-N-(3-bromo-4- fluorophenyl)-N'-hydroxy-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 103
+Cc1cc(CSc2nonc2\C(Nc2ccc(F)c(Br)c2)=N\O)[nH]c(=O)c1	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-{[(4-methyl-6-oxo- 1,6-dihydropyridin-2- yl)methyl]sulfanyl}-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 102
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCCP(=O)(Oc1ccccc1)Oc1ccccc1	US10538497, Example 101::diphenyl [2-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3- yl}sulfanyl)ethyl]phosphonate
+COCCNP(=O)(CCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O)NCCOC	4-[(2-{bis[(2- methoxyethyl)amino]phosphoryl} ethyl)sulfanyl]-N-(3-bromo-4- fluorophenyl)-N'-hydroxy-1,2,5- oxadiaxole-3-carboximidamide::US10538497, Example 100
+N\C(NCCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O)=C/[N+]([O-])=O	4-[(2-{[(E)-1-amino-2- nitroethenyl]amino}ethyl) sulfanyl]-N-(3-bromo- 4-fluorophenyl)-N'- hydroxy-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 99
+Cn1c(CSc2nonc2\C(Nc2ccc(F)c(Br)c2)=N\O)n[nH]c1=O	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-{[(4-methyl-5-oxo- 4,5-dihydro-1H-1,2,4-triazol-3- yl)methyl]sulfanyl}-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 98
+CC(C)OC(=O)[C@H](C)NP(=O)(CCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O)N[C@@H](C)C(=O)OC(C)C	1-methylethyl (2S,6S)-4-[2-({4- [N-(3-bromo-4-fluorophenyl)- N'-hydroxycarbamimidoyl]- 1,2,5-oxadiazol-3- yl}sulfanyl)ethyl]-2,6,9- trimethyl-7-oxo-8-oxa-3,5-diaza- 4-phosphadecan-1-oate 4-oxide (non-preferred name)::US10538497, Example 97
+NC(=O)CCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	3-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3- yl}sulfanyl)propanamide::US10538497, Example 96
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCCNc1c(NCc2ccncc2)c(=O)c1=O	N-(3-bromo-4-fluorophenyl)-4- {[2-({3,4-dioxo-2-[(pyridin-4- ylmethyl)amino]cyclobut-1-en- 1-yl}amino)ethyl]sulfanyl}-N'- hydroxy-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 95
+CC(C)Nc1c(NCCSc2nonc2\C(Nc2ccc(F)c(Br)c2)=N\O)c(=O)c1=O	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-{[2-({2-[(1- methylethyl)amino]-3,4- dioxocyclobut-1-en-1- yl}amino)ethyl]sulfanyl}-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 94
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCCNc1c(N2CCCCC2)c(=O)c1=O	N-(3-bromo-4-fluorophenyl)-4- ({2-[(3,4-dioxo-2-piperidin-1- ylcyclobut-1-en-1- yl)amino]ethyl}sulfanyl)-N'- hydroxy-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 93
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCc1cc(c(=O)[nH]n1)C(F)(F)F	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-({[6-oxo-5- (trifluoromethyl)-1,6- dihydropyridazin-3- yl]methyl}sulfanyl)-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 92
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCCNc1c(N2CCOCC2)c(=O)c1=O	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-({2-[(2-morpholin-4- yl-3,4-dioxocyclobut-1-en-1- yl)amino]ethyl}sulfanyl)-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 91
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCCCP(O)(=O)Oc1ccccc1	US10538497, Example 118::phenyl hydrogen [3-({4-[N-(3- bromo-4-fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3- yl}sulfanyl)propyl]phosphonate
+COC(=O)CNP(=O)(CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O)NCC(=O)OC	US10538497, Example 120::methyl 6-[({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)methyl]- 3-oxo-2-oxa-5,7-diaza-6- phosphanonan-9-oate 6-oxide
+CC(C)(O)[C@H](O)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	(R)/(S)N-(3-bromo-4-fluorophenyl)-4-((2,3-dihydroxy-3-methylbutyl)thio)-N&#8242;-hydroxy-1,2,5-oxadiazole-3-carboximidamide::US10538497, Example 29
+CN1[C@H](CSc2nonc2\C(Nc2ccc(F)c(Br)c2)=N\O)CNC1=O	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-({[(4S)-3-methyl-2- oxoimidazolidin-4- yl]methyl}sulfanyl)-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 121
+O\N=C(/Nc1ccc(F)c(c1)C#N)c1nonc1SC[C@H]1CCC(=O)N1	N-(3-cyano-4-fluorophenyl)-N'- hydroxy-4-({[(2R)-5- oxopyrrolidin-2- yl]methyl}sulfanyl)-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 148
+OC[C@@H](O)CSc1nonc1\C(Nc1ccc(F)c(c1)C#N)=N\O	N-(3-cyano-4-fluorophenyl)-4- {[(2R)-2,3- dihydroxypropyl]sulfanyl}-N'- hydroxy-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 147
+CN1[C@H](CSc2nonc2\C(Nc2ccc(F)c(c2)C#N)=N\O)CNC1=O	N-(3-cyano-4-fluorophenyl)-N'- hydroxy-4-({[(4S)-3-methy]-2- oxoimidazolidin-4- yl]methyl}sulfanyl)-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 146
+OCC(CO)NC(=O)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	2-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)-N-[2- hydroxy-1- (hydroxymethyl)ethyl]acetamide::US10538497, Example 145
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCC(=O)N[C@H]1C[C@H](O)[C@H](O)C1	2-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)-N- [(1s,3R,4S)-3,4- dihydroxycyclopentyl]acetamide::US10538497, Example 144
+C[C@@H](O)[C@@H](CO)NC(=O)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	2-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)-N- [(1R,2R)-2-hydroxy-1- (hydroxymethyl)propyl]acetamide::US10538497, Example 143
+CC(=O)NCCSc1nonc1\C(Nc1ccc(F)c(c1)C(F)F)=N\O	N-{2-[(4-{N-[3- (difluoromethyl)-4- fluorophenyl]-N'- hydroxycarbamimidoyl}-1,2,5- oxadiazol-3- yl)sulfanyl]ethyl}acetamide::US10538497, Example 142
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCCc1n[nH]c(=O)o1	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-{[2-(5-oxo-4,5- dihydro-1,3,4-oxadiazol-2- yl)ethyl]sulfanyl}-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 141
+OC[C@H](O)CSc1nonc1\C(Nc1ccc(F)c(c1)C#N)=N\O	N-(3-cyano-4-fluorophenyl)-4- {[(2S)-2,3- dihydroxypropyl]sulfanyl}-N'- hydroxy-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 140
+CN(C)P(=O)(CCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O)N(C)C	4-({2- [bis(dimethylamino)phosphoryl] ethyl}sulfanyl)-N-(3-bromo-4- fluorophenyl)-N'-hydroxy-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 139
+CC(O)CNC(=O)CSc1nonc1C(=N)Nc1ccc(F)c(Br)c1	2-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)-N-(2- hydroxypropyl)acetamide::US10538497, Example 138
+FCCNC(=O)CSc1nonc1C(=N)Nc1ccc(F)c(Br)c1	2-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)-N-(2- fluoroethyl)acetamide::US10538497, Example 137
+Fc1ccc(NC(=N)c2nonc2SCC(=O)N2CCCC2)cc1Br	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-[(2-oxo-2-pyrrolidin- 1-ylethyl)sulfanyl]-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 136
+OC[C@H]1CCCN1C(=O)CSc1nonc1C(=N)Nc1ccc(F)c(Br)c1	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-({2-[(2R)-2- (hydroxymethyl)pyrrolidin-1- yl]-2-oxoethyl}sulfanyl)-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 135
+OC[C@@H]1CCCN1C(=O)CSc1nonc1C(=N)Nc1ccc(F)c(Br)c1	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-({2-[(2S)-2- (hydroxymethyl)pyrrolidin-1- yl]-2-oxoethyl}sulfanyl)-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 134
+Cn1c(CSc2nonc2\C(Nc2ccc(F)c(Cl)c2)=N\O)n[nH]c1=O	N-(3-chloro-4-fluorophenyl)-N'- hydroxy-4-{[(4-methyl-5-oxo- 4,5-dihydro-1H-1,2,4-triazol-3- yl)methyl]sulfanyl}-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 133
+COCCNC(=O)NCCSc1nonc1C(=N)Nc1ccc(F)c(Br)c1	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-[(2-{[(2- methoxyethyl)carbamoyl]amino} ethyl)sulfanyl]-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 132
+Fc1ccc(NC(=N)c2nonc2SCCNC(=O)NCc2ccco2)cc1Br	N-(3-bromo-4-fluorophenyl)-4- [(2-{[(furan-2- ylmethyl)carbamoyl]amino} ethyl)sulfanyl]-N'-hydroxy-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 131
+Fc1ccc(NC(=N)c2nonc2SCCNC(=O)NCC2CCOCC2)cc1Br	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-[(2-{[(tetrahydro-2H- pyran-4- ylmethyl)carbamoyl]amino}ethyl) sulfanyl]-1,2,5-oxadiaxole-3- carboximidamide::US10538497, Example 130
+Fc1ccc(NC(=N)c2nonc2SCCNC(=O)NC2CCCC2)cc1Br	N-(3-bromo-4-fluorophenyI)-4- ({2- [(cyclopentylcarbamoyl)amino] ethyl}sulfanyl)-N'-hydroxy-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 129
+CCOC(=O)NC(=O)NCCSc1nonc1C(=N)Nc1ccc(F)c(Br)c1	US10538497, Example 128::ethyl {[2-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3- yl}sulfanyl)ethyl]carbamoyl} carbamate
+CCCCNC(=O)NCCSc1nonc1C(=N)Nc1ccc(F)c(Br)c1	N-(3-bromo-4-fluorophenyl)-4- ({2- [(bulylcarbamoyl)amino]ethyl} sulfanyl)-N'-hydroxy-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 127
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCCN1CCOCC1	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-[(2-morpholin-4- ylethyl)sulfanyl]-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 126
+N[C@H](CO)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	4-{[(2R)-2-amino-3- hydroxypropyl]sulfanyl}-N-(3- bromo-4-fluorophenyl)-N'- hydroxy-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 125
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCC1CNC(=O)O1	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-{[(2-oxo-1,3- oxazolidin-5- yl)methyl]sulfanyl}-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 124
+CN1C[C@H](CSc2nonc2\C(Nc2ccc(F)c(Br)c2)=N\O)NC1=O	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-({[(4R)-1-methyl-2- oxoimidazolidin-4- yl]methyl}sulfanyl)-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 123
+CN1C[C@@H](CSc2nonc2\C(Nc2ccc(F)c(Br)c2)=N\O)NC1=O	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-({[(4S)-1-methyl-2- oxoimidazolidin-4- yl]methyl}sulfanyl)-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 122
+OCCNc1c(NCCSc2nonc2\C(Nc2ccc(F)c(Br)c2)=N\O)c(=O)c1=O	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-{[2-({2-[(2- hydroxyethyl)amino]-3,4- dioxocyclobut-1-en-1- yl}amino)ethyl]sulfanyl}-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 90
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCCNc1c(NCC2CC2)c(=O)c1=O	N-(3-bromo-4-fluorophenyl)-4- {[2-({2- [(cyclopropylmethyl)amino]-3,4- dioxocyclobut-1-en-1- yl}amino)ethyl]sulfanyl}-N'- hydroxy-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 89
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCc1cc(cc(=O)[nH]1)C(F)(F)F	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-({[6-oxo-4- (trifluoromethyl)-1,6- dihydropyridin-2- yl]methyl}sulfanyl)-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 88
+CC(=O)N1CCC(CC1)Sc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	4-[(1-acetylpiperidin-4- yl)sulfanyl]-N-(3-bromo-4- fluorophenyl)-N'-hydroxy-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 87
+NC(=N)NCCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	N-(3-bromo-4-fluorophenvl)-4- [(2- carbamimidamidoethyl)sulfanyl]- N'-hydroxy-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 56
+CCNc1c(NCCSc2nonc2\C(Nc2ccc(F)c(Br)c2)=N\O)c(=O)c1=O	N-(3-bromo-4-fluorophenyl)-4- [(2-{[2-(ethylamino)-3,4- dioxocyclobut-1-en-1- yl]amino}ethyl)sulfanyl]-N'- hydroxy-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 55
+CC(C)C(O)CCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-[(3-hydroxy-4- methylpentyl)sulfanyl]-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 54
+OCCCCCCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-[(6- hydroxyhexyl)sulfanyl]-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 53
+CC(=O)NCCSc1nonc1\C(Nc1ccc(F)c(OC(F)(F)F)c1)=N\O	N-{2-[(4-{N-[4-fluoro-3- (trifluoromethoxy)phenyl]-N'- hydroxycarbamimidoyl}-1,2,5- oxadiazol-3- yl)sulfanyl]ethyl}acetamide::US10538497, Example 52
+CC(=O)NCCSc1nonc1\C(Nc1ccc(F)c(C)c1)=N\O	N-[2-({4-[N-(4-fluoro-3- methylphenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3- yl}sulfanyl)ethyl]acetamide::US10538497, Example 51
+OCCSc1nonc1\C(Nc1ccc(F)c(c1)C(F)(F)F)=N\O	N-[4-fluoro-3- (trifluoromethyl)phenyl]-N'- hydroxy-4-[(2- hydroxyethyl)sulfanyl]-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 50
+CC(=O)NCCSc1nonc1\C(Nc1ccc(F)c(c1)C(F)(F)F)=N\O	N-{2-[(4-{N-[4-fluoro-3- (trifluoromethyl)phenyl]-N'- hydroxycarbamimidoyl}-1,2,5- oxadiazol-3- yl)sulfanyl]ethyl}acetamide::US10538497, Example 49
+COC(=O)[C@@H](N)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	US10538497, Example 48::methyl S-{4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}-L-cisteinate
+NS(=O)(=O)NCCSc1nsnc1\C(Nc1ccc(F)c(Br)c1)=N\O	US10538497, Example 47
+NC(=O)NCCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	US10538497, Example 46
+CNC(=O)NCCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	US10538497, Example 45
+COC(=O)CNP(=O)(CCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O)NCC(=O)OC	US10538497, Example 44
+CN1[C@@H](CSc2nonc2\C(Nc2ccc(F)c(Br)c2)=N\O)CNC1=O	US10538497, Example 43
+OC[C@H](O)CNC(=O)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	US10538497, Example 42
+CNC(=O)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	US10538497, Example 41
+O\N=C(/Nc1ccc(F)c(c1)C#N)c1nonc1SCCNC(=O)C1CC1	US10538497, Example 40
+CC(C)(O)[C@H](O)CSc1nonc1\C(Nc1ccc(F)c(c1)C#N)=N\O	US10538497, Example 39
+CC(C)(O)[C@@H](O)CSc1nonc1\C(Nc1ccc(F)c(c1)C#N)=N\O	(R)N-(3-cyano-4-fluorophenyl)-4-((2,3-dihydroxy-3-methylbutyl)thio)-N&#8242;-hydroxy-1,2,5-oxadiazole-3-carboximidamide::US10538497, Example 38
+CC(=O)NCCSc1nonc1\C(Nc1ccc(F)c(c1)C#N)=N\O	US10538497, Example 37
+CNc1c(NCCSc2nonc2\C(Nc2ccc(F)c(Br)c2)=N\O)c(=O)c1=O	US10538497, Example 36
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCc1ccc(=O)[nH]n1	US10538497, Example 35
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCc1n[nH]c(=O)[nH]1	US10538497, Example 34
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SC[C@H]1CNS(=O)(=O)N1	US10538497, Example 33
+O\N=C(/Nc1ccc(F)c(Cl)c1)c1nonc1SC[C@H]1CNS(=O)(=O)N1	US10538497, Example 32
+COCCNS(=O)(=O)NCCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	US10538497, Example 31
+CC(C)(O)[C@@H](O)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	US10538497, Example 30
+NC(CCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O)C(O)=O	S-{4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}homocysteine::US10538497, Example 57
+CC(=O)NCCSc1nonc1\C(Nc1cc(Br)c(F)cc1F)=N\O	N-[2-({4-[N-(5-bromo-2,4- difluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3- yl}sulfanyl)ethyl]acetamide::US10538497, Example 58
+CC(=O)NCCSc1nonc1\C(Nc1cccc(Br)c1)=N\O	N-[2-({4-[N-(3-bromophenyl)- N'-hydroxycarbamimidoyl]- 1,2,5-oxadiazol-3- yl}sulfanyl)ethyl]acetamide::US10538497, Example 59
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCC(O)c1ccccc1	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-[(2-hydroxy-2- phenylethyl)sulfanyl]-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 74
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCc1cccc(=O)[nH]1	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-{[(6-oxo-1,6- dihydropyridin-2- yl)methyl]sulfanyl}-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 86
+N\C(NCCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O)=N/C#N	N-(3-bromo-4-fluorophenyl)-4- {[2-(N$#8243;- cyanocarbamimidamido)ethyl] sulfanyl}-N'-hydroxy-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 85
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SC[C@@H]1CCC(=O)N1	N-(3-bromo-4-fluorophenvl)-N'- hydroxy-4-({[(2S)-5- oxopyrrolidin-2- yl]methyl}sulfanyl)-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 84
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SC[C@H]1CCC(=O)N1	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-({[(2R)-5- oxopyrrolidin-2- yl]methyl}sulfanyl)-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 83
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SC1CCS(=O)(=O)CC1	N-(3-bromo-4-fluorophenyl)-4- [(1,1-dioxidotetrahydro-2H- thiopyran-4-yl)sulfanyl]-N'- hydroxy-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 82
+CNC(=O)N1CC(C1)Sc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	3-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)-N- methylazetidine-1-carboxamide::US10538497, Example 81
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCC12CC(C1)(C2)C#N	N-(3-bromo-4-fluorophenyl)-4- {[(3-cyanobicyclo[1.1.1]pent-1- yl)methyl]sulfanyl}-N'-hydroxy- 1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 80
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCCNC(=O)C(F)(F)F	N-[2-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)ethyl]- 2,2,2-trifluoroacetamide::US10538497, Example 79
+CN1CCOC(CSc2nonc2\C(Nc2ccc(F)c(Br)c2)=N\O)C1	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-{[(4- methylmorpholin-2- yl)methyl]sulfanyl}-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 78
+NC(=O)CSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	2-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3- yl}sulfanyl)acetamide::US10538497, Example 77
+NS(=O)(=O)N1CCC(CC1)Sc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-[(1- sulfamoylpiperidin-4- yl)sulfanyl]-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 76
+OCC(O)CNc1c(NCCSc2nonc2\C(Nc2ccc(F)c(Br)c2)=N\O)c(=O)c1=O	N-(3-bromo-4-fluorophenyl)-4- {[2-({2-[(2,3- dihydroxypropyl)amino]-3,4- dioxocyclobut-1-en-1- yl}amino)ethyl]sulfanyl}-N'- hydroxy-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 75
+Nc1c(NCCSc2nonc2\C(Nc2ccc(F)c(Br)c2)=N\O)c(=O)c1=O	4-({2-[(2-amino-3,4- dioxocyclobut-1-en-1- yl)amino]ethyl}sulfanyl)-N-(3- bromo-4-fluorophenyl)-N'- hydroxy-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 73
+CN\C(NCCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O)=C/[N+]([O-])=O	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-[(2-{[(E)-1- (methylamino)-2- nitroethenyl]amino}ethyl)sulfanyl]- 1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 60
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SC1CCNCC1	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-(piperidin-4- ylsulfanyl)-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 72
+NS(=O)(=O)c1ccc(CCSc2nonc2\C(Nc2ccc(F)c(Br)c2)=N\O)cc1	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-{[2-(4- sulfamoylphenyl)ethyl]sulfanyl}- 1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 71
+CNC(=O)CCSc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	3-({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)-N- methylpropanamide::US10538497, Example 70
+CNC(=O)C1(CSc2nonc2\C(Nc2ccc(F)c(Br)c2)=N\O)CC1	1-[({4-[N-(3-bromo-4- fluorophenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)methyl]- N- methylcyclopropanecarboxamide::US10538497, Example 69
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCC1(CC1)C#N	N-(3-bromo-4-fluorophenvl)-4- {[(1- cyanocyclopropyl)methyl] sulfanyl}-N'-hydroxy-1,2,5- oxadiazole-3-carboximidamide::US10538497, Example 68
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCC#N	N-(3-bromo-4-fluorophenyl)-4- [(cyanomethyl)sulfanyl]-N'- hydroxy-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 67
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SC1CCNC1	N-(3-bromo-4-fluorophenyl)-N'- hydroxy-4-(pyrrolidin-3- ylsulfanyl)-1,2,5-oxadiazole-3- carboximidamide::US10538497, Example 66
+CCc1cccc(N\C(=N/O)c2nonc2SCCNC(C)=O)c1	N-[2-({4-[N-(3-ethylphenyl)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3- yl}sulfanyl)ethyl]acetamide::US10538497, Example 65
+CC(=O)NCCSc1nonc1\C(Nc1ccc(F)cc1)=N\O	N-[2-({4-[N-(4-fluorophenyl)- N'-hydroxycarbamimidoyl]- 1,2,5-oxadiazol-3- yl}sulfanyl)ethyl]acetamide::US10538497, Example 62
+O\N=C(/Nc1ccc(F)c(Br)c1)c1nonc1SCC(=O)Nc1ccccc1	2-({4-[N-(3-bromo-4- fluorophenyI)-N'- hydroxycarbamimidoyl]-1,2,5- oxadiazol-3-yl}sulfanyl)-N- phenylacetamide::US10538497, Example 61
+CCc1coc2c(F)ccc(C(O)c3ncnn3COCC[Si](C)(C)C)c12	US10550089, Example 63
+Cn1ncc2c(F)ccc(C(O)c3ncc[nH]3)c12	US10550089, Example 62
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(N(C)CCOC)c2c1)-c1cnc(C)nc1	(R and S)-5-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3-[(2- methoxyethyl)(methyl)amino]- 3-methyl-1,3-dihydro- 2H-indol-2-one::US10544147, Compound 2-14
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(N[C@@H](C)C3CC3)c2c1)-c1cnc(C)nc1	3-{[(1S)-1- cyclopropylethyl]amino}-5- [9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3(R or S)- methyl-1,3-dihydro-2H- indol-2-one::US10544147, Compound 2-12::US10544147, Compound 2-13
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(N[C@H](C)C3CC3)c2c1)-c1cnc(C)nc1	3-{[(1R)-1- cyclopropylethyl]amino}-5- [9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3(R and S)- methyl-1,3-dihydro-2H- indol-2-one::US10544147, Compound 2-11
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(N3CCC4OCCC34)c2c1)-c1cnc(C)nc1	(R and S)-5-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3-(hexahydro- 4H-furo[3,2-b]pyrrol-4-yl)- 3-methyl-1,3-dihydro-2H- indol-2-one::US10544147, Compound 2-10
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(Nc3ccncc3)c2c1)-c1cnc(C)nc1	(R and S)-5-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3-methyl-3- (pyridin-4-ylamino)-1,3- dihydro-2H-indol-2-one::US10544147, Compound 2-9
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(N3CC4(CCO4)C3)c2c1)-c1cnc(C)nc1	(R or S)-5-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3-methyl-3-(1- oxa-6-azaspiro[3.3]hept-6- yl)-1,3-dihydro-2H-indol-2- one::US10544147, Compound 2-7::US10544147, Compound 2-8
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(N3CC(C)(C3)C#N)c2c1)-c1cnc(C)nc1	(R or S)-1-{5-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3-methyl-2- oxo-2,3-dihydro-1H-indol- 3-yl}-3-methylazetidine-3- carbonitrile::US10544147, Compound 2-5::US10544147, Compound 2-6
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(N3C[C@H](C)O[C@H](C)C3)c2c1)-c1cnc(C)nc1	(R or S)-3-[(cis)-2,6- dimethylmorpholin-4-yl]-5- [9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3-methyl-1,3- dihydro-2H-indol-2-one::US10544147, Compound 2-3::US10544147, Compound 2-4
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(N3CC(C)(C3)OC)c2c1)-c1cnc(C)nc1	(R or S)-5-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3-(3-methoxy- 3-methylazetidin-1-yl)-3- methyl-1,3-dihydro-2H- indol-2-one::US10544147, Compound 2-1::US10544147, Compound 2-2
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(CC(C)(C)O)c2c1)-c1cnc(C)nc1	(R or S)-5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-(2-hydroxy-2- methylpropyl)-3- methylindolin-2-one::US10544147, Compound 1-40::US10544147, Compound 1-41
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(CC)c2c1)-c1cnc(C)nc1	(R or S)-3-ethyl-5-(9-ethyl-8- (2-methylpyrimidin-5-yl)- 9H-purin-6-yl)-3- methylindolin-2-one::US10544147, Compound 1-38::US10544147, Compound 1-39
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(c2c1)c1ccccc1)-c1cnc(C)nc1	(R or S)-5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-methyl-3- phenylindolin-2-one::US10544147, Compound 1-36::US10544147, Compound 1-37
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(C3CCOCC3)c2c1)-c1cnc(C)nc1	(R or S)-5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-methyl-3- (tetrahydro-2H-pyran-4- yl)indolin-2-one::US10544147, Compound 1-34::US10544147, Compound 1-35
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(Cc3cncnc3)c2c1)-c1cnc(C)nc1	5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-methyl-3- (pyrimidin-5- ylmethyl)indolin-2-one::US10544147, Compound 1-33
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(CC3CCO3)c2c1)-c1cnc(C)nc1	US10544147, Compound 1-30::US10544147, Compound 1-31::US10544147, Compound 1-32::[(R,R) or (R,S) or (S,S) or (S,R)]-5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-methyl-3- (oxetan-2-ylmethyl)indolin- 2-one
+Cn1cnc2c(ncnc12)-c1ccc2NC(=O)C(C)(Cc3ccccc3)c2c1	(R or S)-3-benzyl-3-methyl- 5-(9-methyl-9H-purin-6- yl)indolin-2-one::US10544147, Compound 1-28::US10544147, Compound 1-29
+CC(C)CC1(C)C(=O)Nc2ncc(cc12)-c1ncnc2n(C)c(nc12)-c1cnc(C)nc1	(R or S)-3-isobutyl-3-methyl- 5-(9-methyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-1,3-dihydro-2H- pyrrolo[2,3-b]pyridin-2-one::US10544147, Compound 1-26::US10544147, Compound 1-27
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(N(C)C(C)C)c2c1)-c1cnc(C)nc1	(R and S)-5-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3-methyl-3- [methyl(1- methylethyl)amino]-1,3- dihydro-2H-indol-2-one::US10544147, Compound 2-15
+CCn1ncc(c1C)-c1nc2c(ncnc2n1CC)-c1ccc2NC(=O)C(C)(CC3CC3)c2c1	(R or S)-3- (cyclopropylmethyl)-5-(9- ethyl-8-(1-ethyl-5-methyl- 1H-pyrazol-4-yl)-9H-purin-6- yl)-3-methylindolin-2-one::US10544147, Compound 1-25
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(NCCOC)c2c1)-c1cnc(C)nc1	(R and S)-5-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3-[(2- methoxyethyl)amino]-3- methyl-1,3-dihydro-2H- indol-2-one::US10544147, Compound 2-16
+CCn1c(nc2c(ncnc12)-c1cnc2NC(=O)C(C)(N[C@H]3CCOC3)c2c1)-c1cnc(C)nc1	(R or S)-5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-methyl-3- (((S)-tetrahydrofuran-3- yl)amino)-1,3-dihydro-2H- pyrrolo[2,3-b]pyridin-2-one::US10544147, Compound 2-43::US10544147, Compound 2-44
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(NCC(C)(F)F)c2c1)-c1cnc(C)nc1	(R or S)-3-((2,2- difluoropropyl)amino)-5- (9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3- methylindolin-2-one::US10544147, Compound 2-41::US10544147, Compound 2-42
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(NCC(C)(C)C#N)c2c1)-c1cnc(C)nc1	(R or S)-3-((5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-methyl-2- oxoindolin-3-yl)amino)- 2,2-dimethylpropanenitrile::US10544147, Compound 2-39::US10544147, Compound 2-40
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(NCC(C)(C)F)c2c1)-c1cnc(C)nc1	(R or S)-5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-((2-fluoro-2- methylpropyl)amino)-3- methylindolin-2-one::US10544147, Compound 2-37::US10544147, Compound 2-38
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(N[C@H]3CCOC3)c2c1)-c1cnc(C)nc1	5-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3(R or S)- methyl-3-[(3S)- tetrahydrofuran-3- ylamino]-1,3-dihydro-2H- indol-2-one::US10544147, Compound 2-35::US10544147, Compound 2-36
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(NCC3CC3)c2c1)-c1cnc(C)nc1	(R or S)-3- [(cyclopropylmethyl)amino]- 5-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3-methyl-1,3- dihydro-2H-indol-2-one::US10544147, Compound 2-33::US10544147, Compound 2-34
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(NC(C)C)c2c1)-c1cnc(C)nc1	(R or S)-5-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3-methyl-3-[(1- methylethyl)amino]-1,3- dihydro-2H-indol-2-one::US10544147, Compound 2-31::US10544147, Compound 2-32
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(NC3CCC3)c2c1)-c1cnc(C)nc1	(R or S)-3- (cyclobutylamino)-5-[9- ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3-methyl-1,3- dihydro-2H-indol-2-one::US10544147, Compound 2-29::US10544147, Compound 2-30
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(N3CC4(C3)CCOC4)c2c1)-c1cnc(C)nc1	(R and S)-5-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3-methyl-3-(6- oxa-2-azaspiro[3.4]oct-2- yl)-1,3-dihydro-2H-indol-2- one::US10544147, Compound 2-28
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(N[C@@H](C)C3CCC3)c2c1)-c1cnc(C)nc1	3-{[(1S)-1- cyclobutylethyl]amino}-5- [9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3(R and S)- methyl-1,3-dihydro-2H- indol-2-one::US10544147, Compound 2-27
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(N3C[C@H]4C[C@@H]3CO4)c2c1)-c1cnc(C)nc1	5-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3(R and S)- methyl-3-[(1R,4R)-2-oxa-5- azabicyclo[2.2.1]hept-5-yl]- 1,3-dihydro-2H-indol-2-one::US10544147, Compound 2-26
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(NC3CCOCC3)c2c1)-c1cnc(C)nc1	(R and S)-5-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3-methyl-3- (tetrahydro-2H-pyran-4- ylamino)-1,3-dihydro-2H- indol-2-one::US10544147, Compound 2-25
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(N3CCn4nccc4C3)c2c1)-c1cnc(C)nc1	(R and S)-3-(6,7- dihydropyrazolo[1,5- a]pyrazin-5(4H)-yl)-5-[9- ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3-methyl-1,3- dihydro-2H-indol-2-one::US10544147, Compound 2-24
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(N3CCOCC33CCC3)c2c1)-c1cnc(C)nc1	(R and S)-5-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3-methyl-3-(8- oxa-5-azaspiro[3.5]non-5- yl)-1,3-dihydro-2H-indol-2- one::US10544147, Compound 2-23
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(NC[C@H]3CCCO3)c2c1)-c1cnc(C)nc1	5-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3(R and S)- methyl-3-{[(2R)- tetrahydrofuran-2- ylmethyl]amino}-1,3- dihydro-2H-indol-2-one::US10544147, Compound 2-22
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(NC[C@@H]3CCCO3)c2c1)-c1cnc(C)nc1	5-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3(R and S)- methyl-3-{[(2S)- tetrahydrofuran-2- ylmethyl]amino}-1,3- dihydro-2H-indol-2-one::US10544147, Compound 2-21
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(NCC3CCC3)c2c1)-c1cnc(C)nc1	(R and S)-3- [(cyclobutylmethyl)amino]- 5-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3-methyl-1,3- dihydro-2H-indol-2-one::US10544147, Compound 2-20
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(NCC3(CCC3)[N+]#[C-])c2c1)-c1cnc(C)nc1	(R and S)-1-[({5-[9-ethyl-8- (2-methylpyrimidin-5-yl)- 9H-purin-6-yl]-3-methyl-2- oxo-2,3-dihydro-1H-indol- 3- yl}amino)methyl]cyclobutane- carbonitrile::US10544147, Compound 2-19
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(NCC3(C)CCC3)c2c1)-c1cnc(C)nc1	(R and S)-5-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3-methyl-3- {[(1- methylcyclobutyl)methyl] amino}-1,3-dihydro-2H- indol-2-one::US10544147, Compound 2-18
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(N[C@H](C)C3CCC3)c2c1)-c1cnc(C)nc1	3-{[(1R)-1- cyclobutylethyl]amino}-5- [9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3(R and S)- methyl-1,3-dihydro-2H- indol-2-one::US10544147, Compound 2-17
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(Cc3ccccc3)c2c1)C(F)F	(R or S)-benzyl-5-(8- (difluoromethyl)-9-ethyl-9H- purin-6-yl)-3-methylindolin- 2-one::US10544147, Compound 1-23::US10544147, Compound 1-24
+CC(=O)N1CCN(CC1)c1ccc(Nc2ncc(C(N)=O)c(NCC#C)n2)cc1	2-(4-(4- acetylpiperazin-1- yl)phenylamino)-4- (prop-2- ynylamino) pyrimidine- 5-carboxamide::US10533001, Example 13::US9868729, Example 13
+CS(=O)(=O)[C@H]1CC[C@@H](CC1)NC(=O)c1cnc(Nc2ncc(cc2F)C#N)cc1Nc1cccc(c1)C(N)=O	US10023562, Example 161::US10544133, Example 161::US9657009, 161
+CC(F)[C@@H](C)Nc1cc(Nc2ncc(cc2Cl)C#N)ncc1C(=O)NC[C@@H](F)C(C)(C)O	US10023562, Example 159::US10023562, Example 160::US10544133, Example 160::US9657009, 160
+CC(C)(O)[C@H](F)CNC(=O)c1cnc(Nc2ncc(cc2Cl)C#N)cc1NC1CCC(F)C1	US10023562, Example 157::US10023562, Example 158::US10023562, Example 57::US10023562, Example 62::US10544133, Example 158::US9657009, 158
+CC(C)Nc1cc(Nc2ncc(cc2Cl)C#N)ncc1C(=O)NC[C@H](F)C(C)(C)O	US10023562, Example 156::US10544133, Example 156::US9657009, 156
+CC(C)CNc1cc(Nc2ncc(cc2Cl)C#N)ncc1C(=O)NC[C@@H](F)C(C)(C)O	US10023562, Example 155::US10544133, Example 155::US9657009, 155
+CC(C)(O)[C@H](F)CNC(=O)c1cnc(Nc2cc(N)c(cn2)C#N)cc1NC1CC1	US10544133, Example 154
+CC(C)(O)[C@H](F)CNC(=O)c1cnc(Nc2ncc(cc2Cl)C#N)cc1Nc1ccc2ncsc2c1	US10023562, Example 153::US10544133, Example 153::US9657009, 153
+CC(C)(O)[C@H](F)CNC(=O)c1cnc(Nc2ncc(cc2Cl)C#N)cc1N[C@H]1CC[C@@](C)(O)CC1	US10023562, Example 152::US10544133, Example 152::US9657009, 152
+CS(=O)(=O)[C@H]1CC[C@@H](CC1)NC(=O)c1cnc(Nc2ncc(cc2Cl)C#N)cc1NC1CC1	US10023562, Example 151::US10544133, Example 151::US9657009, 151
+CC(C)(O)[C@H](F)CNC(=O)c1cnc(Nc2ncc(cc2Cl)C#N)cc1N[C@H]1CC[C@](C)(O)CC1	US10023562, Example 150::US10544133, Example 150::US9657009, 150
+CS(=O)(=O)[C@H]1CC[C@@H](CC1)NC(=O)c1cnc(Nc2ncc(cc2Cl)C#N)cc1NC1CCOCC1	US10023562, Example 149::US10544133, Example 149::US9657009, 149
+Cn1nnnc1-c1ccc(Nc2cc(Nc3ncc(cc3Cl)C#N)ncc2C(=O)NC[C@@H](F)C(C)(C)O)cc1	US10023562, Example 148::US10544133, Example 148::US9657009, 148
+Cn1nnnc1-c1ccc(Nc2cc(Nc3ncc(cn3)C#N)ncc2C(=O)NC[C@@H](F)C(C)(C)O)cc1	US10023562, Example 147::US10544133, Example 147::US9657009, 147
+Cn1nnnc1-c1cccc(Nc2cc(Nc3ncc(cc3Cl)C#N)ncc2C(=O)NC[C@@H](F)C(C)(C)O)c1	US10023562, Example 146::US10544133, Example 146::US9657009, 146
+CC(C)Nc1cc(Nc2ncc(cc2F)C#N)ncc1C(=O)NC1CC[C@@H](CC1)C(C)(O)C1CC1	US10023562, Example 144::US10023562, Example 145::US10544133, Example 145::US9657009, 145
+CC(C)(O)[C@H](F)CNC(=O)c1cnc(Nc2ncc(cc2Cl)C#N)cc1Nc1cccc(c1)C(N)=O	US10023562, Example 143::US10544133, Example 143::US9657009, 143
+CC(C)(O)[C@H](F)CNC(=O)c1cnc(Nc2ncc(cc2F)C#N)cc1Nc1ccc(cc1)C(N)=O	US10023562, Example 142::US10544133, Example 142::US9657009, 142
+CC(C)CCNc1cc(Nc2ncc(cc2F)C#N)ncc1C(=O)NC[C@@H](F)C(C)(C)O	US10023562, Example 141::US10544133, Example 141::US9657009, 141
+CC(C)CCNc1cc(Nc2ncc(cc2Cl)C#N)ncc1C(=O)NC[C@@H](F)C(C)(C)O	US10023562, Example 140::US10544133, Example 140::US9657009, 140
+CCCNc1cc(Nc2ncc(cc2F)C#N)ncc1C(=O)NC[C@@H](F)C(C)(C)O	US10023562, Example 139::US10544133, Example 139::US9657009, 139
+CCCNc1cc(Nc2ncc(cc2Cl)C#N)ncc1C(=O)NC[C@@H](F)C(C)(C)O	US10023562, Example 138::US10544133, Example 138::US9657009, 138
+CC(C)Nc1cc(Nc2ncc(cc2F)C#N)ncc1C(=O)N[C@H]1CC[C@@H](CC1)C(C)(C)O	US10023562, Example 137::US10544133, Example 137::US9657009, 137
+CC(C)Nc1cc(Nc2ncc(C#N)c(N)n2)ncc1C(=O)NC[C@@H](F)C(C)(C)O	US10023562, Example 136::US10544133, Example 136::US9657009, 136
+CC(C)(O)[C@H](F)CNC(=O)c1cnc(Nc2ncc(cc2F)C#N)cc1Nc1cccc(c1)C(N)=O	US10023562, Example 135::US10544133, Example 135::US9657009, 135
+CC(C)(O)[C@H](F)CNC(=O)c1cnc(Nc2ncc(cc2F)C#N)cc1Nc1cccc(NS(C)(=O)=O)c1	US10023562, Example 134::US10544133, Example 134::US9657009, 134
+CC(C)(O)[C@H](F)CNC(=O)c1cnc(Nc2ncc(cc2F)C#N)cc1NC12CCC(O)(CC1)C2	US10023562, Example 133::US10544133, Example 133::US9657009, 133
+CC(C)(O)[C@H](F)CNC(=O)c1cnc(Nc2ncc(cc2Cl)C#N)cc1Nc1cccc(c1)C#N	US10023562, Example 162::US10544133, Example 162::US9657009, 162
+CC(Nc1cc(Nc2ncc(cn2)C#N)ncc1C(=O)NC[C@@H](F)C(C)(C)O)C1CC1	US10023562, Example 163::US10544133, Example 163::US9657009, 163
+CCn1c(nc2c(ncnc12)-c1ccc2N(C)CC(C)(Cc3ccccc3)c2c1)-c1cnc(C)nc1	6-(3-benzyl-1,3- dimethylindolin-5-yl)-9- ethyl-8-(2-methylpyrimidin- 5-yl)-9H-purine::US10544147, Compound 1-22
+CCn1c(nc2c(ncnc12)-c1ccc2N(C)C(=O)C(C)(Cc3ccccc3)c2c1)-c1cnc(C)nc1	(R or S)-3-benzyl-5-(9-ethyl- 8-(2-methylpyrimidin-5-yl)- 9H-purin-6-yl)-1,3- dimethylindolin-2-one::US10544147, Compound 1-20::US10544147, Compound 1-21
+CCn1c(nc2c(ncnc12)-c1ccc2N(CC(C)(Cc3ccccc3)c2c1)C(C)=O)-c1cnc(C)nc1	1-(3-benzyl-5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-methylindolin- 1-yl)ethan-1-one::US10544147, Compound 1-19
+CCn1c(nc2c(ncnc12)-c1ccc2NCC(C)(Cc3ccccc3)c2c1)-c1cnc(C)nc1	6-(3-benzyl-3-methylindol- 5-yl)-9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purine::US10544147, Compound 1-18
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(Cc3ccccc3)c2c1)-c1cnc(C)nc1	(R or S)-3-benzyl-5-(9- ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3- methylindolin-2-one::US10544147, Compound 1-16::US10544147, Compound 1-17
+CCn1c(nc2c(ncnc12)-c1cnc2NC(=O)C(C)(CC3CC3)c2c1)-c1cnc(C)nc1	(R or S)-3- (cyclopropylmethyl)-5-(9- ethyl-S-(2-methylpyrimidin- 5-yl)-9H-purin-6-yl)-3- methyl-1,3-dihydro-2H- pyrrolo[2,3-b]pyridin-2-one::US10544147, Compound 1-14::US10544147, Compound 1-15
+CCn1c(nc2c(ncnc12)-c1cnc2NC(=O)C(C)(CC(C)C)c2c1)-c1cnc(C)nc1	(R or S)-5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-isobutyl-3- methyl-1,3-dihydro-2H- pyrrolo[2,3-b]pyridin-2-one::US10544147, Compound 1-13
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(CC(C)C)c2c1)-c1cnc(C)nc1	(R or S)-5-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3-methyl-3-(2- methylpropyl)-1,3-dihydro- 2H-indol-2-one::US10544147, Compound 1-1::US10544147, Compound 1-12::US10544147, Compound 1-2
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(CC(C)C)(C#N)c2c1)-c1cnc(C)nc1	5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-isobutyl-2- oxoindoline-3-carbonitrile::US10544147, Compound 1-11
+CCn1c(nc2c(ncnc12)-c1ccc2N(C)C(=O)C(C)(CC3CC3)c2c1)-c1cnc(C)nc1	(R or S)-3- (cyclopropylmethyl)-5-[9- ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-1,3- dimethylindolin-2-one::US10544147, Compound 1-10::US10544147, Compound 1-9
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(CC3CC3)c2c1)-c1cnc(C)nc1	(R or S)-3- (cyclopropylmethyl)-5-(9- ethyl-8-(2-methylpyrimidin- 5-yl)-9H-purin-6-yl)-3- methylindolin-2-one::US10544147, Compound 1-7::US10544147, Compound 1-8
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(CC3(C)COC3)c2c1)-c1cnc(C)nc1	(R or S)-5-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3-methyl-3-[(3- methyloxetan-3- yl)methyl]-1,3-dihydro- 2H-indol-2-one::US10544147, Compound 1-5::US10544147, Compound 1-6
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(CC3COC3)c2c1)-c1cnc(C)nc1	(R or S)-5-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3-methyl-3- (oxetan-3-ylmethyl)-1,3- dihydro-2H-indol-2-one::US10544147, Compound 1-3::US10544147, Compound 1-4
+CC(C)(O)[C@H](F)CNC(=O)c1cnc(Nc2ncc(cc2Cl)C#N)cc1Nc1ccc(cc1)-n1cccn1	US10023562, Example 168::US10544133, Example 168::US9657009, 168
+CC(C)Nc1cc(Nc2ncc(cc2F)C#N)ncc1C(=O)NC1CCC(O)(CC1)c1nccs1	US10544133, Example 167
+CC(C)Nc1cc(Nc2ncc(cc2F)C#N)ncc1C(=O)NC1CCC(O)(CC1)c1ccnn1C	US10544133, Example 166
+COC(=O)N[C@H]1CC[C@@H](CC1)NC(=O)c1cnc(Nc2ncc(cc2F)C#N)cc1NC(C)C	US10023562, Example 165::US10544133, Example 165::US9657009, 165
+CC(C)(O)[C@H](F)CNC(=O)c1cnc(Nc2ncc(cc2F)C#N)cc1NC1COC1	US10544133, Example 164::US9657009, 164
+Cc1ncc(cn1)-c1nc2c(ncnc2n1C)-c1cnc2NC(=O)C(C)(N[C@H]3CCOC3)c2c1	(R or S)-3-methyl-5-(9- methyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-(((S)- tetrahydrofuran-3- yl)amino)-1H-pyrrolo[2,3- b]pyridin-2(3H)-one::US10544147, Compound 2-45::US10544147, Compound 2-46
+CCn1c(nc2c(ncnc12)-c1ccc2oc(=O)n(C(C)c3ccccc3)c2c1)-c1cnc(C)nc1	(R or S)-5-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3-(1- phenylethyl)-1,3- benzoxazol-2(3H)-one::US10544147, Compound 5-1::US10544147, Compound 5-2
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)OC(C)(c3ccccc3)c2c1)-c1cnc(C)nc1	6-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-4-methyl-4- phenyl-1,4-dihydro-2H- benzo[d][1,3]oxazin-2-one::US10544147, Compound 4-16
+CCn1c(nc2c(ncnc12)-c1ccc2C(=O)NCc2c1)-c1cnc(C)nc1	5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)isoindolin-1-one::US10544147, Compound 4-15
+CCn1c(nc2c(ncnc12)-c1ccc2c(CN(C)S2(=O)=O)c1)-c1cnc(C)nc1	5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-2-methyl-2,3- dihydrobenzo[d]isothiazole 1,1-dioxide::US10544147, Compound 4-14
+CCn1c(nc2c(ncnc12)-c1ccc2c(CNS2(=O)=O)c1)-c1cnc(C)nc1	5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-2,3- dihydrobenzo[d]isothiazole 1,1-dioxide::US10544147, Compound 4-13
+CCn1c(nc2c(ncnc12)-c1ccc2C(=O)N(C)C(C)(Cc3ccccc3)c2c1)-c1cnc(C)nc1	(R or S)-3-benzyl-5-[9- ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-2,3-dimethyl- 2,3-dihydro-1H-isoindol-1- one::US10544147, Compound 4-12
+CCn1c(nc2c(ncnc12)-c1ccc2C(=O)NC(C)(Cc3ccccc3)c2c1)-c1cnc(C)nc1	(R or S)-3-benzyl-5-[9- ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3-methyl-2,3- dihydro-1H-isoindol-1-one::US10544147, Compound 4-10::US10544147, Compound 4-11
+CCn1c(nc2c(ncnc12)-c1ccc2C(=O)NC(Cc3ccccc3)c2c1)-c1cnc(C)nc1	(R or S)-3-benzyl-5-[9- ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-2,3-dihydro- 1H-isoindol-1-one::US10544147, Compound 4-9
+CCn1c(nc2c(ncnc12)-c1ccc2C(=O)NC(C)(CC(C)C)c2c1)-c1cnc(C)nc1	(R or S)-5-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3-methyl-3-(2- methylpropyl)-2,3- dihydro-1H-isoindol-1-one::US10544147, Compound 4-7::US10544147, Compound 4-8
+CCn1c(nc2c(ncnc12)-c1ccc2c(c1)C(C)(CC(C)C)NS2(=O)=O)-c1cnc(C)nc1	(R or S)-9-ethyl-6-[3- methyl-3-(2- methylpropyl)-1,1-dioxido- 2,3-dihydro-1,2- benzisothiazol-5-yl]-8-(2- methylpyrimidin-5-yl)-9H- purine::US10544147, Compound 4-5::US10544147, Compound 4-6
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)OC(C)(CC(C)C)c2c1)-c1cnc(C)nc1	(R or S)-6-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-4-methyl-4-(2- methylpropyl)-1,4-dihydro- 2H-3,1-benzoxazin-2-one::US10544147, Compound 4-3::US10544147, Compound 4-4
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)OC(Cc3ccccc3)c2c1)-c1cnc(C)nc1	(R or S)-4-benzyl-6-[9- ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-1,4-dihydro- 2H-3,1-benzoxazin-2-one::US10544147, Compound 4-1::US10544147, Compound 4-2
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C3(CCN(C3)C(C)C)c2c1)-c1cnc(C)nc1	(R or S)-5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-1''- isopropylspiro[indoline- 3,3''-pyrrolidin]-2-one::US10544147, Compound 3-35::US10544147, Compound 3-36
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C3(CCCC3)c2c1)-c1cnc(C)nc1	5'-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6- yl)spiro[cyclopentane-1,3'- indolin]-2'-one::US10544147, Compound 3-34
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C3(CCCN3)c2c1)-c1cnc(C)nc1	(R or S)-5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)spiro[indoline- 3,2''-pyrrolidin]-2-one::US10544147, Compound 3-32::US10544147, Compound 3-33
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C3(CCCO3)c2c1)-c1cnc(C)nc1	(R or S)-5'-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-4,5-dihydro-3H- spiro[furan-2,3'-indolin]-2'- one::US10544147, Compound 3-31
+Cc1ncc(cn1)-c1nc2c(ncnc2n1C)-c1ccc2NC(=O)C3(CCCO3)c2c1	(R or S)-5'-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-4,5-dihydro-3H- spiro[furan-2,3'-indolin]-2'- one::US10544147, Compound 3-30
+CCN1CCCC11C(=O)Nc2ccc(cc12)-c1ncnc2n(C)c(nc12)-c1cnc(C)nc1	(R or S)-1''-ethyl-5-(9- methyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)spiro[indoline- 3,2''-pyrrolidin]-2-one::US10544147, Compound 3-28::US10544147, Compound 3-29
+CCN1CCCC11C(=O)Nc2ccc(cc12)-c1ncnc2n(CC)c(nc12)-c1cnc(C)nc1	(R or S)-1''-ethyl -5-(9-ethyl- 8-(2-methylpyrimidin-5- yl)-9H-purin-6- yl)spiro[indoline-3,2''- pyrrolidin]-2-one::US10544147, Compound 3-26::US10544147, Compound 3-27
+CCn1c(nc2c(ncnc12)-c1ccc2oc(=O)n(Cc3ccccc3)c2c1)-c1cnc(C)nc1	3-benzyl-5-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-1,3- benzoxazol-2(3H)-one::US10544147, Compound 5-3
+CCn1c(nc2c(ncnc12)-c1cnc2NC(=O)C(C)(N3CC(C)(C3)OC)c2c1)-c1cnc(C)nc1	(R or S)-5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-(3-methoxy- 3-methylazetidin-1-yl)-3- methyl-1H-pyrrolo[2,3- b]pyridin-2(3H)-one::US10544147, Compound 2-47::US10544147, Compound 2-48
+CCn1c(nc2c(ncnc12)-c1ccc2oc(=O)n(CC3CCOCC3)c2c1)-c1cnc(C)nc1	5-[9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-3-(tetrahydro- 2H-pyran-4-ylmethyl)-1,3- benzoxazol-2(3H)-one::US10544147, Compound 5-4
+COCCCNc1nc(Nc2ccc(cc2)N2CCN(CC2)C(C)=O)ncc1C(N)=O	2-(4-(4- acetylpiperazin-1- yl)phenylamino)-4- (3- methoxypropylamino) pyrimidine-5- carboxamide::US10533001, Example 10::US9868729, Example 10
+COCCNc1nc(Nc2ccc(cc2)N2CCN(CC2)C(C)=O)ncc1C(N)=O	2-(4-(4- acetylpiperazin-1- yl)phenylamino)-4- (2- methoxyethylamino) pyrimidine-5- carboxamide::US10533001, Example 9::US9868729, Example 9
+CCCCNc1nc(Nc2ccc(cc2)N2CCN(CC2)C(C)=O)ncc1C(N)=O	2-(4-(4- acetylpiperazin-1- yl)phenylamino)-4- (butylamino) pyrimidine-5- carboxamide::US10533001, Example 8::US9868729, Example 8
+CC(C)Nc1nc(Nc2ccc(cc2)N2CCN(CC2)C(C)=O)ncc1C(N)=O	2-(4-(4- acetylpiperazin-1- yl)phenylamino)-4- (isopropylamino) pyrimidine-5- carboxamide::US10533001, Example 7::US9868729, Example 7
+CC(=O)N1CCN(CC1)c1ccc(Nc2ncc(C(N)=O)c(Nc3cccc(C)c3)n2)cc1	2-(4-(4- acetylpiperazin-1- yl)phenylamino)-4- (m-tolylamino) pyrimidine- 5-carboxamide::US10533001, Example 6::US9868729, Example 6
+CC(=O)N1CCN(CC1)c1ccc(Nc2ncc(C(N)=O)c(NC(C)(C)C)n2)cc1	2-(4-(4- acetylpiperazin-1- yl)phenylamino)-4- (tert- butylamino) pyrimidine-5- carboxamide::US10533001, Example 5::US9868729, Example 5
+CC(=O)N1CCN(CC1)c1ccc(Nc2ncc(C(N)=O)c(NC3CCCC3)n2)cc1	2-(4-(4- acetylpiperazin-1- yl)phenylamino)-4- (cyclopentylamino) pyrimidine-5- carboxamide::US10533001, Example 4::US9868729, Example 4
+CC(=O)N1CCN(CC1)c1ccc(Nc2ncc(C(N)=O)c(NC3CC3)n2)cc1	2-(4-(4- acetylpiperazin-1- yl)phenylamino)-4- (cyclopropylamino) pyrimidine-5- carboxamide::US10533001, Example 3::US9868729, Example 3
+COc1cccc(Nc2nc(Nc3ccc(cc3)N3CCN(CC3)C(C)=O)ncc2C(N)=O)c1	2-(4-(4- acetylpiperazin-1- yl)phenylamino)-4- (3-methoxyphenyl- amino)pyrimidine-5- carboxamide::US10533001, Example 2::US9868729, Example 2
+NC(=O)c1cnc(On2nnc3ccccc23)nc1NC1CCC1	US10533001, Example 1
+CS(=O)(=O)N[C@H]1CCCC[C@@H]1N1[C@H]([C@H](C(=O)NOCc2ccc(CC(O)=O)cc2)c2ccccc2C1=O)c1ccc(Cl)cc1Cl	US10532048, Example 856
+CS(=O)(=O)N[C@H]1CCCC[C@@H]1N1[C@H]([C@H](C(=O)NOCc2ccc(cc2)C(F)(F)C(O)=O)c2ccccc2C1=O)c1ccc(Cl)cc1Cl	US10532048, Example 712
+CS(=O)(=O)N[C@H]1CCCC[C@@H]1N1[C@H]([C@H](C(=O)NOCc2ccc(OCCCC(O)=O)cc2)c2ccccc2C1=O)c1ccc(Cl)cc1Cl	US10532048, Example 709
+CS(=O)(=O)N[C@H]1CCCC[C@@H]1N1[C@H]([C@H](C(=O)NCCc2ccc(CC(O)=O)cc2)c2ccccc2C1=O)c1ccc(Cl)cc1Cl	US10532048, Example 701
+CS(=O)(=O)N[C@H]1CCCC[C@@H]1N1[C@H]([C@H](C(=O)NCCc2cccc(c2)C(=O)NS(C)(=O)=O)c2ccccc2C1=O)c1ccc(Cl)cc1Cl	US10532048, Example 700
+CS(=O)(=O)N[C@H]1CCCC[C@@H]1N1[C@H]([C@H](C(=O)[N-]OCc2cccc(OCC([O-])=O)c2)c2ccccc2C1=O)c1ccc(Cl)cc1Cl	US10532048, Example 631
+CS(=O)(=O)N[C@H]1CCCC[C@@H]1N1[C@H]([C@H](C(=O)NOCc2ccccn2)c2ccccc2C1=O)c1ccc(Cl)cc1Cl	US10532048, Example 589
+CS(=O)(=O)N[C@H]1CCCC[C@@H]1N1[C@H]([C@H](C(=O)NOCc2cccc(c2)C(O)=O)c2ccccc2C1=O)c1ccc(Cl)cc1Cl	US10532048, Example 560
+CS(=O)(=O)N[C@H]1CCCC[C@@H]1N1[C@H]([C@H](C(=O)[N-]OCc2cc(cs2)C([O-])=O)c2ccccc2C1=O)c1ccc(Cl)cc1Cl	US10532048, Example 542
+C[C@@H](NC(=O)[C@H]1[C@@H](N([C@H]2CCCC[C@@H]2NS(C)(=O)=O)C(=O)c2ccccc12)c1ccc(Cl)cc1Cl)c1ccccc1	US10532048, Example 236
+OC[C@@H](N1[C@H]([C@H](C(=O)NCCc2ccccc2)c2ccccc2C1=O)c1ccc(Cl)cc1Cl)c1ccccc1	US10532048, Example 62
+OC[C@H](Cc1ccccc1)N1[C@H]([C@H](C(=O)NCCc2ccccn2)c2ccccc2C1=O)c1ccc(Cl)cc1Cl	US10532048, Example 61
+Cc1ncc(cn1)-c1nc2c(ncnc2n1C)-c1ccc2oc(=O)n(C3CCOCC3)c2c1	5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-(tetrahydro- 2H-pyran-4- yl)benzo[d]oxazol-2(3H)- one::US10544147, Compound 5-9
+CCn1c(nc2c(ncnc12)-c1ccc2[nH]c(=O)n(C(C)C3CC3)c2c1)-c1cnc(C)nc1	(R or S)-1-(1- cyclopropylethyl)-6-[9- ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-1,3-dihydro- 2H-benzimidazol-2-one::US10544147, Compound 5-7::US10544147, Compound 5-8
+CCn1c(nc2c(ncnc12)-c1ccc2oc(=O)n(C(C)C3CC3)c2c1)-c1cnc(C)nc1	(R or S)-3-(1- cyclopropylethyl)-5-[9- ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl]-1,3- benzoxazol-2(3H)-one::US10544147, Compound 5-5::US10544147, Compound 5-6
+Cc1ncc(cn1)-c1nc2c(ncnc2n1C)-c1ccc2NC(=O)C3(CCN(CC3)C(=O)C3CC3)c2c1	1'-(cyclopropanecarbonyl)- 5-(9-methyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)spiro[indoline- 3,4'-piperidin]-2-one::US10544147, Compound 3-25
+CCn1c(nc2c(ncnc12)-c1ccc2N(C)C(=O)C3(CCCN3S(C)(=O)=O)c2c1)-c1cnc(C)nc1	(R or S)-5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-1-methyl-1''- (methylsulfonyl)spiro [indoline-3,2''-pyrrolidin]-2- one::US10544147, Compound 3-23::US10544147, Compound 3-24
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C3(CCCN3S(=O)(=O)C(F)(F)F)c2c1)-c1cnc(C)nc1	(R or S)-5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-1''- ((trifluoromethyl)sulfonyl) spiro[indoline-3,2''- pyrrolidin]-2-one::US10544147, Compound 3-21::US10544147, Compound 3-22
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(OC3CCC3)c2c1)-c1cnc(C)nc1	3-cyclobutoxy-5-(9-ethyl-8- (2-methylpyrimidin-5-yl)- 9H-purin-6-yl)-3- methylindolin-2-one::US10544147, Compound 2-74
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(OC(C)C)c2c1)-c1cnc(C)nc1	5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-isopropoxy-3- methylindolin-2-one::US10544147, Compound 2-73
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(NCC3(F)COC3)c2c1)-c1cnc(C)nc1	(R or S)-5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-(((3- fluorooxetan-3- yl)methyl)amino)-3- methylindolin-2-one::US10544147, Compound 2-71::US10544147, Compound 2-72
+Cc1ncc(cn1)-c1nc2c(ncnc2n1C)-c1ccc2NC(=O)C(C)(NCC(C)(F)F)c2c1	(R or S)-3-((2,2- difluoropropyl)amino)-3- methyl-5-(9-methyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)indolin-2-one::US10544147, Compound 2-69::US10544147, Compound 2-70
+Cc1ncc(cn1)-c1nc2c(ncnc2n1C)-c1ccc2NC(=O)C(C)(NCC(C)(C)F)c2c1	(R or S)-3-((2-fluoro-2- methylpropyl)amino)-3- methyl-5-(9-methyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)indolin-2-one::US10544147, Compound 2-67::US10544147, Compound 2-68
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(NCC(C)C)c2c1)-c1cnc(C)nc1	(R or S)-5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3- (isobutylamino)-3- methylindolin-2-one::US10544147, Compound 2-65::US10544147, Compound 2-66
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(N3CC(C)(F)C3)c2c1)-c1cnc(C)nc1	(R or S)-5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-(3-fluoro-3- methylazetidin-1-yl)-3- methylindolin-2-one::US10544147, Compound 2-63::US10544147, Compound 2-64
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(N3C[C@@H](F)[C@H](F)C3)c2c1)-c1cnc(C)nc1	3-(R or S)-((3R,4R)-3,4- difluoropyrrolidin-1-yl)-5- (9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3- methylindolin-2-one::US10544147, Compound 2-61::US10544147, Compound 2-62
+Cc1ncc(cn1)-c1nc2c(ncnc2n1C)-c1cnc2NC(=O)C(C)(NCC(C)(C)F)c2c1	(S or R)-5-(9-methyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-((2-fluoro-2- methylpropyl)amino)-3- methyl-1H-pyrrolo[2,3- b]pyridin-2(3H)-one::US10544147, Compound 2-59::US10544147, Compound 2-60
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(OCC3CC3)c2c1)-c1cnc(C)nc1	(R or S)-3- (cyclopropylmethoxy)-5-(9- ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3- methylindolin-2-one::US10544147, Compound 2-57::US10544147, Compound 2-58
+CCn1c(nc2c(ncnc12)-c1cnc2NC(=O)C(C)(OCC(C)(C)F)c2c1)-c1cnc(C)nc1	(R or S)-5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-(2-fluoro-2- methylpropoxy)-3- methylindolin-2-one::US10544147, Compound 2-55::US10544147, Compound 2-56
+CCn1c(nc2c(ncnc12)-c1cnc2NC(=O)C(C)(N3CC(C)(C3)C#N)c2c1)-c1cnc(C)nc1	(S or R)-1-(5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-methyl-2- oxo-2,3-dihydro-1H- pyrrolo[2,3-b]pyridin-3-yl)- 3-methylazetidine-3- carbonitrile::US10544147, Compound 2-53::US10544147, Compound 2-54
+CCn1c(nc2c(ncnc12)-c1cnc2NC(=O)C(C)(NC3CCC3)c2c1)-c1cnc(C)nc1	(S or R)-3- (cyclobutylamino)-5-(9- ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-methyl-1,3- dihydro-2H-pyrrolo[2,3- b]pyridin-2-one::US10544147, Compound 2-51::US10544147, Compound 2-52
+CCn1c(nc2c(ncnc12)-c1cnc2NC(=O)C(C)(NCC(C)(C)F)c2c1)-c1cnc(C)nc1	(S or R)-5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-((2-fluoro-2- methylpropyl)amino)-3- methyl-1H-pyrrolo[2,3- b]pyridin-2(3H)-one::US10544147, Compound 2-49::US10544147, Compound 2-50
+Cc1ncc(cn1)-c1nc2c(ncnc2n1C)-c1ccc2NC(=O)C(C)(OCC3CC3)c2c1	3-(cyclopropylmethoxy)-3- methyl-5-(9-methyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)indolin-2-one::US10544147, Compound 2-75
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(N[C@@H]3CCOC3)c2c1)-c1cnc(C)nc1	5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-(R and S)- methyl-3-(((R)- tetrahydrofuran-3- yl)amino)indolin-2-one::US10544147, Compound 2-76
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C#N)(N3CC(C)(C3)OC)c2c1)-c1cnc(C)nc1	5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-(3-methoxy- 3-methylazetidin-1-yl)-2- oxoindoline-3-carbonitrile::US10544147, Compound 2-77
+CCN1C(=O)C2(CCCN2C(=O)C2CC2)c2cc(ccc12)-c1ncnc2n(CC)c(nc12)-c1cnc(C)nc1	(R or S)-1'- (cyclopropanecarbonyl)-1- ethyl-5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)spiro[indoline-3,2'- pyrrolidin]-2-one::US10544147, Compound 3-9
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C3(CCCN3S(C)(=O)=O)c2c1)-c1cnc(C)nc1	(R or S)-5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-1''- (methylsulfonyl)spiro [indoline-3,2''-pyrrolidin]-2- one::US10544147, Compound 3-19::US10544147, Compound 3-20
+Cc1ncc(cn1)-c1nc2c(ncnc2n1C)-c1ccc2N(CCO)C(=O)C3(CCCN3C(=O)C3CC3)c2c1	(R or S)-1'- (cyclopropanecarbonyl)-1- (2-hydroxyethyl)-5-(9- methyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)spiro[indoline- 3,2'-pyrrolidin]-2-one::US10544147, Compound 3-18
+Cc1ncc(cn1)-c1nc2c(ncnc2n1C)-c1ccc2N(CC(C)(C)O)C(=O)C3(CCCN3C(=O)C3CC3)c2c1	(R or S)-1'- (cyclopropanecarbonyl)-1- (2-hydroxy-2- methylpropyl)-5-(9-methyl- 8-(2-methylpyrimidin-5- yl)-9H-purin-6- yl)spiro[indoline-3,2'- pyrrolidin]-2-one::US10544147, Compound 3-17
+Cc1ncc(cn1)-c1nc2c(ncnc2n1C)-c1ccc2N(CCN3CCOCC3)C(=O)C3(CCCN3C(=O)C3CC3)c2c1	(R or S)-1'- (cyclopropanecarbonyl)-5- (9-methyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-1-(2- morpholinoethyl)spiro [indoline-3,2'-pyrrolidin]- 2-one::US10544147, Compound 3-16
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C3(CCCN3C(=O)C3CC3)c2c1)C(F)F	(R or S)-1'- (cyclopropanecarbonyl)-5- (8-(difluoromethyl)-9- ethyl-9H-purin-6- yl)spiro[indoline-3,2'- pyrrolidin]-2-one::US10544147, Compound 3-15
+CC(C)N1CCCC11C(=O)Nc2ccc(cc12)-c1ncnc2n(C)c(nc12)-c1cnc(C)nc1	(R or S)-1''-isopropyl-5-(9- methyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)spiro[indoline- 3,2''-pyrrolidin]-2-one::US10544147, Compound 3-13::US10544147, Compound 3-14
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C3(CCCN3C(C)C)c2c1)-c1cnc(C)nc1	(R or S)-5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-1''- isopropylspiro[indoline- 3,2''-pyrrolidin]-2-one::US10544147, Compound 3-11::US10544147, Compound 3-12
+CCn1c(nc2c(ncnc12)-c1ccc2N(C(C)C)C(=O)C3(CCCN3C(=O)C3CC3)c2c1)-c1cnc(C)nc1	(R or S)-1'- (cyclopropanecarbonyl)-5-(9- ethyl-8-(2-methylpyrimidin-5- yl)-9H-purin-6-yl)-1- isopropylspiro[indoline-3,2'- pyrrolidin]-2-one::US10544147, Compound 3-10
+CN1C(=O)C2(CCCN2C(=O)C2CC2)c2cc(ccc12)-c1ncnc2n(C)c(nc12)-c1cnc(C)nc1	(R or S)-1'- (cyclopropanecarbonyl)-1- methyl-5-(9-methyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)spiro[indoline-3,2'- pyrrolidin]-2-one::US10544147, Compound 3-8
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(N3CC(C3)OC)c2c1)-c1cnc(C)nc1	(R or S)-5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-(3- methoxyazetidin-1-yl)-3- methylindolin-2-one::US10544147, Compound 2-78::US10544147, Compound 2-79
+Cc1ncc(cn1)-c1nc2c(ncnc2n1C)-c1ccc2NC(=O)C3(CCCN3C(=O)C3CC3)c2c1	(R or S)-1'- (cyclopropanecarbonyl)-5-(9- methyl-8-(2-methylpyrimidin- 5-yl)-9H-purin-6- yl)spiro[indoline-3,2'- pyrrolidin]-2-one::US10544147, Compound 3-7
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C3(CCN(C3)C(=O)C3CC3)c2c1)-c1cnc(C)nc1	(R or S)-1''- (cyclopropanecarbonyl)-5-(9- ethyl-8-(2-methylpyrimidin-5- yl)-9H-purin-6- yl)spiro[indoline-3,3''- pyrrolidin]-2-one::US10544147, Compound 3-5::US10544147, Compound 3-6
+CCn1c(nc2c(ncnc12)-c1ccc2N(C)C(=O)C3(CCCN3C(=O)C3CC3)c2c1)-c1cnc(C)nc1	(R or S)-1''- (cyclopropylcarbonyl)-5-[9- ethyl-8-(2-methylpyrimidin-5- yl)-9H-purin-6-yl]-1- methylspiro[indole-3,2''- pyrrolidin]-2(1H)-one::US10544147, Compound 3-3::US10544147, Compound 3-4
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C3(CCCN3C(=O)C3CC3)c2c1)-c1cnc(C)nc1	(R or S)-1''- (cyclopropylcarbonyl)-5-[9- ethyl-8-(2-methylpyrimidin-5- yl)-9H-purin-6- yl]spiro[indole-3,2''- pyrrolidin]-2(1H)-one::US10544147, Compound 3-1::US10544147, Compound 3-2
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(N[C@H]3C[C@@H](C3)OC)c2c1)-c1cnc(C)nc1	5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-(((1R,3R)-3- methoxycyclobutyl)amino)- 3(R or S)-methylindolin-2- one::US10544147, Compound 2-82::US10544147, Compound 2-83
+CCn1c(nc2c(ncnc12)-c1ccc2NC(=O)C(C)(N3CC(C)(O)C3)c2c1)-c1cnc(C)nc1	(R or S)-5-(9-ethyl-8-(2- methylpyrimidin-5-yl)-9H- purin-6-yl)-3-(3-hydroxy-3- methylazetidin-1-yl)-3- methylindolin-2-one::US10544147, Compound 2-80::US10544147, Compound 2-81
+CC(C)Nc1cc(Nc2ncncc2N)ncc1C(=O)NC[C@@H](F)C(C)(C)O	US10023562, Example 132::US10544133, Example 132::US9657009, 132
+CC(C)Nc1cc(Nc2ccnc(N)n2)ncc1C(=O)NC[C@@H](F)C(C)(C)O	US10023562, Example 131::US10544133, Example 131::US9657009, 131
+COc1cccc(Nc2cc(Nc3ncc(cc3F)C#N)ncc2C(=O)NC[C@@H](F)C(C)(C)O)c1	US10023562, Example 130::US10544133, Example 130::US9657009, 130
+CC(C)C[C@](C)(N)COc1ccc(cc1C(F)(F)F)-c1cc(Cl)ncn1	(S)-1-(4-(6-chloropyrimidin-4-yl)-2-(trifluoromethyl)phenoxy)-2,4-dimethylpentan-2-amine::US10544120, Example 442
+CC(C)C[C@@](C)(COc1ccc(cc1C(F)(F)F)-c1cc(Cl)ncn1)NC(=O)OC(C)(C)C	(S)-1-(4-(6-methoxypyrimidin-4-yl)-2-(trifluoromethyl)phenoxy)-2,4-dimethylpentan-2-amine::US10544120, Example 440
+CC(C)C[C@@](C)(COc1ccc(cc1C#N)-c1cc(Cl)ncn1)NC(=O)OC(C)(C)C	(S)-2-((2-amino-2,4-dimethylpentyl)oxy)-5-(6-methoxypyrimidin-4-yl)benzonitrile::US10544120, Example 439
+COC(=O)Nc1cc(ncn1)-c1cnc(OC[C@@](C)(N)CC(C)C)c(C)c1	(S)-methyl(6-(6-((2-amino-2,4-dimethylpentyl)oxy)-5-methylpyridin-3-yl)pyrimidin-4-yl)carbamate::US10544120, Example 438
+COC(=O)Nc1cc(ncn1)-c1cnc(OC[C@@](C)(N)CC(C)C)c(Cl)c1	(S)-methyl (6-(6-((2-amino-2,4-dimethylpentyl)oxy)-5-chloropyridin-3-yl)pyrimidin-4-yl)carbamate::US10544120, Example 437

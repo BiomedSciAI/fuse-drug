@@ -1,0 +1,53 @@
+paths:
+  root_dir: ./_examples/dti
+  train_data_path: "https://raw.githubusercontent.com/samsledje/ConPLex/main/dataset/BindingDB/train.csv"
+  val_data_path: "https://raw.githubusercontent.com/samsledje/ConPLex/main/dataset/BindingDB/val.csv"
+  test_data_path: "https://raw.githubusercontent.com/samsledje/ConPLex/main/dataset/BindingDB/test.csv"
+  model_dir: '${paths.root_dir}/${params.train.model.context}'
+  cache_dir: '${paths.root_dir}/cache_dir'
+  infer_dir: '${paths.model_dir}/infer_dir'
+  eval_dir: '${paths.model_dir}/eval_dir'
+  ckpt_filename: best_epoch.ckpt
+  infer_filename: infer_file.gz
+logging:
+  log_clear_ml: 0
+  log_lr: 0
+  task_name: '${params.train.model.context}-${params.train.model.emb_dim}'
+params:
+  NOTES: >
+    seq_a := drug sequence (small molecule - SMILES)
+    seq_b := target sequence (protein)
+  train:
+    model:
+      context: seq_a
+      emb_dim: 128
+      num_tokens_a: 10000
+      num_tokens_b: 10000
+      max_seq_len_a: 1024
+      max_seq_len_b: 1024
+      depth_a: 6
+      depth_b: 6
+      depth_cross_attn: 6
+      heads_a: 8
+      heads_b: 8
+      output_dim: 512
+    num_workers: 20
+    batch_size: 32
+    lr: 0.00001
+    log_lr: '${logging.log_lr}'
+    weight_decay: 0.001
+    num_epochs: 1
+    accelerator: gpu
+    num_devices: 1
+    data:
+      drug_fixed_size: 60
+      target_fixed_size: 842
+  infer:
+    model: '${params.train.model}'
+    batch_size: 100
+    num_workers: 20
+    accelerator: '${params.train.accelerator}'
+    num_devices: 1
+    data:
+      drug_fixed_size: '${params.train.data.drug_fixed_size}'
+      target_fixed_size: '${params.train.data.target_fixed_size}'
