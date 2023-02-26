@@ -68,6 +68,7 @@ if __name__=='__main__':
     from torch.utils.data import default_collate
     from fuse.data.ops.ops_cast import OpToTensor
 
+    # TODO: provide example files or remove this example use:
     smiles_path = ""  
     proteins_path = ""
     affinity_set_path = ""
