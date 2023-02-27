@@ -90,7 +90,8 @@ trainer:
   clr_t0: 10
   device: 0 # 5
 
-#test:
+test:
+  save_preds_for_benchmark_eval: false
 # to run test only mode with an already trained model, provide the test.checkpoint argument
 # here or via CLI, i.e: python test.py +test.checkpoint=/path/to/checkpoint.ckpt
 #  checkpoint: /path/to/checkpoint.ckpt 

@@ -55,6 +55,10 @@ class PLM_DTI_Module(pl.LightningModule):
         self.train_metrics, self.val_metrics, self.test_metrics = metrics.get_metrics(cfg.experiment.task)
         
         self.output_dir = cfg.experiment.dir
+        if 'save_preds_for_benchmark_eval' in cfg.test and cfg.test.save_preds_for_benchmark_eval:
+            self.do_save_preds_for_benchmark_eval = True
+        else:
+            self.do_save_preds_for_benchmark_eval = False
 
     def forward(self, batch_dict):
         return self.model(batch_dict)
@@ -96,7 +100,8 @@ class PLM_DTI_Module(pl.LightningModule):
         # given the batch_dict and FuseMedML style losses - collect the required values to compute the metrics on epoch_end
         fuse_pl.step_metrics(self.test_metrics, batch_dict)
         self.log("test_loss", loss)
-        return {"losses": batch_dict["losses"], "preds": batch_dict["model.output"], "ids": batch_dict["data.input.id"]}
+        sample_ids = batch_dict["data.input.id"] if self.do_save_preds_for_benchmark_eval else None
+        return {"losses": batch_dict["losses"], "preds": batch_dict["model.output"], "ids": sample_ids}
 
     def test_epoch_end(self, test_step_outputs) -> None:
         ### add saving of predictions and labels
@@ -107,7 +112,8 @@ class PLM_DTI_Module(pl.LightningModule):
         fuse_pl.epoch_end_compute_and_log_metrics(self, "test", self.test_metrics)
 
         # save predictions and labels (for later evaluation)
-        self.save_preds_for_benchmark_eval(test_step_outputs)
+        if self.do_save_preds_for_benchmark_eval:
+            self.save_preds_for_benchmark_eval(test_step_outputs)
 
     def save_preds_for_benchmark_eval(self, test_step_outputs):
         output_filepath = os.path.join(self.output_dir, 'test_results.tsv')

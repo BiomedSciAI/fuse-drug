@@ -317,21 +317,33 @@ def get_dataloaders(cfg, device=torch.device("cpu"), contrastive=False, test_mod
     else:
         pipeline_desc = [(OpToTensor(), {'dtype': torch.float32, 'key': 'data.label'})] # convert labels to float
         # FuseMedML wrapper
-        datamodule.data_train = DatasetWrapSeqToDict(
-                name="PLM_DTI_train",
-                dataset=datamodule.data_train,
-                sample_keys=("data.drug", "data.target", "data.label"),
-                dynamic_pipeline=PipelineDefault(name='data_pipeline', ops_and_kwargs=pipeline_desc),
-            )
-        datamodule.data_train.create()
+        # dataloader with batch dict collator:
+        datamodule._loader_kwargs['collate_fn'] = CollateDefault()
+        if not test_mode:
+            datamodule.data_train = DatasetWrapSeqToDict(
+                    name="PLM_DTI_train",
+                    dataset=datamodule.data_train,
+                    sample_keys=("data.drug", "data.target", "data.label"),
+                    dynamic_pipeline=PipelineDefault(name='data_pipeline', ops_and_kwargs=pipeline_desc),
+                )
+            datamodule.data_train.create()
 
-        datamodule.data_val = DatasetWrapSeqToDict(
-                name="PLM_DTI_val",
-                dataset=datamodule.data_val,
-                sample_keys=("data.drug", "data.target", "data.label"),
-                dynamic_pipeline=PipelineDefault(name='data_pipeline', ops_and_kwargs=pipeline_desc),
-            )
-        datamodule.data_val.create()
+            datamodule.data_val = DatasetWrapSeqToDict(
+                    name="PLM_DTI_val",
+                    dataset=datamodule.data_val,
+                    sample_keys=("data.drug", "data.target", "data.label"),
+                    dynamic_pipeline=PipelineDefault(name='data_pipeline', ops_and_kwargs=pipeline_desc),
+                )
+            datamodule.data_val.create()
+
+            train_dataloader = DataLoader(dataset=datamodule.data_train, 
+                                    **datamodule._loader_kwargs)
+        
+            valid_dataloader = DataLoader(dataset=datamodule.data_val, 
+                                        **datamodule._loader_kwargs)
+        else:
+            train_dataloader = None
+            valid_dataloader = None
 
         datamodule.data_test = DatasetWrapSeqToDict(
                 name="PLM_DTI_test",
@@ -340,15 +352,7 @@ def get_dataloaders(cfg, device=torch.device("cpu"), contrastive=False, test_mod
                 dynamic_pipeline=PipelineDefault(name='data_pipeline', ops_and_kwargs=pipeline_desc),
             )
         datamodule.data_test.create()
-
-        # dataloader with batch dict collator:
-        datamodule._loader_kwargs['collate_fn'] = CollateDefault() 
-        train_dataloader = DataLoader(dataset=datamodule.data_train, 
-                                    **datamodule._loader_kwargs)
         
-        valid_dataloader = DataLoader(dataset=datamodule.data_val, 
-                                    **datamodule._loader_kwargs)
-
         test_dataloader = DataLoader(dataset=datamodule.data_test, 
                                     **datamodule._loader_kwargs)
         
