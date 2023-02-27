@@ -30,6 +30,10 @@ def get_antibodies_info(antibodies_pdb_ids:List[str]) -> List[Antibody]:
     return antibodies
 
 def get_omegafold_preprint_test_antibodies():
+    """
+    https://www.biorxiv.org/content/10.1101/2022.07.21.500999v1
+    Figure 2
+    """
     return [        
         '7k7r',
         '7e6p',

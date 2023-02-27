@@ -1,9 +1,7 @@
 from openfold.np.residue_constants import restype_3to1
 from Bio.PDB import PDBParser
 import openfold.np.protein as protein_utils
-#from openfold.np import residue_constants as rc
 from omegafold.utils.protein_utils import residue_constants as rc
-#from Bio.PDB import *
 import gzip
 import nglview as nv
 from fusedrug.tests_data import get_tests_data_dir
@@ -17,8 +15,7 @@ from Bio.PDB.Atom import Atom
 from typing import Optional, Dict, List
 import os
 import io
-#from fusedrug.data.protein.structure.utils import aa_sequence_from_aa_integers
-#https://bioinformatics.stackexchange.com/questions/14101/extract-residue-sequence-from-pdb-file-in-biopython-but-open-to-recommendation
+
 import torch
 from Bio import PDB as PDB
 from Bio.PDB import StructureBuilder
@@ -35,9 +32,7 @@ from openfold.data import (
     data_pipeline,
     feature_pipeline,
     mmcif_parsing,
-    #templates,
 )
-#from openfold.np import residue_constants as openfold_rc
 from omegafold.utils import residue_constants as omegafold_rc
 import numpy as np
 from Bio.PDB import MMCIFParser, Select, MMCIF2Dict
@@ -56,9 +51,9 @@ from openfold.utils.superimposition import superimpose
 from openfold.data import data_transforms
 from openfold.utils.tensor_utils import tree_map
 
-#from openfold.np import residue_constants as rc
-
 from fusedrug.data.protein.structure.utils import aa_sequence_from_aa_integers, get_structure_file_type
+
+#https://bioinformatics.stackexchange.com/questions/14101/extract-residue-sequence-from-pdb-file-in-biopython-but-open-to-recommendation
     
 #TODO: split this into pdb related and mmcif related functions
 
@@ -408,9 +403,12 @@ def save_pdb_file(
     """
     saves the pos14 as a pdb file
 
+    To learn more about pdb format see: https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/introduction
+
+    
     Args:
         pos14: the atom14 representation of the coordinates
-        b_factors: the b_factors of the amino acids
+        b_factors: the b_factors of the amino acids - it can represent per residue: 1. Measurement accuracy in ground truth lab experiment or 2. Model prediction certainty
         sequence: the amino acid of the pos14
         mask: the validity of the atoms
         save_path: the path to save the pdb file
