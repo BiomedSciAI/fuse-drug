@@ -1,7 +1,7 @@
 from typing import List, Callable, Optional, Union, Dict
 from fuse.utils import NDict
 from fuse.data import OpBase, get_sample_id, set_sample_id
-from fusedrug.data.interaction.drug_target.datasets import DTIBindingDataset
+from fusedrug.data.interaction.drug_target.datasets.dti_binding_dataset import DTIBindingDataset
 from fuse.utils.cpu_profiling import Timer
 import numpy as np
 import os

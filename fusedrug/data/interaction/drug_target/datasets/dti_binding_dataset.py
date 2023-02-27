@@ -3,7 +3,6 @@ from torch.utils.data import Dataset
 import pandas as pd
 import numpy as np
 from fuse.data import DatasetDefault
-from fusedrug.data.interaction.drug_target.loaders.dti_binding_dataset_loader import DTIBindingDatasetLoader
 from fuse.data.ops.caching_tools import run_cached_func
 from fuse.data.ops.ops_read import OpReadDataframe
 from fuse.data.pipelines.pipeline_default import PipelineDefault

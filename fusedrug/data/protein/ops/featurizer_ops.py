@@ -1,7 +1,7 @@
 from fuse.utils import NDict
 from fuse.utils.cpu_profiling import Timer
 from fuse.data import OpBase
-from fusedrug.data.interaction.drug_target.datasets import DTIBindingDataset
+from fusedrug.data.interaction.drug_target.datasets.dti_binding_dataset import DTIBindingDataset
 from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI.Contrastive_PLM_DTI.src.featurizers import Featurizer
 import pandas as pd
 import torch
