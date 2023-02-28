@@ -11,18 +11,9 @@ from scipy.stats import pearsonr, spearmanr
 from sklearn.metrics import mean_squared_error
 
 from paccmann_predictor.models.bimodal_mca import BimodalMCA
-from transformer_encoder_towers_model import TransformerEncoderTowers
-# from transformer_encoder_towers_model_with_cross_attention import TransformerEncoderTowersWithCrossAttention
 MODEL_FACTORY = {    
     'bimodal_mca': BimodalMCA,
-    # 'knn': knn,
-    'dual_towers': TransformerEncoderTowers,
-    # 'dual_towers_cross': TransformerEncoderTowersWithCrossAttention,
 }
-
-#hydra.verbose = True
-#import logging
-#log = logging.getLogger(__name__)
 import numpy as np
 import colorama
 colorama.init(autoreset=True)
@@ -31,9 +22,6 @@ from colorama import Fore, Back, Style
 
 class AffinityPredictorModule(pl.LightningModule):
     def __init__(self, 
-        #protein_padding_length:int,
-        #peptide_language_model:SMILESTokenizer,
-        #protein_language_model:ProteinLanguage,        
         **model_params : dict, #will be passed to base model        
         ) -> None:
         '''
