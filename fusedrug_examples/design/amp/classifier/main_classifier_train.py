@@ -14,7 +14,7 @@ limitations under the License.
 
 """
 
-from fuse_examples.design.amp.datasets import PeptidesDatasets
+from fusedrug_examples.design.amp.datasets import PeptidesDatasets
 
 from typing import Any, Optional, List, Tuple
 import hydra
@@ -39,7 +39,7 @@ from fuse.dl.losses import LossDefault
 from fuse.utils import NDict
 from fuse.data import DatasetDefault
 
-from fuse_examples.design.amp.model import (
+from fusedrug_examples.design.amp.model import (
     Embed,
     WordDropout,
     Tokenizer,
@@ -50,7 +50,7 @@ from fuse_examples.design.amp.model import (
     RandomAdjacentSwap,
     RandomShift,
 )
-from fuse_examples.design.amp.losses import LossRecon
+from fusedrug_examples.design.amp.losses import LossRecon
 
 
 def data(
