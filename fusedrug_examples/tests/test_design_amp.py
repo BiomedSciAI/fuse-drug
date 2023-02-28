@@ -5,7 +5,6 @@ from omegaconf import OmegaConf
 from pathlib import Path
 class DesignAMPTestCase(unittest.TestCase):
 
-    @unittest.skip("skipping")
     def test_classifier(self):
         config_path = Path(__file__, "../../design/amp/classifier/config.yaml")
         cfg = OmegaConf.load(config_path)
