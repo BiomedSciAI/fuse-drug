@@ -30,3 +30,5 @@ exclude =
     fusedrug_examples
     requirements
     tutorials
+    run_all_unit_tests.py
+    setup.py
