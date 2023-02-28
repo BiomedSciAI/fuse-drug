@@ -51,7 +51,7 @@ class IndexedTextFile(Dataset):
         timer = Timer('Process') if verbose>0 else DummyContext()
         with timer:        
             if index_filename is None:
-                index_filename = change_extension(filename, '.index.hdf5')
+                index_filename = filename+'.index.hdf5'
                 if verbose>0:
                     print(f'IndexedTextFile:: index_filename={index_filename}')
             
