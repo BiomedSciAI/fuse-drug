@@ -70,7 +70,7 @@ def filter_label_unknown(batch_dict: NDict, label_key: str, out_key: str) -> NDi
     return {label_key: batch_dict[label_key][keep_indices], out_key: batch_dict[out_key][keep_indices]}
 
 def data(
-    peptides_datasets: dict, batch_size: int, data_loader: dict
+    peptides_datasets: dict, batch_size: int, num_batches: Optional[int], data_loader: dict
 ) -> Tuple[DatasetDefault, DataLoader, DataLoader]:
     """
     Data preparation
@@ -93,6 +93,7 @@ def data(
             balanced_class_weights={0: 0.25, 1: 0.25, -1: 0.5},
             batch_size=batch_size,
             mode="approx",
+            num_batches=num_batches,
         ),
         **data_loader,
     )
