@@ -19,11 +19,5 @@ install:
 script:
 
   # run unit tests
+  # TODO move to Jenkins
   - python ./run_all_unit_tests.py
-
-  # TODO open style checkers
-
-  # static type and style checkers
-  # - python -m black . --check --diff --color
-  # - python -m mypy .
-  # - python -m flake8 .
