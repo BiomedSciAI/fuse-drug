@@ -81,16 +81,20 @@ Peptide classification (AMP / Toxicity)
   
       `export AXPEP_DATA_PATH=<path to the folder that contains the downloaded files>`
 
-        
+  * Set an environment variable for the split file to be generated:  
+    Note that this is an output file that the code will generate.
+
+      `export PEPTIDES_DATASETS_SPLIT_FILENAME=<path to a pickle file to be generated>`
+            
 2. Train design model
 
-  * Modify the configuration file if necessary `design/config.xml`
+  * Modify the configuration file if necessary `design/config.yaml`
 
   * Run the training script `python design/main_design_train.py`
 
 3. Train classification models
 
-  * Modify the configuration file if necessary `design/config.xml`- including the actual target (amp/toxicity)
+  * Modify the configuration file if necessary `classifier/config.yaml`- including the actual target (amp/toxicity)
 
   * Run the training script `python classifier/main_classifier_train.py`
 
