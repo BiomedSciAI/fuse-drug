@@ -5,31 +5,67 @@ hydra:
     chdir: False 
 experiment:
   project_name: PLM-DTI
-  experiment_name: basic
+  experiment_name: pretrained_on_benchmark_finetuning_on_davis
   dir: ${paths.results}/${experiment.project_name}/${experiment.experiment_name}
   verbosity: 3
   seed: 0
-  task: davis # "dti_dg" for TDCommons domain generalization benchmark,
+  task: bindingdb # "dti_dg" for TDCommons domain generalization benchmark,
             # one of EnzPredDataModule.dataset_list() ("halogenase",
             # "bkace", "gt", "esterase", "kinase", "phosphatase"),
             # "benchmark" for our benchmark (TBD),
             # others - "davis", "bindingdb", "biosnap", "biosnap_prot" (unseen protein),
             # "biosnap_mol" (unseen drug), "dude" (not implemented)
   clearml: true
+  only_load_checkpoint_weights: true # if "checkpoint" is provided, specify whether to only load weights (true) or entire training state (lr schedule etc'.) (false) 
 
 paths:
   results: ${oc.env:DTI_RESULTS}
 
 benchmark_data:
-  # parameters specific for our data/benchmark. used if task="ours"
-  path: ${oc.env:MERGED_MOL_DATA}
-  split: lenient # split if using task="ours". can be "lenient", "cond-target", "cold-ligand", "temporal". 
+  # parameters specific for our data/benchmark. used if task="benchmark"
+  # TODO: use more general params, like in the benchmark repo
+  root_path: ${oc.env:MERGED_MOL_DATA}/14-04-2022_30_05-09-2022
+  # small subset for debugging
+  featurizer_debug_mode: False # if true, use dummy string in featurizer to speed up debugging
+  #pairs_tsv: ${benchmark_data.root_path}/pairs/merged_bindingdb_chembl_pubchem_14-04-2022_30_05-09-2022@native@single_protein_target@affinity_pairs_v0.1_limit_100000_rows.tsv
+  #ligands_tsv: ${benchmark_data.root_path}/ligand/merged_bindingdb_chembl_pubchem_14-04-2022_30_05-09-2022@native@single_protein_target@ligands_limit_100000_rows.tsv
+  #targets_tsv: ${benchmark_data.root_path}/target/merged_bindingdb_chembl_pubchem_14-04-2022_30_05-09-2022@native@single_protein_target@targets_limit_100000_rows.tsv
+  #splits_tsv: ${benchmark_data.root_path}/splits/splits/${benchmark_data.split}/split_lenient_0.14_0.14_0.14_0.14_0.14_0.15_0.15_limit_100000_rows.tsv
+  
+  pairs_tsv: ${benchmark_data.root_path}/pairs/merged_bindingdb_chembl_pubchem_14-04-2022_30_05-09-2022@native@single_protein_target@affinity_pairs_v0.1.tsv
+  ligands_tsv: ${benchmark_data.root_path}/ligand/merged_bindingdb_chembl_pubchem_14-04-2022_30_05-09-2022@native@single_protein_target@ligands.tsv
+  targets_tsv: ${benchmark_data.root_path}/target/merged_bindingdb_chembl_pubchem_14-04-2022_30_05-09-2022@native@single_protein_target@targets.tsv
+  # lenient split:
+  splits_tsv: ${benchmark_data.root_path}/splits/splits/${benchmark_data.split}/split_lenient_0.14_0.14_0.14_0.14_0.14_0.15_0.15.tsv
+  # cold_ligand split:
+  #splits_tsv: ${benchmark_data.root_path}/splits/splits/${benchmark_data.split}/split_cold_ligand_0.7_0.15_0.15.tsv
+  # cold_target split:
+  #splits_tsv: ${benchmark_data.root_path}/splits/splits/${benchmark_data.split}/split_cold_target_0.7_0.15_0.15.tsv
+  # temporal split:
+  #splits_tsv: ${benchmark_data.root_path}/splits/splits/${benchmark_data.split}/split_temporal_0.7_0.15_0.15.tsv
 
+  split: lenient # split if using task="ours". can be "lenient", "cold_target", "cold_ligand", "temporal". 
+  train_folds:
+  - train1
+  - train2
+  - train3
+  - train4
+  - train5
+  val_folds:
+  - val # the '-' is needed so that it's used as a list
+  test_folds:
+  - test
+  class_label_to_idx: 
+    Active: 1
+    Inactive: 0
+  minibatches_per_epoch: 300 # 2500, for debugging: 250
+  validation_epochs: 50 # 50, for debugging: 5
+ 
 data:
   batch_size: 32
   contrastive_batch_size: 256
   shuffle: True
-  num_workers: 0
+  num_workers: 16
 
 model:
   # possible values: MorganFeaturizer, others (not tested): Mol2VecFeaturizer, GNN, MolEFeaturizer, MolRFeaturizer
@@ -44,8 +80,9 @@ model:
   latent_distance: "Cosine"
 
 trainer:
-  epochs: 50
-  every_n_val: 1
+  loss: 'bce' # 'bce' (binary cross-entropy), 'focal'
+  epochs: 50 # 50, for debugging: 5
+  every_n_val: 2
   lr: 1e-4
   lr_t0: 10
   contrastive: false # Note: currently not implemented. If true, will be used with DUDE dataset 
@@ -53,4 +90,10 @@ trainer:
   clr: 1e-5 
   clr_t0: 10
   device: 0 # 5
+
+test:
+  save_preds_for_benchmark_eval: false
+# to run test only mode with an already trained model, provide the test.checkpoint argument
+# here or via CLI, i.e: python test.py +test.checkpoint=/path/to/checkpoint.ckpt
+#  checkpoint: /path/to/checkpoint.ckpt 
 
