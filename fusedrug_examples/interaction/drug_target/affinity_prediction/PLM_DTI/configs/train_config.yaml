@@ -9,7 +9,7 @@ experiment:
   dir: ${paths.results}/${experiment.project_name}/${experiment.experiment_name}
   verbosity: 3
   seed: 0
-  task: bindingdb # "dti_dg" for TDCommons domain generalization benchmark,
+  task: davis # "dti_dg" for TDCommons domain generalization benchmark,
             # one of EnzPredDataModule.dataset_list() ("halogenase",
             # "bkace", "gt", "esterase", "kinase", "phosphatase"),
             # "benchmark" for our benchmark (TBD),
