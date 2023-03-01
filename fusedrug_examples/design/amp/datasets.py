@@ -227,7 +227,7 @@ class Dbaasp:
         ],
     ) -> pd.DataFrame:
         """
-        :param raw_data_path: path to peptides-complete.csv as downloaded from: https://dbaasp.org/download-dataset?source=peptides
+        :param raw_data_path: path to peptides-complete.json as downloaded from: https://dbaasp.org/download-dataset?source=peptides
         """
         # load the raw data
         peptides = pd.read_json(raw_data_path)
@@ -544,9 +544,9 @@ class PeptidesDatasets:
         test_folds: Sequence[int],
     ) -> DatasetDefault:
         """
-        :param dbaasp_raw_data_path: path to peptides-complete.csv as downloaded from: https://dbaasp.org/download-dataset?source=peptides
+        :param dbaasp_raw_data_path: path to peptides-complete.json as downloaded from: https://dbaasp.org/download-dataset?source=peptides
         :param uniprot_raw_data_path_reviewed: only two columns file of reviewed peptides downloaded from uniprot - uncompressed tsv format: https://www.uniprot.org/uniprotkb?facets=reviewed%3Atrue%2Clength%3A%5B1%20TO%20200%5D&query=%2A
-        :param uniprot_raw_data_path_not_reviewed:only two columns file of reviewed peptides downloaded from uniprot - uncompressed tsv format: https://www.uniprot.org/uniprotkb?facets=reviewed%3Afalse%2Clength%3A%5B1%20TO%20200%5D&query=%2A
+        :param uniprot_raw_data_path_not_reviewed:only two columns file of unreviewed peptides downloaded from uniprot - uncompressed tsv format: https://www.uniprot.org/uniprotkb?facets=reviewed%3Afalse%2Clength%3A%5B1%20TO%20200%5D&query=%2A
         :param toxin_pred_data_path:path to a folder that contains multiple files downloaded directly from "https://webs.iiitd.edu.in/raghava/toxinpred/dataset.php"
         :param satpdb_data_path: path to a folder that contains files 'antimicrobial.fasta' and 'toxic.fasta' downloaded from https://webs.iiitd.edu.in/raghava/satpdb/down.php
         :param axpep_data_path:  path to a folder that contains files '*_ne.fasta' and '*_po.fasta' downloaded fromhttps://sourceforge.net/projects/axpep/
