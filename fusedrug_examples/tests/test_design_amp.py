@@ -8,10 +8,12 @@ class DesignAMPTestCase(unittest.TestCase):
     def test_classifier(self):
         config_path = Path(__file__, "../../design/amp/classifier/config.yaml")
         cfg = OmegaConf.load(config_path)
-        cfg.train.trainer_kwargs.max_epochs = 1
         cfg.data.data_loader.num_workers=16
+        cfg.train.trainer_kwargs.max_epochs = 1
         cfg.data.batch_size = 32
         cfg.data.num_batches = 10
+        cfg.data.peptides_datasets.uniprot_raw_data_path_reviewed = None
+        cfg.data.peptides_datasets.uniprot_raw_data_path_not_reviewed = None
         main_classifier_train.main(cfg)
 
     def test_design(self):
@@ -22,6 +24,8 @@ class DesignAMPTestCase(unittest.TestCase):
         cfg.data.data_loader.num_workers=16
         cfg.data.batch_size = 32
         cfg.data.num_batches = 10
+        cfg.data.peptides_datasets.uniprot_raw_data_path_reviewed = None
+        cfg.data.peptides_datasets.uniprot_raw_data_path_not_reviewed = None
         main_design_train.main(cfg)
 
 
