@@ -71,6 +71,7 @@ train: # arguments for train() in classifiers_main_train.py
     devices: 1
     strategy: null
     auto_select_gpus: True
+    num_sanity_val_steps: 0
 
 
 # model
