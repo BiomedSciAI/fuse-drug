@@ -17,9 +17,6 @@ pg8000
 ipykernel  # dev
 jupyter  # dev 
 transformers
-black==22.3.0  # dev
-flake8  # dev
-mypy==0.950  # dev
 termcolor
 xmlrunner
 pytoda @ git+https://git@github.com/PaccMann/paccmann_datasets/@0.2.5#egg=pytoda
