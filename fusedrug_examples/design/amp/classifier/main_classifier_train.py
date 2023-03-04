@@ -14,7 +14,7 @@ limitations under the License.
 
 """
 
-from fuse_examples.design.amp.datasets import PeptidesDatasets
+from fusedrug_examples.design.amp.datasets import PeptidesDatasets
 
 from typing import Any, Optional, List, Tuple
 import hydra
@@ -39,7 +39,7 @@ from fuse.dl.losses import LossDefault
 from fuse.utils import NDict
 from fuse.data import DatasetDefault
 
-from fuse_examples.design.amp.model import (
+from fusedrug_examples.design.amp.model import (
     Embed,
     WordDropout,
     Tokenizer,
@@ -50,7 +50,7 @@ from fuse_examples.design.amp.model import (
     RandomAdjacentSwap,
     RandomShift,
 )
-from fuse_examples.design.amp.losses import LossRecon
+from fusedrug_examples.design.amp.losses import LossRecon
 
 
 def data(
@@ -58,6 +58,7 @@ def data(
     target_key: str,
     infill: bool,
     batch_size: int,
+    num_batches: int,
     data_loader: dict,
 ) -> Tuple[DatasetDefault, DataLoader, DataLoader]:
     """
@@ -66,6 +67,7 @@ def data(
     :param target_key: used to to balance the trainset
     :param infill: if True will keep the unlabeled data. Otherwise it will filter it.
     :param batch_size: batch size - used for both train dataloader and validation dataloader.
+    :param num_batches: number of batches
     :param data_loader: arguments for pytorch dataloader constructor
     :return: train dataset and dataloaders for both train-set and validation-set
     """
@@ -93,7 +95,7 @@ def data(
             balanced_class_name=target_key,
             batch_size=batch_size,
             mode="approx",
-            num_batches=1000
+            num_batches=num_batches,
         ),
         **data_loader,
     )

@@ -14,7 +14,7 @@ limitations under the License.
 
 """
 
-from fuse_examples.design.amp.datasets import PeptidesDatasets
+from fusedrug_examples.design.amp.datasets import PeptidesDatasets
 
 from typing import Any, Optional, List, Tuple
 import hydra
@@ -40,8 +40,8 @@ from fuse.eval.metrics.classification.metrics_classification_common import Metri
 from fuse.dl.losses import LossDefault
 from fuse.utils import NDict
 
-from fuse_examples.design.amp.losses import kl_gaussian_sharedmu, LossRecon, LossWAE
-from fuse_examples.design.amp.model import (
+from fusedrug_examples.design.amp.losses import kl_gaussian_sharedmu, LossRecon, LossWAE
+from fusedrug_examples.design.amp.model import (
     Embed,
     WordDropout,
     Sample,
@@ -56,7 +56,7 @@ from fuse_examples.design.amp.model import (
     RandomAdjacentSwap,
     RandomShift,
 )
-from fuse_examples.design.amp.metrics import (
+from fusedrug_examples.design.amp.metrics import (
     MetricSeqAccuracy,
     MetricPrintRandomSubsequence,
 )
@@ -70,7 +70,7 @@ def filter_label_unknown(batch_dict: NDict, label_key: str, out_key: str) -> NDi
     return {label_key: batch_dict[label_key][keep_indices], out_key: batch_dict[out_key][keep_indices]}
 
 def data(
-    peptides_datasets: dict, batch_size: int, data_loader: dict
+    peptides_datasets: dict, batch_size: int, num_batches: Optional[int], data_loader: dict
 ) -> Tuple[DatasetDefault, DataLoader, DataLoader]:
     """
     Data preparation
@@ -93,6 +93,7 @@ def data(
             balanced_class_weights={0: 0.25, 1: 0.25, -1: 0.5},
             batch_size=batch_size,
             mode="approx",
+            num_batches=num_batches,
         ),
         **data_loader,
     )
