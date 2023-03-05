@@ -26,17 +26,16 @@ ignore =
 
 # Files to exclude:
 exclude =
+    ## all __init__.py files
+    __init__.py
+
     ## fusedrug/
-    ./fusedrug/__init__.py
-    ./fusedrug/data/__init__.py
     ./fusedrug/data/interaction/drug_target/datasets/dti_binding_dataset.py
     ./fusedrug/data/interaction/drug_target/datasets/pytoda_style_target_affinity_dataset.py
     ./fusedrug/data/interaction/drug_target/datasets/tests/test_dti_binding_dataset.py
     ./fusedrug/data/interaction/drug_target/datasets/tests/test_fuse_style_dti_dataset.py
-    ./fusedrug/data/interaction/drug_target/loaders/__init__.py
     ./fusedrug/data/interaction/drug_target/loaders/dti_binding_dataset_loader.py
     ./fusedrug/data/interaction/drug_target/loaders/pytoda_style_target_affinity_loader.py
-    ./fusedrug/data/molecule/ops/__init__.py
     ./fusedrug/data/molecule/ops/augment.py
     ./fusedrug/data/molecule/ops/loaders/smi_loader.py
     ./fusedrug/data/molecule/ops/pytoda_chem_ops.py
@@ -45,29 +44,20 @@ exclude =
     ./fusedrug/data/molecule/smi_sanitizer.py
     ./fusedrug/data/molecule/tokenizer/build_molecule_tokenizer.py
     ./fusedrug/data/molecule/tokenizer/build_molecule_tokenizer_with_predefined_vocab.py
-    ./fusedrug/data/molecule/tokenizer/pretrained/__init__.py
     ./fusedrug/data/molecule/utils/selfies_ops.py
-    ./fusedrug/data/ops/__init__.py
     ./fusedrug/data/ops/attention_ops.py
     ./fusedrug/data/ops/torch_ops.py
-    ./fusedrug/data/protein/ops/__init__.py
     ./fusedrug/data/protein/ops/aa_ops.py
     ./fusedrug/data/protein/ops/augment.py
     ./fusedrug/data/protein/ops/loaders/fasta_loader.py
-    ./fusedrug/data/protein/ops/loaders/tests/__init__.py
     ./fusedrug/data/protein/ops/loaders/tests/test_aa_ops.py
     ./fusedrug/data/protein/ops/loaders/tests/test_loaders.py
     ./fusedrug/data/protein/ops/omegafold_plm.py
     ./fusedrug/data/protein/tokenizer/build_protein_tokenizer_pair_encoding.py
     ./fusedrug/data/protein/tokenizer/build_protein_tokenizer_simple.py
-    ./fusedrug/data/protein/tokenizer/pretrained/__init__.py
-    ./fusedrug/data/tokenizer/__init__.py
     ./fusedrug/data/tokenizer/fast_tokenizer_learn.py
-    ./fusedrug/data/tokenizer/ops/__init__.py
     ./fusedrug/data/tokenizer/ops/fast_tokenizer_ops.py
     ./fusedrug/data/tokenizer/ops/pytoda_tokenizer.py
-    ./fusedrug/tests_data/__init__.py
-    ./fusedrug/utils/file_formats/__init__.py
     ./fusedrug/utils/file_formats/convertors/sdf_to_smi.py
     ./fusedrug/utils/file_formats/ffdata.py
     ./fusedrug/utils/file_formats/indexed_fasta.py
@@ -80,11 +70,9 @@ exclude =
     ./fusedrug/utils/file_formats/tests/test_indexed_text_file.py
     ./fusedrug/utils/file_formats/tests/test_indexed_text_table.py
     ./fusedrug/utils/file_formats/tests/test_sdf_iterable_dataset.py
-    ./fusedrug/utils/samplers/__init__.py
     ./fusedrug/utils/samplers/fast_balanced_sampler.py
     ./fusedrug/utils/samplers/tests/test_fast_balanced_sampler.py
     ./fusedrug/utils/session_manager/session_creator.py
-    ./fusedrug/utils/sql/__init__.py
     ./fusedrug/utils/sql/rdf.py
     ./fusedrug/utils/sql/sql.py
     ./fusedrug/utils/sql/sql_db_from_csv.py
