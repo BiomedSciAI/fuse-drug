@@ -24,6 +24,14 @@ with open(os.path.join(HERE, "fusedrug_examples/requirements.txt"), "r") as fh:
         if not line.startswith("#"):
             fusedrug_examples_requirements.append(line.strip())
 
+# list of requirements for core packages for development
+fuse_requirements_dev = []
+with open(os.path.join(HERE, "requirements/requirements_dev.txt"), "r") as fh:
+    for line in fh:
+        if not line.startswith("#"):
+            fuse_requirements_dev.append(line.strip())
+
+
 # version
 version_file = open(os.path.join(HERE, 'VERSION.txt'))
 version = version_file.read().strip()
@@ -41,5 +49,6 @@ setup(name="fuse-drug",
       install_requires=fusedrug_requirements,
       extras_require={
         "examples": fusedrug_examples_requirements,
+        "dev": fuse_requirements_dev,
         },
       )

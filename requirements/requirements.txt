@@ -14,8 +14,6 @@ rdflib
 rdflib-sqlalchemy
 pandarallel
 pg8000
-ipykernel  # dev
-jupyter  # dev 
 transformers
 termcolor
 xmlrunner
