@@ -18,6 +18,9 @@ Coming soon: DrugDiscoveryFoundationBenchmarks - A repository for biochemical ML
 2. Install Fuse-Drug only (without examples) by running:
 ``` 
 pip install -e .
+
+# to also install development deps use:
+pip install -e .[dev]
 ```
 or:  
 
