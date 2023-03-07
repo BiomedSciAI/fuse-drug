@@ -77,6 +77,11 @@ exclude =
     ./fusedrug/utils/sql/sql.py
     ./fusedrug/utils/sql/sql_db_from_csv.py
     ./fusedrug/utils/sql/tests/test_sql_db_from_csv.py
+    ./fusedrug/data/protein/structure/utils.py
+    ./fusedrug/data/protein/structure/sabdab.py
+    ./fusedrug/data/protein/antibody/antibody.py
+    ./fusedrug/data/protein/structure/structure_io.py
+
 
     ## fusedrug_examples/
     ./fusedrug_examples/design/amp/classifier/main_classifier_train.py
