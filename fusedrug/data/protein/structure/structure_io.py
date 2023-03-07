@@ -1,40 +1,17 @@
-from openfold.np.residue_constants import restype_3to1
-from Bio.PDB import PDBParser
-import openfold.np.protein as protein_utils
-from omegafold.utils.protein_utils import residue_constants as rc
+from typing import Optional, Dict, Union, List
 import gzip
-import nglview as nv
-from fusedrug.tests_data import get_tests_data_dir
-from os.path import join
-from Bio.PDB import *
-from Bio.PDB.Model import Model
-from Bio.PDB.Structure import Structure
-from Bio.PDB.Chain import Chain
-from Bio.PDB.Residue import Residue
-from Bio.PDB.Atom import Atom
-from typing import Optional, Dict, List
-import os
 import io
-
+import os
 import torch
-from Bio import PDB as PDB
-from Bio.PDB import StructureBuilder
+from copy import deepcopy
 import pathlib
 
-
-from typing import Dict, Optional, List
 import torch
 
-from typing import Optional, Dict, Union
-import gzip
-import io
-from openfold.data import (
-    data_pipeline,
-    feature_pipeline,
-    mmcif_parsing,
-)
-from omegafold.utils import residue_constants as omegafold_rc
 import numpy as np
+from Bio.PDB import *
+from Bio.PDB import StructureBuilder
+from Bio.PDB import PDBParser
 from Bio.PDB import MMCIFParser, Select, MMCIF2Dict
 from Bio.PDB.mmcifio import MMCIFIO
 from Bio.PDB.Model import Model
@@ -42,14 +19,25 @@ from Bio.PDB.Structure import Structure
 from Bio.PDB.Chain import Chain
 from Bio.PDB.Residue import Residue
 from Bio.PDB.Atom import Atom
-from typing import List
-from copy import deepcopy
-import os
-import torch
 
-from openfold.utils.superimposition import superimpose
-from openfold.data import data_transforms
-from openfold.utils.tensor_utils import tree_map
+# TODO: temp until openfold will be added to the dependency list
+try:
+    from openfold.data import data_transforms
+    from openfold.utils.tensor_utils import tree_map
+    import openfold.np.protein as protein_utils
+    from openfold.np.residue_constants import restype_3to1
+    from openfold.data import (
+        data_pipeline,
+        mmcif_parsing,
+    )
+except ImportError:
+    print("Warning: import openfold failed - some functions might fail")
+
+# TODO: temp until omegafold will be added to the dependency list
+try:
+    from omegafold.utils.protein_utils import residue_constants as rc
+except ImportError:
+    print("Warning: import omegafold failed - some functions might fail")
 
 from fusedrug.data.protein.structure.utils import aa_sequence_from_aa_integers, get_structure_file_type
 
@@ -254,13 +242,12 @@ def aa_sequence_from_pdb(pdb_filename:str) -> Dict[str,str]:
     Returns a dictionary that maps chain_id to sequence
     """
 
-    assert False, "Not implemented fully yet - in 7kpj it crashes on attempt to treat HOH as a residue. Should probably just filter protein chains"
     pdb_filename = get_pdb_native_full_name(pdb_filename)
     text = read_file_raw_string(pdb_filename)
 
     pdb_fh = io.StringIO(text)
     
-    parser = PDBParser(QUIET=False)
+    parser = PDBParser(QUIET=True)
     structure = parser.get_structure('struct', pdb_fh)
     # iterate each model, chain, and residue
     # printing out the sequence for each chain
@@ -269,10 +256,9 @@ def aa_sequence_from_pdb(pdb_filename:str) -> Dict[str,str]:
 
     for model in structure:
         for chain in model:
-            #print(chain.name)
-            seq = ''.join([restype_3to1[residue.resname] for residue in chain])
+            seq = ''.join([restype_3to1[residue.resname] for residue in chain if residue.resname in restype_3to1])
             chains[chain.id] = seq
-            #print('>some_header\n',''.join(seq))
+            
     return chains
 
 def pdb_to_openfold_protein(filename:str, chain_id:Optional[str]=None) -> protein_utils.Protein:
