@@ -14,12 +14,7 @@ rdflib
 rdflib-sqlalchemy
 pandarallel
 pg8000
-ipykernel  # dev
-jupyter  # dev 
 transformers
-black
-flake8
-mypy
 termcolor
 xmlrunner
 pytoda @ git+https://git@github.com/PaccMann/paccmann_datasets/@0.2.5#egg=pytoda
