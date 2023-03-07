@@ -6,6 +6,8 @@ from fuse.data import DatasetDefault
 from fuse.data.ops.caching_tools import run_cached_func
 from fuse.data.ops.ops_read import OpReadDataframe
 from fuse.data.pipelines.pipeline_default import PipelineDefault
+from fusedrug.data.molecule.ops.featurizer_ops import FeaturizeDrug
+from fusedrug.data.protein.ops.featurizer_ops import FeaturizeTarget
 
 def fix_df_types(df):
     if 'source_dataset_activity_id' in df.columns:
@@ -30,10 +32,13 @@ def itemify(x):
         pass
     return x
 
-def dti_binding_dataset(pairs_tsv:str, ligands_tsv:str, targets_tsv:str, split_tsv:str=None, 
+def dti_binding_dataset_with_featurizers(pairs_tsv:str, ligands_tsv:str, targets_tsv:str, split_tsv:str=None, 
                                     pairs_columns_to_extract=None, pairs_rename_columns=None, \
                                     ligands_columns_to_extract=None, ligands_rename_columns=None, \
                                     targets_columns_to_extract=None, targets_rename_columns=None, **kwargs) -> DatasetDefault:
+
+    # custom imlpementation based on fuse.data.interaction.drug_target.datasets.dti_binding_datasets
+    # to allow featurizer ops that require the ligand and target strings during initialization
 
     # load tsvs with opional caching:
     _args = [pairs_tsv, ligands_tsv, targets_tsv, split_tsv]
@@ -49,12 +54,30 @@ def dti_binding_dataset(pairs_tsv:str, ligands_tsv:str, targets_tsv:str, split_t
     ligands_df = ans_dict['ligands']
     targets_df = ans_dict['targets']
     
+    if pairs_df.index.duplicated().sum()>0:
+        print(f"There are {pairs_df.index.duplicated().sum()} elements with duplicate indices in pairs_df. removing them...")
+        pairs_df = pairs_df[~pairs_df.index.duplicated(keep='first')]
+
+    if ligands_df.index.duplicated().sum()>0:
+        print(f"There are {ligands_df.index.duplicated().sum()} elements with duplicate indices in ligands_df. removing them...")
+        ligands_df = ligands_df[~ligands_df.index.duplicated(keep='first')]
+
+    if targets_df.index.duplicated().sum()>0:
+        print(f"There are {targets_df.index.duplicated().sum()} elements with duplicate indices in targets_df. removing them...")
+        targets_df = targets_df[~targets_df.index.duplicated(keep='first')]
+
     dynamic_pipeline = [
         (OpReadDataframe(pairs_df, columns_to_extract=pairs_columns_to_extract, rename_columns=pairs_rename_columns, key_column=None), {}), 
         (OpReadDataframe(ligands_df, columns_to_extract=ligands_columns_to_extract, rename_columns=ligands_rename_columns, key_column=None, key_name="ligand_id"), {}), 
         (OpReadDataframe(targets_df, columns_to_extract=targets_columns_to_extract, rename_columns=targets_rename_columns, key_column=None, key_name="target_id"), {}),
     ]
 
+    all_drugs = list(set([dynamic_pipeline[1][0]._data[item]['ligand_str'] for item in dynamic_pipeline[1][0]._data]))
+    all_targets = list(set([dynamic_pipeline[2][0]._data[item]['target_str'] for item in dynamic_pipeline[2][0]._data]))
+    dynamic_pipeline += [
+        FeaturizeDrug(dataset=None, all_drugs=all_drugs, featurizer=kwargs['drug_featurizer'], debug=kwargs['featurizer_debug_mode']),
+        FeaturizeTarget(dataset=None, all_targets=all_targets, featurizer=kwargs['target_featurizer'], debug=kwargs['featurizer_debug_mode'])
+    ]
     # append custom pipeline:
     if 'dynamic_pipeline' in kwargs and kwargs['dynamic_pipeline'] is not None:
         dynamic_pipeline += kwargs['dynamic_pipeline']

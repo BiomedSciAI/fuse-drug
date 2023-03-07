@@ -143,3 +143,7 @@ tutorials/data/*
 
 # CCC outputs
 outputs
+
+# Unit test outputs
+fusedrug_examples/tests/cls_amp
+fusedrug_examples/tests/peptides_design
