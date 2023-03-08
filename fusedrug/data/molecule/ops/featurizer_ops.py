@@ -10,12 +10,10 @@ from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI.Contr
 import pandas as pd
 from torch.utils.data import DataLoader
 from fuse.data.utils.collates import CollateDefault
-from typing import Optional
 
 class FeaturizeDrug(OpBase):
     def __init__(self,
-        dataset: Optional[DTIBindingDataset], 
-        all_drugs: Optional[list],
+        dataset: DTIBindingDataset, 
         featurizer: Featurizer,
         device: str="cpu",
         num_workers: int=16,
@@ -33,20 +31,19 @@ class FeaturizeDrug(OpBase):
         self.featurizer = featurizer
         self._device = device
         # get unique drug SMILES strings
-        if all_drugs is None:
-            all_drugs = []
-            # helper loader to multiprocess obtaining the unique drugs
-            loader = DataLoader( 
-                        self.dataset,
-                        shuffle=False,
-                        num_workers=num_workers,
-                        collate_fn=CollateDefault(skip_keys=("ground_truth_activity_value",)),
-                        batch_size=1000
-                    )
-            with Timer("Getting unique drugs..."):
-                for data in loader:
-                    all_drugs += data['ligand_str']
-                all_drugs = list(set(all_drugs))
+        all_drugs = []
+        # helper loader to multiprocess obtaining the unique drugs
+        loader = DataLoader( 
+                    self.dataset,
+                    shuffle=False,
+                    num_workers=num_workers,
+                    collate_fn=CollateDefault(skip_keys=("ground_truth_activity_value",)),
+                    batch_size=1000
+                )
+        with Timer("Getting unique drugs..."):
+            for data in loader:
+                all_drugs += data['ligand_str']
+            all_drugs = list(set(all_drugs))
 
         if self._device == "cuda":
             self.featurizer.cuda(self._device)

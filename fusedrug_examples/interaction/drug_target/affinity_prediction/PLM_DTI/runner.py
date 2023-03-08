@@ -5,13 +5,11 @@ PLM-DTI affinity predictor (see https://www.mlsb.io/papers_2021/MLSB2021_Adaptin
 import os
 from omegaconf import DictConfig, OmegaConf
 import hydra
-import torch
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint
 from clearml import Task
 import data
 import plm_dti
-from fuse.utils.cpu_profiling import Profiler
 
 CONFIGS_DIR = os.path.join(os.path.dirname(__file__), 'configs')
 SELECTED_CONFIG = 'train_config.yaml'
@@ -36,8 +34,7 @@ def main(cfg : DictConfig) -> None:
     train_dataloader, valid_dataloader, test_dataloader, cfg = data.get_dataloaders(cfg)
 
     model = plm_dti.PLM_DTI_Module(cfg)
-    if "checkpoint" in cfg.experiment and cfg.experiment.only_load_checkpoint_weights:
-        model.load_state_dict(torch.load(cfg.experiment.checkpoint)["state_dict"])
+
     # Initialize clearml
     if cfg.experiment.clearml:
         _ = Task.init(project_name=cfg.experiment.project_name, task_name=cfg.experiment.experiment_name)
@@ -48,9 +45,8 @@ def main(cfg : DictConfig) -> None:
     trainer = pl.Trainer(callbacks=[checkpoint_callback], default_root_dir=cfg.experiment.dir, \
                          gpus=1, auto_select_gpus=True, check_val_every_n_epoch=cfg.trainer.every_n_val, \
                          max_epochs=cfg.trainer.epochs, benchmark=True)
-    ckpt_path = cfg.experiment.checkpoint if "checkpoint" in cfg.experiment and not cfg.experiment.only_load_checkpoint_weights else None
-    with Profiler('profile fit'):
-        trainer.fit(model, train_dataloader, valid_dataloader, ckpt_path=ckpt_path)
+    ckpt_path = None if "checkpoint" not in cfg.experiment else cfg.experiment.checkpoint # start from checkpoint if exists
+    trainer.fit(model, train_dataloader, valid_dataloader, ckpt_path=ckpt_path)
     trainer.test(model, test_dataloader)
 
 if __name__ == '__main__':

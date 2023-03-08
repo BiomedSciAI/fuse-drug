@@ -7,12 +7,10 @@ import pandas as pd
 import torch
 from torch.utils.data import DataLoader
 from fuse.data.utils.collates import CollateDefault
-from typing import Optional
 
 class FeaturizeTarget(OpBase):
     def __init__(self,
-        dataset: Optional[DTIBindingDataset], 
-        all_targets: Optional[list],
+        dataset: DTIBindingDataset, 
         featurizer: Featurizer,
         device: str="cpu",
         num_workers: int=16,
@@ -30,20 +28,19 @@ class FeaturizeTarget(OpBase):
         self.featurizer = featurizer
         self._device = device
         # get unique target amino acid strings
-        if all_targets is None:
-            all_targets = []
-            # helper loader to multiprocess obtaining the unique drugs
-            loader = DataLoader( 
-                        self.dataset,
-                        shuffle=False,
-                        num_workers=num_workers,
-                        collate_fn=CollateDefault(skip_keys=("ground_truth_activity_value",)),
-                        batch_size=1000
-                    )
-            with Timer("Getting unique targets..."):
-                for data in loader:
-                    all_targets += data['target_str']
-                all_targets = list(set(all_targets))
+        all_targets = []
+        # helper loader to multiprocess obtaining the unique drugs
+        loader = DataLoader( 
+                    self.dataset,
+                    shuffle=False,
+                    num_workers=num_workers,
+                    collate_fn=CollateDefault(skip_keys=("ground_truth_activity_value",)),
+                    batch_size=1000
+                )
+        with Timer("Getting unique targets..."):
+            for data in loader:
+                all_targets += data['target_str']
+            all_targets = list(set(all_targets))
         if self._device == "cuda":
             self.featurizer.cuda(self._device)
         # Not writing target featurizer to disk. will obtain the features during preload from the model directly

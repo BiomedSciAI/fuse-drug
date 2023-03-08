@@ -54,11 +54,6 @@ def dti_binding_dataset(pairs_tsv:str, ligands_tsv:str, targets_tsv:str, split_t
         (OpReadDataframe(ligands_df, columns_to_extract=ligands_columns_to_extract, rename_columns=ligands_rename_columns, key_column=None, key_name="ligand_id"), {}), 
         (OpReadDataframe(targets_df, columns_to_extract=targets_columns_to_extract, rename_columns=targets_rename_columns, key_column=None, key_name="target_id"), {}),
     ]
-
-    # append custom pipeline:
-    if 'dynamic_pipeline' in kwargs and kwargs['dynamic_pipeline'] is not None:
-        dynamic_pipeline += kwargs['dynamic_pipeline']
-
     dynamic_pipeline = PipelineDefault("DTI dataset", dynamic_pipeline)
 
     dataset = DatasetDefault(sample_ids=None, dynamic_pipeline=dynamic_pipeline)

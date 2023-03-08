@@ -2,8 +2,7 @@ import torch
 import pytorch_lightning as pl
 # The Contrastive_PLM_DTI submodule is the repository found at https://github.com/samsledje/Contrastive_PLM_DTI
 # and described in the paper "Adapting protein language models for rapid DTI prediction": https://www.mlsb.io/papers_2021/MLSB2021_Adapting_protein_language_models.pdf 
-from Contrastive_PLM_DTI.src import architectures as architectures
-import models
+from Contrastive_PLM_DTI.src import architectures as model_types
 import metrics
 from fuse.dl.models.model_wrapper import ModelWrapSeqToDict
 from fuse.dl.losses.loss_default import LossDefault
@@ -20,10 +19,6 @@ class PLM_DTI_Module(pl.LightningModule):
         super().__init__()
         print("Initializing model")
         self.cfg = cfg
-        if cfg.model.model_architecture.lower() == "deepcoembedding":
-            model_types = models
-        else:
-            model_types = architectures
         model = getattr(model_types, cfg.model.model_architecture)(
             cfg.model.drug_shape,
             cfg.model.target_shape,
