@@ -56,7 +56,7 @@ def cluster(force_rebuild:bool = False, **kwargs):
     save_text_file_safe(already_created_description_filename, hash_value)
     save_text_file_safe(already_created_hash_filename, str_repr)
 
-def cluter_impl(*, all_sequences_fasta:str, output_dir:str, cluster_min_seqeunce_identity:float=0.4, cluster_method:str='cluster'):
+def cluter_impl(*, input_fasta_filename:str, output_dir:str, cluster_min_seqeunce_identity:float=0.4, cluster_method:str='cluster'):
     """
 
     Uses mmseqs to:
@@ -68,7 +68,7 @@ def cluter_impl(*, all_sequences_fasta:str, output_dir:str, cluster_min_seqeunce
         b. Balanced sampling during training, sampling with inverse proportion to cluster size. (Similar to Class Balancing)        
 
     Args:
-        all_sequences_fasta: a fasta with an entry per molecular entity
+        input_fasta_filename: a fasta with an entry per molecular entity
         output_dir: where the output will be generated
         cluster_min_seqeunce_identity: the minimal sequence identity for member within a cluster
         cluster_method: any of 'cluster', 'linclust':
@@ -87,9 +87,9 @@ def cluter_impl(*, all_sequences_fasta:str, output_dir:str, cluster_min_seqeunce
     else:
         print(f'identified mmseqs binary at: {which_mmseqs}')
     
-    if not os.path.isfile(all_sequences_fasta):
-        if os.path.isfile(all_sequences_fasta+'.gz'):
-            cmd = f'gunzip {all_sequences_fasta}.gz'
+    if not os.path.isfile(input_fasta_filename):
+        if os.path.isfile(input_fasta_filename+'.gz'):
+            cmd = f'gunzip {input_fasta_filename}.gz'
             _run_system_cmd(cmd)            
     
     mmseqs_db_path = os.path.join(output_dir, 'mmseqs_DB')
@@ -99,7 +99,7 @@ def cluter_impl(*, all_sequences_fasta:str, output_dir:str, cluster_min_seqeunce
     ########### Major step A - remove all redundancies
 
     print('A.1 - creating mmseqs DB. It converts the input fasta into mmseqs DB internal format (made of multiple files)') #
-    cmd = f'mmseqs createdb {all_sequences_fasta} {mmseqs_db_path}'
+    cmd = f'mmseqs createdb {input_fasta_filename} {mmseqs_db_path}'
     _run_system_cmd(cmd)            
 
     #mmseqs cluster DB DB_clu tmp --min-seq-id 1.0 --threads 32 
