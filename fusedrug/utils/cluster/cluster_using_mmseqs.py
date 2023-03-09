@@ -5,25 +5,39 @@ import subprocess
 from fuse.utils.file_io import save_text_file_safe, read_text_file
 import os
 
-def cluster(force_rebuild:bool = False, **kwargs):
+
+def cluster(output_dir:str, force_rebuild: bool = False, **kwargs) -> None:
     """
-    A wrapped around cluster_impl() to allow caching 
-    see cluster_impl doc for details
-    
+    Uses mmseqs to:
+
+    1. Remove 100% sequence identity duplicates
+    2. Cluster the remaining unique sequences into multiple clusters (e.g. with 70% sequence similary threshold )
+        This is useful for multiple purposes:
+        a. Creating cross validation/test splits that evaluate and demonstrate generalizability
+        b. Balanced sampling during training, sampling with inverse proportion to cluster size. (Similar to Class Balancing)
+
+    Note: depends on availability of mmseqs binary
+        Please install mmseqs2 . See install instructions here: https://github.com/soedinglab/MMseqs2 '
+        'Also note that you can download prebuilt static binaries such as: https://mmseqs.com/latest/mmseqs-linux-sse41.tar.gz - extract and add the binary to your system PATH.
+
     Args:
         force_rebuild: rebuilds the data even if the hash indicates that it was already cached.
-    """
+        input_fasta_filename: a fasta with an entry per molecular entity
+        output_dir: where the output will be generated
+        cluster_min_seqeunce_identity: the minimal sequence identity for member within a cluster
+        cluster_method: any of 'cluster', 'linclust':
+            'cluster' is the "vanilla" one
+            'linclust' is faster (claims linear runtime) but less accurate. Might be suitable for massive data.
+                NOTE: I've compared cluster and linclust results for the deduplication phase, and results aren't identical, which means it probably misses few identical cases.
+        deduplicate: if False, deduplication step will be skipped and clustering will be done directly on the input
 
-    if 'output_dir' not in kwargs:
-        raise Exception('cluster() expects "output_dir" ')
-
-    output_dir = kwargs['output_dir']
-
+    Note - this function wraps cluster_impl() to allow caching
+    """    
     os.makedirs(output_dir, exist_ok=True)
 
     str_repr = get_function_call_str(
-        cluter_impl, 
-        _ignore_kwargs_names=['num_workers'], 
+        cluter_impl,
+        _ignore_kwargs_names=['num_workers'],
         _include_code = False,
         **kwargs
         )
@@ -56,27 +70,9 @@ def cluster(force_rebuild:bool = False, **kwargs):
     save_text_file_safe(already_created_description_filename, hash_value)
     save_text_file_safe(already_created_hash_filename, str_repr)
 
-def cluter_impl(*, input_fasta_filename:str, output_dir:str, cluster_min_seqeunce_identity:float=0.4, cluster_method:str='cluster'):
+def cluter_impl(*, input_fasta_filename:str, output_dir:str, cluster_min_seqeunce_identity:float=0.4, cluster_method:str='cluster', deduplicate:bool=True) -> None:
     """
-
-    Uses mmseqs to:
-
-    1. Remove 100% sequence identity duplicates
-    2. Cluster the remaining unique sequences into multiple clusters (e.g. with 70% sequence similary threshold )
-        This is useful for multiple purposes:
-        a. Creating cross validation/test splits that evaluate and demonstrate generalizability
-        b. Balanced sampling during training, sampling with inverse proportion to cluster size. (Similar to Class Balancing)        
-
-    Args:
-        input_fasta_filename: a fasta with an entry per molecular entity
-        output_dir: where the output will be generated
-        cluster_min_seqeunce_identity: the minimal sequence identity for member within a cluster
-        cluster_method: any of 'cluster', 'linclust':
-            'cluster' is the "vanilla" one
-            'linclust' is faster (claims linear runtime) but less accurate. Might be suitable for massive data.
-                NOTE: I've compared cluster and linclust results for the deduplication phase, and results aren't identical, which means it probably misses few identical cases.
-
-        
+    see cluster() doc        
     """    
 
     which_mmseqs = shutil.which('mmseqs')
@@ -97,27 +93,28 @@ def cluter_impl(*, input_fasta_filename:str, output_dir:str, cluster_min_seqeunc
     print('cluster_method=', cluster_method)
 
     ########### Major step A - remove all redundancies
+    if deduplicate:
 
-    print('A.1 - creating mmseqs DB. It converts the input fasta into mmseqs DB internal format (made of multiple files)') #
-    cmd = f'mmseqs createdb {input_fasta_filename} {mmseqs_db_path}'
-    _run_system_cmd(cmd)            
+        print('A.1 - creating mmseqs DB. It converts the input fasta into mmseqs DB internal format (made of multiple files)') #
+        cmd = f'mmseqs createdb {input_fasta_filename} {mmseqs_db_path}'
+        _run_system_cmd(cmd)            
 
-    #mmseqs cluster DB DB_clu tmp --min-seq-id 1.0 --threads 32 
-    mmseqs_cluster_full_identity = os.path.join(output_dir, 'mmseqs_DB_cluster_full_identity')
-    mmseqs_tmp_for_clustering = os.path.join(output_dir, 'mmseqs_DB_tmp')
-    print(r'A.2 - clustering with 100% identity to remove duplicates. The generated DB does not contain (directly) the sequences data, it only maps clusters centers to members.')
-    cmd = f'mmseqs {cluster_method} {mmseqs_db_path} {mmseqs_cluster_full_identity} {mmseqs_tmp_for_clustering} -c 1.0 --min-seq-id 1.0 --threads 32'
-    _run_system_cmd(cmd)            
+        #mmseqs cluster DB DB_clu tmp --min-seq-id 1.0 --threads 32 
+        mmseqs_cluster_full_identity = os.path.join(output_dir, 'mmseqs_DB_cluster_full_identity')
+        mmseqs_tmp_for_clustering = os.path.join(output_dir, 'mmseqs_DB_tmp')
+        print(r'A.2 - clustering with 100% identity to remove duplicates. The generated DB does not contain (directly) the sequences data, it only maps clusters centers to members.')
+        cmd = f'mmseqs {cluster_method} {mmseqs_db_path} {mmseqs_cluster_full_identity} {mmseqs_tmp_for_clustering} -c 1.0 --min-seq-id 1.0 --threads 32'
+        _run_system_cmd(cmd)            
 
-    mmseqs_only_representatives = os.path.join(output_dir, 'mmseqs_DB_full_identity_representitives')
-    print(r'A.3 - keeping only cluster centers')
-    cmd = f'mmseqs createsubdb {mmseqs_cluster_full_identity} {mmseqs_db_path}  {mmseqs_only_representatives}'
-    _run_system_cmd(cmd)            
+        mmseqs_only_representatives = os.path.join(output_dir, 'mmseqs_DB_full_identity_representitives')
+        print(r'A.3 - keeping only cluster centers')
+        cmd = f'mmseqs createsubdb {mmseqs_cluster_full_identity} {mmseqs_db_path}  {mmseqs_only_representatives}'
+        _run_system_cmd(cmd)            
 
-    mmseqs_only_unique_sequences_representatives_fasta = os.path.join(output_dir, 'unique_representatives.fasta')
-    print(r'A.4 - creating a fasta file that contains only the representatives, including their sequence data.')
-    cmd = f'mmseqs convert2fasta {mmseqs_only_representatives} {mmseqs_only_unique_sequences_representatives_fasta}'
-    _run_system_cmd(cmd)            
+        mmseqs_only_unique_sequences_representatives_fasta = os.path.join(output_dir, 'unique_representatives.fasta')
+        print(r'A.4 - creating a fasta file that contains only the representatives, including their sequence data.')
+        cmd = f'mmseqs convert2fasta {mmseqs_only_representatives} {mmseqs_only_unique_sequences_representatives_fasta}'
+        _run_system_cmd(cmd)            
 
     #TODO: I can probably avoid converting to fasta in the end of major step A, and do major step B still in mmseqs DB format, which might speed things.
 
@@ -127,20 +124,30 @@ def cluter_impl(*, input_fasta_filename:str, output_dir:str, cluster_min_seqeunc
     #also describes how to convert it to TSV for convinience    
 
     print('B.1 - creating mmseqs DB for our unique DB') #
-    mmseqs_all_unique_DB = os.path.join(output_dir, 'all_unique_DB')
-    cmd = f'mmseqs createdb {mmseqs_only_unique_sequences_representatives_fasta} {mmseqs_all_unique_DB}'
+    step_B_initial_db = os.path.join(output_dir, 'step_B_initial_DB')
+
+    if deduplicate:   
+        cmd = f'mmseqs createdb {mmseqs_only_unique_sequences_representatives_fasta} {step_B_initial_db}'
+    else:
+        cmd = f'mmseqs createdb {input_fasta_filename} {step_B_initial_db}'
+    
     _run_system_cmd(cmd)
 
     print('B.2 - cluster the remaining unique representatives into different clusters based on the requested sequence identity threshold') #
     mmseqs_tmp_2_for_clustering = os.path.join(output_dir, 'mmseqs_DB_tmp_2')
     clustered_db = os.path.join(output_dir, 'mmseqs_DB_clustered')
-    cmd = f'mmseqs {cluster_method} {mmseqs_all_unique_DB} {clustered_db} {mmseqs_tmp_2_for_clustering} -c 1.0 --min-seq-id {cluster_min_seqeunce_identity} --threads 32'
+    cmd = f'mmseqs {cluster_method} {step_B_initial_db} {clustered_db} {mmseqs_tmp_2_for_clustering} -c 1.0 --min-seq-id {cluster_min_seqeunce_identity} --threads 32'
     _run_system_cmd(cmd)    
 
     print('B.3 - generate cluster TSV for convinience') #for massive datasets, we might skip this and use mmseqs output format directly (possibly worth checking if there's already a python lib that handles this)    
     clustered_tsv = os.path.join(output_dir, 'clustered.tsv')
-    cmd = f'mmseqs createtsv {mmseqs_all_unique_DB} {mmseqs_all_unique_DB} {clustered_db} {clustered_tsv}'
+    cmd = f'mmseqs createtsv {step_B_initial_db} {step_B_initial_db} {clustered_db} {clustered_tsv}'
     _run_system_cmd(cmd) 
+
+    print('--------------------------------------')
+    print('final key files summary:')
+    print('--------------------------------------')
+
 
 def _run_system_cmd(cmd:str):
     print('about to run: ', cmd)
