@@ -75,15 +75,11 @@ def data(
 
     # filter unknown labels
     if not infill:
-        labels_train = ds_train.get_multi(
-            None, keys=[target_key, "source"], desc="filter train set"
-        )
+        labels_train = ds_train.get_multi(None, keys=[target_key, "source"], desc="filter train set")
         indices_train = [i for i, v in enumerate(labels_train) if v[target_key] >= 0]
         ds_train.subset(indices_train)
 
-    labels_valid = ds_valid.get_multi(
-        None, keys=[target_key, "source"], desc="filter validation set"
-    )
+    labels_valid = ds_valid.get_multi(None, keys=[target_key, "source"], desc="filter validation set")
     indices_valid = [i for i, v in enumerate(labels_valid) if v[target_key] >= 0]
     ds_valid.subset(indices_valid)
 
@@ -211,6 +207,7 @@ def filter_label_unknown(batch_dict: NDict, label_key: str, out_key: str) -> NDi
     # keep_indices = keep_indices.cpu().numpy()
     return {label_key: batch_dict[label_key][keep_indices], out_key: batch_dict[out_key][keep_indices]}
 
+
 def train(
     model: torch.nn.Module,
     dl_train: DataLoader,
@@ -263,8 +260,7 @@ def train(
     # Metrics
     filter_func = partial(filter_label_unknown, label_key=target_key, out_key="model.output.cls")
     train_metrics = {
-        "auc":
-            MetricAUCROC(pred="model.output.cls", target=target_key, batch_pre_collect_process_func=filter_func),
+        "auc": MetricAUCROC(pred="model.output.cls", target=target_key, batch_pre_collect_process_func=filter_func),
     }
 
     validation_metrics = {
@@ -318,10 +314,7 @@ def main(cfg: DictConfig):
     ds_train, dl_train, dl_valid = data(**cfg.data)
 
     # model
-    seqs = [
-        sample["sequence"]
-        for sample in ds_train.get_multi(None, keys=["sequence"], desc="tokenizer")
-    ]
+    seqs = [sample["sequence"] for sample in ds_train.get_multi(None, keys=["sequence"], desc="tokenizer")]
     nn_model, tokenizer = model(seqs=seqs, **cfg.model)
 
     # train

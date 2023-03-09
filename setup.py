@@ -33,22 +33,23 @@ with open(os.path.join(HERE, "requirements/requirements_dev.txt"), "r") as fh:
 
 
 # version
-version_file = open(os.path.join(HERE, 'VERSION.txt'))
+version_file = open(os.path.join(HERE, "VERSION.txt"))
 version = version_file.read().strip()
 
-setup(name="fuse-drug",
-      version=version,
-      description="drug discovery domain data, models, pipelines and more",
-      long_description=long_description,
-      long_description_content_type="text/markdown",
-      url="https://github.com/BiomedSciAI/fuse-med-ml-drug/",
-      author="IBM Research Israel Labs - Machine Learning for Healthcare and Life Sciences",
-      author_email="alex.golts@ibm.com",
-      packages=find_namespace_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
-      license="Apache License 2.0",
-      install_requires=fusedrug_requirements,
-      extras_require={
+setup(
+    name="fuse-drug",
+    version=version,
+    description="drug discovery domain data, models, pipelines and more",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/BiomedSciAI/fuse-med-ml-drug/",
+    author="IBM Research Israel Labs - Machine Learning for Healthcare and Life Sciences",
+    author_email="alex.golts@ibm.com",
+    packages=find_namespace_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
+    license="Apache License 2.0",
+    install_requires=fusedrug_requirements,
+    extras_require={
         "examples": fusedrug_examples_requirements,
         "dev": fuse_requirements_dev,
-        },
-      )
+    },
+)

@@ -26,12 +26,8 @@ class MetricSeqAccuracy(MetricDefault):
     Accuracy of a generated sequence.
     """
 
-    def __init__(
-        self, pred: Optional[str] = None, target: Optional[str] = None, **kwargs
-    ):
-        super().__init__(
-            metric_func=self.sequence_accuracy, pred=pred, target=target, **kwargs
-        )
+    def __init__(self, pred: Optional[str] = None, target: Optional[str] = None, **kwargs):
+        super().__init__(metric_func=self.sequence_accuracy, pred=pred, target=target, **kwargs)
 
     @staticmethod
     def sequence_accuracy(pred: List[str], target: List[str]):
