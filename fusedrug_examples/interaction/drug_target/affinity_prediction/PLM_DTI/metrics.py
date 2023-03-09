@@ -1,5 +1,6 @@
 import torch, torchmetrics
 
+
 def get_metrics(task):
     if task == "dti_dg":
         val_metrics = {
@@ -22,6 +23,7 @@ def get_metrics(task):
             "test/auroc": torchmetrics.classification.BinaryAUROC,
         }
     return val_metrics, test_metrics
+
 
 def get_metrics_instances(metrics):
     metric_dict = {}

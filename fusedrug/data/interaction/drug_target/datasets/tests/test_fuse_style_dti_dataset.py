@@ -1,8 +1,8 @@
 import unittest
 from fusedrug.data.interaction.drug_target.datasets.fuse_style_dti import DTIDataset
 
-class TestFuseStyleDTIDataset(unittest.TestCase):
 
+class TestFuseStyleDTIDataset(unittest.TestCase):
     def test_dataset(self):
         """
         Sanity check
@@ -12,4 +12,3 @@ class TestFuseStyleDTIDataset(unittest.TestCase):
 
         dataset = DTIDataset.dataset(data_path=TRAIN_URL)
         sample = dataset[42]
-

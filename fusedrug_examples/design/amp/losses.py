@@ -127,12 +127,8 @@ def interpolate(start_val, end_val, start_iter, end_iter, current_iter):
     elif current_iter >= end_iter:
         return end_val
     else:
-        return start_val + (end_val - start_val) * (current_iter - start_iter) / (
-            end_iter - start_iter
-        )
+        return start_val + (end_val - start_val) * (current_iter - start_iter) / (end_iter - start_iter)
 
 
 def anneal(cfgan, it):
-    return interpolate(
-        cfgan.start_val, cfgan.end_val, cfgan.start_iter, cfgan.end_iter, it
-    )
+    return interpolate(cfgan.start_val, cfgan.end_val, cfgan.start_iter, cfgan.end_iter, it)
