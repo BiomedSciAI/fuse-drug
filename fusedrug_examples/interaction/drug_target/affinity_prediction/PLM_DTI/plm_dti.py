@@ -1,12 +1,14 @@
 import torch
 import pytorch_lightning as pl
+
 # The Contrastive_PLM_DTI submodule is the repository found at https://github.com/samsledje/Contrastive_PLM_DTI
-# and described in the paper "Adapting protein language models for rapid DTI prediction": https://www.mlsb.io/papers_2021/MLSB2021_Adapting_protein_language_models.pdf 
+# and described in the paper "Adapting protein language models for rapid DTI prediction": https://www.mlsb.io/papers_2021/MLSB2021_Adapting_protein_language_models.pdf
 from Contrastive_PLM_DTI.src import architectures as model_types
 import metrics
 from fuse.dl.models.model_wrapper import ModelWrapSeqToDict
 from fuse.dl.losses.loss_default import LossDefault
 import fuse.dl.lightning.pl_funcs as fuse_pl
+
 
 class PLM_DTI_Module(pl.LightningModule):
     def __init__(self, cfg) -> None:
@@ -36,15 +38,13 @@ class PLM_DTI_Module(pl.LightningModule):
         # wrap loss with fuse:
         # losses
         self.losses = {
-            "cls_loss": LossDefault(
-                pred="model.output", target="data.label", callable=loss_fct, weight=1.0
-            ),
+            "cls_loss": LossDefault(pred="model.output", target="data.label", callable=loss_fct, weight=1.0),
         }
         self.val_metrics, self.test_metrics = metrics.get_metrics(cfg.experiment.task)
         self.val_metric_dict = metrics.get_metrics_instances(self.val_metrics)
         self.test_metric_dict = metrics.get_metrics_instances(self.test_metrics)
         # TBD - handle checkpoint loading
-    
+
     def forward(self, batch_dict):
         return self.model(batch_dict)
 
@@ -60,7 +60,7 @@ class PLM_DTI_Module(pl.LightningModule):
         for _, met_instance in self.val_metric_dict.items():
             met_instance(batch_dict["model.output"], batch_dict["data.label"])
         self.log("validation_loss", loss)
-        
+
     def validation_epoch_end(self, validation_step_outputs):
         results = {}
         for (k, met_instance) in self.val_metric_dict.items():
@@ -88,5 +88,3 @@ class PLM_DTI_Module(pl.LightningModule):
         opt = torch.optim.AdamW(self.model.parameters(), lr=self.cfg.trainer.lr)
         lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(opt, T_0=self.cfg.trainer.lr_t0)
         return {"optimizer": opt, "lr_scheduler": lr_scheduler}
-
-
