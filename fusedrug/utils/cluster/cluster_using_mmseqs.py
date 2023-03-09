@@ -32,22 +32,22 @@ def cluster(force_rebuild:bool = False, **kwargs):
     already_created_hash_filename = os.path.join(output_dir, 'created_hash')
     already_created_description_filename = os.path.join(output_dir, 'created_desc')
 
-    _rebuild_needed = False
+    rebuild_needed = False
     if os.path.isfile(already_created_hash_filename):
         existing_hash_value = read_text_file(already_created_hash_filename)
         if hash_value == existing_hash_value:
             if force_rebuild:
                 print(f'cluster::Hash value on disk matches the calculated one ({hash_value}), but force_rebuild was requested so rebuilding anyway.')
-                _rebuild_needed = True
+                rebuild_needed = True
         else:
             raise Exception('hash value on disk is a mismatch! please delete the directory manually and rerun.')
-            _rebuild_needed = True
+            rebuild_needed = True
 
         existing_desc = read_text_file(already_created_description_filename)
     else:
-        _rebuild_needed = True
+        rebuild_needed = True
             
-    if _rebuild_needed and (not _rebuild_needed):
+    if (not force_rebuild) and (not rebuild_needed):
         print(f'Hash value indicates that it was already built, not rebuilding. See description: {existing_desc}')
         return
 
@@ -106,7 +106,7 @@ def cluter_impl(*, input_fasta_filename:str, output_dir:str, cluster_min_seqeunc
     mmseqs_cluster_full_identity = os.path.join(output_dir, 'mmseqs_DB_cluster_full_identity')
     mmseqs_tmp_for_clustering = os.path.join(output_dir, 'mmseqs_DB_tmp')
     print(r'A.2 - clustering with 100% identity to remove duplicates. The generated DB does not contain (directly) the sequences data, it only maps clusters centers to members.')
-    cmd = f'mmseqs {cluster_method} {mmseqs_db_path} {mmseqs_cluster_full_identity} {mmseqs_tmp_for_clustering} --min-seq-id 1.0 --threads 32'
+    cmd = f'mmseqs {cluster_method} {mmseqs_db_path} {mmseqs_cluster_full_identity} {mmseqs_tmp_for_clustering} -c 1.0 --min-seq-id 1.0 --threads 32'
     _run_system_cmd(cmd)            
 
     mmseqs_only_representatives = os.path.join(output_dir, 'mmseqs_DB_full_identity_representitives')
@@ -134,7 +134,7 @@ def cluter_impl(*, input_fasta_filename:str, output_dir:str, cluster_min_seqeunc
     print('B.2 - cluster the remaining unique representatives into different clusters based on the requested sequence identity threshold') #
     mmseqs_tmp_2_for_clustering = os.path.join(output_dir, 'mmseqs_DB_tmp_2')
     clustered_db = os.path.join(output_dir, 'mmseqs_DB_clustered')
-    cmd = f'mmseqs {cluster_method} {mmseqs_all_unique_DB} {clustered_db} {mmseqs_tmp_2_for_clustering} --min-seq-id {cluster_min_seqeunce_identity} --threads 32'
+    cmd = f'mmseqs {cluster_method} {mmseqs_all_unique_DB} {clustered_db} {mmseqs_tmp_2_for_clustering} -c 1.0 --min-seq-id {cluster_min_seqeunce_identity} --threads 32'
     _run_system_cmd(cmd)    
 
     print('B.3 - generate cluster TSV for convinience') #for massive datasets, we might skip this and use mmseqs output format directly (possibly worth checking if there's already a python lib that handles this)    
@@ -152,5 +152,5 @@ def _run_system_cmd(cmd:str):
         print('stderr=')
         print(res.stderr.decode())
     if res.returncode != 0:
-        raise Exception(f'ERROR: failed when trying to run {cmd}, get return val={res.returncode}')
+        raise Exception(f'ERROR: failed when trying to run {cmd}, got return val={res.returncode}')
 
