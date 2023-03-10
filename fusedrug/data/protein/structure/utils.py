@@ -4,6 +4,7 @@ try:
 except ImportError:
     print("Warning: import openfold failed - some functions might fail")
 
+
 def aa_sequence_from_aa_integers(aatype):
     ans = "".join(["X" if x == 20 else rc.restypes[x] for x in aatype])
     return ans
@@ -16,8 +17,9 @@ def get_structure_file_type(filename: str) -> str:
         return "cif"
     raise Exception(f"Could not detect structure file format for {filename}")
 
-#from OmegaFold version of residue_constants.py
+
+# from OmegaFold version of residue_constants.py
 # Compute a mask whether the group exists.
 # (N, 8)
 def residx_to_3(idx):
-    return rc.restype_1to3[rc.restypes[idx]] 
+    return rc.restype_1to3[rc.restypes[idx]]

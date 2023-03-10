@@ -32,7 +32,7 @@ try:
         mmcif_parsing,
     )
     from openfold.np import residue_constants as rc
- 
+
 except ImportError:
     print("Warning: import openfold failed - some functions might fail")
 
@@ -381,8 +381,6 @@ def read_file_raw_string(filename: str) -> str:
     with use_open(filename, "rt") as f:
         loaded = f.read()
     return loaded
-
-
 
 
 def save_pdb_file(
