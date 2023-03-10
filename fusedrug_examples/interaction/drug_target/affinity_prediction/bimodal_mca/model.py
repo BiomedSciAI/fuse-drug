@@ -5,43 +5,45 @@ import numpy as np
 from sklearn.metrics import mean_squared_error
 from scipy.stats import pearsonr, spearmanr
 
+
 class AffinityPredictorModule(pl.LightningModule):
-    def __init__(self,        
-                 **model_params : dict, #will be passed to BimodalMCA        
-                ) -> None:
+    def __init__(
+        self,
+        **model_params: dict,  # will be passed to BimodalMCA
+    ) -> None:
         """
-        Affinity Predictor            
+        Affinity Predictor
         """
         super().__init__()
 
-        assert 'learning_rate' in model_params
+        assert "learning_rate" in model_params
 
-        self.learning_rate = model_params['learning_rate']
-        
+        self.learning_rate = model_params["learning_rate"]
+
         self.model_params = model_params
         self.save_hyperparameters()
 
         self.model = BimodalMCA(self.model_params)
         self.num_params = sum(p.numel() for p in self.model.parameters())
-        print('total model num_params=',self.num_params)        
+        print("total model num_params=", self.num_params)
 
     def forward(self, smiles: torch.Tensor, proteins: torch.Tensor) -> torch.Tensor:
         return self.model.forward(smiles, proteins)[0]
 
     def training_step(self, batch: tuple, batch_idx: int) -> torch.Tensor:
-        
-        smiles = batch['data.input.tokenized_ligand']
-        proteins = batch['data.input.tokenized_protein']
-        y = batch['data.gt.affinity_val']
+
+        smiles = batch["data.input.tokenized_ligand"]
+        proteins = batch["data.input.tokenized_protein"]
+        y = batch["data.gt.affinity_val"]
         y_hat = self(smiles, proteins)
         return self.model.loss(y_hat, y)
 
     def validation_step(self, batch: tuple, batch_idx: int) -> None:
-        
-        smiles = batch['data.input.tokenized_ligand']
-        proteins = batch['data.input.tokenized_protein']
-        y = batch['data.gt.affinity_val']
-        
+
+        smiles = batch["data.input.tokenized_ligand"]
+        proteins = batch["data.input.tokenized_protein"]
+        y = batch["data.gt.affinity_val"]
+
         y_hat = self(smiles, proteins)
         loss = self.model.loss(y_hat, y)
         y = y.cpu().detach().squeeze().tolist()
@@ -55,10 +57,10 @@ class AffinityPredictorModule(pl.LightningModule):
         self.log("val_spearman", spearman, batch_size=smiles.shape[0])
 
     def test_step(self, batch: tuple, batch_idx: int) -> None:
-        
-        smiles = batch['data.input.tokenized_ligand']
-        proteins = batch['data.input.tokenized_protein']
-        y = batch['data.gt.affinity_val']
+
+        smiles = batch["data.input.tokenized_ligand"]
+        proteins = batch["data.input.tokenized_protein"]
+        y = batch["data.gt.affinity_val"]
         y_hat = self(smiles, proteins)
         loss = self.model.loss(y_hat, y)
 
@@ -73,6 +75,4 @@ class AffinityPredictorModule(pl.LightningModule):
         self.log("test_spearman", spearman, batch_size=smiles.shape[0])
 
     def configure_optimizers(self) -> torch.optim.Optimizer:
-        return torch.optim.Adam(
-            self.model.parameters(), lr=self.learning_rate
-        )
+        return torch.optim.Adam(self.model.parameters(), lr=self.learning_rate)
