@@ -17,7 +17,7 @@ _default_regions_colors = dict(
 def get_indices_colors_scheme_from_chain(
     openfold_prot: protein_utils.Protein,
     regions_colors: Optional[Dict[str, str]] = None,
-    scheme: str="chothia",
+    scheme: str = "chothia",
     verbose: int = 1,
 ) -> List:
     """
