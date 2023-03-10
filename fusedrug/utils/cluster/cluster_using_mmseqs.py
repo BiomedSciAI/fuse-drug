@@ -6,7 +6,7 @@ from fuse.utils.file_io import save_text_file_safe, read_text_file
 import os
 
 
-def cluster(output_dir:str, force_rebuild: bool = False, **kwargs) -> None:
+def cluster(output_dir: str, force_rebuild: bool = False, **kwargs) -> None:
     """
     Uses mmseqs to:
 
@@ -17,8 +17,10 @@ def cluster(output_dir:str, force_rebuild: bool = False, **kwargs) -> None:
         b. Balanced sampling during training, sampling with inverse proportion to cluster size. (Similar to Class Balancing)
 
     Note: depends on availability of mmseqs binary
-        Please install mmseqs2 . See install instructions here: https://github.com/soedinglab/MMseqs2 '
-        'Also note that you can download prebuilt static binaries such as: https://mmseqs.com/latest/mmseqs-linux-sse41.tar.gz - extract and add the binary to your system PATH.
+        Please install mmseqs2 . See install instructions here: https://github.com/soedinglab/MMseqs2 
+        Also note that you can download prebuilt static binaries such as: https://mmseqs.com/latest/mmseqs-linux-sse41.tar.gz - extract and add the binary to your system PATH.
+        The version we used was MMseqs2 Version: 13.45111
+        Note: we've experienced "segmentation fault" when not using -c 1.0 (and keeping it at default value)
 
     Args:
         force_rebuild: rebuilds the data even if the hash indicates that it was already cached.
@@ -32,7 +34,7 @@ def cluster(output_dir:str, force_rebuild: bool = False, **kwargs) -> None:
         deduplicate: if False, deduplication step will be skipped and clustering will be done directly on the input
 
     Note - this function wraps cluster_impl() to allow caching
-    """    
+    """
     os.makedirs(output_dir, exist_ok=True)
 
     str_repr = get_function_call_str(
@@ -65,7 +67,7 @@ def cluster(output_dir:str, force_rebuild: bool = False, **kwargs) -> None:
         print(f'Hash value indicates that it was already built, not rebuilding. See description: {existing_desc}')
         return
 
-    cluter_impl(**kwargs)
+    cluter_impl(output_dir=output_dir, **kwargs)
 
     save_text_file_safe(already_created_description_filename, hash_value)
     save_text_file_safe(already_created_hash_filename, str_repr)
@@ -97,67 +99,69 @@ def cluter_impl(*, input_fasta_filename:str, output_dir:str, cluster_min_seqeunc
 
         print('A.1 - creating mmseqs DB. It converts the input fasta into mmseqs DB internal format (made of multiple files)') #
         cmd = f'mmseqs createdb {input_fasta_filename} {mmseqs_db_path}'
-        _run_system_cmd(cmd)            
+        _run_system_cmd(cmd)
 
-        #mmseqs cluster DB DB_clu tmp --min-seq-id 1.0 --threads 32 
+        #mmseqs cluster DB DB_clu tmp --min-seq-id 1.0 --threads 32
         mmseqs_cluster_full_identity = os.path.join(output_dir, 'mmseqs_DB_cluster_full_identity')
         mmseqs_tmp_for_clustering = os.path.join(output_dir, 'mmseqs_DB_tmp')
         print(r'A.2 - clustering with 100% identity to remove duplicates. The generated DB does not contain (directly) the sequences data, it only maps clusters centers to members.')
         cmd = f'mmseqs {cluster_method} {mmseqs_db_path} {mmseqs_cluster_full_identity} {mmseqs_tmp_for_clustering} -c 1.0 --min-seq-id 1.0 --threads 32'
-        _run_system_cmd(cmd)            
+        _run_system_cmd(cmd)
 
         mmseqs_only_representatives = os.path.join(output_dir, 'mmseqs_DB_full_identity_representitives')
         print(r'A.3 - keeping only cluster centers')
         cmd = f'mmseqs createsubdb {mmseqs_cluster_full_identity} {mmseqs_db_path}  {mmseqs_only_representatives}'
-        _run_system_cmd(cmd)            
+        _run_system_cmd(cmd)
 
         mmseqs_only_unique_sequences_representatives_fasta = os.path.join(output_dir, 'unique_representatives.fasta')
         print(r'A.4 - creating a fasta file that contains only the representatives, including their sequence data.')
         cmd = f'mmseqs convert2fasta {mmseqs_only_representatives} {mmseqs_only_unique_sequences_representatives_fasta}'
-        _run_system_cmd(cmd)            
+        _run_system_cmd(cmd)
 
     #TODO: I can probably avoid converting to fasta in the end of major step A, and do major step B still in mmseqs DB format, which might speed things.
 
     ########### Major step B - create clusters
 
     #description on how to read the cluster files format: https://mmseqs.com/latest/userguide.pdf - search for "Internal cluster format",
-    #also describes how to convert it to TSV for convinience    
+    #also describes how to convert it to TSV for convinience
 
-    print('B.1 - creating mmseqs DB for our unique DB') #
+    print('B.1 - creating mmseqs DB for our unique DB')
     step_B_initial_db = os.path.join(output_dir, 'step_B_initial_DB')
 
-    if deduplicate:   
+    if deduplicate:
         cmd = f'mmseqs createdb {mmseqs_only_unique_sequences_representatives_fasta} {step_B_initial_db}'
     else:
         cmd = f'mmseqs createdb {input_fasta_filename} {step_B_initial_db}'
-    
+
     _run_system_cmd(cmd)
 
-    print('B.2 - cluster the remaining unique representatives into different clusters based on the requested sequence identity threshold') #
+    print('B.2 - cluster the remaining unique representatives into different clusters based on the requested sequence identity threshold')
     mmseqs_tmp_2_for_clustering = os.path.join(output_dir, 'mmseqs_DB_tmp_2')
     clustered_db = os.path.join(output_dir, 'mmseqs_DB_clustered')
     cmd = f'mmseqs {cluster_method} {step_B_initial_db} {clustered_db} {mmseqs_tmp_2_for_clustering} -c 1.0 --min-seq-id {cluster_min_seqeunce_identity} --threads 32'
-    _run_system_cmd(cmd)    
+    _run_system_cmd(cmd)
 
-    print('B.3 - generate cluster TSV for convinience') #for massive datasets, we might skip this and use mmseqs output format directly (possibly worth checking if there's already a python lib that handles this)    
+    print('B.3 - generate cluster TSV for convinience')  #for massive datasets, we might skip this and use mmseqs output format directly (possibly worth checking if there's already a python lib that handles this)
     clustered_tsv = os.path.join(output_dir, 'clustered.tsv')
     cmd = f'mmseqs createtsv {step_B_initial_db} {step_B_initial_db} {clustered_db} {clustered_tsv}'
     _run_system_cmd(cmd) 
 
     print('--------------------------------------')
-    print('final key files summary:')
+    print('Final generated key files summary:')
     print('--------------------------------------')
+    if deduplicate:
+        print(f'a deduplicated FASTA file: {mmseqs_only_unique_sequences_representatives_fasta}')
+    print(f'a TSV file containing the clusters (no sequence information): {clustered_tsv}')
 
 
-def _run_system_cmd(cmd:str):
+def _run_system_cmd(cmd: str):
     print('about to run: ', cmd)
     res = subprocess.run(cmd, shell=True, check=False, capture_output=True)
-    if len(res.stdout)>0:
+    if len(res.stdout) > 0:
         print('stdout=')
         print(res.stdout.decode())
-    if len(res.stderr)>0:
+    if len(res.stderr) > 0:
         print('stderr=')
         print(res.stderr.decode())
     if res.returncode != 0:
         raise Exception(f'ERROR: failed when trying to run {cmd}, got return val={res.returncode}')
-
