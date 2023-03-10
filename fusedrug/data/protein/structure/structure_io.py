@@ -19,6 +19,7 @@ from Bio.PDB.Structure import Structure
 from Bio.PDB.Chain import Chain
 from Bio.PDB.Residue import Residue
 from Bio.PDB.Atom import Atom
+from Bio import PDB
 
 # TODO: temp until openfold will be added to the dependency list
 try:
@@ -30,16 +31,19 @@ try:
         data_pipeline,
         mmcif_parsing,
     )
+    from openfold.np import residue_constants as rc
+
 except ImportError:
     print("Warning: import openfold failed - some functions might fail")
 
 # TODO: temp until omegafold will be added to the dependency list
-try:
-    from omegafold.utils.protein_utils import residue_constants as rc
-except ImportError:
-    print("Warning: import omegafold failed - some functions might fail")
+# try:
+#     from omegafold.utils.protein_utils import residue_constants as rc
+# except ImportError:
+#     print("Warning: import omegafold failed - some functions might fail")
 
-from fusedrug.data.protein.structure.utils import aa_sequence_from_aa_integers, get_structure_file_type
+
+from fusedrug.data.protein.structure.utils import aa_sequence_from_aa_integers, get_structure_file_type, residx_to_3
 
 # https://bioinformatics.stackexchange.com/questions/14101/extract-residue-sequence-from-pdb-file-in-biopython-but-open-to-recommendation
 
@@ -420,7 +424,7 @@ def save_pdb_file(
         if aa_idx == 21:
             continue
         try:
-            three = rc.residx_to_3(aa_idx)
+            three = residx_to_3(aa_idx)
         except IndexError:
             continue
         builder.init_residue(three, " ", int(i), icode=" ")
@@ -604,8 +608,8 @@ def create_biopython_structure(
     # pred_structure = Structure(pdb_id)
     pred_model = Model(id="prediction@" + pdb_id, serial_num="0")  # 999')
 
-    restypes = omegafold_rc.restypes + ["X"]
-    # res_1to3 = lambda r: omegafold_rc.restype_1to3.get(restypes[r], "UNK")
+    restypes = rc.restypes + ["X"]
+    # res_1to3 = lambda r: rc.restype_1to3.get(restypes[r], "UNK")
     # atom_types = openfold_rc.atom_types
 
     # pred_chains = {}
@@ -613,7 +617,7 @@ def create_biopython_structure(
     atom_idx = -1
 
     for chain_id, seq in chain_to_aa_seq.items():
-        if any([x not in omegafold_rc.restype_1to3 for x in seq]):
+        if any([x not in rc.restype_1to3 for x in seq]):
             raise ValueError("Invalid aatypes.")
 
         ref_chain = [c for c in ref_structure.get_chains() if c.id == chain_id]
@@ -631,9 +635,9 @@ def create_biopython_structure(
             # ref_atoms = list(ref_residue.get_atoms())
             # pred_residue_pos = pred_pos_all_atom_with_res_structure[res_i]
             pred_residue_pos = chain_to_atom14[chain_id][res_i]
-            res_3char = omegafold_rc.restype_1to3[r_1char]
+            res_3char = rc.restype_1to3[r_1char]
 
-            atom14_atoms = omegafold_rc.restype_name_to_atom14_names[res_3char]
+            atom14_atoms = rc.restype_name_to_atom14_names[res_3char]
 
             pred_residue = Residue(
                 # ref_residue.id,
