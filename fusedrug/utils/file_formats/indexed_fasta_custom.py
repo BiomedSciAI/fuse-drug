@@ -27,7 +27,7 @@ def _default_identifier_extractor(identifier_line, also_return_comment:bool=True
         comment = identifier_line[pos+1:]
         return identifier, comment
 
-    return identifier, None
+    return identifier
 
 
 
