@@ -5,11 +5,11 @@ hydra:
     chdir: False 
 experiment:
   project_name: PLM-DTI
-  experiment_name: pretrained_on_benchmark_finetuning_on_davis
+  experiment_name: benchmark_data_focal_loss_temporal_split_1_linear_layers
   dir: ${paths.results}/${experiment.project_name}/${experiment.experiment_name}
   verbosity: 3
   seed: 0
-  task: bindingdb # "dti_dg" for TDCommons domain generalization benchmark,
+  task: benchmark # "dti_dg" for TDCommons domain generalization benchmark,
             # one of EnzPredDataModule.dataset_list() ("halogenase",
             # "bkace", "gt", "esterase", "kinase", "phosphatase"),
             # "benchmark" for our benchmark (TBD),
@@ -36,15 +36,15 @@ benchmark_data:
   ligands_tsv: ${benchmark_data.root_path}/ligand/merged_bindingdb_chembl_pubchem_14-04-2022_30_05-09-2022@native@single_protein_target@ligands.tsv
   targets_tsv: ${benchmark_data.root_path}/target/merged_bindingdb_chembl_pubchem_14-04-2022_30_05-09-2022@native@single_protein_target@targets.tsv
   # lenient split:
-  splits_tsv: ${benchmark_data.root_path}/splits/splits/${benchmark_data.split}/split_lenient_0.14_0.14_0.14_0.14_0.14_0.15_0.15.tsv
+  #splits_tsv: ${benchmark_data.root_path}/splits/splits/${benchmark_data.split}/split_lenient_0.14_0.14_0.14_0.14_0.14_0.15_0.15.tsv
   # cold_ligand split:
   #splits_tsv: ${benchmark_data.root_path}/splits/splits/${benchmark_data.split}/split_cold_ligand_0.7_0.15_0.15.tsv
   # cold_target split:
   #splits_tsv: ${benchmark_data.root_path}/splits/splits/${benchmark_data.split}/split_cold_target_0.7_0.15_0.15.tsv
   # temporal split:
-  #splits_tsv: ${benchmark_data.root_path}/splits/splits/${benchmark_data.split}/split_temporal_0.7_0.15_0.15.tsv
+  splits_tsv: ${benchmark_data.root_path}/splits/splits/${benchmark_data.split}/split_temporal_0.7_0.15_0.15.tsv
 
-  split: lenient # split if using task="ours". can be "lenient", "cold_target", "cold_ligand", "temporal". 
+  split: temporal # split if using task="ours". can be "lenient", "cold_target", "cold_ligand", "temporal". 
   train_folds:
   - train1
   - train2
@@ -58,7 +58,7 @@ benchmark_data:
   class_label_to_idx: 
     Active: 1
     Inactive: 0
-  minibatches_per_epoch: 300 # 2500, for debugging: 250
+  minibatches_per_epoch: 2500 # 2500, for debugging: 250
   validation_epochs: 50 # 50, for debugging: 5
  
 data:
@@ -75,13 +75,13 @@ model:
   target_featurizer: ProtBertFeaturizer
   # possible values: SimpleCoembedding, others (not tested): GoldmanCPI, SimpleCosine, AffinityCoembedInner, CosineBatchNorm, LSTMCosine, DeepCosine, 
   #                  SimpleConcat, SeparateConcat, AffinityEmbedConcat, AffinityConcatLinear
-  model_architecture: SimpleCoembedding 
+  model_architecture: SimpleCoembedding # SimpleCoembedding
   latent_dimension: 1024
   latent_distance: "Cosine"
 
 trainer:
-  loss: 'bce' # 'bce' (binary cross-entropy), 'focal'
-  epochs: 50 # 50, for debugging: 5
+  loss: 'focal' # 'bce' (binary cross-entropy), 'focal'
+  epochs: 100 # 50, for debugging: 5
   every_n_val: 2
   lr: 1e-4
   lr_t0: 10
