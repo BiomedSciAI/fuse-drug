@@ -166,7 +166,7 @@ class BenchmarkDTIDataModule(pl.LightningDataModule):
         else:
             num_samples_per_epoch = self.validation_epochs*self.minibatches_per_epoch*self.batch_size if phase=='val' else None
             sampler = SubsetSampler(dataset=dataset, 
-                                    dataset_len=len(dataset.dynamic_pipeline._ops_and_kwargs[0][0]._data.keys()),
+                                    sample_ids = list(dataset.dynamic_pipeline._ops_and_kwargs[0][0]._data.keys()),
                                     num_samples_per_epoch=num_samples_per_epoch, 
                                     shuffle=True)        
             dl = DataLoader(dataset,
