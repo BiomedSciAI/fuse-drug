@@ -75,8 +75,8 @@ def dti_binding_dataset_with_featurizers(pairs_tsv:str, ligands_tsv:str, targets
     all_drugs = list(set([dynamic_pipeline[1][0]._data[item]['ligand_str'] for item in dynamic_pipeline[1][0]._data]))
     all_targets = list(set([dynamic_pipeline[2][0]._data[item]['target_str'] for item in dynamic_pipeline[2][0]._data]))
     dynamic_pipeline += [
-        FeaturizeDrug(dataset=None, all_drugs=all_drugs, featurizer=kwargs['drug_featurizer'], debug=kwargs['featurizer_debug_mode']),
-        FeaturizeTarget(dataset=None, all_targets=all_targets, featurizer=kwargs['target_featurizer'], debug=kwargs['featurizer_debug_mode'])
+        (FeaturizeDrug(dataset=None, all_drugs=all_drugs, featurizer=kwargs['drug_featurizer'], debug=kwargs['featurizer_debug_mode']), {}),
+        (FeaturizeTarget(dataset=None, all_targets=all_targets, featurizer=kwargs['target_featurizer'], debug=kwargs['featurizer_debug_mode']), {})
     ]
     # append custom pipeline:
     if 'dynamic_pipeline' in kwargs and kwargs['dynamic_pipeline'] is not None:
