@@ -27,6 +27,7 @@ def cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict) -> Non
         input_fasta_filename: a fasta with an entry per molecular entity
         output_dir: where the output will be generated
         cluster_min_seqeunce_identity: the minimal sequence identity for member within a cluster
+        threads: number of threads (for multithreading)
         cluster_method: any of 'cluster', 'linclust':
             'cluster' is the "vanilla" one
             'linclust' is faster (claims linear runtime) but less accurate. Might be suitable for massive data.
@@ -75,6 +76,7 @@ def cluter_impl(
     input_fasta_filename: str,
     output_dir: str,
     cluster_min_seqeunce_identity: float = 0.4,
+    threads = 30,
     cluster_method: str = "cluster",
     deduplicate: bool = True,
 ) -> None:
@@ -116,7 +118,7 @@ def cluter_impl(
         print(
             r"A.2 - clustering with 100% identity to remove duplicates. The generated DB does not contain (directly) the sequences data, it only maps clusters centers to members."
         )
-        cmd = f"mmseqs {cluster_method} {mmseqs_db_path} {mmseqs_cluster_full_identity} {mmseqs_tmp_for_clustering} -c 1.0 --min-seq-id 1.0 --threads 32"
+        cmd = f"mmseqs {cluster_method} {mmseqs_db_path} {mmseqs_cluster_full_identity} {mmseqs_tmp_for_clustering} -c 1.0 --min-seq-id 1.0 --threads {threads}"
         _run_system_cmd(cmd)
 
         mmseqs_only_representatives = os.path.join(output_dir, "mmseqs_DB_full_identity_representitives")
@@ -151,7 +153,7 @@ def cluter_impl(
     )
     mmseqs_tmp_2_for_clustering = os.path.join(output_dir, "mmseqs_DB_tmp_2")
     clustered_db = os.path.join(output_dir, "mmseqs_DB_clustered")
-    cmd = f"mmseqs {cluster_method} {step_B_initial_db} {clustered_db} {mmseqs_tmp_2_for_clustering} -c 1.0 --min-seq-id {cluster_min_seqeunce_identity} --threads 32"
+    cmd = f"mmseqs {cluster_method} {step_B_initial_db} {clustered_db} {mmseqs_tmp_2_for_clustering} -c 1.0 --min-seq-id {cluster_min_seqeunce_identity} --threads {threads}"
     _run_system_cmd(cmd)
 
     print(
