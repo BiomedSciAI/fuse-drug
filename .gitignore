@@ -145,4 +145,8 @@ tutorials/data/*
 outputs
 
 # personal configs
-*vadim*
+*_personal.yaml
+
+# Unit test outputs
+fusedrug_examples/tests/cls_amp
+fusedrug_examples/tests/peptides_design

@@ -1,5 +1,6 @@
 from pathlib import Path
 
+
 def get_task_dir(task_name: str, orig_repo_name: str = ""):
     """
     Slightly modified function vs. that from the original repo,
