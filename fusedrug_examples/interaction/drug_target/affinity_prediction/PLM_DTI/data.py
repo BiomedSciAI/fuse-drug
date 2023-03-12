@@ -140,7 +140,7 @@ class BenchmarkDTIDataModule(pl.LightningDataModule):
         #    dataset.create()        
         #print(f'created dataset has length={len(dataset_loader_op.dataset)}') # dataset has no known len because it's created without explicit sample ids
         
-        dataset = dti_dataset.dti_binding_dataset_with_featurizers(pairs_tsv=self.pairs_tsv, ligands_tsv=self.ligands_tsv, 
+        dataset, pairs_df = dti_dataset.dti_binding_dataset_with_featurizers(pairs_tsv=self.pairs_tsv, ligands_tsv=self.ligands_tsv, 
                         targets_tsv=self.targets_tsv, \
                         pairs_columns_to_extract=['ligand_id', 'target_id', 'activity_value', 'activity_label'], \
                         pairs_rename_columns={'activity_value': 'ground_truth_activity_value', 'activity_label': 'ground_truth_activity_label'}, \
@@ -155,7 +155,7 @@ class BenchmarkDTIDataModule(pl.LightningDataModule):
 
         if phase=='train': 
             with Timer("Initializing training sampler..."):
-                batch_sampler = BalancedClassDataFrameSampler(df=dataset_loader_op.dataset._pairs, label_column_name="activity_label", classes=list(self.class_label_to_idx.keys()), 
+                batch_sampler = BalancedClassDataFrameSampler(df=pairs_df, label_column_name="activity_label", classes=list(self.class_label_to_idx.keys()), 
                                                 counts=[self.batch_size//2, self.batch_size//2], shuffle=True, total_minibatches=self.minibatches_per_epoch)
             print("Done.")
             dl = DataLoader(dataset,
@@ -166,7 +166,7 @@ class BenchmarkDTIDataModule(pl.LightningDataModule):
         else:
             num_samples_per_epoch = self.validation_epochs*self.minibatches_per_epoch*self.batch_size if phase=='val' else None
             sampler = SubsetSampler(dataset=dataset, 
-                                    dataset_len=len(dataset_loader_op.dataset),
+                                    dataset_len=len(dataset.dynamic_pipeline._ops_and_kwargs[0][0]._data.keys()),
                                     num_samples_per_epoch=num_samples_per_epoch, 
                                     shuffle=True)        
             dl = DataLoader(dataset,

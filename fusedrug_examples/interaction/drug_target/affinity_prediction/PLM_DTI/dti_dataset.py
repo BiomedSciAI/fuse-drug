@@ -83,11 +83,11 @@ def dti_binding_dataset_with_featurizers(pairs_tsv:str, ligands_tsv:str, targets
         dynamic_pipeline += kwargs['dynamic_pipeline']
 
     dynamic_pipeline = PipelineDefault("DTI dataset", dynamic_pipeline)
-
-    dataset = DatasetDefault(sample_ids=None, dynamic_pipeline=dynamic_pipeline)
+    
+    dataset = DatasetDefault(sample_ids=None, dynamic_pipeline=dynamic_pipeline) #list(dynamic_pipeline._ops_and_kwargs[0][0]._data.keys())
     dataset.create()
 
-    return dataset
+    return dataset, pairs_df
 
 class DTIBindingDataset(Dataset):
     """
