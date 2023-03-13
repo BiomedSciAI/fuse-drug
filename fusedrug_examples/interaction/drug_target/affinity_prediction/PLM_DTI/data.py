@@ -142,8 +142,8 @@ class BenchmarkDTIDataModule(pl.LightningDataModule):
         
         dataset, pairs_df = dti_dataset.dti_binding_dataset_with_featurizers(pairs_tsv=self.pairs_tsv, ligands_tsv=self.ligands_tsv, 
                         targets_tsv=self.targets_tsv, \
-                        pairs_columns_to_extract=['ligand_id', 'target_id', 'activity_value', 'activity_label'], \
-                        pairs_rename_columns={'activity_value': 'ground_truth_activity_value', 'activity_label': 'ground_truth_activity_label'}, \
+                        pairs_columns_to_extract=['ligand_id', 'target_id', 'activity_label'], \
+                        pairs_rename_columns={'activity_label': 'data.label'}, \
                         ligands_columns_to_extract=['canonical_smiles'], \
                         ligands_rename_columns={'canonical_smiles': 'ligand_str'}, \
                         targets_columns_to_extract=['canonical_aa_sequence'], \
@@ -151,6 +151,12 @@ class BenchmarkDTIDataModule(pl.LightningDataModule):
                         drug_featurizer=self.drug_featurizer,
                         target_featurizer=self.target_featurizer,
                         featurizer_debug_mode=self.featurizer_debug_mode,
+                        splits_tsv=self.splits_tsv,
+                        use_folds=use_folds,
+                        keep_activity_labels=list(self.class_label_to_idx.keys()),
+                        cache_dir=Path(self.data_dir, 'PLM_DTI_cache'),
+                        dynamic_pipeline=[(OpLookup(map=self.class_label_to_idx), dict(key_in='data.label', key_out='data.label')),
+                                          (OpToTensor(), {'dtype': torch.float32, 'key': 'data.label'})],
                         )
 
         if phase=='train': 

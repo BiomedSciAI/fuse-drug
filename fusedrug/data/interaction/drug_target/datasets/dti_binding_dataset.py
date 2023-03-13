@@ -30,20 +30,22 @@ def itemify(x):
         pass
     return x
 
-def dti_binding_dataset(pairs_tsv:str, ligands_tsv:str, targets_tsv:str, split_tsv:str=None, 
+def dti_binding_dataset(pairs_tsv:str, ligands_tsv:str, targets_tsv:str, 
                                     pairs_columns_to_extract=None, pairs_rename_columns=None, \
                                     ligands_columns_to_extract=None, ligands_rename_columns=None, \
                                     targets_columns_to_extract=None, targets_rename_columns=None, **kwargs) -> DatasetDefault:
 
     # load tsvs with opional caching:
-    _args = [pairs_tsv, ligands_tsv, targets_tsv, split_tsv]
+    _args = [pairs_tsv, ligands_tsv, targets_tsv]
 
     if 'cache_dir' in kwargs and kwargs['cache_dir'] is not None:
-        ans_dict = run_cached_func(kwargs['cache_dir'], _load_dataframes,
+        cache_dir = kwargs['cache_dir']
+        del kwargs['cache_dir']
+        ans_dict = run_cached_func(cache_dir, _load_dataframes,
             *_args, **kwargs
             )
     else:
-        ans_dict = _load_dataframes(*_args)
+        ans_dict = _load_dataframes(*_args, **kwargs)
 
     pairs_df = ans_dict['pairs']
     ligands_df = ans_dict['ligands']

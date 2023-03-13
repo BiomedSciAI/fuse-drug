@@ -41,14 +41,16 @@ def dti_binding_dataset_with_featurizers(pairs_tsv:str, ligands_tsv:str, targets
     # to allow featurizer ops that require the ligand and target strings during initialization
 
     # load tsvs with opional caching:
-    _args = [pairs_tsv, ligands_tsv, targets_tsv, split_tsv]
+    _args = [pairs_tsv, ligands_tsv, targets_tsv]
 
     if 'cache_dir' in kwargs and kwargs['cache_dir'] is not None:
-        ans_dict = run_cached_func(kwargs['cache_dir'], _load_dataframes,
+        cache_dir = kwargs['cache_dir']
+        del kwargs['cache_dir']
+        ans_dict = run_cached_func(cache_dir, _load_dataframes,
             *_args, **kwargs
             )
     else:
-        ans_dict = _load_dataframes(*_args)
+        ans_dict = _load_dataframes(*_args, **kwargs)
 
     pairs_df = ans_dict['pairs']
     ligands_df = ans_dict['ligands']
@@ -75,8 +77,8 @@ def dti_binding_dataset_with_featurizers(pairs_tsv:str, ligands_tsv:str, targets
     all_drugs = list(set([dynamic_pipeline[1][0]._data[item]['ligand_str'] for item in dynamic_pipeline[1][0]._data]))
     all_targets = list(set([dynamic_pipeline[2][0]._data[item]['target_str'] for item in dynamic_pipeline[2][0]._data]))
     dynamic_pipeline += [
-        (FeaturizeDrug(dataset=None, all_drugs=all_drugs, featurizer=kwargs['drug_featurizer'], debug=kwargs['featurizer_debug_mode']), {}),
-        (FeaturizeTarget(dataset=None, all_targets=all_targets, featurizer=kwargs['target_featurizer'], debug=kwargs['featurizer_debug_mode']), {})
+        (FeaturizeDrug(dataset=None, all_drugs=all_drugs, featurizer=kwargs['drug_featurizer'], debug=kwargs['featurizer_debug_mode']), dict(key_out_ligand='data.drug')),
+        (FeaturizeTarget(dataset=None, all_targets=all_targets, featurizer=kwargs['target_featurizer'], debug=kwargs['featurizer_debug_mode']), dict(key_out_target='data.target'))
     ]
     # append custom pipeline:
     if 'dynamic_pipeline' in kwargs and kwargs['dynamic_pipeline'] is not None:
