@@ -1,6 +1,7 @@
 # Taken from https://huggingface.co/course/chapter6/8?fw=pt
 from datasets import load_dataset
-from tokenizer.special_tokens import get_special_tokens, special_mark
+from tokenizer.special_tokens import get_special_tokens, special_mark_AA, special_wrap_input
+import os
 
 from tokenizers import (
     decoders,
@@ -13,6 +14,8 @@ from tokenizers import (
 )
 
 import pandas as pd
+import hydra
+from omegaconf import DictConfig
 
 
 from rdkit import Chem
@@ -58,27 +61,39 @@ def get_training_corpus(dataset):
         yield dataset[i : i + 1000]
 
 
-if __name__ == "__main__":
+@hydra.main(config_path='./configs', config_name='train_config', version_base=None)
+def main(cfg: DictConfig) -> None: 
+    print(str(cfg))
+
+    cfg = hydra.utils.instantiate(cfg)
     
     vocab_data = pd.read_csv(TITAN_SMILES_PATH, sep='\t', header=None, names=['repr', 'ID'])
     
     tokenizer = Tokenizer(models.BPE())
-    tokenizer.pre_tokenizer = pre_tokenizers.ByteLevel(add_prefix_space=False)
-    
-    dataset = load_dataset("wikitext", name="wikitext-2-raw-v1", split="train")
-    
+    # tokenizer.pre_tokenizer = pre_tokenizers.ByteLevel(add_prefix_space=False) # Significantly reduces the resulting vocabulary size
+        
     special_tokens = get_special_tokens()
-    trainer = trainers.BpeTrainer(vocab_size=2500, special_tokens=special_tokens)
+    trainer = trainers.BpeTrainer(
+        vocab_size=8000, 
+        special_tokens=special_tokens)
     
     tokenizer.model = models.BPE()
     
     tokenizer.train_from_iterator(get_training_corpus(dataset=list(vocab_data['repr'])), trainer=trainer) 
     
-    encoding = tokenizer.encode(special_mark("ATGCCTTACGCCCCTGGAGACGAAAAGAAGGGT"))
-    encoding_smiles = tokenizer.encode(aas_to_smiles("ATGCCTTACGCCCCTGGAGACGAAAAGAAGGGT"))
+    encoding = tokenizer.encode(special_wrap_input('BINDING') + special_mark_AA("ATGCCTTACGCCCCTGGAGACGAAAAGAAGGGT") + special_wrap_input('SEP') + special_mark_AA("ATGCCTTACGCCCCTGGAGACGAAAAGAAGGGT"))
+    encoding_smiles = tokenizer.encode(special_wrap_input('BINDING') + aas_to_smiles("ATGCCTTACGCCCCTGGAGACGAAAAGAAGGGT") + special_wrap_input('SEP') + aas_to_smiles("ATGCCTTACGCCCCTGGAGACGAAAAGAAGGGT"))
     print(encoding.tokens)
     print(len(encoding.tokens))
     print(encoding_smiles.tokens)
     print(len(encoding_smiles.tokens))
+    print(tokenizer.get_vocab_size())
+    print('Fin')
+    
+if __name__ == "__main__":
+    os.environ['TITAN_DATA'] =  '/dccstor/fmm/users/vadimra/dev/data/TITAN/08-02-2023/'
+    os.environ['TITAN_RESULTS'] =  '/dccstor/fmm/users/vadimra/dev/output/TITAN_t5/08-02-2023/'
+    main()
+    
 
 

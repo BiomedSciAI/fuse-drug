@@ -38,30 +38,31 @@ model:
   learning_rate: 0.001
 
 data:
-  lightning_data_module:       
-    molecules_smi: "${paths.data}/pretraining/bindingdb_ligands.smi"
-    proteins_smi: "${paths.data}/pretraining/bindingdb_sequence.smi"
-    train_dataset_path: "${paths.data}/pretraining/non_kinase_train.csv"
-    val_dataset_path: "${paths.data}/pretraining/non_kinase_test.csv"
-    test_dataset_path: "${paths.data}/pretraining/non_kinase_test.csv"
+  TITAN_benchmark:
+    lightning_data_module:       
+      ligand_csv: "${paths.data}/ligands/TITAN_08-02-2023@single_protein_target@ligands.tsv"
+      target_csv: "${paths.data}/targets/TITAN_08-02-2023@single_protein_target@targets.tsv"
+      affinity_csv: "${paths.data}/pairs/TITAN_08-02-2023@single_protein_target@affinity_pairs_v0.1.tsv"
+      split_csv: "${paths.data}/splits/splits/lenient/split_lenient_0.14_0.14_0.14_0.14_0.14_0.15_0.15.tsv"
 
-    pairs_table_ligand_column: ligand_name
-    pairs_table_sequence_column: uniprot_accession
-    pairs_table_affinity_column: pIC50
-    ligand_padding_length: ${model.ligand_padding_length}
-    receptor_padding_length: ${model.receptor_padding_length}
+      train_dataset_path: "${paths.data}/pretraining/non_kinase_train.csv"
+      val_dataset_path: "${paths.data}/pretraining/non_kinase_test.csv"
+      test_dataset_path: "${paths.data}/pretraining/non_kinase_test.csv"
+
+      naming_conventions:
+        pairs_table_ligand_column: ligand_name
+        pairs_table_sequence_column: uniprot_accession
+        pairs_table_affinity_column: pIC50
+        ligand_padding_length: ${model.ligand_padding_length}
+        receptor_padding_length: ${model.receptor_padding_length}
+      
+      
+      # sample processing pipeline related
+      train_augment_molecule_shuffle_atoms: false    
+      train_augment_protein_flip: true
     
-    # tokenizer related
-    pytoda_ligand_tokenizer_json: ${pytoda_ligand_tokenizer_path:}
-    pytoda_target_tokenizer_amino_acid_dict: "iupac"
-    pytoda_wrapped_tokenizer: true
-
-    # sample processing pipeline related
-    train_augment_molecule_shuffle_atoms: false    
-    train_augment_protein_flip: true
-  
-    train_batch_size: 128
-    eval_batch_size: 512
-    num_workers: 20   
-    train_shuffle: true
+      train_batch_size: 128
+      eval_batch_size: 512
+      num_workers: 20   
+      train_shuffle: true
 

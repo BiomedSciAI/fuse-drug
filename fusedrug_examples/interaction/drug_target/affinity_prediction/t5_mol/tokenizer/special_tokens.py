@@ -47,6 +47,7 @@ task_tokens = [# pairwise tasks
                # property modifier tokens:
                'BINARY',    # make property prediction binary - yes/no
                'REGRESSION', # Predict a numerical value of the property 
+               'ORGANISM', # Predict the source organism for the protein/antibody
                '0',
                '1',
                '2',
@@ -91,10 +92,10 @@ AA_tokens = [
         'Z',
     ]
 
-def __wrap_input__(x):
+def special_wrap_input(x):
     return special_token_marker[0]+x+special_token_marker[1]
 
-def special_mark(in_str):
+def special_mark_AA(in_str):
     """wraps every character of the input with special markers
 
     Args:
@@ -103,7 +104,7 @@ def special_mark(in_str):
     Returns:
         str: input with every character wrapped by special token markers
     """
-    return ''.join([__wrap_input__(x) for x in in_str])
+    return ''.join([special_wrap_input(x) for x in in_str])
 
 def get_special_tokens():
     """Wraps all tokens in special_tokens, task_tokens and AA_tokens with special_token_marker and returns them in a single list 
@@ -112,7 +113,7 @@ def get_special_tokens():
     Returns:
         _type_: _description_
     """
-    tokens_wrapped = [__wrap_input__(x) for x in special_tokens+task_tokens+AA_tokens]
+    tokens_wrapped = [special_wrap_input(x) for x in special_tokens+task_tokens+AA_tokens]
     return tokens_wrapped
 
 
