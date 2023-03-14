@@ -74,8 +74,8 @@ def dti_binding_dataset_with_featurizers(pairs_tsv:str, ligands_tsv:str, targets
         (OpReadDataframe(targets_df, columns_to_extract=targets_columns_to_extract, rename_columns=targets_rename_columns, key_column=None, key_name="target_id"), {}),
     ]
 
-    all_drugs = list(set([dynamic_pipeline[1][0]._data[item]['ligand_str'] for item in dynamic_pipeline[1][0]._data]))
-    all_targets = list(set([dynamic_pipeline[2][0]._data[item]['target_str'] for item in dynamic_pipeline[2][0]._data]))
+    all_drugs = list(set([dynamic_pipeline[1][0]._data[item]['data.drug'] for item in dynamic_pipeline[1][0]._data]))
+    all_targets = list(set([dynamic_pipeline[2][0]._data[item]['data.target'] for item in dynamic_pipeline[2][0]._data]))
     dynamic_pipeline += [
         (FeaturizeDrug(dataset=None, all_drugs=all_drugs, featurizer=kwargs['drug_featurizer'], debug=kwargs['featurizer_debug_mode']), dict(key_out_ligand='data.drug')),
         (FeaturizeTarget(dataset=None, all_targets=all_targets, featurizer=kwargs['target_featurizer'], debug=kwargs['featurizer_debug_mode']), dict(key_out_target='data.target'))

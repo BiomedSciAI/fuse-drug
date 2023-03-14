@@ -49,8 +49,7 @@ def main(cfg : DictConfig) -> None:
                          gpus=1, auto_select_gpus=True, check_val_every_n_epoch=cfg.trainer.every_n_val, \
                          max_epochs=cfg.trainer.epochs, benchmark=True)
     ckpt_path = cfg.experiment.checkpoint if "checkpoint" in cfg.experiment and not cfg.experiment.only_load_checkpoint_weights else None
-    with Profiler('profile fit'):
-        trainer.fit(model, train_dataloader, valid_dataloader, ckpt_path=ckpt_path)
+    trainer.fit(model, train_dataloader, valid_dataloader, ckpt_path=ckpt_path)
     trainer.test(model, test_dataloader)
 
 if __name__ == '__main__':

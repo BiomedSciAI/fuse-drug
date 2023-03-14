@@ -145,9 +145,9 @@ class BenchmarkDTIDataModule(pl.LightningDataModule):
                         pairs_columns_to_extract=['ligand_id', 'target_id', 'activity_label'], \
                         pairs_rename_columns={'activity_label': 'data.label'}, \
                         ligands_columns_to_extract=['canonical_smiles'], \
-                        ligands_rename_columns={'canonical_smiles': 'ligand_str'}, \
+                        ligands_rename_columns={'canonical_smiles': 'data.drug'}, \
                         targets_columns_to_extract=['canonical_aa_sequence'], \
-                        targets_rename_columns={'canonical_aa_sequence': 'target_str'}, \
+                        targets_rename_columns={'canonical_aa_sequence': 'data.target'}, \
                         drug_featurizer=self.drug_featurizer,
                         target_featurizer=self.target_featurizer,
                         featurizer_debug_mode=self.featurizer_debug_mode,
