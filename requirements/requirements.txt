@@ -1,6 +1,7 @@
 click
 pyfastx
 torch
+torchvision<0.15
 pytorch-lightning
 tokenizers
 hydra-core
