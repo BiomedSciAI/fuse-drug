@@ -35,7 +35,7 @@ train: # arguments for train() function in main_design_train.py
   #   tags: "fusedrug-examples"
   #   reuse_last_task_id: True
   #   continue_last_task: False
-    
+
   num_iter: 1000
 
   losses:
@@ -104,7 +104,7 @@ model: # arguments for model() function in main_design_train.py
     out_dropout: 0.3
   gru_decoder:
     num_tokens: ${model.max_seq_len}
-    emb_dim: ${model.z_dim} 
+    emb_dim: ${model.z_dim}
     h_dim: ${model.z_dim}
   word_dropout:
     p_word_dropout: 0.1
@@ -122,15 +122,10 @@ model: # arguments for model() function in main_design_train.py
   classification_toxicity:
     num_outputs: 2
     layers_description: []
-    
+
 
 hydra:
   run:
-    dir: ${root}/${name} 
+    dir: ${root}/${name}
   job:
-    chdir: False 
-
-  
-  
-
-  
+    chdir: False

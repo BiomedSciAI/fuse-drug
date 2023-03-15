@@ -52,7 +52,9 @@ create_env() {
 
         nvidia-smi
 
-        if find_in_conda_env $ENV_NAME ; then
+        # temp gen new env each run (delete when jenkins stable)
+        # if find_in_conda_env $ENV_NAME ; then
+        if false ; then
             echo "Environment exist: $env"
         else
             echo "Mode=$mode"
@@ -64,12 +66,13 @@ create_env() {
             # install PyTorch
             if [ $force_cuda_version != "no" ]; then
                 echo "forcing cudatoolkit $force_cuda_version"
-                conda install $env pytorch torchvision pytorch-cuda=$force_cuda_version -c pytorch -c nvidia
+                conda install $env pytorch torchvision pytorch-cuda=$force_cuda_version -c pytorch -c nvidia -y
                 echo "forcing cudatoolkit $force_cuda_version - Done"
             fi
 
             # install local repository (fuse-med-ml)
             echo "Installing core requirements"
+            conda run $env --no-capture-output --live-stream pip install fuse-med-ml  # maybe clone&install instead of pypi
             conda run $env --no-capture-output --live-stream pip install -r ./requirements/requirements.txt
             conda run $env --no-capture-output --live-stream pip install -r ./requirements/requirements_dev.txt
             echo "Installing core requirements - Done"
