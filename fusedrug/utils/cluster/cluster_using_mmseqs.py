@@ -7,7 +7,7 @@ import os
 from typing import Dict
 from os.path import join
 
-def cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict) -> Dict:
+def cached_cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict) -> Dict:
     """
     Uses mmseqs to:
 
@@ -74,7 +74,7 @@ def cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict) -> Dic
     return ans
 
 
-def cluster_impl(
+def cluster(
     *,
     input_fasta_filename: str,
     output_dir: str,
@@ -198,7 +198,7 @@ def cluster_impl(
     
 
     return ans
-
+cluster_impl = cluster #for backward compatibility
 
 def _run_system_cmd(cmd: str) -> None:
     print("about to run: ", cmd)
