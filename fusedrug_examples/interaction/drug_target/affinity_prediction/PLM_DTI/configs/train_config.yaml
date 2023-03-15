@@ -5,7 +5,7 @@ hydra:
     chdir: False 
 experiment:
   project_name: PLM-DTI
-  experiment_name: benchmark_data_lenient_split_fuse_dataset
+  experiment_name: benchmark_data_cold_ligand_split_fuse_dataset
   dir: ${paths.results}/${experiment.project_name}/${experiment.experiment_name}
   verbosity: 3
   seed: 0
@@ -36,15 +36,15 @@ benchmark_data:
   ligands_tsv: ${benchmark_data.root_path}/ligand/merged_bindingdb_chembl_pubchem_14-04-2022_30_05-09-2022@native@single_protein_target@ligands.tsv
   targets_tsv: ${benchmark_data.root_path}/target/merged_bindingdb_chembl_pubchem_14-04-2022_30_05-09-2022@native@single_protein_target@targets.tsv
   # lenient split:
-  splits_tsv: ${benchmark_data.root_path}/splits/splits/${benchmark_data.split}/split_lenient_0.14_0.14_0.14_0.14_0.14_0.15_0.15.tsv
+  #splits_tsv: ${benchmark_data.root_path}/splits/splits/${benchmark_data.split}/split_lenient_0.14_0.14_0.14_0.14_0.14_0.15_0.15.tsv
   # cold_ligand split:
-  #splits_tsv: ${benchmark_data.root_path}/splits/splits/${benchmark_data.split}/split_cold_ligand_0.7_0.15_0.15.tsv
+  splits_tsv: ${benchmark_data.root_path}/splits/splits/${benchmark_data.split}/split_cold_ligand_0.7_0.15_0.15.tsv
   # cold_target split:
   #splits_tsv: ${benchmark_data.root_path}/splits/splits/${benchmark_data.split}/split_cold_target_0.7_0.15_0.15.tsv
   # temporal split:
   #splits_tsv: ${benchmark_data.root_path}/splits/splits/${benchmark_data.split}/split_temporal_0.7_0.15_0.15.tsv
 
-  split: lenient # split if using task="ours". can be "lenient", "cold_target", "cold_ligand", "temporal". 
+  split: cold_ligand # split if using task="ours". can be "lenient", "cold_target", "cold_ligand", "temporal". 
   train_folds:
   - train1
   - train2
@@ -81,7 +81,7 @@ model:
 
 trainer:
   loss: 'focal' # 'bce' (binary cross-entropy), 'focal'
-  epochs: 50 # 50, for debugging: 5
+  epochs: 100 # 50, for debugging: 5
   every_n_val: 2
   lr: 1e-4
   lr_t0: 10 # 10

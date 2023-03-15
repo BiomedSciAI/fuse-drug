@@ -31,7 +31,6 @@ from fusedrug.utils.samplers.subset_sampler import SubsetSampler
 from fusedrug.data.molecule.ops.featurizer_ops import FeaturizeDrug
 from fusedrug.data.protein.ops.featurizer_ops import FeaturizeTarget
 from fuse.data.ops.ops_common import OpDeleteKeypaths, OpLookup
-#from fusedrug.data.interaction.drug_target.datasets.dti_binding_dataset import dti_binding_dataset
 import dti_dataset
 class BenchmarkDTIDataModule(pl.LightningDataModule):
     def __init__(
@@ -76,70 +75,12 @@ class BenchmarkDTIDataModule(pl.LightningDataModule):
         self.num_workers = num_workers
         self.featurizer_debug_mode = featurizer_debug_mode
 
-    def _create_pipeline_desc(self, drug_featurizer_op, target_featurizer_op):
-
-        pipeline_desc = [
-            #load affinity sample
-            #(drug_target_affinity_loader_op, 
-            #    dict(
-            #        key_out_ligand='data.drug',
-            #        key_out_target='data.target',
-            #        key_out_ground_truth_activity_value='data.activity_value',
-            #        key_out_ground_truth_activity_label='data.label',
-            #        )),
-            (drug_featurizer_op,
-                dict(key_out_ligand='data.drug')),
-            (target_featurizer_op,
-                dict(key_out_target='data.target')),
-            (OpDeleteKeypaths(),
-                dict(keypaths=['data.activity_value'])),
-            (OpLookup(map=self.class_label_to_idx), dict(key_in='data.label', key_out='data.label')),
-            (OpToTensor(), {'dtype': torch.float32, 'key': 'data.label'}),
-        ]
-
-        return pipeline_desc
 
     def _make_dataloader(self,
         phase:str,
         use_folds:Union[str,List[str]],
         pipeline_name:str,
     ):
-        
-        #dataset_loader_op = DTIBindingDatasetLoader(
-        #    pairs_tsv=self.pairs_tsv,
-        #    ligands_tsv=self.ligands_tsv,
-        #    targets_tsv=self.targets_tsv,
-        #    splits_tsv=self.splits_tsv,
-        #    return_index=True if phase=='test' else False,
-        #    use_folds=use_folds,
-        #    keep_activity_labels=list(self.class_label_to_idx.keys()),
-        #    cache_dir=Path(self.data_dir, 'PLM_DTI_cache'),
-        #    force_dummy_constant_ligand_for_debugging=False,
-        #    force_dummy_constant_target_for_debugging=False,
-        #)
-
-       
-        #drug_featurizer_op = FeaturizeDrug(dataset=dataset_loader_op.dataset, 
-        #                                   featurizer=self.drug_featurizer, debug=self.featurizer_debug_mode)
-        #target_featurizer_op = FeaturizeTarget(dataset=dataset_loader_op.dataset, 
-        #                                       featurizer=self.target_featurizer, debug=self.featurizer_debug_mode)
-        #pipeline_desc = self._create_pipeline_desc(
-        #    #drug_target_affinity_loader_op=dataset_loader_op,
-        #    drug_featurizer_op=drug_featurizer_op,
-        #    target_featurizer_op=target_featurizer_op,
-        #)
-        
-        #with Timer('constructing dataset'):
-        #    dataset = DatasetDefault(
-        #        sample_ids=None,
-        #        static_pipeline=None,
-        #        dynamic_pipeline= PipelineDefault(name=pipeline_name, ops_and_kwargs=pipeline_desc),
-        #    )
-
-        #with Timer('creating dataset'):
-        #    dataset.create()        
-        #print(f'created dataset has length={len(dataset_loader_op.dataset)}') # dataset has no known len because it's created without explicit sample ids
-        
         dataset, pairs_df = dti_dataset.dti_binding_dataset_with_featurizers(pairs_tsv=self.pairs_tsv, ligands_tsv=self.ligands_tsv, 
                         targets_tsv=self.targets_tsv, \
                         pairs_columns_to_extract=['ligand_id', 'target_id', 'activity_label'], \
