@@ -1,4 +1,3 @@
-# import pyfastx  # https://pyfastx.readthedocs.io/en/latest/usage.html
 import torch
 from typing import List, Callable, Optional, Dict
 from functools import partial

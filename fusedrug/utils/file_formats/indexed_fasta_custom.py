@@ -3,7 +3,6 @@ from fuse.utils.cpu_profiling import Timer
 from fuse.utils.file_io import save_hdf5_safe, load_hdf5, change_extension
 import numpy as np
 
-# from fuse.utils.misc.context import DummyContext
 from contextlib import nullcontext
 import click
 from torch.utils.data import Dataset
