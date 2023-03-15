@@ -12,15 +12,33 @@ from collections import defaultdict
 def split(
         cluster_tsv:str, 
         splits_desc:Dict = frozendict(train=0.90, val=0.05, test=0.05),        
-        ):
+        ) -> Dict:
     """
-    gets a cluster tsv file (usually the output of cluster_using_mmseqs.py:cluster() call
+    Gets a cluster tsv file (usually the output of cluster_using_mmseqs.py:cluster() call
+    and distributes randomly the clusters into sets in the requested (statistical, not necessarily exact) proportions
+    this function will generate one file per requested set, for example, if the input was /a/b/c/d/clustered.tsv
+    you may get
+    /a/b/c/d/train@clustered.tsv
+    /a/b/c/d/val@clustered.tsv
+    /a/b/c/d/test@clustered.tsv
 
-    at the expected columns structure (no title)
-    cluster_center, member
+    Args:
+        cluster_tsv - a TSV (like csv but tab separated) at the expected columns structure (no title line)
+        cluster_center, member
 
-    for example:
-    
+        for example:
+            6usf_B  6usf_B
+            6vkl_G  6vkl_G
+            6wed_B  6wed_B
+            6wed_B  6wee_A
+            6wed_B  3lzo_A
+            6wed_B  4nwn_H
+            6wed_B  6wef_C
+            6xds_A  6xds_A
+            6y6x_LW 6y6x_LW
+        splits_desc - a dictionary representing the names and proportions of the sets
+
+        returns: a dictionary that maps the requested sets names to the generates files paths    
     """
     files_names = {set_name:join(dirname(cluster_tsv), f'{set_name}@'+basename(cluster_tsv)) for (set_name,_) in splits_desc.items()}
     files_handles = {set_name: open(filename, 'wb') for (set_name, filename) in files_names.items() }
@@ -57,8 +75,6 @@ def split(
                 print(f'line {linenum}: {line}')
 
             linenum += 1
-
-    #assert False
             
     print('sets summary:')
     for set_name in splits_desc.keys():
