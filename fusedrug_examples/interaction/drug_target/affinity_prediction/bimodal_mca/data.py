@@ -1,5 +1,5 @@
 import pytorch_lightning as pl
-from typing import Optional
+from typing import Optional, List, Any
 from fusedrug.data.molecule.ops import SmilesRandomizeAtomOrder, SmilesToRDKitMol, RDKitMolToSmiles
 import os
 from fuse.data import OpBase
@@ -140,7 +140,9 @@ class AffinityDataModule(pl.LightningDataModule):
             affinity_pairs_csv_affinity_value_column_name=self.pairs_table_affinity_column,  #'pIC50',
         )
 
-    def _create_pipeline_desc(self, is_training, drug_target_affinity_loader_op):
+    def _create_pipeline_desc(
+        self, is_training: bool, drug_target_affinity_loader_op: DrugTargetAffinityLoader
+    ) -> List[OpBase]:
         """
         Note: in the current implementation, augmentation is activated only if is_training==False
         """
@@ -247,7 +249,7 @@ class AffinityDataModule(pl.LightningDataModule):
 
         return pipeline_desc
 
-    def train_dataloader(self):
+    def train_dataloader(self) -> DataLoader:
 
         affinity_loader_op = DrugTargetAffinityLoader(
             ligands_smi=self.molecules_smi,
@@ -278,7 +280,7 @@ class AffinityDataModule(pl.LightningDataModule):
         )
         return dl
 
-    def val_dataloader(self):
+    def val_dataloader(self) -> DataLoader:
 
         affinity_loader_op = DrugTargetAffinityLoader(
             ligands_smi=self.molecules_smi,
@@ -305,7 +307,7 @@ class AffinityDataModule(pl.LightningDataModule):
         )
         return dl
 
-    def test_dataloader(self):
+    def test_dataloader(self) -> DataLoader:
         affinity_loader_op = DrugTargetAffinityLoader(
             ligands_smi=self.molecules_smi,
             proteins_smi=self.proteins_smi,
@@ -333,13 +335,13 @@ class AffinityDataModule(pl.LightningDataModule):
 
 
 ### Ops
-# TODO: consider moving to fusedrug/data/ops
+# TODO: consider moving to fusedrug/data/ops (???)
 
 
 class OpLoadActiveSiteAlignmentInfo(OpBase):
-    def __init__(self, kinase_alignment_smi, **kwargs):
+    def __init__(self, kinase_alignment_smi: str, **kwargs: Any):
         """
-        #example kinase_alignment_smi found in '/gpfs/haifa/projects/m/msieve/MedicalSieve/mol_bio_datasets/paccmann_related/active_sites_alignment_from_Tien_Huynh/joint_alignment_info.smi'
+        example in KINASE_ALIGNMENT_SMI_EXAMPLE env variable
         """
 
         super().__init__(**kwargs)
@@ -350,16 +352,15 @@ class OpLoadActiveSiteAlignmentInfo(OpBase):
             id_column_idx=1,
             columns_num_expectation=3,
             allow_access_by_id=True,
-            # num_workers=0, #DEBUGGING! remove this
         )
 
     def __call__(
         self,
         sample_dict: NDict,
         op_id: Optional[str] = None,
-        key_in="data.input.protein_str",
-        key_out="data.input.protein_str",
-    ):
+        key_in: str = "data.input.protein_str",
+        key_out: str = "data.input.protein_str",
+    ) -> NDict:
         """
         params
             key_in:str - expected to contain only the active site, in high case

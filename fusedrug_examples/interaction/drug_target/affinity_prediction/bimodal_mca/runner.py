@@ -4,11 +4,13 @@ BimodalMCA affinity predictor (see https://pubs.acs.org/doi/pdf/10.1021/acs.jcim
 
 import os
 from omegaconf import DictConfig, OmegaConf
+from fusedrug_examples.interaction.drug_target.affinity_prediction.bimodal_mca import model, data, utils
 import hydra
 import socket
-import model
-import data
-import utils
+
+# import model
+# import data
+# import utils
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint
 
@@ -23,7 +25,7 @@ def run_train_and_val(cfg: DictConfig) -> None:
 
     if len(cfg) == 0:
         raise Exception(
-            f"You should provide --config-dir and --config-name  . Note - config-name should be WITHOUT the .yaml postfix"
+            f"You should provide --config-dir and --config-name  . Note --config-name should be WITHOUT the .yaml postfix"
         )
 
     SESSION_FULL_PATH = os.path.realpath(os.getcwd())

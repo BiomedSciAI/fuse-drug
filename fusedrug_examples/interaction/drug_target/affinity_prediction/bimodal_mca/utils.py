@@ -2,9 +2,10 @@ from pytorch_lightning.callbacks import Callback
 import os, sys
 import pytoda
 from pathlib import Path
+from typing import Optional, Any
 
 
-def _check_stopfile(stop_filename):
+def _check_stopfile(stop_filename: str) -> None:
     if os.path.isfile(stop_filename):
         print(f"detected request stop file: [{stop_filename}]. Exiting from process.")
         sys.stdout.flush()
@@ -12,7 +13,7 @@ def _check_stopfile(stop_filename):
 
 
 class ExitOnStopFileCallback(Callback):
-    def __init__(self, stop_filename=None):
+    def __init__(self, stop_filename: Optional[str] = None):
         super().__init__()
         if not isinstance(stop_filename, str):
             raise Exception("stop_filename must be str")
@@ -21,17 +22,22 @@ class ExitOnStopFileCallback(Callback):
             f"ExitOnStopFileCallback: To stop the session (even if it is detached) create a file named: {self.stop_filename}"
         )
 
-    def on_predict_batch_start(self, trainer, pl_module, batch, batch_idx, dataloader_idx):
+    def on_predict_batch_start(
+        self, trainer: Any, pl_module: Any, batch: Any, batch_idx: Any, dataloader_idx: Any
+    ) -> None:
         _check_stopfile(self.stop_filename)
 
-    def on_batch_start(self, trainer, pl_module):
+    def on_train_batch_start(self, trainer: Any, pl_module: Any) -> None:
+        # RuntimeError: The `Callback.on_batch_start` hook was removed in v1.8. Please use `Callback.on_train_batch_start` instead.
         _check_stopfile(self.stop_filename)
 
-    def on_test_batch_start(self, trainer, pl_module, batch, batch_idx, dataloader_idx):
+    def on_test_batch_start(
+        self, trainer: Any, pl_module: Any, batch: Any, batch_idx: Any, dataloader_idx: Any
+    ) -> None:
         _check_stopfile(self.stop_filename)
 
 
-def pytoda_ligand_tokenizer_path():
+def pytoda_ligand_tokenizer_path() -> str:
     path = Path(pytoda.__file__)
     path = os.path.join(path.parent.absolute(), "smiles", "metadata", "tokenizer", "vocab.json")
     return path
