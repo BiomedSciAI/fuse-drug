@@ -32,8 +32,8 @@ if __name__ == "__main__":
     print("will generate unit tests output xml at :", output)
 
     sub_sections_core = [("fusedrug", search_base)]
-    # sub_sections_examples = [("fuse_examples/tests", search_base)]  # delete if below sufficient
-    sub_sections_examples = [("fusedrug_examples", search_base)]
+    sub_sections_examples = [("fusedrug_examples/tests", search_base)]
+
     if mode is None:
         sub_sections = sub_sections_core + sub_sections_examples
     elif mode == "core":
