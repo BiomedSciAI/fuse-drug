@@ -3,16 +3,13 @@ BimodalMCA affinity predictor (see https://pubs.acs.org/doi/pdf/10.1021/acs.jcim
 """
 
 import os
-from omegaconf import DictConfig, OmegaConf
-from fusedrug_examples.interaction.drug_target.affinity_prediction.bimodal_mca import model, data, utils
 import hydra
 import socket
+from omegaconf import DictConfig, OmegaConf
 
-# import model
-# import data
-# import utils
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint
+from fusedrug_examples.interaction.drug_target.affinity_prediction.bimodal_mca import model, data, utils
 
 CONFIGS_DIR = os.path.join(os.path.dirname(__file__), "configs")
 SELECTED_CONFIG = "train_config.yaml"
