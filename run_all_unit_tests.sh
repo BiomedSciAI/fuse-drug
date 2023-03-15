@@ -52,9 +52,7 @@ create_env() {
 
         nvidia-smi
 
-        # temp gen new env each run (delete when jenkins stable)
-        # if find_in_conda_env $ENV_NAME ; then
-        if false ; then
+        if find_in_conda_env $ENV_NAME ; then
             echo "Environment exist: $env"
         else
             echo "Mode=$mode"
