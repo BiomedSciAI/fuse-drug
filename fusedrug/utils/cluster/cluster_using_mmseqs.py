@@ -4,9 +4,10 @@ import hashlib
 import subprocess
 from fuse.utils.file_io import save_text_file_safe, read_text_file
 import os
+from typing import Dict
 
 
-def cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict) -> None:
+def cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict) -> Dict:
     """
     Uses mmseqs to:
 
@@ -38,7 +39,7 @@ def cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict) -> Non
     """
     os.makedirs(output_dir, exist_ok=True)
 
-    str_repr = get_function_call_str(cluter_impl, _ignore_kwargs_names=["num_workers"], _include_code=False, **kwargs)
+    str_repr = get_function_call_str(cluster_impl, _ignore_kwargs_names=["num_workers"], _include_code=False, **kwargs)
 
     hash_value = hashlib.md5(str_repr.encode()).hexdigest()
     already_created_hash_filename = os.path.join(output_dir, "created_hash")
@@ -65,13 +66,15 @@ def cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict) -> Non
         print(f"Hash value indicates that it was already built, not rebuilding. See description: {existing_desc}")
         return
 
-    cluter_impl(output_dir=output_dir, **kwargs)
+    ans = cluster_impl(output_dir=output_dir, **kwargs)
 
     save_text_file_safe(already_created_description_filename, hash_value)
     save_text_file_safe(already_created_hash_filename, str_repr)
 
+    return ans
 
-def cluter_impl(
+
+def cluster_impl(
     *,
     input_fasta_filename: str,
     output_dir: str,
@@ -103,6 +106,8 @@ def cluter_impl(
 
     print("cluster_method=", cluster_method)
 
+    ans = {}
+
     ########### Major step A - remove all redundancies
     if deduplicate:
 
@@ -130,7 +135,7 @@ def cluter_impl(
         print(r"A.4 - creating a fasta file that contains only the representatives, including their sequence data.")
         cmd = f"mmseqs convert2fasta {mmseqs_only_representatives} {mmseqs_only_unique_sequences_representatives_fasta}"
         _run_system_cmd(cmd)
-
+        
     # TODO: I can probably avoid converting to fasta in the end of major step A, and do major step B still in mmseqs DB format, which might speed things.
 
     ########### Major step B - create clusters
@@ -163,12 +168,34 @@ def cluter_impl(
     cmd = f"mmseqs createtsv {step_B_initial_db} {step_B_initial_db} {clustered_db} {clustered_tsv}"
     _run_system_cmd(cmd)
 
+    
+    ####
+    final_clusters_mmseqs_only_representatives = os.path.join(output_dir, "mmseqs_DB_final_clusters_representitives")
+    print(r"B.4 - create a sub DB only with the clusters centers (representatives)")
+    cmd = f"mmseqs createsubdb {clustered_db} {step_B_initial_db}  {final_clusters_mmseqs_only_representatives}"
+    _run_system_cmd(cmd)
+    
+    final_clusters_centers_fasta = os.path.join(output_dir, "clusters_representatives.fasta")
+    print(r"B.5 - creating a fasta file that contains only the representatives (clusters centers), including their sequence data.")
+    cmd = f"mmseqs convert2fasta {final_clusters_mmseqs_only_representatives} {final_clusters_centers_fasta}"
+    _run_system_cmd(cmd)
+
     print("--------------------------------------")
     print("Final generated key files summary:")
     print("--------------------------------------")
     if deduplicate:
         print(f"a deduplicated FASTA file: {mmseqs_only_unique_sequences_representatives_fasta}")
+        ans['deduplicated_fasta'] = mmseqs_only_unique_sequences_representatives_fasta
+    
     print(f"a TSV file containing the clusters (no sequence information): {clustered_tsv}")
+    ans['cluster_tsv'] = clustered_tsv
+
+    print(f"a FASTA file containing the clusters centers (representatives) including sequence information: {final_clusters_centers_fasta}")
+    ans['cluster_centers'] = final_clusters_centers_fasta
+
+    
+
+    return ans
 
 
 def _run_system_cmd(cmd: str) -> None:
