@@ -7,6 +7,7 @@ import os
 from typing import Dict
 from os.path import join
 
+
 def cached_cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict) -> Dict:
     """
     Uses mmseqs to:
@@ -79,7 +80,7 @@ def cluster(
     input_fasta_filename: str,
     output_dir: str,
     cluster_min_seqeunce_identity: float = 0.4,
-    threads = 30,
+    threads: int = 30,
     cluster_method: str = "cluster",
     deduplicate: bool = True,
 ) -> None:
@@ -102,9 +103,9 @@ def cluster(
             cmd = f"gunzip {input_fasta_filename}.gz"
             _run_system_cmd(cmd)
 
-    os.makedirs(join(output_dir, 'mmseqs_workspace'))
+    os.makedirs(join(output_dir, "mmseqs_workspace"))
 
-    mmseqs_db_path = join(output_dir, 'mmseqs_workspace', "mmseqs_DB")
+    mmseqs_db_path = join(output_dir, "mmseqs_workspace", "mmseqs_DB")
 
     print("cluster_method=", cluster_method)
 
@@ -120,15 +121,15 @@ def cluster(
         _run_system_cmd(cmd)
 
         # mmseqs cluster DB DB_clu tmp --min-seq-id 1.0 --threads 32
-        mmseqs_cluster_full_identity = join(output_dir, 'mmseqs_workspace', "mmseqs_DB_cluster_full_identity")
-        mmseqs_tmp_for_clustering = join(output_dir, 'mmseqs_workspace', "mmseqs_DB_tmp")
+        mmseqs_cluster_full_identity = join(output_dir, "mmseqs_workspace", "mmseqs_DB_cluster_full_identity")
+        mmseqs_tmp_for_clustering = join(output_dir, "mmseqs_workspace", "mmseqs_DB_tmp")
         print(
             r"A.2 - clustering with 100% identity to remove duplicates. The generated DB does not contain (directly) the sequences data, it only maps clusters centers to members."
         )
         cmd = f"mmseqs {cluster_method} {mmseqs_db_path} {mmseqs_cluster_full_identity} {mmseqs_tmp_for_clustering} -c 1.0 --min-seq-id 1.0 --threads {threads}"
         _run_system_cmd(cmd)
 
-        mmseqs_only_representatives = join(output_dir, 'mmseqs_workspace', "mmseqs_DB_full_identity_representitives")
+        mmseqs_only_representatives = join(output_dir, "mmseqs_workspace", "mmseqs_DB_full_identity_representitives")
         print(r"A.3 - keeping only cluster centers")
         cmd = f"mmseqs createsubdb {mmseqs_cluster_full_identity} {mmseqs_db_path}  {mmseqs_only_representatives}"
         _run_system_cmd(cmd)
@@ -137,7 +138,7 @@ def cluster(
         print(r"A.4 - creating a fasta file that contains only the representatives, including their sequence data.")
         cmd = f"mmseqs convert2fasta {mmseqs_only_representatives} {mmseqs_only_unique_sequences_representatives_fasta}"
         _run_system_cmd(cmd)
-        
+
     # TODO: I can probably avoid converting to fasta in the end of major step A, and do major step B still in mmseqs DB format, which might speed things.
 
     ########### Major step B - create clusters
@@ -146,7 +147,7 @@ def cluster(
     # also describes how to convert it to TSV for convinience
 
     print("B.1 - creating mmseqs DB for our unique DB")
-    step_B_initial_db = join(output_dir, 'mmseqs_workspace', "step_B_initial_DB")
+    step_B_initial_db = join(output_dir, "mmseqs_workspace", "step_B_initial_DB")
 
     if deduplicate:
         cmd = f"mmseqs createdb {mmseqs_only_unique_sequences_representatives_fasta} {step_B_initial_db}"
@@ -158,8 +159,8 @@ def cluster(
     print(
         "B.2 - cluster the remaining unique representatives into different clusters based on the requested sequence identity threshold"
     )
-    mmseqs_tmp_2_for_clustering = join(output_dir,'mmseqs_workspace',  "mmseqs_DB_tmp_2")
-    clustered_db = join(output_dir, 'mmseqs_workspace', "mmseqs_DB_clustered")
+    mmseqs_tmp_2_for_clustering = join(output_dir, "mmseqs_workspace", "mmseqs_DB_tmp_2")
+    clustered_db = join(output_dir, "mmseqs_workspace", "mmseqs_DB_clustered")
     cmd = f"mmseqs {cluster_method} {step_B_initial_db} {clustered_db} {mmseqs_tmp_2_for_clustering} -c 1.0 --min-seq-id {cluster_min_seqeunce_identity} --threads {threads}"
     _run_system_cmd(cmd)
 
@@ -170,15 +171,18 @@ def cluster(
     cmd = f"mmseqs createtsv {step_B_initial_db} {step_B_initial_db} {clustered_db} {clustered_tsv}"
     _run_system_cmd(cmd)
 
-    
     ####
-    final_clusters_mmseqs_only_representatives = join(output_dir, 'mmseqs_workspace', "mmseqs_DB_final_clusters_representitives")
+    final_clusters_mmseqs_only_representatives = join(
+        output_dir, "mmseqs_workspace", "mmseqs_DB_final_clusters_representitives"
+    )
     print(r"B.4 - create a sub DB only with the clusters centers (representatives)")
     cmd = f"mmseqs createsubdb {clustered_db} {step_B_initial_db}  {final_clusters_mmseqs_only_representatives}"
     _run_system_cmd(cmd)
-    
+
     final_clusters_centers_fasta = join(output_dir, "clusters_representatives.fasta")
-    print(r"B.5 - creating a fasta file that contains only the representatives (clusters centers), including their sequence data.")
+    print(
+        r"B.5 - creating a fasta file that contains only the representatives (clusters centers), including their sequence data."
+    )
     cmd = f"mmseqs convert2fasta {final_clusters_mmseqs_only_representatives} {final_clusters_centers_fasta}"
     _run_system_cmd(cmd)
 
@@ -187,18 +191,21 @@ def cluster(
     print("--------------------------------------")
     if deduplicate:
         print(f"a deduplicated FASTA file: {mmseqs_only_unique_sequences_representatives_fasta}")
-        ans['deduplicated_fasta'] = mmseqs_only_unique_sequences_representatives_fasta
-    
+        ans["deduplicated_fasta"] = mmseqs_only_unique_sequences_representatives_fasta
+
     print(f"a TSV file containing the clusters (no sequence information): {clustered_tsv}")
-    ans['cluster_tsv'] = clustered_tsv
+    ans["cluster_tsv"] = clustered_tsv
 
-    print(f"a FASTA file containing the clusters centers (representatives) including sequence information: {final_clusters_centers_fasta}")
-    ans['clusters_centers_fasta'] = final_clusters_centers_fasta
-
-    
+    print(
+        f"a FASTA file containing the clusters centers (representatives) including sequence information: {final_clusters_centers_fasta}"
+    )
+    ans["clusters_centers_fasta"] = final_clusters_centers_fasta
 
     return ans
-cluster_impl = cluster #for backward compatibility
+
+
+cluster_impl = cluster  # for backward compatibility
+
 
 def _run_system_cmd(cmd: str) -> None:
     print("about to run: ", cmd)

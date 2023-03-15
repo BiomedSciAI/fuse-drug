@@ -2,7 +2,8 @@ import os
 from fuse.utils.cpu_profiling import Timer
 from fuse.utils.file_io import save_hdf5_safe, load_hdf5, change_extension
 import numpy as np
-#from fuse.utils.misc.context import DummyContext
+
+# from fuse.utils.misc.context import DummyContext
 from contextlib import nullcontext
 import click
 from torch.utils.data import Dataset
@@ -14,7 +15,7 @@ from typing import Tuple, Union
 # maybe use "raw mode" in https://github.com/Congyuwang/RocksDict ? (or maybe not, as it just uses a DB in the backend, so maybe it's better to use a DB ourselves)
 
 
-def _default_identifier_extractor(identifier_line, also_return_comment:bool=True, verbose=0):
+def _default_identifier_extractor(identifier_line, also_return_comment: bool = True, verbose=0):
     # return identifier_line.split('|')[1]
     pos = identifier_line.find(" ")
     if pos < 0:
@@ -23,12 +24,11 @@ def _default_identifier_extractor(identifier_line, also_return_comment:bool=True
         return identifier_line, None
 
     identifier = identifier_line[:pos].rstrip()
-    if also_return_comment:        
-        comment = identifier_line[pos+1:]
+    if also_return_comment:
+        comment = identifier_line[pos + 1 :]
         return identifier, comment
 
     return identifier
-
 
 
 class IndexedFastaCustom(Dataset):
@@ -50,7 +50,7 @@ class IndexedFastaCustom(Dataset):
         index_filename=None,
         process_identifier_pipeline=(_default_identifier_extractor,),
         force_recreate_index=False,
-        allow_access_by_id=False,        
+        allow_access_by_id=False,
         num_workers="auto",
         verbose=1,
     ):
@@ -79,8 +79,8 @@ class IndexedFastaCustom(Dataset):
         timer = Timer("Process") if verbose > 0 else nullcontext()
         with timer:
             if index_filename is None:
-                #index_filename = change_extension(filename, ".fastaindex.hdf5")
-                index_filename = filename+".fastaindex.hdf5"
+                # index_filename = change_extension(filename, ".fastaindex.hdf5")
+                index_filename = filename + ".fastaindex.hdf5"
                 if verbose > 0:
                     print(f"IndexedTextFile:: index_filename={index_filename}")
 
@@ -99,8 +99,8 @@ class IndexedFastaCustom(Dataset):
                 line_num = 0
                 offset = 0
                 # important - using 'rb' will not remove things line '\r' from the line, making the offset ok! (as opposed to using 'r' !!)
-                if verbose>0:
-                    print('building fasta index ... ')                    
+                if verbose > 0:
+                    print("building fasta index ... ")
                 with open(filename, "rb") as read_file:
                     for line in read_file.readlines():
 
@@ -125,7 +125,7 @@ class IndexedFastaCustom(Dataset):
                         lines_offsets=lines_offsets,
                     )
                 lines_offsets = None
-        
+
         timer = Timer("Process") if verbose > 0 else nullcontext()
         with timer:
             loaded_hdf5 = load_hdf5(self.index_filename)  # reloading even in the creation time (intentional)
@@ -169,7 +169,7 @@ class IndexedFastaCustom(Dataset):
         for i in range(len(self)):
             yield self.__getitem__(i)
 
-    def __getitem__(self, index) -> Tuple[Union[Tuple[str],Tuple[str,str]],str,str]:
+    def __getitem__(self, index) -> Tuple[Union[Tuple[str], Tuple[str, str]], str, str]:
         """
         returns a single FASTA entry in as a tuple with 3 elements:
             element 0: a tuple with either a. a single element, the identifier of the entry or b. a tuple with 2 elements, the identifier of the entry followed by the comment of the entry

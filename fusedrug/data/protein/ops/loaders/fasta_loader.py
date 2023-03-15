@@ -1,4 +1,4 @@
-#import pyfastx  # https://pyfastx.readthedocs.io/en/latest/usage.html
+# import pyfastx  # https://pyfastx.readthedocs.io/en/latest/usage.html
 import torch
 from typing import List, Callable, Optional, Dict
 from functools import partial
@@ -12,12 +12,13 @@ Note: I'm getting crashes in pyfastx library code when using FastaLoader on very
 In such case you can use the alternative IndexedFastaCustom class.
 """
 
+
 class FastaLoaderCustom(OpBase):
     """
     Allows random access to a large FASTA file
     """
 
-    def __init__(self, fasta_filename:str, **indexed_fasta_custom_kwargs:Dict):
+    def __init__(self, fasta_filename: str, **indexed_fasta_custom_kwargs: Dict):
         """
         Args:
             fasta_filename: the name of the FASTA file to load
