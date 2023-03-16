@@ -1,8 +1,8 @@
 paths:
   root_dir: ./_examples/dti
-  train_data_path: "https://raw.githubusercontent.com/samsledje/ConPLex/main/dataset/BindingDB/train.csv"
-  val_data_path: "https://raw.githubusercontent.com/samsledje/ConPLex/main/dataset/BindingDB/val.csv"
-  test_data_path: "https://raw.githubusercontent.com/samsledje/ConPLex/main/dataset/BindingDB/test.csv"
+  train_data_path: '${oc.env:BINDINGDB_SMALL}/train.csv'
+  val_data_path: '${oc.env:BINDINGDB_SMALL}/val.csv'
+  test_data_path: '${oc.env:BINDINGDB_SMALL}/test.csv'
   model_dir: '${paths.root_dir}/${params.train.model.context}'
   cache_dir: '${paths.root_dir}/cache_dir'
   infer_dir: '${paths.model_dir}/infer_dir'
@@ -31,21 +31,22 @@ params:
       heads_a: 8
       heads_b: 8
       output_dim: 512
-    num_workers: 20
+    num_workers: 8
     batch_size: 32
     lr: 0.00001
     log_lr: '${logging.log_lr}'
     weight_decay: 0.001
-    num_epochs: 1
+    num_epochs: 100
     accelerator: gpu
     num_devices: 1
+    strategy: "auto"
     data:
       drug_fixed_size: 60
       target_fixed_size: 842
   infer:
     model: '${params.train.model}'
-    batch_size: 100
-    num_workers: 20
+    batch_size: 32
+    num_workers: 8
     accelerator: '${params.train.accelerator}'
     num_devices: 1
     data:
