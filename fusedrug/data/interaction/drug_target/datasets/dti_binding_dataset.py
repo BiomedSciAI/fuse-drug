@@ -39,6 +39,7 @@ def dti_binding_dataset(
     ligands_tsv: str,
     targets_tsv: str,
     split_tsv: str = None,
+    use_folds: Optional[Union[List, str]]=None,
     pairs_columns_to_extract=None,
     pairs_rename_columns=None,
     ligands_columns_to_extract=None,
@@ -47,9 +48,27 @@ def dti_binding_dataset(
     targets_rename_columns=None,
     **kwargs,
 ) -> DatasetDefault:
+    """_summary_
+
+    Args:
+        pairs_tsv (str): path to tab-separated pairs csv (tsv) file
+        ligands_tsv (str): path to tab-separated ligands csv (tsv) file
+        targets_tsv (str): path to tab-separated targets csv (tsv) file
+        split_tsv (str, optional): _description_. Defaults to None.
+        use_folds (Union[List, str], optional): A list of folds (as defined in split_tsv) to use. Defaults to None: use all folds.
+        pairs_columns_to_extract (_type_, optional): _description_. Defaults to None.
+        pairs_rename_columns (_type_, optional): _description_. Defaults to None.
+        ligands_columns_to_extract (_type_, optional): _description_. Defaults to None.
+        ligands_rename_columns (_type_, optional): _description_. Defaults to None.
+        targets_columns_to_extract (_type_, optional): _description_. Defaults to None.
+        targets_rename_columns (_type_, optional): _description_. Defaults to None.
+
+    Returns:
+        DatasetDefault: _description_
+    """
 
     # load tsvs with opional caching:
-    _args = [pairs_tsv, ligands_tsv, targets_tsv, split_tsv]
+    _args = [pairs_tsv, ligands_tsv, targets_tsv, split_tsv, use_folds]
 
     if "cache_dir" in kwargs and kwargs["cache_dir"] is not None:
         ans_dict = run_cached_func(kwargs["cache_dir"], _load_dataframes, *_args, **kwargs)

@@ -40,15 +40,22 @@ model:
 data:
   TITAN_benchmark:
     lightning_data_module:       
-      ligand_csv: "${paths.data}/ligands/TITAN_08-02-2023@single_protein_target@ligands.tsv"
-      target_csv: "${paths.data}/targets/TITAN_08-02-2023@single_protein_target@targets.tsv"
-      affinity_csv: "${paths.data}/pairs/TITAN_08-02-2023@single_protein_target@affinity_pairs_v0.1.tsv"
-      split_csv: "${paths.data}/splits/splits/lenient/split_lenient_0.14_0.14_0.14_0.14_0.14_0.15_0.15.tsv"
+      ligands_tsv: "${paths.data}/ligand/TITAN_08-02-2023@single_protein_target@ligands.tsv"
+      targets_tsv: "${paths.data}/target/TITAN_08-02-2023@single_protein_target@targets.tsv"
+      pairs_tsv: "${paths.data}/pairs/TITAN_08-02-2023@single_protein_target@affinity_pairs_v0.1.tsv"
+      split_tsv: "${paths.data}/splits/splits/lenient/split_lenient_0.14_0.14_0.14_0.14_0.14_0.15_0.15.tsv"
 
-      train_dataset_path: "${paths.data}/pretraining/non_kinase_train.csv"
-      val_dataset_path: "${paths.data}/pretraining/non_kinase_test.csv"
-      test_dataset_path: "${paths.data}/pretraining/non_kinase_test.csv"
-
+      use_folds: ['train1', 'train2', 'train3', 'train4', 'train5']                 
+      pairs_columns_to_extract: ['ligand_id', 'target_id', 'activity_label']
+      pairs_rename_columns: 
+        activity_label: 'data.label'
+      ligands_columns_to_extract: ['canonical_smiles', 'canonical_aa_sequence']
+      ligands_rename_columns:
+        canonical_smiles: 'ligand_str' 
+      targets_columns_to_extract: ['canonical_smiles', 'canonical_aa_sequence', 'full_canonical_aa_sequence']
+      targets_rename_columns:
+        canonical_aa_smiles: 'target_str'
+      
       naming_conventions:
         pairs_table_ligand_column: ligand_name
         pairs_table_sequence_column: uniprot_accession

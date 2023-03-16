@@ -15,7 +15,8 @@ from tokenizers import (
 
 import pandas as pd
 import hydra
-from omegaconf import DictConfig
+from omegaconf import DictConfig, OmegaConf
+from fusedrug.data.interaction.drug_target.datasets.dti_binding_dataset import dti_binding_dataset as dti_dataset
 
 
 from rdkit import Chem
@@ -66,6 +67,28 @@ def main(cfg: DictConfig) -> None:
     print(str(cfg))
 
     cfg = hydra.utils.instantiate(cfg)
+    cfg_raw = OmegaConf.to_object(cfg)
+    ppi_dataset, pairs_df = dti_dataset(**cfg_raw['data']['TITAN_benchmark']['lightning_data_module'])
+    # ppi_dataset, pairs_df = dti_dataset.dti_binding_dataset(                       
+        
+    #                     pairs_tsv=self.pairs_tsv, 
+    #                     ligands_tsv=self.ligands_tsv, 
+    #                     targets_tsv=self.targets_tsv,
+    #                     splits_tsv=self.splits_tsv,
+    #                     use_folds=['train1', 'train2', 'train3', 'train4', 'train5'],                         
+    #                     pairs_columns_to_extract=['ligand_id', 'target_id', 'activity_label'], 
+    #                     pairs_rename_columns={'activity_label': 'data.label'}, 
+    #                     ligands_columns_to_extract=['canonical_smiles', 'canonical_aa_sequence', 'full_canonical_aa_sequence'], 
+    #                     ligands_rename_columns={'canonical_smiles': 'ligand_str'}, 
+    #                     targets_columns_to_extract=['canonical_smiles', 'canonical_aa_sequence', 'full_canonical_aa_sequence'], 
+    #                     targets_rename_columns={'canonical_aa_smiles': 'target_str'}, 
+                        
+    #                     keep_activity_labels=list(self.class_label_to_idx.keys()),
+    #                     cache_dir=Path(self.data_dir, 'PLM_DTI_cache'),
+    #                     dynamic_pipeline=[(OpLookup(map=self.class_label_to_idx), dict(key_in='data.label', key_out='data.label')),
+    #                                       (OpToTensor(), {'dtype': torch.float32, 'key': 'data.label'})],
+    #                     )
+
     
     vocab_data = pd.read_csv(TITAN_SMILES_PATH, sep='\t', header=None, names=['repr', 'ID'])
     
