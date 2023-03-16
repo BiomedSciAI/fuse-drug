@@ -85,7 +85,7 @@ def create_model(model_params: dict) -> nn.Module:
     return model
 
 
-def create_datamodule(paths: dict, params: dict):
+def create_datamodule(paths: dict, params: dict) -> DTIDataModule:
     """
     create dti datamodule
 

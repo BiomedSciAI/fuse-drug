@@ -8,6 +8,7 @@ import shutil
 import os
 from fuse.utils.file_io.file_io import create_dir
 
+
 class DesignAMPTestCase(unittest.TestCase):
     def setUp(self):
         self.root = tempfile.mkdtemp()
@@ -21,7 +22,7 @@ class DesignAMPTestCase(unittest.TestCase):
         cfg.data.num_batches = 10
         cfg.data.peptides_datasets.uniprot_raw_data_path_reviewed = None
         cfg.data.peptides_datasets.uniprot_raw_data_path_not_reviewed = None
-        cfg.root = os.path.join(self.root, "cls") 
+        cfg.root = os.path.join(self.root, "cls")
         create_dir(cfg.root)
         main_classifier_train.main(cfg)
 
@@ -36,12 +37,13 @@ class DesignAMPTestCase(unittest.TestCase):
         cfg.data.peptides_datasets.uniprot_raw_data_path_reviewed = None
         cfg.data.peptides_datasets.uniprot_raw_data_path_not_reviewed = None
         cfg.root = os.path.join(self.root, "design")
-        create_dir(cfg.root) 
+        create_dir(cfg.root)
         main_design_train.main(cfg)
-    
+
     def tearDown(self):
         # Delete temporary directories
         shutil.rmtree(self.root)
+
 
 if __name__ == "__main__":
     unittest.main()
