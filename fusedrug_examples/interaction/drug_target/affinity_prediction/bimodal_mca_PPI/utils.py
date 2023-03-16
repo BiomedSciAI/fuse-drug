@@ -1,13 +1,7 @@
 from pytorch_lightning.callbacks import Callback
-import os, sys
-from pathlib import Path
-from typing import Union, List
-import pandas as pd
-from fusedrug.data.interaction.drug_target.datasets.dti_binding_dataset import (
-    DTIBindingDataset,
-)
+import os
+import sys
 import numpy as np
-from time import time
 import torch
 import random
 import pytz
@@ -86,9 +80,3 @@ hydra_resolvers = OrderedDict(
 def get_valid_filename(s):
     s = str(s).strip().replace(" ", "_")
     return re.sub(r"(?u)[^-\w.]", "@", s)
-
-
-def listify(x):
-    if not isinstance(x, list):
-        x = [x]
-    return x

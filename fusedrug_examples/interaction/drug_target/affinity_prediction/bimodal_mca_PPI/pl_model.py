@@ -1,25 +1,25 @@
-import os
-import torch
-import tensorflow as tf
-
-import pytorch_lightning as pl
-import os
-
-os.environ["TOKENIZERS_PARALLELISM"] = "false"
-import numpy as np
 from scipy.stats import pearsonr, spearmanr
 from sklearn.metrics import mean_squared_error
 
 from paccmann_predictor.models.bimodal_mca import BimodalMCA
 
-MODEL_FACTORY = {
-    "bimodal_mca": BimodalMCA,
-}
 import numpy as np
 import colorama
 
+import os
+import torch
+
+# import tensorflow as tf #uncomment if getting pl error
+
+import pytorch_lightning as pl
+
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
 colorama.init(autoreset=True)
-from colorama import Fore, Back, Style
+
+MODEL_FACTORY = {
+    "bimodal_mca": BimodalMCA,
+}
 
 
 class AffinityPredictorModule(pl.LightningModule):

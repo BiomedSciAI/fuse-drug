@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn import CrossEntropyLoss
 
+
 # TODO: consider also adding "MyGammaLoss" which doesn't involve crossentropy term at all
 class FocalLoss(nn.Module):
     def __init__(self, weight=None, gamma=2.0, reduction="mean"):

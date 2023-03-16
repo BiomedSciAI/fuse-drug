@@ -4,23 +4,18 @@ with focus on multiprocessing to improve GPU utilization
 """
 
 import os
-import tensorflow as tf
+
+# import tensorflow as tf
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import Callback
-import os
 
-os.environ["TOKENIZERS_PARALLELISM"] = "false"
 import hydra
 from utils import (
     hydra_resolvers,
 )  # examples.fuse_examples.interaction.drug_target.affinity_prediction.bimodal_mca_PPI.
 
-
-# hydra.verbose = True
-# import logging
-# log = logging.getLogger(__name__)
 from omegaconf import DictConfig, OmegaConf
-from hydra.utils import instantiate, call
+from hydra.utils import instantiate
 import sys
 import socket
 from fuse.utils.file_io import read_simple_int_file
@@ -29,8 +24,12 @@ from pl_model import AffinityPredictorModule  # TODO: fix import path for fuse d
 from pl_data import AffinityDataModule  # TODO: fix import path
 import colorama
 
+from colorama import Fore
+
 colorama.init(autoreset=True)
-from colorama import Fore, Back, Style
+
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
 
 print(
     "CUDA_VISIBLE_DEVICES=",
@@ -131,7 +130,7 @@ def session_manager_and_logger_setup(cfg: dict) -> None:
                 Fore.GREEN
                 + f"for clearml: continuing existing task - project_name={project_name}, task_name={task_name}, continue_last_task=True"
             )
-            task = Task.init(
+            Task.init(
                 project_name=project_name,
                 task_name=task_name,
                 continue_last_task=True,
@@ -141,7 +140,7 @@ def session_manager_and_logger_setup(cfg: dict) -> None:
                 Fore.GREEN
                 + f"for clearml: starting a new task - project_name={project_name}, task_name={task_name}, reuse_last_task_id=False"
             )
-            task = Task.init(
+            Task.init(
                 project_name=project_name,
                 task_name=task_name,
                 reuse_last_task_id=False,
@@ -154,7 +153,7 @@ def session_manager_and_logger_setup(cfg: dict) -> None:
 def main(cfg: DictConfig) -> None:
     if 0 == len(cfg):
         raise Exception(
-            f"You should provide --config-dir and --config-name  . Note - config-name should be WITHOUT the .yaml postfix"
+            "You should provide --config-dir and --config-name  . Note - config-name should be WITHOUT the .yaml postfix"
         )
 
     OmegaConf.resolve(

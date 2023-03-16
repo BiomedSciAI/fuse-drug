@@ -1,21 +1,17 @@
 import os
-import torch
-import tensorflow as tf
+
+# import tensorflow as tf #uncomment if getting pl error
 
 import pytorch_lightning as pl
-import os
-
-os.environ["TOKENIZERS_PARALLELISM"] = "false"
 import numpy as np
-from scipy.stats import pearsonr, spearmanr
-from sklearn.metrics import mean_squared_error
-from fuse.data import DatasetDefault, PipelineDefault, OpToTensor, OpKeepKeypaths
-from fusedrug.data.molecule.ops import (
-    SmilesRandomizeAtomOrder,
-    SmilesToRDKitMol,
-    RDKitMolToSmiles,
-    SanitizeMol,
+from fuse.data import (
+    DatasetDefault,
+    PipelineDefault,
+    OpToTensor,
+    OpKeepKeypaths,
+    OpBase,
 )
+
 from fusedrug.data.protein.ops import (
     ProteinRandomFlipOrder,
     ProteinIntroduceNoise,
@@ -34,30 +30,19 @@ from fusedrug.data.interaction.drug_target.loaders import (
 )
 from torch.utils.data import DataLoader
 
-
-# hydra.verbose = True
-# import logging
-# log = logging.getLogger(__name__)
 from fusedrug.data.molecule.tokenizer.pretrained import (
     get_path as get_molecule_pretrained_tokenizer_path,
 )
 from fusedrug.data.protein.tokenizer.pretrained import (
     get_path as get_protein_pretrained_tokenizer_path,
 )
-import numpy as np
-import socket
-from typing import List, Callable, Optional
-from fuse.utils import NDict
-from fuse.utils.file_io import read_simple_int_file, save_text_file_safe
-from fuse.data import OpBase, get_sample_id
-from fusedrug.utils.file_formats import IndexedTextTable
 from typing import Optional
-from pprint import pprint
-from clearml import Task
+from fuse.utils import NDict
+from fusedrug.utils.file_formats import IndexedTextTable
 import colorama
 
 colorama.init(autoreset=True)
-from colorama import Fore, Back, Style
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 
 class OpLoadActiveSiteAlignmentInfo(OpBase):
@@ -183,7 +168,7 @@ class AffinityDataModule(pl.LightningDataModule):
         """
 
         """
-        
+
         Args:
             peptide_language_model: SMILESTokenizer instance
             protein_language_model: ProteinLanguage instance
@@ -297,10 +282,10 @@ class AffinityDataModule(pl.LightningDataModule):
 
         self._shared_affinity_dataset_loader_kwargs = dict(
             ligand_sequence_column_name="peptide_sequence",
-            affinity_pairs_csv_ligand_id_column_name=self.pairs_table_ligand_column,  #'ligand_name',
+            affinity_pairs_csv_ligand_id_column_name=self.pairs_table_ligand_column,  # 'ligand_name',
             protein_sequence_column_name="protein_sequence",
-            affinity_pairs_csv_protein_id_column_name=self.pairs_table_sequence_column,  #'uniprot_accession',
-            affinity_pairs_csv_affinity_value_column_name=self.pairs_table_affinity_column,  #'pIC50',
+            affinity_pairs_csv_protein_id_column_name=self.pairs_table_sequence_column,  # 'uniprot_accession',
+            affinity_pairs_csv_affinity_value_column_name=self.pairs_table_affinity_column,  # 'pIC50',
         )
 
     def _create_pipeline_desc(self, is_training, drug_target_affinity_loader_op):
@@ -370,7 +355,7 @@ class AffinityDataModule(pl.LightningDataModule):
 
         if (
             is_training and self.train_augment_protein_flip
-        ):  ### keep this after all active site alignment based operations! otherwise the extraction of aligned kinase info won't work
+        ):  # keep this after all active site alignment based operations! otherwise the extraction of aligned kinase info won't work
             pipeline_desc += [
                 (
                     ProteinRandomFlipOrder(),
