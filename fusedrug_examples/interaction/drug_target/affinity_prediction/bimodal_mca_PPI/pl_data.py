@@ -50,7 +50,7 @@ class OpLoadActiveSiteAlignmentInfo(OpBase):
     TODO: Move to fuse-drug ops
     """
 
-    def __init__(self, kinase_alignment_smi, **kwargs):
+    def __init__(self, kinase_alignment_smi: str, **kwargs) -> None:
         """_summary_
 
         Args:
@@ -72,9 +72,9 @@ class OpLoadActiveSiteAlignmentInfo(OpBase):
         self,
         sample_dict: NDict,
         op_id: Optional[str],
-        key_in="data.input.protein_str",
-        key_out="data.input.protein_str",
-    ):
+        key_in: str = "data.input.protein_str",
+        key_out: str = "data.input.protein_str",
+    ) -> NDict:
         """
         params
             key_in:str - expected to contain only the active site, in high case
@@ -109,8 +109,8 @@ class AffinityDataModule(pl.LightningDataModule):
         train_shuffle: bool = True,
         train_augment_peptide_shuffle_atoms: bool = False,
         train_augment_protein_flip: bool = False,
-        protein_augment_full_sequence_noise=False,
-        protein_augment_full_sequence_noise_p=0.1,
+        protein_augment_full_sequence_noise: bool = False,
+        protein_augment_full_sequence_noise_p: float = 0.1,
         active_site_alignment_info_smi: Optional[str] = None,
         protein_augment_by_reverting_individual_active_site_sub_sequences: bool = False,
         protein_augment_by_reverting_individual_active_site_sub_sequences_p: float = 0.5,
@@ -125,7 +125,7 @@ class AffinityDataModule(pl.LightningDataModule):
         pairs_table_affinity_column: str = "pIC50",
         protein_final_keep_only_uppercase: bool = False,
         **kwargs,
-    ):
+    ) -> None:
         """a ligand vs. target affinity prediction data module
 
         Args:
@@ -208,9 +208,7 @@ class AffinityDataModule(pl.LightningDataModule):
         self.train_augment_protein_flip = train_augment_protein_flip
 
         self.protein_augment_full_sequence_noise = protein_augment_full_sequence_noise
-        self.protein_augment_full_sequence_noise_p = (
-            protein_augment_full_sequence_noise_p
-        )
+        self.protein_augment_full_sequence_noise_p = protein_augment_full_sequence_noise_p
 
         self.protein_augment_by_reverting_individual_active_site_sub_sequences = (
             protein_augment_by_reverting_individual_active_site_sub_sequences
@@ -221,16 +219,18 @@ class AffinityDataModule(pl.LightningDataModule):
         self.protein_augment_by_introducing_noise_to_non_active_site_residues = (
             protein_augment_by_introducing_noise_to_non_active_site_residues
         )
-        self.protein_augment_by_introducing_noise_to_non_active_site_residues_p_inside_active_site = protein_augment_by_introducing_noise_to_non_active_site_residues_p_inside_active_site
-        self.protein_augment_by_introducing_noise_to_non_active_site_residues_p_outside_active_site = protein_augment_by_introducing_noise_to_non_active_site_residues_p_outside_active_site
+        self.protein_augment_by_introducing_noise_to_non_active_site_residues_p_inside_active_site = (
+            protein_augment_by_introducing_noise_to_non_active_site_residues_p_inside_active_site
+        )
+        self.protein_augment_by_introducing_noise_to_non_active_site_residues_p_outside_active_site = (
+            protein_augment_by_introducing_noise_to_non_active_site_residues_p_outside_active_site
+        )
 
         self.active_site_alignment_info_smi = active_site_alignment_info_smi
 
         self.pytoda_wrapped_tokenizer = pytoda_wrapped_tokenizer
         self.pytoda_SMILES_tokenizer_json = pytoda_SMILES_tokenizer_json
-        self.pytoda_target_target_tokenizer_amino_acid_dict = (
-            pytoda_target_target_tokenizer_amino_acid_dict
-        )
+        self.pytoda_target_target_tokenizer_amino_acid_dict = pytoda_target_target_tokenizer_amino_acid_dict
 
         self.pairs_table_ligand_column = pairs_table_ligand_column
         self.pairs_table_sequence_column = pairs_table_sequence_column
@@ -288,7 +288,7 @@ class AffinityDataModule(pl.LightningDataModule):
             affinity_pairs_csv_affinity_value_column_name=self.pairs_table_affinity_column,  # 'pIC50',
         )
 
-    def _create_pipeline_desc(self, is_training, drug_target_affinity_loader_op):
+    def _create_pipeline_desc(self, is_training: bool, drug_target_affinity_loader_op) -> list:
         """
         Note: in the current implementation, augmentation is activated only if is_training==False
         """
@@ -320,10 +320,7 @@ class AffinityDataModule(pl.LightningDataModule):
                 ),
             ]
 
-            if (
-                is_training
-                and self.protein_augment_by_reverting_individual_active_site_sub_sequences
-            ):
+            if is_training and self.protein_augment_by_reverting_individual_active_site_sub_sequences:
                 pipeline_desc += [
                     (
                         ProteinFlipIndividualActiveSiteSubSequences(
@@ -336,10 +333,7 @@ class AffinityDataModule(pl.LightningDataModule):
                     ),
                 ]
 
-            if (
-                is_training
-                and self.protein_augment_by_introducing_noise_to_non_active_site_residues
-            ):
+            if is_training and self.protein_augment_by_introducing_noise_to_non_active_site_residues:
                 pipeline_desc += [
                     (
                         ProteinIntroduceActiveSiteBasedNoise(
@@ -371,9 +365,7 @@ class AffinityDataModule(pl.LightningDataModule):
             if self.protein_representation_type == "AA":
                 pipeline_desc += [
                     (
-                        ProteinIntroduceNoise(
-                            p=self.protein_augment_full_sequence_noise_p
-                        ),
+                        ProteinIntroduceNoise(p=self.protein_augment_full_sequence_noise_p),
                         dict(key_in="data.input.protein", key_out="data.input.protein"),
                     ),
                 ]
@@ -384,9 +376,7 @@ class AffinityDataModule(pl.LightningDataModule):
             if self.peptide_representation_type == "AA":
                 pipeline_desc += [
                     (
-                        ProteinIntroduceNoise(
-                            p=self.protein_augment_full_sequence_noise_p
-                        ),
+                        ProteinIntroduceNoise(p=self.protein_augment_full_sequence_noise_p),
                         dict(key_in="data.input.ligand", key_out="data.input.ligand"),
                     ),
                 ]
@@ -451,9 +441,7 @@ class AffinityDataModule(pl.LightningDataModule):
             )
             protein_pad_id = 0
         else:
-            raise NotImplementedError(
-                f"Unexpected representation type: {self.protein_representation_type}"
-            )
+            raise NotImplementedError(f"Unexpected representation type: {self.protein_representation_type}")
 
         if self.peptide_representation_type == "SMILES":
             # If proteins and peptides are represented as SMILES strings, the tokenizer should work on smiles
@@ -461,21 +449,15 @@ class AffinityDataModule(pl.LightningDataModule):
                 get_molecule_pretrained_tokenizer_path(),
                 "bpe_tokenizer_trained_on_chembl_zinc_with_aug_4272372_samples_balanced_1_1.json",
             )
-            peptide_pad_id = (
-                3  # TODO: check if peptide_pad_id should be the same as protein_pad_id
-            )
+            peptide_pad_id = 3  # TODO: check if peptide_pad_id should be the same as protein_pad_id
         elif self.peptide_representation_type == "AA":
             # If proteins and peptides are represented as AA sequences, they should both use protein tokenizer
             _peptide_tokenizer_path = os.path.join(
                 get_protein_pretrained_tokenizer_path(), "simple_protein_tokenizer.json"
             )
-            peptide_pad_id = (
-                3  # TODO: check if peptide_pad_id should be the same as protein_pad_id
-            )
+            peptide_pad_id = 3  # TODO: check if peptide_pad_id should be the same as protein_pad_id
         else:
-            raise NotImplementedError(
-                f"Unexpected representation type: {self.peptide_representation_type}"
-            )
+            raise NotImplementedError(f"Unexpected representation type: {self.peptide_representation_type}")
 
         if self.protein_representation_type == "SMILES":
             if self.pytoda_wrapped_tokenizer:
@@ -518,9 +500,7 @@ class AffinityDataModule(pl.LightningDataModule):
                     pad_id=protein_pad_id,
                 )
         else:
-            raise NotImplementedError(
-                f"Unexpected representation type: {self.protein_representation_type}"
-            )
+            raise NotImplementedError(f"Unexpected representation type: {self.protein_representation_type}")
 
         if self.peptide_representation_type == "SMILES":
             if self.pytoda_wrapped_tokenizer:
@@ -564,9 +544,7 @@ class AffinityDataModule(pl.LightningDataModule):
                 )
 
         else:
-            raise NotImplementedError(
-                f"Unexpected representation type: {self.peptide_representation_type}"
-            )
+            raise NotImplementedError(f"Unexpected representation type: {self.peptide_representation_type}")
 
         pipeline_desc += [
             # peptide
@@ -606,7 +584,7 @@ class AffinityDataModule(pl.LightningDataModule):
 
         return pipeline_desc
 
-    def train_dataloader(self):
+    def train_dataloader(self) -> DataLoader:
         # affinity_loader_op = PeptideTargetAffinityLoader(
         #     affinity_pairs_csv_path=self.train_dataset_path,
         #     **self._affinity_loader_shared_arguments
@@ -621,18 +599,14 @@ class AffinityDataModule(pl.LightningDataModule):
             **self._shared_affinity_dataset_loader_kwargs,
         )
 
-        pipeline_desc = self._create_pipeline_desc(
-            is_training=True, drug_target_affinity_loader_op=affinity_loader_op
-        )
+        pipeline_desc = self._create_pipeline_desc(is_training=True, drug_target_affinity_loader_op=affinity_loader_op)
 
         all_sample_ids = np.arange(len(affinity_loader_op.drug_target_affinity_dataset))
 
         train_dataset = DatasetDefault(
             all_sample_ids,
             static_pipeline=None,
-            dynamic_pipeline=PipelineDefault(
-                name="train_pipeline_affinity_predictor", ops_and_kwargs=pipeline_desc
-            ),
+            dynamic_pipeline=PipelineDefault(name="train_pipeline_affinity_predictor", ops_and_kwargs=pipeline_desc),
         )
         train_dataset.create()
 
@@ -645,7 +619,7 @@ class AffinityDataModule(pl.LightningDataModule):
         )
         return dl
 
-    def val_dataloader(self):
+    def val_dataloader(self) -> DataLoader:
 
         affinity_loader_op = PeptideTargetAffinityLoader(
             ligands_smi=self.peptides_smi,
@@ -656,18 +630,14 @@ class AffinityDataModule(pl.LightningDataModule):
             **self._shared_affinity_dataset_loader_kwargs,
         )
 
-        pipeline_desc = self._create_pipeline_desc(
-            is_training=False, drug_target_affinity_loader_op=affinity_loader_op
-        )
+        pipeline_desc = self._create_pipeline_desc(is_training=False, drug_target_affinity_loader_op=affinity_loader_op)
 
         all_sample_ids = np.arange(len(affinity_loader_op.drug_target_affinity_dataset))
 
         val_dataset = DatasetDefault(
             all_sample_ids,
             static_pipeline=None,
-            dynamic_pipeline=PipelineDefault(
-                name="val_pipeline_affinity_predictor", ops_and_kwargs=pipeline_desc
-            ),
+            dynamic_pipeline=PipelineDefault(name="val_pipeline_affinity_predictor", ops_and_kwargs=pipeline_desc),
         )
         val_dataset.create()
 
@@ -680,7 +650,7 @@ class AffinityDataModule(pl.LightningDataModule):
         )
         return dl
 
-    def test_dataloader(self):
+    def test_dataloader(self) -> DataLoader:
         affinity_loader_op = PeptideTargetAffinityLoader(
             ligands_smi=self.peptides_smi,
             proteins_smi=self.proteins_smi,
@@ -690,18 +660,14 @@ class AffinityDataModule(pl.LightningDataModule):
             **self._shared_affinity_dataset_loader_kwargs,
         )
 
-        pipeline_desc = self._create_pipeline_desc(
-            is_training=False, drug_target_affinity_loader_op=affinity_loader_op
-        )
+        pipeline_desc = self._create_pipeline_desc(is_training=False, drug_target_affinity_loader_op=affinity_loader_op)
 
         all_sample_ids = np.arange(len(affinity_loader_op.drug_target_affinity_dataset))
 
         test_dataset = DatasetDefault(
             all_sample_ids,
             static_pipeline=None,
-            dynamic_pipeline=PipelineDefault(
-                name="test_pipeline_affinity_predictor", ops_and_kwargs=pipeline_desc
-            ),
+            dynamic_pipeline=PipelineDefault(name="test_pipeline_affinity_predictor", ops_and_kwargs=pipeline_desc),
         )
         test_dataset.create()
 

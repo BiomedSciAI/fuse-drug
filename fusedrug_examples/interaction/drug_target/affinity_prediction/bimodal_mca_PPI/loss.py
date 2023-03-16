@@ -6,13 +6,13 @@ from torch.nn import CrossEntropyLoss
 
 # TODO: consider also adding "MyGammaLoss" which doesn't involve crossentropy term at all
 class FocalLoss(nn.Module):
-    def __init__(self, weight=None, gamma=2.0, reduction="mean"):
+    def __init__(self, weight: float = None, gamma: float = 2.0, reduction: str = "mean") -> None:
         nn.Module.__init__(self)
         self.weight = weight
         self.gamma = gamma
         self.reduction = reduction
 
-    def forward(self, pred, gt):
+    def forward(self, pred: torch.Tensor, gt: torch.Tensor) -> float:
         log_prob = F.log_softmax(pred, dim=-1)
         prob = torch.exp(log_prob)
         return F.nll_loss(
@@ -29,10 +29,8 @@ loss_funcs = {
 }
 
 
-def get_loss_func(name, **kwargs):
+def get_loss_func(name: str, **kwargs) -> float:
     if name not in loss_funcs:
-        raise Exception(
-            f'loss function "{name}" not recognized. Supported options are: {loss_funcs.keys()}'
-        )
+        raise Exception(f'loss function "{name}" not recognized. Supported options are: {loss_funcs.keys()}')
     func = loss_funcs[name]
     return func(**kwargs)

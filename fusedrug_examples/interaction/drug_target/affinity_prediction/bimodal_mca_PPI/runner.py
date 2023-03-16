@@ -10,12 +10,11 @@ import pytorch_lightning as pl
 from pytorch_lightning.callbacks import Callback
 
 import hydra
-from utils import (
+from PPI_utils import (
     hydra_resolvers,
 )  # examples.fuse_examples.interaction.drug_target.affinity_prediction.bimodal_mca_PPI.
 
 from omegaconf import DictConfig, OmegaConf
-from hydra.utils import instantiate
 import sys
 import socket
 from fuse.utils.file_io import read_simple_int_file
@@ -33,17 +32,8 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 print(
     "CUDA_VISIBLE_DEVICES=",
-    os.environ["CUDA_VISIBLE_DEVICES"]
-    if "CUDA_VISIBLE_DEVICES" in os.environ
-    else None,
+    os.environ["CUDA_VISIBLE_DEVICES"] if "CUDA_VISIBLE_DEVICES" in os.environ else None,
 )
-
-
-def _instantiate_if_needed(x):
-    if isinstance(x, (dict, DictConfig)):
-        if "_target_" in x:
-            x = instantiate(x)
-    return x
 
 
 CONFIGS_DIR = os.path.join(os.path.dirname(__file__), "configs")
@@ -67,14 +57,10 @@ def session_manager_and_logger_setup(cfg: dict) -> None:
     SESSION_FULL_PATH = os.path.realpath(os.getcwd())
     HYDRA_SESSION_NUM = os.path.basename(os.getcwd())
 
-    OmegaConf.save(
-        config=cfg, f=os.path.join(SESSION_FULL_PATH, "resolved_config.yaml")
-    )
+    OmegaConf.save(config=cfg, f=os.path.join(SESSION_FULL_PATH, "resolved_config.yaml"))
 
     session_manager_num = None
-    session_num_file = os.path.realpath(
-        os.path.join(SESSION_FULL_PATH, "../session_created")
-    )
+    session_num_file = os.path.realpath(os.path.join(SESSION_FULL_PATH, "../session_created"))
     if os.path.isfile(session_num_file):
         session_manager_num = read_simple_int_file(session_num_file)
         print(f"found session num {session_manager_num} in {session_num_file}")
@@ -91,17 +77,13 @@ def session_manager_and_logger_setup(cfg: dict) -> None:
         print(
             f'Note: the debug session directory, in which artifacts like logs and checkpoints will be saved, is: {cfg_raw["paths"]["debug_session_dir"]}'
         )
-        print(
-            "to choose a different location modify paths.debug_session_dir in configs/train_config.yaml"
-        )
+        print("to choose a different location modify paths.debug_session_dir in configs/train_config.yaml")
         print("You may need to manually delete this directory.")
 
         SESSION_FULL_PATH = cfg_raw["paths"]["debug_session_dir"]
         os.makedirs(SESSION_FULL_PATH, exist_ok=True)
 
-    default_checkpoints_dir = os.path.realpath(
-        os.path.join(SESSION_FULL_PATH, "../rank_0")
-    )
+    default_checkpoints_dir = os.path.realpath(os.path.join(SESSION_FULL_PATH, "../rank_0"))
     print(f"checkpoints will be written into {default_checkpoints_dir}")
     os.makedirs(default_checkpoints_dir, exist_ok=True)
 
@@ -117,9 +99,7 @@ def session_manager_and_logger_setup(cfg: dict) -> None:
         task_name = f"session_{session_manager_num}@{task_name}"
         # task_name=f"session_{session_manager_num}@{task_name}@{HYDRA_SESSION_NUM}"
 
-    task_name += (
-        f'@{cfg_raw["_free_text_description"]}' + cfg_raw["model"]["base_model"]
-    )
+    task_name += f'@{cfg_raw["_free_text_description"]}' + cfg_raw["model"]["base_model"]
     print("CLEARML - using task_name=", task_name)
 
     if cfg_raw["clearml"]["active"]:
@@ -163,9 +143,7 @@ def main(cfg: DictConfig) -> None:
 
     SESSION_FULL_PATH = session_manager_and_logger_setup(cfg=cfg)
 
-    if (
-        "ONLY_GET_EXPECTED_WORKING_DIR" in os.environ
-    ) or cfg.only_get_expected_working_dir:
+    if ("ONLY_GET_EXPECTED_WORKING_DIR" in os.environ) or cfg.only_get_expected_working_dir:
         QUERY_SEP_TOKEN = "<@@@QUERY_SEP_TOKEN@@@>"
         print(
             f"SESSION_FULL_PATH_QUERY_ANSWER={QUERY_SEP_TOKEN}{SESSION_FULL_PATH}{QUERY_SEP_TOKEN}"
@@ -179,20 +157,16 @@ def main(cfg: DictConfig) -> None:
 
     print(f"Running on hostname={socket.gethostname()}")
     STOP_FILENAME = os.path.join(SESSION_FULL_PATH, "STOP")
-    print(
-        f"created a stop filename - create it to stop a session gracefully. [{STOP_FILENAME}]"
-    )
+    print(f"created a stop filename - create it to stop a session gracefully. [{STOP_FILENAME}]")
 
-    def _check_stopfile(stop_filename):
+    def _check_stopfile(stop_filename: str) -> None:
         if os.path.isfile(stop_filename):
-            print(
-                f"detected request stop file: [{STOP_FILENAME}]. Exiting from process."
-            )
+            print(f"detected request stop file: [{STOP_FILENAME}]. Exiting from process.")
             sys.stdout.flush()
             sys.exit()
 
     class ExitOnStopFileCallback(Callback):
-        def __init__(self, stop_filename=None):
+        def __init__(self, stop_filename: str = None) -> None:
             super().__init__()
             if not isinstance(stop_filename, str):
                 raise Exception("stop_filename must be str")
@@ -203,13 +177,13 @@ def main(cfg: DictConfig) -> None:
 
         # def on_predict_batch_start(self, trainer=trainer, pl_module, batch, batch_idx, dataloader_idx):
         #     _check_stopfile(self.stop_filename)
-        def on_predict_batch_start(self, trainer, pl_module, batch, batch_idx):
+        def on_predict_batch_start(self, **kwargs) -> None:
             _check_stopfile(self.stop_filename)
 
-        def on_train_batch_start(self, trainer, pl_module, batch, batch_idx):
+        def on_train_batch_start(self, **kwargs) -> None:
             _check_stopfile(self.stop_filename)
 
-        def on_test_batch_start(self, trainer, pl_module, batch, batch_idx):
+        def on_test_batch_start(self, **kwargs) -> None:
             _check_stopfile(self.stop_filename)
 
     print("cfg_raw = ")
