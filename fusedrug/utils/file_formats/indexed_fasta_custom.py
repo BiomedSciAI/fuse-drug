@@ -12,7 +12,7 @@ from typing import Tuple, Union
 
 # TODO: consider using SQLite for files with too big number of identifiers to fit in memory
 # maybe use "raw mode" in https://github.com/Congyuwang/RocksDict ? (or maybe not, as it just uses a DB in the backend, so maybe it's better to use a DB ourselves)
-
+o
 
 def _default_identifier_extractor(identifier_line, also_return_comment: bool = True, verbose=0):
     # return identifier_line.split('|')[1]
