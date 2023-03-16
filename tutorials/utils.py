@@ -7,17 +7,16 @@ from fuse.utils.file_io.file_io import create_dir
 
 
 class BindingDB:
-
     @staticmethod
     def download(data_dir: str) -> None:
         """
         Downloads BindingDB data
         """
-        
+
         create_dir(data_dir)
         zip_path = os.path.join(data_dir, "BindingDB_All.tsv.zip")
 
-        if not os.path.isfile(zip_path): 
+        if not os.path.isfile(zip_path):
             # Download zip
             print("Downloading zip file:")
             url = "https://www.bindingdb.org/bind/downloads/BindingDB_All_2022m4.tsv.zip"
@@ -36,7 +35,7 @@ class BindingDB:
         if not os.path.isfile(pickle_file_path):
             # Load tsv file and pickle it (sort of caching for quicker future use)
             print("Pickling data:")
-            df = pd.read_csv(raw_file_path, sep='\t', on_bad_lines='skip')
+            df = pd.read_csv(raw_file_path, sep="\t", on_bad_lines="skip")
             df.to_pickle(pickle_file_path)
             print("Pickling data: DONE")
 

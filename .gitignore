@@ -144,5 +144,7 @@ tutorials/data/*
 # CCC outputs
 outputs
 
-#local configs
-*vadim*
+# Unit test outputs
+fusedrug_examples/tests/cls_amp
+fusedrug_examples/tests/peptides_design
+

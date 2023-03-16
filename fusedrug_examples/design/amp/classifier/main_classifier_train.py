@@ -14,7 +14,7 @@ limitations under the License.
 
 """
 
-from fuse_examples.design.amp.datasets import PeptidesDatasets
+from fusedrug_examples.design.amp.datasets import PeptidesDatasets
 
 from typing import Any, Optional, List, Tuple
 import hydra
@@ -39,7 +39,7 @@ from fuse.dl.losses import LossDefault
 from fuse.utils import NDict
 from fuse.data import DatasetDefault
 
-from fuse_examples.design.amp.model import (
+from fusedrug_examples.design.amp.model import (
     Embed,
     WordDropout,
     Tokenizer,
@@ -50,7 +50,7 @@ from fuse_examples.design.amp.model import (
     RandomAdjacentSwap,
     RandomShift,
 )
-from fuse_examples.design.amp.losses import LossRecon
+from fusedrug_examples.design.amp.losses import LossRecon
 
 
 def data(
@@ -58,6 +58,7 @@ def data(
     target_key: str,
     infill: bool,
     batch_size: int,
+    num_batches: int,
     data_loader: dict,
 ) -> Tuple[DatasetDefault, DataLoader, DataLoader]:
     """
@@ -66,6 +67,7 @@ def data(
     :param target_key: used to to balance the trainset
     :param infill: if True will keep the unlabeled data. Otherwise it will filter it.
     :param batch_size: batch size - used for both train dataloader and validation dataloader.
+    :param num_batches: number of batches
     :param data_loader: arguments for pytorch dataloader constructor
     :return: train dataset and dataloaders for both train-set and validation-set
     """
@@ -73,15 +75,11 @@ def data(
 
     # filter unknown labels
     if not infill:
-        labels_train = ds_train.get_multi(
-            None, keys=[target_key, "source"], desc="filter train set"
-        )
+        labels_train = ds_train.get_multi(None, keys=[target_key, "source"], desc="filter train set")
         indices_train = [i for i, v in enumerate(labels_train) if v[target_key] >= 0]
         ds_train.subset(indices_train)
 
-    labels_valid = ds_valid.get_multi(
-        None, keys=[target_key, "source"], desc="filter validation set"
-    )
+    labels_valid = ds_valid.get_multi(None, keys=[target_key, "source"], desc="filter validation set")
     indices_valid = [i for i, v in enumerate(labels_valid) if v[target_key] >= 0]
     ds_valid.subset(indices_valid)
 
@@ -93,7 +91,7 @@ def data(
             balanced_class_name=target_key,
             batch_size=batch_size,
             mode="approx",
-            num_batches=1000
+            num_batches=num_batches,
         ),
         **data_loader,
     )
@@ -209,6 +207,7 @@ def filter_label_unknown(batch_dict: NDict, label_key: str, out_key: str) -> NDi
     # keep_indices = keep_indices.cpu().numpy()
     return {label_key: batch_dict[label_key][keep_indices], out_key: batch_dict[out_key][keep_indices]}
 
+
 def train(
     model: torch.nn.Module,
     dl_train: DataLoader,
@@ -261,8 +260,7 @@ def train(
     # Metrics
     filter_func = partial(filter_label_unknown, label_key=target_key, out_key="model.output.cls")
     train_metrics = {
-        "auc":
-            MetricAUCROC(pred="model.output.cls", target=target_key, batch_pre_collect_process_func=filter_func),
+        "auc": MetricAUCROC(pred="model.output.cls", target=target_key, batch_pre_collect_process_func=filter_func),
     }
 
     validation_metrics = {
@@ -316,10 +314,7 @@ def main(cfg: DictConfig):
     ds_train, dl_train, dl_valid = data(**cfg.data)
 
     # model
-    seqs = [
-        sample["sequence"]
-        for sample in ds_train.get_multi(None, keys=["sequence"], desc="tokenizer")
-    ]
+    seqs = [sample["sequence"] for sample in ds_train.get_multi(None, keys=["sequence"], desc="tokenizer")]
     nn_model, tokenizer = model(seqs=seqs, **cfg.model)
 
     # train
