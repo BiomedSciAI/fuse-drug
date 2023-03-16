@@ -14,7 +14,7 @@ limitations under the License.
 
 """
 
-from fuse_examples.design.amp.datasets import PeptidesDatasets
+from fusedrug_examples.design.amp.datasets import PeptidesDatasets
 
 from typing import Any, Optional, List, Tuple
 import hydra
@@ -40,8 +40,8 @@ from fuse.eval.metrics.classification.metrics_classification_common import Metri
 from fuse.dl.losses import LossDefault
 from fuse.utils import NDict
 
-from fuse_examples.design.amp.losses import kl_gaussian_sharedmu, LossRecon, LossWAE
-from fuse_examples.design.amp.model import (
+from fusedrug_examples.design.amp.losses import kl_gaussian_sharedmu, LossRecon, LossWAE
+from fusedrug_examples.design.amp.model import (
     Embed,
     WordDropout,
     Sample,
@@ -56,10 +56,11 @@ from fuse_examples.design.amp.model import (
     RandomAdjacentSwap,
     RandomShift,
 )
-from fuse_examples.design.amp.metrics import (
+from fusedrug_examples.design.amp.metrics import (
     MetricSeqAccuracy,
     MetricPrintRandomSubsequence,
 )
+
 
 def filter_label_unknown(batch_dict: NDict, label_key: str, out_key: str) -> NDict:
     """ignore samples with label -1"""
@@ -69,8 +70,9 @@ def filter_label_unknown(batch_dict: NDict, label_key: str, out_key: str) -> NDi
     # keep_indices = keep_indices.cpu().numpy()
     return {label_key: batch_dict[label_key][keep_indices], out_key: batch_dict[out_key][keep_indices]}
 
+
 def data(
-    peptides_datasets: dict, batch_size: int, data_loader: dict
+    peptides_datasets: dict, batch_size: int, num_batches: Optional[int], data_loader: dict
 ) -> Tuple[DatasetDefault, DataLoader, DataLoader]:
     """
     Data preparation
@@ -84,23 +86,20 @@ def data(
 
     dl_train = DataLoader(
         ds_train,
-        collate_fn=CollateDefault(
-            keep_keys=["sequence", "amp.label", "toxicity.label", "data.sample_id"]
-        ),
+        collate_fn=CollateDefault(keep_keys=["sequence", "amp.label", "toxicity.label", "data.sample_id"]),
         batch_sampler=BatchSamplerDefault(
             ds_train,
             balanced_class_name="amp.label",
             balanced_class_weights={0: 0.25, 1: 0.25, -1: 0.5},
             batch_size=batch_size,
             mode="approx",
+            num_batches=num_batches,
         ),
         **data_loader,
     )
     dl_valid = DataLoader(
         ds_valid,
-        collate_fn=CollateDefault(
-            keep_keys=["sequence", "amp.label", "toxicity.label", "data.sample_id"]
-        ),
+        collate_fn=CollateDefault(keep_keys=["sequence", "amp.label", "toxicity.label", "data.sample_id"]),
         batch_sampler=BatchSamplerDefault(
             ds_valid,
             balanced_class_name="amp.label",
@@ -164,13 +163,9 @@ def model(
         raise Exception(f"Error: unsupported encoder {encoder_type}")
 
     if decoder_type == "transformer":
-        decoder_model = TransformerDecoder(
-            output_dim=len(tokenizer._tokenizer.vocab), **transformer_decoder
-        )
+        decoder_model = TransformerDecoder(output_dim=len(tokenizer._tokenizer.vocab), **transformer_decoder)
     elif decoder_type == "gru":
-        decoder_model = GRUDecoder(
-            output_dim=len(tokenizer._tokenizer.vocab), **gru_decoder
-        )
+        decoder_model = GRUDecoder(output_dim=len(tokenizer._tokenizer.vocab), **gru_decoder)
     else:
         raise Exception(f"Error: unsupported decoder {decoder_type}")
     embed = Embed(
@@ -310,16 +305,16 @@ def train(
 
     filter_func_amp = partial(filter_label_unknown, label_key="amp.label", out_key="model.output.amp")
     filter_func_toxicity = partial(filter_label_unknown, label_key="toxicity.label", out_key="model.output.toxicity")
-    
+
     validation_metrics = {
         "acc": MetricSeqAccuracy(pred="model.out", target="sequence"),
-        "auc_amp": 
-            MetricAUCROC(pred="model.output.amp", target="amp.label", batch_pre_collect_process_func=filter_func_amp),
-        "auc_toxicity": MetricAUCROC(pred="model.output.toxicity", target="toxicity.label", batch_pre_collect_process_func=filter_func_toxicity),
-
-        "dump": MetricPrintRandomSubsequence(
-            pred="model.out", target="sequence", num_sample_to_print=1
+        "auc_amp": MetricAUCROC(
+            pred="model.output.amp", target="amp.label", batch_pre_collect_process_func=filter_func_amp
         ),
+        "auc_toxicity": MetricAUCROC(
+            pred="model.output.toxicity", target="toxicity.label", batch_pre_collect_process_func=filter_func_toxicity
+        ),
+        "dump": MetricPrintRandomSubsequence(pred="model.out", target="sequence", num_sample_to_print=1),
     }
 
     # either a dict with arguments to pass to ModelCheckpoint or list dicts for multiple ModelCheckpoint callbacks (to monitor and save checkpoints for more then one metric).
@@ -362,10 +357,7 @@ def main(cfg: DictConfig):
     ds_train, dl_train, dl_valid = data(**cfg.data)
 
     # model
-    seqs = [
-        sample["sequence"]
-        for sample in ds_train.get_multi(None, keys=["sequence"], desc="tokenizer")
-    ]
+    seqs = [sample["sequence"] for sample in ds_train.get_multi(None, keys=["sequence"], desc="tokenizer")]
     nn_model, tokenizer = model(seqs=seqs, **cfg.model)
 
     # train

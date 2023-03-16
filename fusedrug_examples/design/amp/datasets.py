@@ -85,9 +85,7 @@ class OpProcessTargetActivities(OpBase):
             if target["unit"]["name"] in ["µg/ml"]:
                 concentration_ug_mg = concentration  # µg/ml
             elif target["unit"]["name"] in ["µM"]:  # µmol/L
-                concentration_ug_mg = (
-                    concentration * molecular_weight_g_mol / 1000
-                )  # µg/ml
+                concentration_ug_mg = concentration * molecular_weight_g_mol / 1000  # µg/ml
             elif target["unit"]["name"] in ["nmol/g", "nmol/g "]:
                 # TODO: implement - skip for now
                 continue
@@ -160,9 +158,7 @@ class OpProcessHemoliticCytotoxicActivities(OpBase):
             if target["unit"]["name"] in ["µg/ml"]:
                 concentration_ug_mg = concentration  # µg/ml
             elif target["unit"]["name"] in ["µM"]:  # µmol/L
-                concentration_ug_mg = (
-                    concentration * molecular_weight_g_mol / 1000
-                )  # µg/ml
+                concentration_ug_mg = concentration * molecular_weight_g_mol / 1000  # µg/ml
             elif target["unit"]["name"] in ["nmol/g", "nmol/g "]:
                 # TODO: implement - skip for now
                 continue
@@ -227,7 +223,7 @@ class Dbaasp:
         ],
     ) -> pd.DataFrame:
         """
-        :param raw_data_path: path to peptides-complete.csv as downloaded from: https://dbaasp.org/download-dataset?source=peptides
+        :param raw_data_path: path to peptides-complete.json as downloaded from: https://dbaasp.org/download-dataset?source=peptides
         """
         # load the raw data
         peptides = pd.read_json(raw_data_path)
@@ -366,9 +362,7 @@ class Satpdb:
 
 class Axpep:
     @staticmethod
-    def load_and_process_df(
-        data_path: str, files_prefix: str = "train"
-    ) -> pd.DataFrame:
+    def load_and_process_df(data_path: str, files_prefix: str = "train") -> pd.DataFrame:
         """
         :param data_path: path to a folder that contains files '*_ne.fasta' and '*_po.fasta' downloaded fromhttps://sourceforge.net/projects/axpep/
         :param files_prefix: either "train" or "test"
@@ -479,27 +473,19 @@ class PeptidesDatasets:
             [
                 (
                     "dbaasp",
-                    Dbaasp.load_and_process_df(dbaasp_raw_data_path)
-                    if dbaasp_raw_data_path is not None
-                    else None,
+                    Dbaasp.load_and_process_df(dbaasp_raw_data_path) if dbaasp_raw_data_path is not None else None,
                 ),
                 (
                     "axpep",
-                    Axpep.load_and_process_df(axpep_data_path)
-                    if axpep_data_path is not None
-                    else None,
+                    Axpep.load_and_process_df(axpep_data_path) if axpep_data_path is not None else None,
                 ),
                 (
                     "satpdb",
-                    Satpdb.load_and_process_df(satpdb_data_path)
-                    if satpdb_data_path is not None
-                    else None,
+                    Satpdb.load_and_process_df(satpdb_data_path) if satpdb_data_path is not None else None,
                 ),
                 (
                     "toxin_pred",
-                    ToxinPred.load_and_process_df(toxin_pred_data_path)
-                    if toxin_pred_data_path is not None
-                    else None,
+                    ToxinPred.load_and_process_df(toxin_pred_data_path) if toxin_pred_data_path is not None else None,
                 ),
                 (
                     "uniprot",
@@ -544,9 +530,9 @@ class PeptidesDatasets:
         test_folds: Sequence[int],
     ) -> DatasetDefault:
         """
-        :param dbaasp_raw_data_path: path to peptides-complete.csv as downloaded from: https://dbaasp.org/download-dataset?source=peptides
+        :param dbaasp_raw_data_path: path to peptides-complete.json as downloaded from: https://dbaasp.org/download-dataset?source=peptides
         :param uniprot_raw_data_path_reviewed: only two columns file of reviewed peptides downloaded from uniprot - uncompressed tsv format: https://www.uniprot.org/uniprotkb?facets=reviewed%3Atrue%2Clength%3A%5B1%20TO%20200%5D&query=%2A
-        :param uniprot_raw_data_path_not_reviewed:only two columns file of reviewed peptides downloaded from uniprot - uncompressed tsv format: https://www.uniprot.org/uniprotkb?facets=reviewed%3Afalse%2Clength%3A%5B1%20TO%20200%5D&query=%2A
+        :param uniprot_raw_data_path_not_reviewed:only two columns file of unreviewed peptides downloaded from uniprot - uncompressed tsv format: https://www.uniprot.org/uniprotkb?facets=reviewed%3Afalse%2Clength%3A%5B1%20TO%20200%5D&query=%2A
         :param toxin_pred_data_path:path to a folder that contains multiple files downloaded directly from "https://webs.iiitd.edu.in/raghava/toxinpred/dataset.php"
         :param satpdb_data_path: path to a folder that contains files 'antimicrobial.fasta' and 'toxic.fasta' downloaded from https://webs.iiitd.edu.in/raghava/satpdb/down.php
         :param axpep_data_path:  path to a folder that contains files '*_ne.fasta' and '*_po.fasta' downloaded fromhttps://sourceforge.net/projects/axpep/
@@ -570,9 +556,7 @@ class PeptidesDatasets:
                 dict(condition="dbaasp"),
             ),
             (
-                OpCond(
-                    PipelineDefault("toxin_pred process", ToxinPred.process_pipeline())
-                ),
+                OpCond(PipelineDefault("toxin_pred process", ToxinPred.process_pipeline())),
                 dict(condition="toxin_pred"),
             ),
             (
@@ -638,9 +622,7 @@ if __name__ == "__main__":
         [3],
         [4],
     )
-    df = ExportDataset.export_to_dataframe(
-        ds_train, ["toxicity.label", "amp.label"], workers=0
-    )
+    df = ExportDataset.export_to_dataframe(ds_train, ["toxicity.label", "amp.label"], workers=0)
     print(f"Train toxicity stat:\n {df['toxicity.label'].value_counts()}")
     print(f"Train amp stat:\n {df['amp.label'].value_counts()}")
     df = ExportDataset.export_to_dataframe(ds_valid, ["toxicity.label", "amp.label"])
