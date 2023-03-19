@@ -28,7 +28,7 @@ pipeline {
             echo "------ printing ccc_log.txt -----"
             cat ./ccc_log.txt
             echo "------ Done printing ccc_log.txt ------"
-            junit 'test-reports/TEST-*.xml'
+            junit "test-reports/TEST-*.xml"
         }
     }
 }
