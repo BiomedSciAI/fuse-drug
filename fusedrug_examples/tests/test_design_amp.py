@@ -3,9 +3,16 @@ import fusedrug_examples.design.amp.classifier.main_classifier_train as main_cla
 import fusedrug_examples.design.amp.design.main_design_train as main_design_train
 from omegaconf import OmegaConf
 from pathlib import Path
+import tempfile
+import shutil
+import os
+from fuse.utils.file_io.file_io import create_dir
 
 
 class DesignAMPTestCase(unittest.TestCase):
+    def setUp(self):
+        self.root = tempfile.mkdtemp()
+
     def test_classifier(self):
         config_path = Path(__file__, "../../design/amp/classifier/config.yaml")
         cfg = OmegaConf.load(config_path)
@@ -15,6 +22,8 @@ class DesignAMPTestCase(unittest.TestCase):
         cfg.data.num_batches = 10
         cfg.data.peptides_datasets.uniprot_raw_data_path_reviewed = None
         cfg.data.peptides_datasets.uniprot_raw_data_path_not_reviewed = None
+        cfg.root = os.path.join(self.root, "cls")
+        create_dir(cfg.root)
         main_classifier_train.main(cfg)
 
     def test_design(self):
@@ -27,7 +36,13 @@ class DesignAMPTestCase(unittest.TestCase):
         cfg.data.num_batches = 10
         cfg.data.peptides_datasets.uniprot_raw_data_path_reviewed = None
         cfg.data.peptides_datasets.uniprot_raw_data_path_not_reviewed = None
+        cfg.root = os.path.join(self.root, "design")
+        create_dir(cfg.root)
         main_design_train.main(cfg)
+
+    def tearDown(self):
+        # Delete temporary directories
+        shutil.rmtree(self.root)
 
 
 if __name__ == "__main__":
