@@ -1,4 +1,4 @@
-from typing import Optional, Dict, Union, List
+from typing import Optional, Dict, Union, List, Tuple
 import gzip
 import io
 import os
@@ -32,6 +32,7 @@ try:
         mmcif_parsing,
     )
     from openfold.np import residue_constants as rc
+    from openfold.data.mmcif_parsing import MmcifObject    
 
 except ImportError:
     print("Warning: import openfold failed - some functions might fail")
@@ -171,9 +172,10 @@ def get_chain_native_features(native_structure_filename: str, chain_id: str, pdb
             return None
     elif structure_file_format == "cif":
         try:
-            mmcif_object, chains_names = parse_mmcif(
+            mmcif_object = parse_mmcif(
                 native_structure_filename, unique_file_id=pdb_id, quiet_parsing=True
             )
+            chains_names = list(mmcif_object.chain_to_seqres.keys())
         except Exception as e:
             print(e)
             print(f"Had an issue reading {native_structure_filename}")
@@ -444,17 +446,20 @@ def save_pdb_file(
 
 
 def parse_mmcif(
-    filename: str, unique_file_id: str, handle_residue_id_duplication: bool = True, quiet_parsing: bool = False
-):
+    filename: str, unique_file_id: str, handle_residue_id_duplication: bool = True, quiet_parsing: bool = False,
+) -> MmcifObject:
     """
     filename: path for the mmcif file to load (can be .gz compressed)
     unique_file_id: a unique_id for this file
+
+    returns an MmcifObject
     """
     filename = get_mmcif_native_full_name(filename)
     raw_mmcif_str = read_file_raw_string(filename)
 
     mmcif_object = mmcif_parsing.parse(
         file_id=unique_file_id,
+        catch_all_errors=False,
         mmcif_string=raw_mmcif_str,
         handle_residue_id_duplication=handle_residue_id_duplication,
         quiet_parsing=quiet_parsing,
@@ -462,11 +467,11 @@ def parse_mmcif(
 
     # https://biopython-cn.readthedocs.io/zh_CN/latest/en/chr11.html#reading-an-mmcif-file
 
-    # this is inefficient as I'm reading the mmcif file again, but choosing to do this to keep openfold code unmodified for now
-    handle = io.StringIO(raw_mmcif_str)
-    mmcif_dict = MMCIF2Dict.MMCIF2Dict(handle)
+    # this is inefficient as I'm reading the mmcif file again, but choosing to do this to keep openfold code mostly unmodified for now
+    #handle = io.StringIO(raw_mmcif_str)
+    #mmcif_dict = MMCIF2Dict.MMCIF2Dict(handle)
 
-    entities_details = mmcif_parsing.mmcif_loop_to_list("_entity.", mmcif_dict)
+    #entities_details = mmcif_parsing.mmcif_loop_to_list("_entity.", mmcif_dict)
 
     # Crash if an error is encountered. Any parsing errors should have
     # been dealt with at the alignment stage.
@@ -480,7 +485,9 @@ def parse_mmcif(
 
     mmcif_object = mmcif_object.mmcif_object
 
-    return mmcif_object, list(mmcif_object.chain_to_seqres.keys())
+    #chain_id_to_seqres = list(mmcif_object.chain_to_seqres.keys())
+
+    return mmcif_object 
 
     # it does too much - templates search and MSA
     # data = self.data_pipeline.process_mmcif(
@@ -499,6 +506,11 @@ def get_chain_data(
     Assembles features for a specific chain in an mmCIF object.
             if chain_id is str, it is used
 
+    chain_id: author assigned chain id.
+        For more details in author assigned chain id vs. pdb assigned chain id see https://www.rcsb.org/docs/general-help/identifiers-in-pdb
+    
+    
+
 
     """
 
@@ -516,7 +528,8 @@ def load_mmcif_features(filename, pdb_id: str, chain_id: str):
     Features in the style that *Fold use
     """
     filename = get_mmcif_native_full_name(filename)
-    mmcif_data, chains_names = parse_mmcif(filename, "bananaphone")
+    mmcif_data = parse_mmcif(filename, "bananaphone")
+    chains_names = list(mmcif_data.chain_to_seqres.keys())
     if chain_id not in chains_names:
         raise Exception(f"Error requested chain_id={chain_id} not found in available chains {chains_names}")
     gt_data = get_chain_data(mmcif_data, chain_id=chain_id)

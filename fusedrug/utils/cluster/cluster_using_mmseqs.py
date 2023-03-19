@@ -69,8 +69,8 @@ def cached_cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict)
 
     ans = cluster_impl(output_dir=output_dir, **kwargs)
 
-    save_text_file_safe(already_created_description_filename, hash_value)
-    save_text_file_safe(already_created_hash_filename, str_repr)
+    save_text_file_safe(already_created_hash_filename, hash_value)
+    save_text_file_safe(already_created_description_filename, str_repr)
 
     return ans
 
