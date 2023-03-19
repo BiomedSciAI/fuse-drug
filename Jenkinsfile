@@ -21,9 +21,9 @@ pipeline {
     }
 
     post {
-        failure {
-            echo "----||| FAILED |||----"
-        }
+        // failure {
+        //     echo "----||| FAILED |||----"
+        // }
         always {
             echo "------ printing ccc_log.txt -----"
             cat ./ccc_log.txt
