@@ -349,9 +349,8 @@ def train(
 
 @hydra.main(config_path=".", config_name="config")
 def main(cfg: DictConfig):
-    print(str(cfg))
-
     cfg = hydra.utils.instantiate(cfg)
+    print(NDict(cfg).print_tree(True))
 
     # data
     ds_train, dl_train, dl_valid = data(**cfg.data)

@@ -2,29 +2,34 @@ import os
 from fuse.utils.cpu_profiling import Timer
 from fuse.utils.file_io import save_hdf5_safe, load_hdf5, change_extension
 import numpy as np
-from fuse.utils.misc.context import DummyContext
+
+from contextlib import nullcontext
 import click
 from torch.utils.data import Dataset
 from copy import deepcopy
 from fuse.utils.multiprocessing import run_multiprocessed, get_from_global_storage, get_chunks_ranges
-
+from typing import Tuple, Union
 
 # TODO: consider using SQLite for files with too big number of identifiers to fit in memory
 # maybe use "raw mode" in https://github.com/Congyuwang/RocksDict ? (or maybe not, as it just uses a DB in the backend, so maybe it's better to use a DB ourselves)
 
 
-def _default_identifier_extractor(identifier_line, verbose=0):
+def _default_identifier_extractor(identifier_line, also_return_comment: bool = True, verbose=0):
     # return identifier_line.split('|')[1]
     pos = identifier_line.find(" ")
     if pos < 0:
         if verbose > 0:
             print("Warning: no space found in identifier line:", identifier_line)
-        return identifier_line
+        return identifier_line, None
 
-    return identifier_line[:pos].rstrip()
+    identifier = identifier_line[:pos].rstrip()
+    if also_return_comment:
+        comment = identifier_line[pos + 1 :]
+        return identifier, comment
+
+    return identifier
 
 
-# TODO: add ignore column line (default to False)
 class IndexedFastaCustom(Dataset):
     """
     Handles large fasta files - builds a file offset index for each line and stores it in hdf5 format.
@@ -70,10 +75,11 @@ class IndexedFastaCustom(Dataset):
         if self.process_identifier_pipeline is None:
             self.process_identifier_pipeline = []
 
-        timer = Timer("Process") if verbose > 0 else DummyContext()
+        timer = Timer("Process") if verbose > 0 else nullcontext()
         with timer:
             if index_filename is None:
-                index_filename = change_extension(filename, ".fastaindex.hdf5")
+                # index_filename = change_extension(filename, ".fastaindex.hdf5")
+                index_filename = filename + ".fastaindex.hdf5"
                 if verbose > 0:
                     print(f"IndexedTextFile:: index_filename={index_filename}")
 
@@ -92,6 +98,8 @@ class IndexedFastaCustom(Dataset):
                 line_num = 0
                 offset = 0
                 # important - using 'rb' will not remove things line '\r' from the line, making the offset ok! (as opposed to using 'r' !!)
+                if verbose > 0:
+                    print("building fasta index ... ")
                 with open(filename, "rb") as read_file:
                     for line in read_file.readlines():
 
@@ -108,7 +116,7 @@ class IndexedFastaCustom(Dataset):
 
                 lines_offsets = np.array(lines_offsets, dtype=np.int64)
 
-                timer = Timer("Store") if verbose > 0 else DummyContext()
+                timer = Timer("Store") if verbose > 0 else nullcontext()
                 with timer:
                     save_hdf5_safe(
                         index_filename,
@@ -116,8 +124,11 @@ class IndexedFastaCustom(Dataset):
                         lines_offsets=lines_offsets,
                     )
                 lines_offsets = None
-        loaded_hdf5 = load_hdf5(self.index_filename)  # reloading even in the creation time (intentional)
-        self.offsets = loaded_hdf5["lines_offsets"]
+
+        timer = Timer("Process") if verbose > 0 else nullcontext()
+        with timer:
+            loaded_hdf5 = load_hdf5(self.index_filename)  # reloading even in the creation time (intentional)
+            self.offsets = loaded_hdf5["lines_offsets"]
 
         if isinstance(num_workers, str):
             assert num_workers == "auto"
@@ -157,7 +168,13 @@ class IndexedFastaCustom(Dataset):
         for i in range(len(self)):
             yield self.__getitem__(i)
 
-    def __getitem__(self, index):
+    def __getitem__(self, index) -> Tuple[Union[Tuple[str], Tuple[str, str]], str, str]:
+        """
+        returns a single FASTA entry in as a tuple with 3 elements:
+            element 0: a tuple with either a. a single element, the identifier of the entry or b. a tuple with 2 elements, the identifier of the entry followed by the comment of the entry
+            element 1: the sequence data
+            element 2: the full identifier raw line
+        """
 
         if isinstance(index, str):
             if not self._allow_access_by_id:
