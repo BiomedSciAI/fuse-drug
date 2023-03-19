@@ -3,8 +3,8 @@ import pytorch_lightning as pl
 
 # The Contrastive_PLM_DTI submodule is the repository found at https://github.com/samsledje/Contrastive_PLM_DTI
 # and described in the paper "Adapting protein language models for rapid DTI prediction": https://www.mlsb.io/papers_2021/MLSB2021_Adapting_protein_language_models.pdf
-from Contrastive_PLM_DTI.src import architectures as model_types
-import metrics
+from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI.Contrastive_PLM_DTI.src import architectures as model_types
+import fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI.metrics
 from fuse.dl.models.model_wrapper import ModelWrapSeqToDict
 from fuse.dl.losses.loss_default import LossDefault
 import fuse.dl.lightning.pl_funcs as fuse_pl

@@ -18,11 +18,13 @@ experiment:
   clearml: true
 
 paths:
-  results: ${oc.env:DTI_RESULTS}
+  results: '/dccstor/mm_hcls/shatz/fusedrug_stuff/plm_dti_stuff/DTI_RESULTS/'
+  # results: ${oc.env:DTI_RESULTS}
 
 benchmark_data:
   # parameters specific for our data/benchmark. used if task="ours"
-  path: ${oc.env:MERGED_MOL_DATA}
+  path: '/dccstor/mm_hcls/shatz/fusedrug_stuff/plm_dti_stuff/MERGED_MOL_DATA/'
+  # path: ${oc.env:MERGED_MOL_DATA}
   split: lenient # split if using task="ours". can be "lenient", "cond-target", "cold-ligand", "temporal". 
 
 data:
