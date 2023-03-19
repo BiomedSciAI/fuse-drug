@@ -24,12 +24,12 @@ pipeline {
     }
 
     post {
-        // failure {
-        //     echo "----||| FAILED |||----"
+        failure {
+            echo "----||| FAILED |||----"
         //     echo "------ printing ccc_log.txt -----"
         //     cat ./ccc_log.txt
         //     echo "------ Done printing ccc_log.txt ------"
-        // },
+        }
         always {
             junit 'test-reports/TEST-*.xml'
         }
