@@ -6,14 +6,16 @@ from pathlib import Path
 import tempfile
 import shutil
 import os
+import time
 from fuse.utils.file_io.file_io import create_dir
 
 
 class DesignAMPTestCase(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.root = tempfile.mkdtemp()
+        self.start_time = time.time()
 
-    def test_classifier(self):
+    def test_classifier(self) -> None:
         config_path = Path(__file__, "../../design/amp/classifier/config.yaml")
         cfg = OmegaConf.load(config_path)
         cfg.data.data_loader.num_workers = 16
@@ -26,7 +28,7 @@ class DesignAMPTestCase(unittest.TestCase):
         create_dir(cfg.root)
         main_classifier_train.main(cfg)
 
-    def test_design(self):
+    def test_design(self) -> None:
         config_path = Path(__file__, "../../design/amp/design/config.yaml")
         cfg = OmegaConf.load(config_path)
         cfg.train.num_iter = 1
@@ -40,9 +42,11 @@ class DesignAMPTestCase(unittest.TestCase):
         create_dir(cfg.root)
         main_design_train.main(cfg)
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         # Delete temporary directories
         shutil.rmtree(self.root)
+        t = time.time() - self.start_time
+        print("%s: %.3f" % (self.id(), t))
 
 
 if __name__ == "__main__":
