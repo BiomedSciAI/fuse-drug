@@ -25,10 +25,12 @@ pipeline {
             echo "----||| FAILED |||----"
         }
         always {
-            echo "------ printing ccc_log.txt -----"
-            cat "./ccc_log.txt"
-            echo "------ Done printing ccc_log.txt ------"
-            junit "test-reports/TEST-*.xml"
+            steps {
+                echo "------ printing ccc_log.txt -----"
+                cat "./ccc_log.txt"
+                echo "------ Done printing ccc_log.txt ------"
+                junit "test-reports/TEST-*.xml"
+            }
         }
     }
 }
