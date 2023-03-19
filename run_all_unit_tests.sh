@@ -70,7 +70,7 @@ create_env() {
 
             # install local repository (fuse-med-ml)
             echo "Installing core requirements"
-            conda run $env --no-capture-output --live-stream pip install git+https://https://github.com/BiomedSciAI/fuse-med-ml@master # maybe clone&install instead of pypi
+            conda run $env --no-capture-output --live-stream pip install git+https://github.com/BiomedSciAI/fuse-med-ml@master # maybe clone&install instead of pypi
             conda run $env --no-capture-output --live-stream pip install -r ./requirements/requirements.txt
             conda run $env --no-capture-output --live-stream pip install -r ./requirements/requirements_dev.txt
             echo "Installing core requirements - Done"
