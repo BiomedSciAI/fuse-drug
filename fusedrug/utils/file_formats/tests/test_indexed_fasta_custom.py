@@ -2,15 +2,16 @@ import unittest
 from fusedrug.utils.file_formats import IndexedFastaCustom, uniprot_identifier_extractor
 from fusedrug.tests_data import get_tests_data_dir
 import os
+from typing import Union, Tuple
 
 
 class TestIndexedFastaCustom(unittest.TestCase):
-    def test_basic(self):
+    def test_basic(self) -> None:
         fasta_path = os.path.join(get_tests_data_dir(), "mini_uniprot_sprot.fasta")
         ifc = IndexedFastaCustom(fasta_path, force_recreate_index=True)
 
         identifier, data, full_description = ifc[2]
-        self.assertEqual(identifier, "sp|Q197F8|002R_IIV3")
+        self.assertEqual(self.get_raw_identifier(identifier), "sp|Q197F8|002R_IIV3")
         self.assertEqual(
             data,
             "MASNTVSAQGGSNRPVRDFSNIQDVAQFLLFDPIWNEQPGSIVPWKMNREQALAERYPELQTSEPSEDYSGPVESLELLPLEIKLDIMQYLSWEQISWCKHPWLWTRWYKDNVVRVSAITFEDFQREYAFPEKIQEIHFTDTRAEEIKAILETTPNVTRLVIRRIDDMNYNTHGDLGLDDLEFLTHLMVEDACGFTDFWAPSLTHLTIKNLDMHPRWFGPVMDGIKSMQSTLKYLYIFETYGVNKPFVQWCTDNIETFYCTNSYRYENVPRPIYVWVLFQEDEWHGYRVEDNKFHRRYMYSTILHKRDTDWVENNPLKTPAQVEMYKFLLRISQLNRDGTGYESDSDPENEHFDDESFSSGEEDSSDEDDPTWAPDSDDSDWETETEEEPSVAARILEKGKLTITNLMKSLGFKPKPKKIQSIDRYFCSLDSNYNSEDEDFEYDSDSEDDDSDSEDDC",
@@ -29,7 +30,7 @@ class TestIndexedFastaCustom(unittest.TestCase):
         )
 
         identifier, data, full_description = ifc[2]
-        self.assertEqual(identifier, "Q197F8")
+        self.assertEqual(self.get_raw_identifier(identifier), "Q197F8")
         self.assertEqual(
             data,
             "MASNTVSAQGGSNRPVRDFSNIQDVAQFLLFDPIWNEQPGSIVPWKMNREQALAERYPELQTSEPSEDYSGPVESLELLPLEIKLDIMQYLSWEQISWCKHPWLWTRWYKDNVVRVSAITFEDFQREYAFPEKIQEIHFTDTRAEEIKAILETTPNVTRLVIRRIDDMNYNTHGDLGLDDLEFLTHLMVEDACGFTDFWAPSLTHLTIKNLDMHPRWFGPVMDGIKSMQSTLKYLYIFETYGVNKPFVQWCTDNIETFYCTNSYRYENVPRPIYVWVLFQEDEWHGYRVEDNKFHRRYMYSTILHKRDTDWVENNPLKTPAQVEMYKFLLRISQLNRDGTGYESDSDPENEHFDDESFSSGEEDSSDEDDPTWAPDSDDSDWETETEEEPSVAARILEKGKLTITNLMKSLGFKPKPKKIQSIDRYFCSLDSNYNSEDEDFEYDSDSEDDDSDSEDDC",
@@ -39,7 +40,7 @@ class TestIndexedFastaCustom(unittest.TestCase):
             "sp|Q197F8|002R_IIV3 Uncharacterized protein 002R OS=Invertebrate iridescent virus 3 OX=345201 GN=IIV3-002R PE=4 SV=1",
         )
 
-    def test_identifier_based_access(self):
+    def test_identifier_based_access(self) -> None:
         fasta_path = os.path.join(get_tests_data_dir(), "mini_uniprot_sprot.fasta")
 
         ifc = IndexedFastaCustom(
@@ -55,6 +56,19 @@ class TestIndexedFastaCustom(unittest.TestCase):
         ans_2 = ifc["Q197F8"]
 
         self.assertTupleEqual(ans_1, ans_2)
+
+    def get_raw_identifier(self, identifier: Union[str, Tuple[str, str]]) -> str:
+        """
+        An helper function to (maybe temporarily) address Yoel's changes in PR #20 at:
+        fusedrug_public/fusedrug/utils/file_formats/indexed_fasta_custom.py line 27
+
+        TODO double check with Yoel
+        """
+
+        if isinstance(identifier, tuple):
+            return identifier[0]
+        else:
+            return identifier
 
 
 if __name__ == "__main__":
