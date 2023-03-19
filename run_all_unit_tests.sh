@@ -65,13 +65,16 @@ create_env() {
             # install PyTorch
             if [ $force_cuda_version != "no" ]; then
                 echo "forcing cudatoolkit $force_cuda_version"
-                conda install $env pytorch torchvision pytorch-cuda=$force_cuda_version -c pytorch -c nvidia -y
+                conda install $env pytorch torchvision pytorch-cuda=$force_cuda_version -c pytorch -c nvidia
                 echo "forcing cudatoolkit $force_cuda_version - Done"
             fi
 
-            # install local repository (fuse-med-ml)
+            echo "Installing FuseMedML"
+            conda run $env --no-capture-output --live-stream pip install git+https://github.com/BiomedSciAI/fuse-med-ml@master
+            echo "Installing FuseMedML - Done"
+
+
             echo "Installing core requirements"
-            conda run $env --no-capture-output --live-stream pip install git+https://github.com/BiomedSciAI/fuse-med-ml@master # maybe clone&install instead of pypi
             conda run $env --no-capture-output --live-stream pip install -r ./requirements/requirements.txt
             conda run $env --no-capture-output --live-stream pip install -r ./requirements/requirements_dev.txt
             echo "Installing core requirements - Done"
