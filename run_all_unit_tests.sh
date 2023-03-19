@@ -18,6 +18,7 @@ create_env() {
     force_cuda_version=$1
     env_path=$2
     mode=$3
+    start_time=`date +%s`
 
     requirements=$(cat ./requirements/requirements.txt)
     requirements+=$(cat ./requirements/requirements_dev.txt)
@@ -89,6 +90,9 @@ create_env() {
 
     # set env name
     ENV_TO_USE=$env
+
+    end_time=`date +%s`
+    echo "created env $env in `expr $end_time - $start_time` seconds."
 }
 
 
@@ -116,12 +120,9 @@ conda run $env --no-capture-output --live-stream python ./run_all_unit_tests.py 
 echo "Running core unittests - Done"
 
 
-echo "Create examples env"
-start_time=`date +%s`
-create_env $force_cuda_version $env_path "examples"
-end_time=`date +%s`
-echo execution time was `expr $end_time - $start_time` s.
-echo "Create examples env - Done"
+# echo "Create examples env"
+# create_env $force_cuda_version $env_path "examples"
+# echo "Create examples env - Done"
 
 # echo "Running examples unittests in $ENV_TO_USE"
 # conda run $env --no-capture-output --live-stream python ./run_all_unit_tests.py examples
