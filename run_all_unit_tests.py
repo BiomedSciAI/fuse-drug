@@ -60,3 +60,26 @@ if __name__ == "__main__":
     test_results = xmlrunner.XMLTestRunner(output=output, verbosity=2, stream=sys.stdout).run(
         suite,
     )
+
+    from os import listdir
+    from os.path import isfile, join
+
+    examples_test_files = [
+        f for f in listdir(output) if (isfile(join(output, f)) and f.startswith("TEST-fusedrug_examples"))
+    ]
+
+    for file in examples_test_files:
+        file_path = os.path.join(output, file)
+
+        # Open the file for reading
+        with open(file_path, "r") as f:
+            # Read the contents of the file
+            contents = f.read()
+
+        # Replace all occurrences of "a" with "b"
+        contents = contents.replace("\u001b", "?")
+
+        # Open the file for writing (this will overwrite the original file)
+        with open(file_path, "w") as f:
+            # Write the modified contents back to the file
+            f.write(contents)
