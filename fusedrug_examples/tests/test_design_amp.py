@@ -46,7 +46,7 @@ class DesignAMPTestCase(unittest.TestCase):
         # Delete temporary directories
         shutil.rmtree(self.root)
         t = time.time() - self.start_time
-        print("%s: %.3f" % (self.id(), t))
+        print("Ran %s in %.3f seconds" % (self.id(), t))
 
 
 if __name__ == "__main__":

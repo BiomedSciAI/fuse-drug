@@ -115,10 +115,13 @@ echo "Running core unittests in $ENV_TO_USE"
 conda run $env --no-capture-output --live-stream python ./run_all_unit_tests.py core
 echo "Running core unittests - Done"
 
-# TEMP (!!!) checktimings
-# echo "Create examples env"
-# create_env $force_cuda_version $env_path "examples"
-# echo "Create examples env - Done"
+
+echo "Create examples env"
+start_time=`date +%s`
+create_env $force_cuda_version $env_path "examples"
+end_time=`date +%s`
+echo execution time was `expr $end_time - $start_time` s.
+echo "Create examples env - Done"
 
 # echo "Running examples unittests in $ENV_TO_USE"
 # conda run $env --no-capture-output --live-stream python ./run_all_unit_tests.py examples
