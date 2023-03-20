@@ -80,7 +80,7 @@ create_env() {
             conda run $env --no-capture-output --live-stream pip install -r ./requirements/requirements_dev.txt
             echo "Installing core requirements - Done"
 
-            if [ $mode = "examples" ]; then
+            if [ $mode = "examples" ] || [ $mode = "all" ]; then
                 echo "Installing examples requirements"
                 conda run $env --no-capture-output --live-stream pip install -r ./fusedrug_examples/requirements.txt
                 echo "Installing examples requirements - Done"
