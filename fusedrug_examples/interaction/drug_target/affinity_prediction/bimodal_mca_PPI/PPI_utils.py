@@ -7,6 +7,7 @@ from datetime import datetime
 from collections import OrderedDict
 import getpass
 import re
+from typing import Any, List
 
 
 def get_cwd() -> str:
@@ -14,7 +15,7 @@ def get_cwd() -> str:
     return curr_dir
 
 
-def listify(x):
+def listify(x: Any) -> List:
     if not isinstance(x, list):
         return [x]
     return x
@@ -31,7 +32,7 @@ def get_local_timestamp(timezone: str) -> str:
     return date_str
 
 
-def worker_init_fn(worker_id) -> None:
+def worker_init_fn(worker_id: Any) -> None:
     # to ensure different seed on each worker
     worker_seed = (torch.initial_seed() + os.getpid()) % (2**32)
     print(f"worker_init_fn - seed={worker_seed}")
