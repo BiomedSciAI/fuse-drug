@@ -2,6 +2,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn import CrossEntropyLoss
+from torch import Tensor
+from typing import Dict
 
 
 # TODO: consider also adding "MyGammaLoss" which doesn't involve crossentropy term at all
@@ -12,7 +14,7 @@ class FocalLoss(nn.Module):
         self.gamma = gamma
         self.reduction = reduction
 
-    def forward(self, pred: torch.Tensor, gt: torch.Tensor) -> float:
+    def forward(self, pred: Tensor, gt: Tensor) -> Tensor:
         log_prob = F.log_softmax(pred, dim=-1)
         prob = torch.exp(log_prob)
         return F.nll_loss(
@@ -29,7 +31,7 @@ loss_funcs = {
 }
 
 
-def get_loss_func(name: str, **kwargs) -> float:
+def get_loss_func(name: str, **kwargs: Dict) -> Tensor:
     if name not in loss_funcs:
         raise Exception(f'loss function "{name}" not recognized. Supported options are: {loss_funcs.keys()}')
     func = loss_funcs[name]

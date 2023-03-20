@@ -40,6 +40,7 @@ from typing import Optional
 from fuse.utils import NDict
 from fusedrug.utils.file_formats import IndexedTextTable
 import colorama
+from typing import Dict, Callable
 
 colorama.init(autoreset=True)
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -50,7 +51,7 @@ class OpLoadActiveSiteAlignmentInfo(OpBase):
     TODO: Move to fuse-drug ops
     """
 
-    def __init__(self, kinase_alignment_smi: str, **kwargs) -> None:
+    def __init__(self, kinase_alignment_smi: str, **kwargs: Dict) -> None:
         """_summary_
 
         Args:
@@ -124,7 +125,7 @@ class AffinityDataModule(pl.LightningDataModule):
         pairs_table_sequence_column: str = "uniprot_accession",
         pairs_table_affinity_column: str = "pIC50",
         protein_final_keep_only_uppercase: bool = False,
-        **kwargs,
+        **kwargs: Dict,
     ) -> None:
         """a ligand vs. target affinity prediction data module
 
@@ -288,7 +289,7 @@ class AffinityDataModule(pl.LightningDataModule):
             affinity_pairs_csv_affinity_value_column_name=self.pairs_table_affinity_column,  # 'pIC50',
         )
 
-    def _create_pipeline_desc(self, is_training: bool, drug_target_affinity_loader_op) -> list:
+    def _create_pipeline_desc(self, is_training: bool, drug_target_affinity_loader_op: Callable) -> list:
         """
         Note: in the current implementation, augmentation is activated only if is_training==False
         """
