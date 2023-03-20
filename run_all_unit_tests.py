@@ -61,23 +61,23 @@ if __name__ == "__main__":
         suite,
     )
 
-    # A workaround for "An invalid XML character" issue for the examples' unit-tests
-    examples_test_files = [
-        f for f in listdir(output) if (isfile(join(output, f)) and f.startswith("TEST-fusedrug_examples"))
-    ]
+    ### A workaround for "An invalid XML character" issue for the examples' unit-tests
+    # examples_test_files = [
+    #     f for f in listdir(output) if (isfile(join(output, f)) and f.startswith("TEST-fusedrug_examples"))
+    # ]
 
-    for file in examples_test_files:
-        file_path = join(output, file)
+    # for file in examples_test_files:
+    #     file_path = join(output, file)
 
-        # Open the file for reading
-        with open(file_path, "r") as f:
-            # Read the contents of the file
-            contents = f.read()
+    #     # Open the file for reading
+    #     with open(file_path, "r") as f:
+    #         # Read the contents of the file
+    #         contents = f.read()
 
-        # Replace all occurrences
-        contents = contents.replace("\u001b", "?")
+    #     # Replace all occurrences
+    #     contents = contents.replace("\u001b", "?")
 
-        # Open the file for writing (this will overwrite the original file)
-        with open(file_path, "w") as f:
-            # Write the modified contents back to the file
-            f.write(contents)
+    #     # Open the file for writing (this will overwrite the original file)
+    #     with open(file_path, "w") as f:
+    #         # Write the modified contents back to the file
+    #         f.write(contents)
