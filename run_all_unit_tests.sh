@@ -13,7 +13,7 @@ lockfailed()
     exit 1
 }
 
-# create an environment including the set of requirements specified in fuse-med-ml/requirements.txt (if not already exist)
+# create an environment including the set of requirements specified in the requirements (if not already exist)
 create_env() {
     force_cuda_version=$1
     env_path=$2
@@ -23,7 +23,7 @@ create_env() {
     requirements=$(cat ./requirements/requirements.txt)
     requirements+=$(cat ./requirements/requirements_dev.txt)
 
-    if [ $mode = "examples" ]; then
+    if [ $mode = "examples" ] || [ $mode = "all" ]; then
         requirements+=$(cat ./fusedrug_examples/requirements.txt)
     fi
 
@@ -92,7 +92,7 @@ create_env() {
     ENV_TO_USE=$env
 
     end_time=`date +%s`
-    echo "created env $env in `expr $end_time - $start_time` seconds."
+    echo "Created env $env in `expr $end_time - $start_time` seconds."
 }
 
 
@@ -111,6 +111,8 @@ else
     env_path="no"
 fi
 
+## cuurent FuseMedML workflow:
+
 # echo "Create core env"
 # create_env $force_cuda_version $env_path "core"
 # echo "Create core env - Done"
@@ -119,15 +121,20 @@ fi
 # conda run $env --no-capture-output --live-stream python ./run_all_unit_tests.py core
 # echo "Running core unittests - Done"
 
+# echo "Create examples env"
+# create_env $force_cuda_version $env_path "examples"
+# echo "Create examples env - Done"
 
-echo "Create examples env"
-create_env $force_cuda_version $env_path "examples"
+# echo "Running examples unittests in $ENV_TO_USE"
+# conda run $env --no-capture-output --live-stream python ./run_all_unit_tests.py examples
+# echo "Running examples unittests - Done"
+
+
+## I suggest to run all the unittests in a single env
+echo "Create all env"
+create_env $force_cuda_version $env_path "all"
 echo "Create examples env - Done"
 
-echo "Running core unittests in $ENV_TO_USE"
-conda run $env --no-capture-output --live-stream python ./run_all_unit_tests.py core
-echo "Running core unittests - Done"
-
-echo "Running examples unittests in $ENV_TO_USE"
-conda run $env --no-capture-output --live-stream python ./run_all_unit_tests.py examples
-echo "Running examples unittests - Done"
+echo "Running all unittests in $ENV_TO_USE"
+conda run $env --no-capture-output --live-stream python ./run_all_unit_tests.py
+echo "Running all unittests - Done"

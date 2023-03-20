@@ -24,9 +24,6 @@ pipeline {
     }
 
     post {
-        failure {
-            echo "----||| FAILED |||----"
-        }
         always {
             junit "test-reports/TEST-*.xml"
         }

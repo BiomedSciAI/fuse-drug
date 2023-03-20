@@ -60,7 +60,7 @@ class TestIndexedFastaCustom(unittest.TestCase):
     def get_raw_identifier(self, identifier: Union[str, Tuple[str, str]]) -> str:
         """
         An helper function to (maybe temporarily) address Yoel's changes in PR #20 at:
-        fusedrug_public/fusedrug/utils/file_formats/indexed_fasta_custom.py line 27
+        fusedrug_public/fusedrug/utils/file_formats/indexed_fasta_custom.py line 27~
 
         TODO double check with Yoel
         """

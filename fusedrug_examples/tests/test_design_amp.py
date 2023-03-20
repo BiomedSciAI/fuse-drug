@@ -6,14 +6,12 @@ from pathlib import Path
 import tempfile
 import shutil
 import os
-import time
 from fuse.utils.file_io.file_io import create_dir
 
 
 class DesignAMPTestCase(unittest.TestCase):
     def setUp(self) -> None:
         self.root = tempfile.mkdtemp()
-        self.start_time = time.time()
 
     def test_classifier(self) -> None:
         config_path = Path(__file__, "../../design/amp/classifier/config.yaml")
@@ -45,8 +43,6 @@ class DesignAMPTestCase(unittest.TestCase):
     def tearDown(self) -> None:
         # Delete temporary directories
         shutil.rmtree(self.root)
-        t = time.time() - self.start_time
-        print("Ran %s in %.3f seconds" % (self.id(), t))
 
 
 if __name__ == "__main__":

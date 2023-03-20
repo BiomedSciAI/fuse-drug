@@ -46,7 +46,7 @@ def main(cfg: DictConfig) -> None:
     """
     cfg = hydra.utils.instantiate(cfg)
     cfg = NDict(OmegaConf.to_object(cfg))
-    # cfg.print_tree(True)
+    cfg.print_tree(True)
 
     paths = cfg["paths"]
     train_params = NDict(cfg["params.train"])

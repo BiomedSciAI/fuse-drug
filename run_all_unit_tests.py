@@ -5,10 +5,10 @@ In the case that it's a Jenkins job, it should delete any created cache (not imp
 
 import logging
 import sys
-import unittest
+from unittest import TestLoader
 import os
 import termcolor
-import xmlrunner
+from xmlrunner import XMLTestRunner
 from os import listdir
 from os.path import isfile, join
 
@@ -47,9 +47,7 @@ if __name__ == "__main__":
 
     suite = None
     for curr_subsection, top_dir in sub_sections:
-        curr_subsuite = unittest.TestLoader().discover(
-            f"{search_base}/{curr_subsection}", "test*.py", top_level_dir=top_dir
-        )
+        curr_subsuite = TestLoader().discover(f"{search_base}/{curr_subsection}", "test*.py", top_level_dir=top_dir)
         if suite is None:
             suite = curr_subsuite
         else:
@@ -59,11 +57,11 @@ if __name__ == "__main__":
     lgr = logging.getLogger("FuseDrug")
     lgr.setLevel(logging.INFO)
 
-    test_results = xmlrunner.XMLTestRunner(output=output, verbosity=2, stream=sys.stdout).run(
+    test_results = XMLTestRunner(output=output, verbosity=2, stream=sys.stdout).run(
         suite,
     )
 
-    # A workaround for "An invalid XML character" issue
+    # A workaround for "An invalid XML character" issue for the examples' unit-tests
     examples_test_files = [
         f for f in listdir(output) if (isfile(join(output, f)) and f.startswith("TEST-fusedrug_examples"))
     ]
