@@ -26,6 +26,7 @@ class DesignAMPTestCase(unittest.TestCase):
         create_dir(cfg.root)
         main_classifier_train.main(cfg)
 
+    @unittest.skip("for some reason logs to all xml's CDATA")
     def test_design(self) -> None:
         config_path = Path(__file__, "../../design/amp/design/config.yaml")
         cfg = OmegaConf.load(config_path)

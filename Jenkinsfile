@@ -18,9 +18,8 @@ pipeline {
                 cat "./ccc_log.txt"
                 echo "------ Done printing ccc_log.txt ------"
                 '''
-              }
+            }
         }
-
     }
 
     post {
