@@ -13,7 +13,6 @@ class DesignAMPTestCase(unittest.TestCase):
     def setUp(self) -> None:
         self.root = tempfile.mkdtemp()
 
-    @unittest.skip("for some reason logs to all xml's CDATA")
     def test_classifier(self) -> None:
         config_path = Path(__file__, "../../design/amp/classifier/config.yaml")
         cfg = OmegaConf.load(config_path)
