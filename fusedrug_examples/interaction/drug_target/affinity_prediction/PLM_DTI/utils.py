@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 
@@ -28,4 +29,4 @@ def get_task_dir(task_name: str, orig_repo_name: str = ""):
         "phosphatase": "./dataset/EnzPred/phosphatase_chiral_binary",
     }
 
-    return Path(orig_repo_name, task_paths[task_name.lower()]).resolve()
+    return Path(os.path.dirname(__file__), orig_repo_name, task_paths[task_name.lower()]).resolve()
