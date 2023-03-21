@@ -1,15 +1,13 @@
 """
 PLM-DTI affinity predictor (see https://www.mlsb.io/papers_2021/MLSB2021_Adapting_protein_language_models.pdf)
 """
-
+from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI import data, plm_dti
 import os
 from omegaconf import DictConfig, OmegaConf
 import hydra
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint
 from clearml import Task
-import data
-import plm_dti
 
 CONFIGS_DIR = os.path.join(os.path.dirname(__file__), "configs")
 SELECTED_CONFIG = "train_config.yaml"
