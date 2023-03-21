@@ -15,14 +15,14 @@ experiment:
             # "benchmark" for our benchmark (TBD),
             # others - "davis", "bindingdb", "biosnap", "biosnap_prot" (unseen protein),
             # "biosnap_mol" (unseen drug), "dude" (not implemented)
-  clearml: true
+  clearml: False
 
 paths:
   results: './DTI_RESULTS'
 
 benchmark_data:
   # parameters specific for our data/benchmark. used if task="benchmark"
-  path: None
+  path: null
   split: lenient # split if using task="ours". can be "lenient", "cond-target", "cold-ligand", "temporal".
 
 data:

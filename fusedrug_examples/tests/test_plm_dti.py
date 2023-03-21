@@ -1,3 +1,4 @@
+import os
 import unittest
 from omegaconf import OmegaConf
 from pathlib import Path
@@ -15,7 +16,8 @@ class PLMDTITestCase(unittest.TestCase):
             __file__, "../../interaction/drug_target/affinity_prediction/PLM_DTI/configs/train_config.yaml"
         )
         cfg = OmegaConf.load(config_path)
-        cfg["trainer"]["epochs"] = 2
+        cfg.trainer.epochs = 2
+        cfg.paths.results = os.path.join(self.root, "test_plm_dti")
         main(cfg)
 
     def tearDown(self) -> None:
