@@ -24,6 +24,7 @@ from pl_data import AffinityDataModule  # TODO: fix import path
 import colorama
 
 from colorama import Fore
+from typing import Dict
 
 colorama.init(autoreset=True)
 
@@ -177,13 +178,13 @@ def main(cfg: DictConfig) -> None:
 
         # def on_predict_batch_start(self, trainer=trainer, pl_module, batch, batch_idx, dataloader_idx):
         #     _check_stopfile(self.stop_filename)
-        def on_predict_batch_start(self, **kwargs) -> None:
+        def on_predict_batch_start(self, **kwargs: Dict) -> None:
             _check_stopfile(self.stop_filename)
 
-        def on_train_batch_start(self, **kwargs) -> None:
+        def on_train_batch_start(self, **kwargs: Dict) -> None:
             _check_stopfile(self.stop_filename)
 
-        def on_test_batch_start(self, **kwargs) -> None:
+        def on_test_batch_start(self, **kwarg: Dict) -> None:
             _check_stopfile(self.stop_filename)
 
     print("cfg_raw = ")
