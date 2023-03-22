@@ -1,17 +1,21 @@
+from typing import List
+from fuse.utils.ndict import NDict
 import torch
 import pytorch_lightning as pl
 
 # The Contrastive_PLM_DTI submodule is the repository found at https://github.com/samsledje/Contrastive_PLM_DTI
 # and described in the paper "Adapting protein language models for rapid DTI prediction": https://www.mlsb.io/papers_2021/MLSB2021_Adapting_protein_language_models.pdf
-from Contrastive_PLM_DTI.src import architectures as model_types
-import metrics
+from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI.Contrastive_PLM_DTI.src import (
+    architectures as model_types,
+)
+from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI import metrics
 from fuse.dl.models.model_wrapper import ModelWrapSeqToDict
 from fuse.dl.losses.loss_default import LossDefault
 import fuse.dl.lightning.pl_funcs as fuse_pl
 
 
 class PLM_DTI_Module(pl.LightningModule):
-    def __init__(self, cfg) -> None:
+    def __init__(self, cfg: dict) -> None:
         super().__init__()
         print("Initializing model")
         self.cfg = cfg
@@ -45,23 +49,23 @@ class PLM_DTI_Module(pl.LightningModule):
         self.test_metric_dict = metrics.get_metrics_instances(self.test_metrics)
         # TBD - handle checkpoint loading
 
-    def forward(self, batch_dict):
+    def forward(self, batch_dict: NDict) -> NDict:
         return self.model(batch_dict)
 
-    def training_step(self, batch_dict):
+    def training_step(self, batch_dict: NDict) -> torch.Tensor:
         batch_dict = self.model(batch_dict)
         loss = fuse_pl.step_losses(self.losses, batch_dict)
         self.log("training_loss", loss)
         return loss
 
-    def validation_step(self, batch_dict, batch_idx):
+    def validation_step(self, batch_dict: NDict, batch_idx: int) -> None:
         batch_dict = self.model(batch_dict)
         loss = fuse_pl.step_losses(self.losses, batch_dict)
         for _, met_instance in self.val_metric_dict.items():
             met_instance(batch_dict["model.output"], batch_dict["data.label"])
         self.log("validation_loss", loss)
 
-    def validation_epoch_end(self, validation_step_outputs):
+    def validation_epoch_end(self, validation_step_outputs: List) -> dict:
         results = {}
         for (k, met_instance) in self.val_metric_dict.items():
             res = met_instance.compute()
@@ -69,14 +73,14 @@ class PLM_DTI_Module(pl.LightningModule):
             self.log(k, results[k])
         return results
 
-    def test_step(self, batch_dict, batch_idx):
+    def test_step(self, batch_dict: NDict, batch_idx: int) -> None:
         batch_dict = self.model(batch_dict)
         loss = fuse_pl.step_losses(self.losses, batch_dict)
         for _, met_instance in self.test_metric_dict.items():
             met_instance(batch_dict["model.output"], batch_dict["data.label"])
         self.log("test_loss", loss)
 
-    def test_epoch_end(self, test_step_outputs):
+    def test_epoch_end(self, test_step_outputs: List) -> dict:
         results = {}
         for (k, met_instance) in self.test_metric_dict.items():
             res = met_instance.compute()
@@ -84,7 +88,7 @@ class PLM_DTI_Module(pl.LightningModule):
             self.log(k, results[k])
         return results
 
-    def configure_optimizers(self):
+    def configure_optimizers(self) -> dict:
         opt = torch.optim.AdamW(self.model.parameters(), lr=self.cfg.trainer.lr)
         lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(opt, T_0=self.cfg.trainer.lr_t0)
         return {"optimizer": opt, "lr_scheduler": lr_scheduler}
