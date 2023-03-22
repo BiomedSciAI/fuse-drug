@@ -6,7 +6,7 @@ from fuse.utils.file_io import save_text_file_safe, read_text_file
 import os
 from typing import Dict
 from os.path import join
-
+import yaml
 
 def cached_cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict) -> Dict:
     """
@@ -45,6 +45,7 @@ def cached_cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict)
     hash_value = hashlib.md5(str_repr.encode()).hexdigest()
     already_created_hash_filename = join(output_dir, "created_hash")
     already_created_description_filename = join(output_dir, "created_desc")
+    cached_answer_yaml = join(output_dir, 'cached_cluster_answer.yaml')
 
     rebuild_needed = False
     if os.path.isfile(already_created_hash_filename):
@@ -57,7 +58,7 @@ def cached_cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict)
                 rebuild_needed = True
         else:
             raise Exception("hash value on disk is a mismatch! please delete the directory manually and rerun.")
-            rebuild_needed = True
+            
 
         existing_desc = read_text_file(already_created_description_filename)
     else:
@@ -65,10 +66,16 @@ def cached_cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict)
 
     if (not force_rebuild) and (not rebuild_needed):
         print(f"Hash value indicates that it was already built, not rebuilding. See description: {existing_desc}")
-        return
+        with open(cached_answer_yaml, 'rt') as f:
+            ans = yaml.safe_load(f)
+        return ans
 
     ans = cluster_impl(output_dir=output_dir, **kwargs)
 
+    #store the answer in json (note - we limit the answer to be simple python objects that can be easily stored in json, we don't want pickling as it is hard to maintain!)
+    with open(cached_answer_yaml, 'wt') as f:
+        yaml.dump(ans, f, default_flow_style=False)
+    
     save_text_file_safe(already_created_hash_filename, hash_value)
     save_text_file_safe(already_created_description_filename, str_repr)
 
