@@ -62,7 +62,7 @@ class PLM_DTI_Module(pl.LightningModule):
         batch_dict = self.model(batch_dict)
         loss = fuse_pl.step_losses(self.losses, batch_dict)
         for _, met_instance in self.val_metric_dict.items():
-            met_instance(batch_dict["model.output"].type(torch.float32), batch_dict["data.label"])
+            met_instance(batch_dict["model.output"], batch_dict["data.label"].type(torch.int))
         self.log("validation_loss", loss)
 
     def validation_epoch_end(self, validation_step_outputs: List) -> dict:
@@ -77,7 +77,7 @@ class PLM_DTI_Module(pl.LightningModule):
         batch_dict = self.model(batch_dict)
         loss = fuse_pl.step_losses(self.losses, batch_dict)
         for _, met_instance in self.test_metric_dict.items():
-            met_instance(batch_dict["model.output"].type(torch.float32), batch_dict["data.label"])
+            met_instance(batch_dict["model.output"], batch_dict["data.label"].type(torch.int))
         self.log("test_loss", loss)
 
     def test_epoch_end(self, test_step_outputs: List) -> dict:
