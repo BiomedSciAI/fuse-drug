@@ -26,11 +26,11 @@ class FastaLoaderCustom(OpBase):
         super().__init__()
         self._fasta = IndexedFastaCustom(fasta_filename, **indexed_fasta_custom_kwargs)
 
-    def __call__(self, sample_dict: NDict, key_out="data.gt.seq"):
+    def __call__(self, sample_dict: NDict, key_out="data.seq"):
         """ """
         sid = get_sample_id(sample_dict)
         entry = self._fasta[sid]
-        sample_dict[key_out] = entry.seq
+        sample_dict[key_out] = entry[1]
 
         return sample_dict
 
@@ -49,7 +49,7 @@ class FastaLoader(OpBase):
         super().__init__()
         self._fasta = IndexedFasta(fasta_file_loc=fasta_file_loc, check_for_duplicate_names=check_for_duplicate_names)
 
-    def __call__(self, sample_dict: NDict, key_out="data.gt.seq"):
+    def __call__(self, sample_dict: NDict, key_out="data.seq"):
         """ """
         sid = get_sample_id(sample_dict)
         entry = self._fasta[sid]
