@@ -62,9 +62,7 @@ if __name__ == "__main__":
     )
 
     ### A workaround for "An invalid XML character" issue for the examples' unit-tests
-    examples_test_files = [
-        f for f in listdir(output) if (isfile(join(output, f)) and f.startswith("TEST-fusedrug_examples"))
-    ]
+    examples_test_files = [f for f in listdir(output) if (isfile(join(output, f)) and f.startswith("TEST-"))]
 
     for file in examples_test_files:
         file_path = join(output, file)
