@@ -105,7 +105,7 @@ class PLM_DTI_Module(pl.LightningModule):
         # given the batch_dict and FuseMedML style losses - collect the required values to compute the metrics on epoch_end
         fuse_pl.step_metrics(self.test_metrics, batch_dict)
         self.log("test_loss", loss)
-        sample_ids = batch_dict["data.input.id"] if self.do_save_preds_for_benchmark_eval else None
+        sample_ids = batch_dict["data.sample_id"] if self.do_save_preds_for_benchmark_eval else None
         return {"losses": batch_dict["losses"], "preds": batch_dict["model.output"], "ids": sample_ids}
 
     def test_epoch_end(self, test_step_outputs) -> None:

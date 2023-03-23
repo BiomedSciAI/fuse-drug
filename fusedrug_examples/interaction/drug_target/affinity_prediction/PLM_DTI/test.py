@@ -16,7 +16,7 @@ import data
 import plm_dti
 
 CONFIGS_DIR = os.path.join(os.path.dirname(__file__), 'configs')
-SELECTED_CONFIG = 'config.yaml'
+SELECTED_CONFIG = 'train_config.yaml'
 
 @hydra.main(config_path=CONFIGS_DIR, config_name=SELECTED_CONFIG)
 def main(cfg : DictConfig) -> None:
