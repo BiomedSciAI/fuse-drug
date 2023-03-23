@@ -38,38 +38,46 @@ model:
   learning_rate: 0.001
 
 data:
-  TITAN_benchmark:
-    lightning_data_module:       
-      ligands_tsv: "${paths.data}/ligand/TITAN_08-02-2023@single_protein_target@ligands.tsv"
-      targets_tsv: "${paths.data}/target/TITAN_08-02-2023@single_protein_target@targets.tsv"
-      pairs_tsv: "${paths.data}/pairs/TITAN_08-02-2023@single_protein_target@affinity_pairs_v0.1.tsv"
-      split_tsv: "${paths.data}/splits/splits/lenient/split_lenient_0.14_0.14_0.14_0.14_0.14_0.15_0.15.tsv"
+  benchmarks:
+    TITAN_benchmark:
+      lightning_data_module:       
+        ligands_tsv: "${paths.data}/ligand/TITAN_08-02-2023@single_protein_target@ligands.tsv"
+        targets_tsv: "${paths.data}/target/TITAN_08-02-2023@single_protein_target@targets.tsv"
+        pairs_tsv: "${paths.data}/pairs/TITAN_08-02-2023@single_protein_target@affinity_pairs_v0.1.tsv"
+        split_tsv: "${paths.data}/splits/splits/lenient/split_lenient_0.14_0.14_0.14_0.14_0.14_0.15_0.15.tsv"
 
-      use_folds: ['train1', 'train2', 'train3', 'train4', 'train5']                 
-      pairs_columns_to_extract: ['ligand_id', 'target_id', 'activity_label']
-      pairs_rename_columns: 
-        activity_label: 'data.label'
-      ligands_columns_to_extract: ['canonical_smiles', 'canonical_aa_sequence']
-      ligands_rename_columns:
-        canonical_smiles: 'ligand_str' 
-      targets_columns_to_extract: ['canonical_smiles', 'canonical_aa_sequence', 'full_canonical_aa_sequence']
-      targets_rename_columns:
-        canonical_aa_smiles: 'target_str'
+        use_folds: ['train1', 'train2', 'train3', 'train4', 'train5']                 
+        pairs_columns_to_extract: ['ligand_id', 'target_id', 'activity_label']
+        pairs_rename_columns: 
+          activity_label: 'data.label'
+        ligands_columns_to_extract: ['canonical_smiles', 'canonical_aa_sequence']
+        ligands_rename_columns:
+          canonical_smiles: 'ligand_str' 
+        targets_columns_to_extract: ['canonical_smiles', 'canonical_aa_sequence', 'full_canonical_aa_sequence']
+        targets_rename_columns:
+          canonical_aa_smiles: 'target_str'
+        
+        naming_conventions:
+          pairs_table_ligand_column: ligand_name
+          pairs_table_sequence_column: uniprot_accession
+          pairs_table_affinity_column: pIC50
+          ligand_padding_length: ${model.ligand_padding_length}
+          receptor_padding_length: ${model.receptor_padding_length}
+        
+        
+        # sample processing pipeline related
+        train_augment_molecule_shuffle_atoms: false    
+        train_augment_protein_flip: true
       
-      naming_conventions:
-        pairs_table_ligand_column: ligand_name
-        pairs_table_sequence_column: uniprot_accession
-        pairs_table_affinity_column: pIC50
-        ligand_padding_length: ${model.ligand_padding_length}
-        receptor_padding_length: ${model.receptor_padding_length}
+        train_batch_size: 128
+        eval_batch_size: 512
+        num_workers: 20   
+        train_shuffle: true
+
+  tokenizer:
+    combined_tokenizer_path:     "/dccstor/fmm/users/vadimra/dev/code/fuse-drug/fusedrug_examples/interaction/drug_target/affinity_prediction/t5_mol/tokenizer/pretrained/combined_AA_SMILES_CHEMBL_ZINC_WWITH_AUG_4272372_tokenizer.json"
+    AA_tokenizer_path:      "/dccstor/fmm/users/vadimra/dev/code/fuse-drug/fusedrug_examples/interaction/drug_target/affinity_prediction/t5_mol/tokenizer/pretrained/simple_protein_tokenizer_wrapped_special_AA.json"
+    SMILES_tokenizer_path:  "/dccstor/fmm/users/vadimra/dev/code/fuse-drug/fusedrug_examples/interaction/drug_target/affinity_prediction/t5_mol/tokenizer/pretrained/bpe_tokenizer_trained_on_chembl_zinc_with_aug_4272372_samples_balanced_1_1.json"
       
-      
-      # sample processing pipeline related
-      train_augment_molecule_shuffle_atoms: false    
-      train_augment_protein_flip: true
     
-      train_batch_size: 128
-      eval_batch_size: 512
-      num_workers: 20   
-      train_shuffle: true
 

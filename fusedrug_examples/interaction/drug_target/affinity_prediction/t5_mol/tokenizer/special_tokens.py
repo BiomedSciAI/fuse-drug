@@ -1,101 +1,111 @@
-
-'Amino Acid sequence processing utilities.'
+"Amino Acid sequence processing utilities."
 from collections import OrderedDict
+from typing import List, Union, Optional
 
-special_token_marker = ['<','>'] #In order to avoid confusion between AA symbols and SMILES symbols (e.g. 'H' is both 
+special_token_marker = [
+    "<",
+    ">",
+]  # In order to avoid confusion between AA symbols and SMILES symbols (e.g. 'H' is both
 # amino acid Histidine, and a Hydrogen atom in SMILES), and also between special tokens and viable AA/SMILES sequences,
 # we a. define individual AAs as special tokens; and b. mark every special token with special token markers (e.g. 'SEP' -> '<SEP>').
 # The markers are configurable, in case we come upon a representation that already uses similar characters (such as '[]' in SMILES).
-# The special tokens defined below are without the markers. The function get_special_tokens() adds the markers and returns all the 
+# The special tokens defined below are without the markers. The function get_special_tokens() adds the markers and returns all the
 # tokens. The function special_mark(input) takes a sequence, and marks every character in it (e.g. 'ABC' -> '<A><B><C>')
-special_tokens = ['UNK',    # Unknown token
-                  'PAD',    # Padding token
-                  'CLS',    # Classifier token (probably irrelevant in the T5 setting)
-                  'SEP',    # Separator token
-                  'MASK',   # Mask token
-                ]
-task_tokens = [# pairwise tasks
-               'BINDING',   # Binding affinity prediction task
-               # Masked fill in tasks
-               'FILLIN',    # Fill in masked inputs task
-               # Reorder tasks
-               'REORDER',   # Given a mixeded up molecule, reorder it (mixing should be over relatively long subsequences, not single AAs)
-               # Generation tasks
-               'TOAA',      # Translate SMILES to AA sequence task 
-               'ACTIVE',    # Task to derive an active site  
-               'GENESEQ',   # Genetic sequence from AAs (SMILES)
-               'INCREASE',  # Given a molecule and a property, generate a new molecule with increased property
-               'DECREASE',  # Given a molecule and a property, generate a new molecule with decreased property
-               # Structure prediction
-               'STRUCTURE', # predict 3D structure from sequence  
-               'DISTANCE',  # Given a protein and two groups of AAs in it, predicts the distance between the AA groups within a folded protein.                          
-               # Property predictions:
-               'SOLUBILITY',# Molecule water solubility
-               'TOXICITY',  # Binary (quantitative?) toxicity prediction task
-               'AB',        # Binary (quantitative?) antibacterial activity predictor
-               'ISACTIVE',  # Binary task to predict if first input is an active site of the second input
-               'ISSYNTHETIC', # Binary task to predict if the input protein is natural, or was generated (or filled in) by a model       
-               'PENETR',    # Task of membrane penetration prediction
-               'ABSORPTION',# Absorption measure predictor
-               'DISTRIBUTION', # Distribution measure
-               'METABOLISM', # Metabolism rate prediction
-               'EXCRETION', # Excretion rate prediction
-               'FLUORESCENCE', #
-               'STABILITY', #
-               'DISORDER',
-               'DISEASE',   # Prediction of a disease from an antibody sequence. Requires a group of tokens for the different diseases
-               # property modifier tokens:
-               'BINARY',    # make property prediction binary - yes/no
-               'REGRESSION', # Predict a numerical value of the property 
-               'ORGANISM', # Predict the source organism for the protein/antibody
-               '0',
-               '1',
-               '2',
-               '3',
-               '4',
-               '5',
-               '6',
-               '7',
-               '8',
-               '9',
-               '.',
-               'YES',       # Affirmative answer to the task question
-               'NO',        # Negative answer to the task question
-               
-            ]
+special_tokens = [
+    "UNK",  # Unknown token
+    "PAD",  # Padding token
+    "CLS",  # Classifier token (probably irrelevant in the T5 setting)
+    "SEP",  # Separator token
+    "MASK",  # Mask token
+]
+task_tokens = [  # pairwise tasks
+    "BINDING",  # Binding affinity prediction task
+    # Masked fill in tasks
+    "FILLIN",  # Fill in masked inputs task
+    # Reorder tasks
+    "REORDER",  # Given a mixeded up molecule, reorder it (mixing should be over relatively long subsequences, not single AAs)
+    # Generation tasks
+    "TOAA",  # Translate SMILES to AA sequence task
+    "ACTIVE",  # Task to derive an active site
+    "GENESEQ",  # Genetic sequence from AAs (SMILES)
+    "INCREASE",  # Given a molecule and a property, generate a new molecule with increased property
+    "DECREASE",  # Given a molecule and a property, generate a new molecule with decreased property
+    # Structure prediction
+    "STRUCTURE",  # predict 3D structure from sequence
+    "DISTANCE",  # Given a protein and two groups of AAs in it, predicts the distance between the AA groups within a folded protein.
+    # Property predictions:
+    "SOLUBILITY",  # Molecule water solubility
+    "TOXICITY",  # Binary (quantitative?) toxicity prediction task
+    "AB",  # Binary (quantitative?) antibacterial activity predictor
+    "ISACTIVE",  # Binary task to predict if first input is an active site of the second input
+    "ISSYNTHETIC",  # Binary task to predict if the input protein is natural, or was generated (or filled in) by a model
+    "PENETR",  # Task of membrane penetration prediction
+    "ABSORPTION",  # Absorption measure predictor
+    "DISTRIBUTION",  # Distribution measure
+    "METABOLISM",  # Metabolism rate prediction
+    "EXCRETION",  # Excretion rate prediction
+    "FLUORESCENCE",  #
+    "STABILITY",  #
+    "DISORDER",
+    "DISEASE",  # Prediction of a disease from an antibody sequence. Requires a group of tokens for the different diseases
+    # property modifier tokens:
+    "BINARY",  # make property prediction binary - yes/no
+    "REGRESSION",  # Predict a numerical value of the property
+    "ORGANISM",  # Predict the source organism for the protein/antibody
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    ".",
+    "YES",  # Affirmative answer to the task question
+    "NO",  # Negative answer to the task question
+]
 
 AA_tokens = [
-        'A',
-        'B',
-        'C',
-        'D',
-        'E',
-        'F',
-        'G',
-        'H',
-        'I',
-        'K',
-        'L',
-        'M',
-        'N',
-        'O',
-        'P',
-        'Q',
-        'R',
-        'S',
-        'T',
-        'U',
-        'V',
-        'W',
-        'X',
-        'Y',
-        'Z',
-    ]
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+]
 
-def special_wrap_input(x):
-    return special_token_marker[0]+x+special_token_marker[1]
 
-def special_mark_AA(in_str):
+def special_wrap_input(x:str)->str:
+    return special_token_marker[0] + x + special_token_marker[1]
+
+def strip_special_wrap(x:str)->str:
+    for spec_wrap in special_token_marker:
+        x = x.replace(spec_wrap, '')
+    return x
+
+
+def special_mark_AA(in_str:str)->str:
     """wraps every character of the input with special markers
 
     Args:
@@ -104,155 +114,172 @@ def special_mark_AA(in_str):
     Returns:
         str: input with every character wrapped by special token markers
     """
-    return ''.join([special_wrap_input(x) for x in in_str])
+    return "".join([special_wrap_input(x) for x in in_str])
 
-def get_special_tokens():
-    """Wraps all tokens in special_tokens, task_tokens and AA_tokens with special_token_marker and returns them in a single list 
+
+def get_special_tokens(subset: Optional[Union[str, List]] = None) -> List:
+    """Wraps all tokens in special_tokens, task_tokens and AA_tokens with special_token_marker and returns them in a single list
     TODO: add a selection argument (by default - None, i.e. selects everything): a list containing the names of special token groups
-    {'special_tokens', 'task_tokens', 'AA_tokens'} to return. 
-    Returns:
-        _type_: _description_
-    """
-    tokens_wrapped = [special_wrap_input(x) for x in special_tokens+task_tokens+AA_tokens]
-    return tokens_wrapped
+    {'special_tokens', 'task_tokens', 'AA_tokens'} to return.
 
+
+    Args:
+        subset (Optional, optional): _description_. Defaults to None.
+
+    Returns:
+        List: _description_
+    """
+    if isinstance(subset, str):
+        subset = [subset]
+    if subset != None:
+        for x in subset:
+            assert x in ["special", "task", "AA"]
+
+    tokens_wrapped = []
+    if subset == None or "special" in subset:
+        tokens_wrapped += [special_wrap_input(x) for x in special_tokens]
+    if subset == None or "task" in subset:
+        tokens_wrapped += [special_wrap_input(x) for x in task_tokens]
+    if subset == None or "AA" in subset:
+        tokens_wrapped += [special_wrap_input(x) for x in AA_tokens]
+    return tokens_wrapped
 
 
 IUPAC_CODES = OrderedDict(
     [
-        ('Ala', 'A'),
-        ('Asx', 'B'),  # Aspartate or Asparagine
-        ('Cys', 'C'),
-        ('Asp', 'D'),
-        ('Glu', 'E'),
-        ('Phe', 'F'),
-        ('Gly', 'G'),
-        ('His', 'H'),
-        ('Ile', 'I'),
-        ('Lys', 'K'),
-        ('Leu', 'L'),
-        ('Met', 'M'),
-        ('Asn', 'N'),
-        ('Pyl', 'O'),  # Pyrrolysin
-        ('Pro', 'P'),
-        ('Gln', 'Q'),
-        ('Arg', 'R'),
-        ('Ser', 'S'),
-        ('Thr', 'T'),
-        ('Sec', 'U'),  # Selenocysteine
-        ('Val', 'V'),
-        ('Trp', 'W'),
-        ('Xaa', 'X'),  # Any AA
-        ('Tyr', 'Y'),
-        ('Glx', 'Z'),  # Glutamate or Glutamine
+        ("Ala", "A"),
+        ("Asx", "B"),  # Aspartate or Asparagine
+        ("Cys", "C"),
+        ("Asp", "D"),
+        ("Glu", "E"),
+        ("Phe", "F"),
+        ("Gly", "G"),
+        ("His", "H"),
+        ("Ile", "I"),
+        ("Lys", "K"),
+        ("Leu", "L"),
+        ("Met", "M"),
+        ("Asn", "N"),
+        ("Pyl", "O"),  # Pyrrolysin
+        ("Pro", "P"),
+        ("Gln", "Q"),
+        ("Arg", "R"),
+        ("Ser", "S"),
+        ("Thr", "T"),
+        ("Sec", "U"),  # Selenocysteine
+        ("Val", "V"),
+        ("Trp", "W"),
+        ("Xaa", "X"),  # Any AA
+        ("Tyr", "Y"),
+        ("Glx", "Z"),  # Glutamate or Glutamine
     ]
 )
 
 IUPAC_VOCAB = OrderedDict(
     [
-        ('<PAD>', 0),
-        ('<MASK>', 1),
-        ('<CLS>', 2),
-        ('<SEP>', 3),
-        ('<UNK>', 4),
-        ('A', 5),
-        ('B', 6),
-        ('C', 7),
-        ('D', 8),
-        ('E', 9),
-        ('F', 10),
-        ('G', 11),
-        ('H', 12),
-        ('I', 13),
-        ('K', 14),
-        ('L', 15),
-        ('M', 16),
-        ('N', 17),
-        ('O', 18),
-        ('P', 19),
-        ('Q', 20),
-        ('R', 21),
-        ('S', 22),
-        ('T', 23),
-        ('U', 24),
-        ('V', 25),
-        ('W', 26),
-        ('X', 27),
-        ('Y', 28),
-        ('Z', 29),
-        ('<START>', 30),
-        ('<STOP>', 31),
+        ("<PAD>", 0),
+        ("<MASK>", 1),
+        ("<CLS>", 2),
+        ("<SEP>", 3),
+        ("<UNK>", 4),
+        ("A", 5),
+        ("B", 6),
+        ("C", 7),
+        ("D", 8),
+        ("E", 9),
+        ("F", 10),
+        ("G", 11),
+        ("H", 12),
+        ("I", 13),
+        ("K", 14),
+        ("L", 15),
+        ("M", 16),
+        ("N", 17),
+        ("O", 18),
+        ("P", 19),
+        ("Q", 20),
+        ("R", 21),
+        ("S", 22),
+        ("T", 23),
+        ("U", 24),
+        ("V", 25),
+        ("W", 26),
+        ("X", 27),
+        ("Y", 28),
+        ("Z", 29),
+        ("<START>", 30),
+        ("<STOP>", 31),
     ]
 )
 
 UNIREP_VOCAB = OrderedDict(
     [
-        ('<PAD>', 0),
-        ('M', 1),
-        ('R', 2),
-        ('H', 3),
-        ('K', 4),
-        ('D', 5),
-        ('E', 6),
-        ('S', 7),
-        ('T', 8),
-        ('N', 9),
-        ('Q', 10),
-        ('C', 11),
-        ('U', 12),
-        ('G', 13),
-        ('P', 14),
-        ('A', 15),
-        ('V', 16),
-        ('I', 17),
-        ('F', 18),
-        ('Y', 19),
-        ('W', 20),
-        ('L', 21),
-        ('O', 22),
-        ('X', 23),
-        ('Z', 23),
-        ('B', 23),
-        ('J', 23),
-        ('<CLS>', 24),
-        ('<SEP>', 25),
-        ('<START>', 26),
-        ('<STOP>', 27),
-        ('<UNK>', 28),
-        ('<MASK>', 29),
+        ("<PAD>", 0),
+        ("M", 1),
+        ("R", 2),
+        ("H", 3),
+        ("K", 4),
+        ("D", 5),
+        ("E", 6),
+        ("S", 7),
+        ("T", 8),
+        ("N", 9),
+        ("Q", 10),
+        ("C", 11),
+        ("U", 12),
+        ("G", 13),
+        ("P", 14),
+        ("A", 15),
+        ("V", 16),
+        ("I", 17),
+        ("F", 18),
+        ("Y", 19),
+        ("W", 20),
+        ("L", 21),
+        ("O", 22),
+        ("X", 23),
+        ("Z", 23),
+        ("B", 23),
+        ("J", 23),
+        ("<CLS>", 24),
+        ("<SEP>", 25),
+        ("<START>", 26),
+        ("<STOP>", 27),
+        ("<UNK>", 28),
+        ("<MASK>", 29),
     ]
 )
 
 HUMAN_KINASE_ALIGNMENT_VOCAB = OrderedDict(
     [
-        ('<PAD>', 0),
-        ('<MASK>', 1),
-        ('<CLS>', 2),
-        ('<SEP>', 3),
-        ('<UNK>', 4),
-        ('-', 5),
-        ('A', 6),
-        ('C', 7),
-        ('D', 8),
-        ('E', 9),
-        ('F', 10),
-        ('G', 11),
-        ('H', 12),
-        ('I', 13),
-        ('K', 14),
-        ('L', 15),
-        ('M', 16),
-        ('N', 17),
-        ('P', 18),
-        ('Q', 19),
-        ('R', 20),
-        ('S', 21),
-        ('T', 22),
-        ('V', 23),
-        ('W', 24),
-        ('Y', 25),
-        ('<START>', 26),
-        ('<STOP>', 27),
+        ("<PAD>", 0),
+        ("<MASK>", 1),
+        ("<CLS>", 2),
+        ("<SEP>", 3),
+        ("<UNK>", 4),
+        ("-", 5),
+        ("A", 6),
+        ("C", 7),
+        ("D", 8),
+        ("E", 9),
+        ("F", 10),
+        ("G", 11),
+        ("H", 12),
+        ("I", 13),
+        ("K", 14),
+        ("L", 15),
+        ("M", 16),
+        ("N", 17),
+        ("P", 18),
+        ("Q", 19),
+        ("R", 20),
+        ("S", 21),
+        ("T", 22),
+        ("V", 23),
+        ("W", 24),
+        ("Y", 25),
+        ("<START>", 26),
+        ("<STOP>", 27),
     ]
 )
 
@@ -267,34 +294,34 @@ Stop = -1, Start = 1, Neither = 0
 """
 AA_PROPERTIES_NUM = OrderedDict(
     [
-        ('A', (-1, 0, -1, -1, -1, 0)),
-        ('B', (1, -0.5, 1, -1, 0, 0)),  # mean of D, N
-        ('C', (1, 0, 1, -1, 1, 0)),
-        ('D', (1, -1, 1, -1, 1, 0)),
-        ('E', (1, -1, 1, -1, 1, 0)),
-        ('F', (-1, 0, -1, 1, -1, 0)),
-        ('G', (-1, 0, -1, -1, -1, 0)),
-        ('H', (1, 1, 1, -1, 1, 0)),
-        ('I', (-1, 0, -1, -1, -1, 0)),
-        ('K', (1, 1, 1, -1, 1, 0)),
-        ('L', (-1, 0, -1, -1, -1, 0)),
-        ('M', (-1, 0, -1, -1, -1, 0)),
-        ('N', (1, 0, 1, -1, -1, 0)),
-        ('O', (1, 0, 1, 1, 1, 0)),  # Pyrrolysine
-        ('P', (-1, 0, -1, -1, -1, 0)),
-        ('Q', (1, 0, 1, -1, -1, 0)),
-        ('R', (1, 1, 1, -1, 1, 0)),
-        ('S', (1, 0, 1, -1, -1, 0)),
-        ('T', (1, 0, 1, -1, -1, 0)),
-        ('U', (-1, 0, -1, -1, 1, 0)),  # Selenocyteine
-        ('V', (-1, 0, -1, -1, -1, 0)),
-        ('W', (-1, 0, -1, 1, -1, 0)),
-        ('X', (0.2, 0, 0.1, -0.7, -0.2, 0)),  # mean AA (Unknown)
-        ('Y', (1, 0, -1, 1, 1, 0)),
-        ('Z', (1, -0.5, 1, -1, 0, 0)),  # mean of E, Q
-        ('<PAD>', (0, 0, 0, 0, 0, 0)),
-        ('<START>', (0, 0, 0, 0, 0, 1)),
-        ('<STOP>', (0, 0, 0, 0, 0, -1)),
+        ("A", (-1, 0, -1, -1, -1, 0)),
+        ("B", (1, -0.5, 1, -1, 0, 0)),  # mean of D, N
+        ("C", (1, 0, 1, -1, 1, 0)),
+        ("D", (1, -1, 1, -1, 1, 0)),
+        ("E", (1, -1, 1, -1, 1, 0)),
+        ("F", (-1, 0, -1, 1, -1, 0)),
+        ("G", (-1, 0, -1, -1, -1, 0)),
+        ("H", (1, 1, 1, -1, 1, 0)),
+        ("I", (-1, 0, -1, -1, -1, 0)),
+        ("K", (1, 1, 1, -1, 1, 0)),
+        ("L", (-1, 0, -1, -1, -1, 0)),
+        ("M", (-1, 0, -1, -1, -1, 0)),
+        ("N", (1, 0, 1, -1, -1, 0)),
+        ("O", (1, 0, 1, 1, 1, 0)),  # Pyrrolysine
+        ("P", (-1, 0, -1, -1, -1, 0)),
+        ("Q", (1, 0, 1, -1, -1, 0)),
+        ("R", (1, 1, 1, -1, 1, 0)),
+        ("S", (1, 0, 1, -1, -1, 0)),
+        ("T", (1, 0, 1, -1, -1, 0)),
+        ("U", (-1, 0, -1, -1, 1, 0)),  # Selenocyteine
+        ("V", (-1, 0, -1, -1, -1, 0)),
+        ("W", (-1, 0, -1, 1, -1, 0)),
+        ("X", (0.2, 0, 0.1, -0.7, -0.2, 0)),  # mean AA (Unknown)
+        ("Y", (1, 0, -1, 1, 1, 0)),
+        ("Z", (1, -0.5, 1, -1, 0, 0)),  # mean of E, Q
+        ("<PAD>", (0, 0, 0, 0, 0, 0)),
+        ("<START>", (0, 0, 0, 0, 0, 1)),
+        ("<STOP>", (0, 0, 0, 0, 0, -1)),
     ]
 )
 """
@@ -303,40 +330,40 @@ Taken from: https://www.sigmaaldrich.com/life-science/metabolomics/learning-cent
 """
 AA_FEAT = OrderedDict(
     [
-        ('A', (89.1, 71.08, 2.34, 9.69, 0, 6, 47, 0)),
-        ('B', (132.615, 114.6, 1.95, 9.2, 1.825, 4.09, -29.5, 0)),  # D/N mean
-        ('C', (121.16, 103.15, 1.96, 10.28, 8.18, 5.07, 52, 0)),
-        ('D', (133.11, 115.09, 1.88, 9.6, 3.65, 2.77, -18, 0)),
-        ('E', (147.13, 129.12, 2.19, 9.67, 4.25, 3.22, 8, 0)),
-        ('F', (165.19, 147.18, 1.83, 9.13, 0, 5.48, 92, 0)),
-        ('G', (75.07, 57.05, 2.34, 9.6, 0, 5.97, 0, 0)),
-        ('H', (155.16, 137.14, 1.82, 9.17, 6, 7.59, -42, 0)),
-        ('I', (131.18, 113.16, 2.36, 9.6, 0, 6.02, 100, 0)),
-        ('K', (146.19, 128.18, 2.18, 8.95, 10.53, 9.74, -37, 0)),
-        ('L', (131.18, 113.16, 2.36, 9.6, 0, 5.98, 100, 0)),
-        ('M', (149.21, 131.2, 2.28, 9.21, 0, 5.74, 74, 0)),
-        ('N', (132.12, 114.11, 2.02, 8.8, 0, 5.41, -41, 0)),
-        ('O', (131.13, 113.11, 1.82, 9.65, 0, 0, 0, 0)),  # Pyrrolysine
-        ('P', (115.13, 97.12, 1.99, 10.6, 0, 6.3, -46, 0)),
-        ('Q', (146.15, 128.13, 2.17, 9.13, 0, 5.65, -18, 0)),
-        ('R', (174.2, 156.19, 2.17, 9.04, 12.48, 10.76, -26, 0)),
-        ('S', (105.09, 87.08, 2.21, 9.15, 0, 5.68, -7, 0)),
-        ('T', (119.12, 101.11, 2.09, 9.1, 0, 5.6, 13, 0)),
-        ('U', (168.07, 150.05, 5.47, 10.28, 0, 3.9, 52, 0)),  # Selenocyteine
-        ('V', (117.15, 99.13, 2.32, 9.62, 0, 5.96, 97, 0)),
-        ('W', (204.23, 186.22, 2.83, 9.39, 0, 5.89, 84, 0)),
+        ("A", (89.1, 71.08, 2.34, 9.69, 0, 6, 47, 0)),
+        ("B", (132.615, 114.6, 1.95, 9.2, 1.825, 4.09, -29.5, 0)),  # D/N mean
+        ("C", (121.16, 103.15, 1.96, 10.28, 8.18, 5.07, 52, 0)),
+        ("D", (133.11, 115.09, 1.88, 9.6, 3.65, 2.77, -18, 0)),
+        ("E", (147.13, 129.12, 2.19, 9.67, 4.25, 3.22, 8, 0)),
+        ("F", (165.19, 147.18, 1.83, 9.13, 0, 5.48, 92, 0)),
+        ("G", (75.07, 57.05, 2.34, 9.6, 0, 5.97, 0, 0)),
+        ("H", (155.16, 137.14, 1.82, 9.17, 6, 7.59, -42, 0)),
+        ("I", (131.18, 113.16, 2.36, 9.6, 0, 6.02, 100, 0)),
+        ("K", (146.19, 128.18, 2.18, 8.95, 10.53, 9.74, -37, 0)),
+        ("L", (131.18, 113.16, 2.36, 9.6, 0, 5.98, 100, 0)),
+        ("M", (149.21, 131.2, 2.28, 9.21, 0, 5.74, 74, 0)),
+        ("N", (132.12, 114.11, 2.02, 8.8, 0, 5.41, -41, 0)),
+        ("O", (131.13, 113.11, 1.82, 9.65, 0, 0, 0, 0)),  # Pyrrolysine
+        ("P", (115.13, 97.12, 1.99, 10.6, 0, 6.3, -46, 0)),
+        ("Q", (146.15, 128.13, 2.17, 9.13, 0, 5.65, -18, 0)),
+        ("R", (174.2, 156.19, 2.17, 9.04, 12.48, 10.76, -26, 0)),
+        ("S", (105.09, 87.08, 2.21, 9.15, 0, 5.68, -7, 0)),
+        ("T", (119.12, 101.11, 2.09, 9.1, 0, 5.6, 13, 0)),
+        ("U", (168.07, 150.05, 5.47, 10.28, 0, 3.9, 52, 0)),  # Selenocyteine
+        ("V", (117.15, 99.13, 2.32, 9.62, 0, 5.96, 97, 0)),
+        ("W", (204.23, 186.22, 2.83, 9.39, 0, 5.89, 84, 0)),
         (
-            'X',
+            "X",
             (136.74, 118.73, 2.06, 9.00, 2.51, 5.74, 21.86, 0),
         ),  # mean AA (Unknown)
-        ('Y', (181.19, 163.18, 2.2, 9.11, 10.07, 5.66, 49, 0)),
+        ("Y", (181.19, 163.18, 2.2, 9.11, 10.07, 5.66, 49, 0)),
         (
-            'Z',
+            "Z",
             (146.64, 128.625, 2.18, 9.4, 2.125, 4.435, -5, 0),
         ),  # mean of E, Q
-        ('<PAD>', (0, 0, 0, 0, 0, 0, 0, 0)),
-        ('<START>', (0, 0, 0, 0, 0, 0, 0, 1)),
-        ('<STOP>', (0, 0, 0, 0, 0, 0, 0, -1)),
+        ("<PAD>", (0, 0, 0, 0, 0, 0, 0, 0)),
+        ("<START>", (0, 0, 0, 0, 0, 0, 0, 1)),
+        ("<STOP>", (0, 0, 0, 0, 0, 0, 0, -1)),
     ]
 )
 """
