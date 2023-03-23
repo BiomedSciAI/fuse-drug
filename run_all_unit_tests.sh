@@ -69,12 +69,6 @@ create_env() {
                 echo "forcing cudatoolkit $force_cuda_version - Done"
             fi
 
-            echo "Updating git submodules"
-            git submodule sync
-            git submodule update --init --recursive
-            echo "Updating git submodules - Done"
-
-
             echo "Installing FuseMedML"
             conda run $env --no-capture-output --live-stream pip install git+https://github.com/BiomedSciAI/fuse-med-ml@master
             echo "Installing FuseMedML - Done"
@@ -85,7 +79,12 @@ create_env() {
             conda run $env --no-capture-output --live-stream pip install -r ./requirements/requirements_dev.txt
             echo "Installing core requirements - Done"
 
-            if [ $mode = "examples" ] || [ $mode = "all" ]; then
+            if [ $mode = "examples" ]; then
+                echo "Updating git submodules"
+                git submodule sync
+                git submodule update --init --recursive
+                echo "Updating git submodules - Done"
+
                 echo "Installing examples requirements"
                 conda run $env --no-capture-output --live-stream pip install -r ./fusedrug_examples/requirements.txt
                 echo "Installing examples requirements - Done"
