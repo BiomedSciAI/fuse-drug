@@ -1,6 +1,6 @@
 [submodule "Contrastive_PLM_DTI"]
 	path = fusedrug_examples/interaction/drug_target/affinity_prediction/PLM_DTI/Contrastive_PLM_DTI
-	url = https://github.com/alex-golts/Contrastive_PLM_DTI.git
+	url = "https://github.com/alex-golts/Contrastive_PLM_DTI.git"
 [submodule "fusedrug_examples/interaction/drug_target/affinity_prediction/PLM_DTI/Contrastive_PLM_DTI"]
 	path = fusedrug_examples/interaction/drug_target/affinity_prediction/PLM_DTI/Contrastive_PLM_DTI
-	url = https://github.com/alex-golts/Contrastive_PLM_DTI.git
+	url = "https://github.com/alex-golts/Contrastive_PLM_DTI.git"
