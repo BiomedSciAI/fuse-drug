@@ -57,6 +57,7 @@ if __name__ == "__main__":
     lgr = logging.getLogger("Fuse")
     lgr.setLevel(logging.INFO)
     logging.getLogger("lightning.pytorch").setLevel(logging.INFO)
+    logging.getLogger("lightning.pytorch.core").setLevel(logging.INFO)
 
     test_results = XMLTestRunner(output=output, verbosity=2, stream=sys.stdout).run(
         suite,
