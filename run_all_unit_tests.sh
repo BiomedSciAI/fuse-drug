@@ -23,7 +23,7 @@ create_env() {
     requirements=$(cat ./requirements/requirements.txt)
     requirements+=$(cat ./requirements/requirements_dev.txt)
 
-    if [ $mode = "examples" ] || [ $mode = "all" ]; then
+    if [ $mode = "examples" ]; then
         requirements+=$(cat ./fusedrug_examples/requirements.txt)
     fi
 
