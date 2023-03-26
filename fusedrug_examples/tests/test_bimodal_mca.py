@@ -19,6 +19,9 @@ class BimodalMCATestCase(unittest.TestCase):
         )
         self.cfg = OmegaConf.load(self.config_path)
         self.cfg.data.lightning_data_module.num_workers = 0  # TODO change to 10
+        self.cfg.data.lightning_data_module.train_batch_size = (
+            2  # solve "CUBLAS_STATUS_EXECUTION_FAILED" for 'test_data_and_model'.
+        )
         os.environ["BIMCA_RESULTS"] = tempfile.mkdtemp()
         setup_globals()  # defines resolver 'now'
 
