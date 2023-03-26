@@ -1,4 +1,6 @@
 import os
+from functools import partial
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from typing import OrderedDict, Dict, Any
@@ -71,7 +73,7 @@ def create_model(model_params: dict) -> nn.Module:
         model=torch_model,
         model_inputs=("data.drug.tokenized", "data.target.tokenized"),
         model_outputs=("model.backbone_features",),
-        post_forward_processing_function=lambda x: x.mean(dim=1),
+        post_forward_processing_function=partial(torch.mean, dim=1),
     )
 
     # classification head
@@ -83,7 +85,7 @@ def create_model(model_params: dict) -> nn.Module:
     return model
 
 
-def create_datamodule(paths: dict, params: dict):
+def create_datamodule(paths: dict, params: dict) -> DTIDataModule:
     """
     create dti datamodule
 
@@ -186,6 +188,7 @@ def run_train(paths: Dict[str, str], params: Dict[str, Any]) -> None:
         max_epochs=params["num_epochs"],
         accelerator=params["accelerator"],
         devices=params["num_devices"],
+        strategy=params["strategy"],
         callbacks=[lr_monitor] if params["log_lr"] else None,
     )
 
@@ -241,7 +244,6 @@ def run_infer(paths: Dict[str, str], params: Dict[str, Any]) -> None:
         default_root_dir=paths["model_dir"],
         accelerator=params["accelerator"],
         devices=params["num_devices"],
-        auto_select_gpus=True,
         max_epochs=0,
     )
 

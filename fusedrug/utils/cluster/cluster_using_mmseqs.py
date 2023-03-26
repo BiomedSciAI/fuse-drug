@@ -4,9 +4,11 @@ import hashlib
 import subprocess
 from fuse.utils.file_io import save_text_file_safe, read_text_file
 import os
+from typing import Dict
+from os.path import join
 
 
-def cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict) -> None:
+def cached_cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict) -> Dict:
     """
     Uses mmseqs to:
 
@@ -27,6 +29,7 @@ def cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict) -> Non
         input_fasta_filename: a fasta with an entry per molecular entity
         output_dir: where the output will be generated
         cluster_min_seqeunce_identity: the minimal sequence identity for member within a cluster
+        threads: number of threads (for multithreading)
         cluster_method: any of 'cluster', 'linclust':
             'cluster' is the "vanilla" one
             'linclust' is faster (claims linear runtime) but less accurate. Might be suitable for massive data.
@@ -37,11 +40,11 @@ def cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict) -> Non
     """
     os.makedirs(output_dir, exist_ok=True)
 
-    str_repr = get_function_call_str(cluter_impl, _ignore_kwargs_names=["num_workers"], _include_code=False, **kwargs)
+    str_repr = get_function_call_str(cluster_impl, _ignore_kwargs_names=["num_workers"], _include_code=False, **kwargs)
 
     hash_value = hashlib.md5(str_repr.encode()).hexdigest()
-    already_created_hash_filename = os.path.join(output_dir, "created_hash")
-    already_created_description_filename = os.path.join(output_dir, "created_desc")
+    already_created_hash_filename = join(output_dir, "created_hash")
+    already_created_description_filename = join(output_dir, "created_desc")
 
     rebuild_needed = False
     if os.path.isfile(already_created_hash_filename):
@@ -64,17 +67,20 @@ def cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict) -> Non
         print(f"Hash value indicates that it was already built, not rebuilding. See description: {existing_desc}")
         return
 
-    cluter_impl(output_dir=output_dir, **kwargs)
+    ans = cluster_impl(output_dir=output_dir, **kwargs)
 
     save_text_file_safe(already_created_description_filename, hash_value)
     save_text_file_safe(already_created_hash_filename, str_repr)
 
+    return ans
 
-def cluter_impl(
+
+def cluster(
     *,
     input_fasta_filename: str,
     output_dir: str,
     cluster_min_seqeunce_identity: float = 0.4,
+    threads: int = 30,
     cluster_method: str = "cluster",
     deduplicate: bool = True,
 ) -> None:
@@ -97,9 +103,13 @@ def cluter_impl(
             cmd = f"gunzip {input_fasta_filename}.gz"
             _run_system_cmd(cmd)
 
-    mmseqs_db_path = os.path.join(output_dir, "mmseqs_DB")
+    os.makedirs(join(output_dir, "mmseqs_workspace"))
+
+    mmseqs_db_path = join(output_dir, "mmseqs_workspace", "mmseqs_DB")
 
     print("cluster_method=", cluster_method)
+
+    ans = {}
 
     ########### Major step A - remove all redundancies
     if deduplicate:
@@ -111,20 +121,20 @@ def cluter_impl(
         _run_system_cmd(cmd)
 
         # mmseqs cluster DB DB_clu tmp --min-seq-id 1.0 --threads 32
-        mmseqs_cluster_full_identity = os.path.join(output_dir, "mmseqs_DB_cluster_full_identity")
-        mmseqs_tmp_for_clustering = os.path.join(output_dir, "mmseqs_DB_tmp")
+        mmseqs_cluster_full_identity = join(output_dir, "mmseqs_workspace", "mmseqs_DB_cluster_full_identity")
+        mmseqs_tmp_for_clustering = join(output_dir, "mmseqs_workspace", "mmseqs_DB_tmp")
         print(
             r"A.2 - clustering with 100% identity to remove duplicates. The generated DB does not contain (directly) the sequences data, it only maps clusters centers to members."
         )
-        cmd = f"mmseqs {cluster_method} {mmseqs_db_path} {mmseqs_cluster_full_identity} {mmseqs_tmp_for_clustering} -c 1.0 --min-seq-id 1.0 --threads 32"
+        cmd = f"mmseqs {cluster_method} {mmseqs_db_path} {mmseqs_cluster_full_identity} {mmseqs_tmp_for_clustering} -c 1.0 --min-seq-id 1.0 --threads {threads}"
         _run_system_cmd(cmd)
 
-        mmseqs_only_representatives = os.path.join(output_dir, "mmseqs_DB_full_identity_representitives")
+        mmseqs_only_representatives = join(output_dir, "mmseqs_workspace", "mmseqs_DB_full_identity_representitives")
         print(r"A.3 - keeping only cluster centers")
         cmd = f"mmseqs createsubdb {mmseqs_cluster_full_identity} {mmseqs_db_path}  {mmseqs_only_representatives}"
         _run_system_cmd(cmd)
 
-        mmseqs_only_unique_sequences_representatives_fasta = os.path.join(output_dir, "unique_representatives.fasta")
+        mmseqs_only_unique_sequences_representatives_fasta = join(output_dir, "unique_representatives.fasta")
         print(r"A.4 - creating a fasta file that contains only the representatives, including their sequence data.")
         cmd = f"mmseqs convert2fasta {mmseqs_only_representatives} {mmseqs_only_unique_sequences_representatives_fasta}"
         _run_system_cmd(cmd)
@@ -137,7 +147,7 @@ def cluter_impl(
     # also describes how to convert it to TSV for convinience
 
     print("B.1 - creating mmseqs DB for our unique DB")
-    step_B_initial_db = os.path.join(output_dir, "step_B_initial_DB")
+    step_B_initial_db = join(output_dir, "mmseqs_workspace", "step_B_initial_DB")
 
     if deduplicate:
         cmd = f"mmseqs createdb {mmseqs_only_unique_sequences_representatives_fasta} {step_B_initial_db}"
@@ -149,16 +159,31 @@ def cluter_impl(
     print(
         "B.2 - cluster the remaining unique representatives into different clusters based on the requested sequence identity threshold"
     )
-    mmseqs_tmp_2_for_clustering = os.path.join(output_dir, "mmseqs_DB_tmp_2")
-    clustered_db = os.path.join(output_dir, "mmseqs_DB_clustered")
-    cmd = f"mmseqs {cluster_method} {step_B_initial_db} {clustered_db} {mmseqs_tmp_2_for_clustering} -c 1.0 --min-seq-id {cluster_min_seqeunce_identity} --threads 32"
+    mmseqs_tmp_2_for_clustering = join(output_dir, "mmseqs_workspace", "mmseqs_DB_tmp_2")
+    clustered_db = join(output_dir, "mmseqs_workspace", "mmseqs_DB_clustered")
+    cmd = f"mmseqs {cluster_method} {step_B_initial_db} {clustered_db} {mmseqs_tmp_2_for_clustering} -c 1.0 --min-seq-id {cluster_min_seqeunce_identity} --threads {threads}"
     _run_system_cmd(cmd)
 
     print(
         "B.3 - generate cluster TSV for convinience"
     )  # for massive datasets, we might skip this and use mmseqs output format directly (possibly worth checking if there's already a python lib that handles this)
-    clustered_tsv = os.path.join(output_dir, "clustered.tsv")
+    clustered_tsv = join(output_dir, "clustered.tsv")
     cmd = f"mmseqs createtsv {step_B_initial_db} {step_B_initial_db} {clustered_db} {clustered_tsv}"
+    _run_system_cmd(cmd)
+
+    ####
+    final_clusters_mmseqs_only_representatives = join(
+        output_dir, "mmseqs_workspace", "mmseqs_DB_final_clusters_representitives"
+    )
+    print(r"B.4 - create a sub DB only with the clusters centers (representatives)")
+    cmd = f"mmseqs createsubdb {clustered_db} {step_B_initial_db}  {final_clusters_mmseqs_only_representatives}"
+    _run_system_cmd(cmd)
+
+    final_clusters_centers_fasta = join(output_dir, "clusters_representatives.fasta")
+    print(
+        r"B.5 - creating a fasta file that contains only the representatives (clusters centers), including their sequence data."
+    )
+    cmd = f"mmseqs convert2fasta {final_clusters_mmseqs_only_representatives} {final_clusters_centers_fasta}"
     _run_system_cmd(cmd)
 
     print("--------------------------------------")
@@ -166,7 +191,20 @@ def cluter_impl(
     print("--------------------------------------")
     if deduplicate:
         print(f"a deduplicated FASTA file: {mmseqs_only_unique_sequences_representatives_fasta}")
+        ans["deduplicated_fasta"] = mmseqs_only_unique_sequences_representatives_fasta
+
     print(f"a TSV file containing the clusters (no sequence information): {clustered_tsv}")
+    ans["cluster_tsv"] = clustered_tsv
+
+    print(
+        f"a FASTA file containing the clusters centers (representatives) including sequence information: {final_clusters_centers_fasta}"
+    )
+    ans["clusters_centers_fasta"] = final_clusters_centers_fasta
+
+    return ans
+
+
+cluster_impl = cluster  # for backward compatibility
 
 
 def _run_system_cmd(cmd: str) -> None:
