@@ -4,7 +4,6 @@ from fusedrug.data.molecule.ops import SmilesRandomizeAtomOrder, SmilesToRDKitMo
 import os
 from fuse.data import OpBase
 from fuse.utils import NDict
-from fusedrug.utils.file_formats import IndexedTextTable
 from fusedrug.data.protein.ops import ProteinRandomFlipOrder, OpToUpperCase, OpKeepOnlyUpperCase
 from fusedrug.data.molecule.tokenizer.pretrained import get_path as get_molecule_pretrained_tokenizer_path
 from fusedrug.data.protein.tokenizer.pretrained import get_path as get_protein_pretrained_tokenizer_path
@@ -332,46 +331,3 @@ class AffinityDataModule(pl.LightningDataModule):
             test_dataset, batch_size=self.eval_batch_size, shuffle=False, drop_last=False, num_workers=self.num_workers
         )
         return dl
-
-
-### Ops
-# TODO: consider moving to fusedrug/data/ops (???)
-
-
-class OpLoadActiveSiteAlignmentInfo(OpBase):
-    def __init__(self, kinase_alignment_smi: str, **kwargs: Any):
-        """
-        example in KINASE_ALIGNMENT_SMI_EXAMPLE env variable
-        """
-
-        super().__init__(**kwargs)
-        self.kinase_alignment_smi_name = kinase_alignment_smi
-        self.kinase_alignment_smi = IndexedTextTable(
-            self.kinase_alignment_smi_name,
-            first_row_is_columns_names=True,
-            id_column_idx=1,
-            columns_num_expectation=3,
-            allow_access_by_id=True,
-        )
-
-    def __call__(
-        self,
-        sample_dict: NDict,
-        op_id: Optional[str] = None,
-        key_in: str = "data.input.protein_str",
-        key_out: str = "data.input.protein_str",
-    ) -> NDict:
-        """
-        params
-            key_in:str - expected to contain only the active site, in high case
-            key_out:str - will contain the entire sequence, high case for amino acids inside the active site, low case for amino acids outside it
-        """
-        data = sample_dict[key_in]
-        assert isinstance(data, str)
-
-        _, data = self.kinase_alignment_smi[data]
-        aligned_seq = data.aligned_protein_seq
-
-        sample_dict[key_out] = aligned_seq
-
-        return sample_dict
