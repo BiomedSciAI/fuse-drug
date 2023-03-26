@@ -26,11 +26,14 @@ from fusedrug.data.interaction.drug_target.datasets.dti_binding_dataset import (
 )
 import json
 import os
-from typing import Dict
+from typing import Dict, Optional, Union, List
 from rdkit import Chem
 import time
+import copy
 
-FORBIDDEN = set(["B", "O", "U", "X", "Z"])
+from fuse.data import OpBase
+from fuse.utils import NDict
+
 
 """
 Yoel's base tokenizer code: fuse-drug/fusedrug/data/tokenizer/fast_tokenizer_learn.py
@@ -64,12 +67,40 @@ Thoughts:
     - Merges    
         The most naive approach for now - concatenate the two merges and hope for the best. A slightly less naive approach, as mentioned here: https://github.com/huggingface/tokenizers/issues/690,
         would be to merge the merges by order of token length.
-    
+5. Questions ro raise:
+    - Word Level or BPE tokenizer? Yoel uses word-level on AAs, but if we want to keep an option of training on SMILES, we should probably use BPE. A protein is a single molecule
+        in terms of SMILES, and it's not straightforward to separate into words. It's simpler in AA representation, but I'm not sure we want to teach the network this way.
+    - "<AA>" tokens as regular or special tokens? 
+        Regular: 
+            Cons:
+            - Requires to also have an "AA" token for every "<AA>", and also "<" and ">" tokens (with appropriate merge entries to put them together). This will overlap with other representations.
+            Pros:
+            - Can be trained
+        Special:
+            Cons:
+            - Must be manually constructed
+    - Do we want to represent AAs as "<A>", "<B>",... or, maybe, we can have them as non-ascii characters?
 
 """
 
 
-def aas_to_smiles(aas, sanitize=True):
+TITAN_AA_PATH = (
+    "/dccstor/fmm/users/vadimra/dev/data/TITAN/08-02-2023/public/epitopes.csv"
+)
+TITAN_SMILES_PATH = (
+    "/dccstor/fmm/users/vadimra/dev/data/TITAN/08-02-2023/public/epitopes.smi"
+)
+
+
+def get_training_corpus(dataset):
+    for i in range(0, len(dataset), 1000):
+        yield dataset[i : i + 1000]
+
+
+FORBIDDEN = set(["B", "O", "U", "X", "Z"])
+
+
+def aas_to_smiles(aas, sanitize: Optional[bool] = True):
     """
     Taken from pytoda.proteins.utils
     Converts an amino acid sequence (IUPAC) into SMILES.
@@ -77,7 +108,7 @@ def aas_to_smiles(aas, sanitize=True):
     Args:
         aas (str): The amino acid sequence to be converted.
             Following IUPAC notation.
-        sanitize (bool, optional): [description]. Defaults to True.
+        sanitize (bool, optional): whether or not to sanitize the molecule. Defaults to True.
 
     Raises:
         TypeError: If aas is not a string.
@@ -99,32 +130,165 @@ def aas_to_smiles(aas, sanitize=True):
     return smiles
 
 
-TITAN_AA_PATH = (
-    "/dccstor/fmm/users/vadimra/dev/data/TITAN/08-02-2023/public/epitopes.csv"
-)
-TITAN_SMILES_PATH = (
-    "/dccstor/fmm/users/vadimra/dev/data/TITAN/08-02-2023/public/epitopes.smi"
-)
+class OpAA2SMILES(OpBase):
+    def __init__(self, **kwargs) -> None:
+        """An operator to translate AA sequence to SMILES representation"""
+
+        super().__init__(**kwargs)
+
+    def __call__(
+        self,
+        sample_dict: NDict,
+        op_id: Optional[str] = None,
+        key_in="data.input.protein_str",
+        key_out="data.input.protein_str",
+    ) -> NDict:
+        """
+        params
+            key_in:str - expected to contain only the AA sequence, in upper case
+            key_out:str - will contain the SMILES representation of the input sequence
+        """
+        data = sample_dict[key_in]
+        assert isinstance(data, str)
+
+        sample_dict[key_out] = aas_to_smiles(data)
+
+        return sample_dict
 
 
-def get_training_corpus(dataset):
-    for i in range(0, len(dataset), 1000):
-        yield dataset[i : i + 1000]
+class OpAddDoubleInputTaskTokens(OpBase):
+    def __init__(self, **kwargs):
+        """_summary_"""
+        super().__init__(**kwargs)
+
+    def __call__(
+        self,
+        sample_dict: NDict,
+        op_id: Optional[str] = None,
+        key_in_target: str = "data.input.target_str",
+        key_in_ligand: str = "data.input.ligand_str",
+        key_out: str = "data.input.task_input_str",
+        task_prefix_token: str = "<BINDING>",
+        separator_token: str = "<SEP>",
+    ) -> NDict:
+        """_summary_
+
+        Args:
+            sample_dict (NDict): _description_
+            op_id (Optional[str]): _description_
+            key_in_target (str, optional): target molecule key. Defaults to "data.input.target_str".
+            key_in_ligand (str, optional): ligand molecule key. Defaults to "data.input.ligand_str".
+            key_out (str, optional): output key. Defaults to "data.input.task_input_str".
+            task_prefix_token (str, optional): token that identifies the task. Defaults to "<BINDING>".
+            separator_token (str, optional): separator token. Defaults to "<SEP>".
+
+        Returns:
+            NDict: _description_
+        """
+        target = sample_dict[key_in_target]
+        assert isinstance(target, str)
+        ligand = sample_dict[key_in_ligand]
+        assert isinstance(ligand, str)
+
+        sample_dict[key_out] = (
+            task_prefix_token + target + separator_token + ligand + separator_token
+        )
+
+        return sample_dict
 
 
-"""
-Given two tokenizers, combine them and create a new tokenizer
-Usage: python combine_tokenizers.py --tokenizer1 ../config/en/roberta_8 --tokenizer2 ../config/hi/roberta_8 --save_dir ../config/en/en_hi/roberta_8
-"""
-
-
-def combine_tokenizers(path_primary: str, path_secondary: str, path_out: str) -> None:
-    """Combines two tokenizers
+def add_special_tokens(
+    add_tokens: Union[str, List],
+    tokenizer_json: Union[str, Dict],
+    path_out: Optional[str] = None,
+) -> Dict:
+    """Adds special tokens to a tokenizer json file.
 
     Args:
-        args (_type_): _description_
+        add_tokens (Union[str, List]): A list of special tokens to add (single token if str)
+        tokenizer_json (Union[str, Dict]): json dict or filepath of the tokenizer
+        path_out (Optional[str]): output path for the new tokenizer. If None - the tokenizer json is not saved, only returned.
+
+    Returns:
+        Dict: json of the new tokenizer
     """
-    # Load both the json files, take the union, and store it
+    added_tokens_key = "added_tokens"
+    content_key = "content"
+    index_key = "id"
+    model_key = "model"
+    vocab_key = "vocab"
+    if isinstance(tokenizer_json, str):
+        tokenizer_json = json.load(open(tokenizer_json))
+    else:
+        tokenizer_json = copy.deepcopy(tokenizer_json)
+
+    if isinstance(add_tokens, str):
+        add_tokens = [add_tokens]
+
+    if added_tokens_key in tokenizer_json and len(tokenizer_json[added_tokens_key]):
+        # The added_tokens structure in the json may vary, so we'll try to copy a sample, if there is one:
+        sample_added_token = copy.deepcopy(tokenizer_json[added_tokens_key][0])
+    else:
+        sample_added_token = {
+            index_key: 10000,
+            content_key: "<sample>",
+            "single_word": False,
+            "lstrip": False,
+            "rstrip": False,
+            "normalized": False,
+            "special": True,
+        }
+
+    # Check how many total tokens are there:
+    if len(tokenizer_json[model_key][vocab_key]) > 0:
+        next_token_ind = max(tokenizer_json[model_key][vocab_key].values()) + 1
+    else:
+        # tokenizer_json["model"]["vocab"] contains all tokens, special and regular, so if it's empty, the tokenizer has zero tokens
+        next_token_ind = 0
+
+    for t in add_tokens:
+        curr_token = copy.deepcopy(sample_added_token)
+        curr_token[content_key] = t
+        curr_token[index_key] = next_token_ind
+
+        tokenizer_json[added_tokens_key].append(curr_token)
+        tokenizer_json[model_key][vocab_key][t] = next_token_ind
+        next_token_ind += 1
+
+    if path_out != None:
+        # Save the json
+        with open(path_out, "w") as fp:
+            json.dump(tokenizer_json, fp, ensure_ascii=False, indent=2)
+    return tokenizer_json
+
+
+def combine_tokenizers(
+    path_primary: str,
+    path_out: str,
+    path_secondary: str,
+    add_tokens: Optional[Union[str, List]] = None,
+) -> None:
+    """Combines two tokenizer jsons and saves the resulting json in path_out.
+    The merging is done in such a way as to keep the indices of tokens of the primary tokenizer, and adjust only the indices of the secondary tokenizer. This way, we can use
+    pre-trained models trained using the primary tokenizer.
+    In order to do that, 3 entities must be merged in the jsons of the two tokenizers:
+    - Special tokens:
+        This is problematic, because special tokens are found in the lower indices. It may be possible to add them in higher ones - need to check this.
+        Currently, the only option is to keep the special tokens of the primary tokenizer (this would be AA, with all the tokens to be used in T5 and other models)
+    - Vocabulary
+        Go over the secondary tokenizer vocabulary and add all its tokens (except the ones already in the primary tokenizer)
+    - Merges
+        The most naive approach for now - concatenate the two merges and hope for the best. A slightly less naive approach, as mentioned here: https://github.com/huggingface/tokenizers/issues/690,
+        would be to merge the merges by order of token length.
+
+    Args:
+        path_primary (str): primary tokenizer json
+        path_secondary (str): secondary tokenizer json
+        path_out (str): output tokenizer filename
+        add_tokens (Optional[Union[str, List]]): A list of special tokens to add (single token if str). If None - no tokens are added beyond those in the primary tokenizer.
+    """
+
+    # Load the json files
     json1 = json.load(open(path_primary))
     json2 = json.load(open(path_secondary))
 
@@ -169,31 +333,19 @@ def combine_tokenizers(path_primary: str, path_secondary: str, path_out: str) ->
             idx += 1
 
     json1["model"]["vocab"] = new_vocab
+    json1 = add_special_tokens(tokenizer_json=json1, add_tokens=add_tokens)
 
     # Make the output directory if necessary
     if not os.path.exists(os.path.dirname(path_out)):
         os.makedirs(os.path.dirname(path_out))
 
-    # Save the vocab
+    # Save the json
     with open(path_out, "w") as fp:
         json.dump(json1, fp, ensure_ascii=False, indent=2)
 
     # Instantiate the new tokenizer
     # tokenizer = Tokenizer.from_file(path_out)
     a = 1
-
-
-# def main():
-#     parser = argparse.ArgumentParser()
-
-#     # Dataset Arguments
-#     parser.add_argument("--tokenizer1", type=str, required=True, help="")
-#     parser.add_argument("--tokenizer2", type=str, required=True, help="")
-#     parser.add_argument("--save_dir", type=str, required=True, help="")
-
-#     args = parser.parse_args()
-
-#     combine_tokenizers(args)
 
 
 def create_tokenizers(cfg_raw: Dict):
@@ -252,7 +404,7 @@ def create_tokenizers(cfg_raw: Dict):
     print("Fin")
 
 
-def test_tokenizers(cfg_raw: Dict):
+def test_tokenizers(cfg_raw: Dict, test_token: Optional[str] = None):
 
     # Normalizer (an alternative to special_mark_AA())
     AA_tokens = get_special_tokens(subset=["AA"])
@@ -276,23 +428,25 @@ def test_tokenizers(cfg_raw: Dict):
     print(tokenizer.get_vocab_size())
 
     print(AA_normalizer.normalize_str(test_sequence))
-    loaded_tokenizer_w_norm = Tokenizer.from_file(
-        cfg_raw["data"]["tokenizer"]["combined_tokenizer_path"]
-    )
-    # tokenizer_w_norm.normalizer = AA_normalizer
 
     loaded_AA_tokenizer = Tokenizer.from_file(
         cfg_raw["data"]["tokenizer"]["AA_tokenizer_path"]
     )
 
+    if test_token == None:
+        test_token = ""
     encoding_norm = tokenizer.encode(
-        special_wrap_input("BINDING")
+        test_token
+        + special_wrap_input("BINDING")
         + AA_normalizer.normalize_str(test_sequence)
         + special_wrap_input("SEP")
         + aas_to_smiles(test_sequence)
+        + special_wrap_input("SEP")
     )
+
     print(f"Combined tokenizer tokens ({len(encoding_norm.tokens)}):")
     print(encoding_norm.tokens)
+    print(encoding_norm.ids)
 
     encoding_AA = loaded_AA_tokenizer.encode(AA_normalizer.normalize_str(test_sequence))
     print(f"AA tokenizer tokens ({len(encoding_AA.tokens)}):")
@@ -332,12 +486,14 @@ def main(cfg: DictConfig) -> None:
     #                                       (OpToTensor(), {'dtype': torch.float32, 'key': 'data.label'})],
     #                     )
     # create_tokenizers(cfg_raw=cfg_raw) #We don't want to run this with the same config, so as not to overwrite the tokenizer jsons we use
+    test_token = special_wrap_input("TEST_TOKEN")
     combine_tokenizers(
         path_primary=cfg_raw["data"]["tokenizer"]["AA_tokenizer_path"],
         path_secondary=cfg_raw["data"]["tokenizer"]["SMILES_tokenizer_path"],
         path_out=cfg_raw["data"]["tokenizer"]["combined_tokenizer_path"],
+        add_tokens=test_token,
     )
-    test_tokenizers(cfg_raw=cfg_raw)
+    test_tokenizers(cfg_raw=cfg_raw, test_token=test_token)
 
 
 if __name__ == "__main__":
