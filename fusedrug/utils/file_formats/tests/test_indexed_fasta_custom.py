@@ -11,7 +11,7 @@ class TestIndexedFastaCustom(unittest.TestCase):
         ifc = IndexedFastaCustom(fasta_path, force_recreate_index=True)
 
         identifier, data, full_description = ifc[2]
-        self.assertEqual(self.get_raw_identifier(identifier), "sp|Q197F8|002R_IIV3")
+        self.assertEqual(identifier[0], "sp|Q197F8|002R_IIV3")
         self.assertEqual(
             data,
             "MASNTVSAQGGSNRPVRDFSNIQDVAQFLLFDPIWNEQPGSIVPWKMNREQALAERYPELQTSEPSEDYSGPVESLELLPLEIKLDIMQYLSWEQISWCKHPWLWTRWYKDNVVRVSAITFEDFQREYAFPEKIQEIHFTDTRAEEIKAILETTPNVTRLVIRRIDDMNYNTHGDLGLDDLEFLTHLMVEDACGFTDFWAPSLTHLTIKNLDMHPRWFGPVMDGIKSMQSTLKYLYIFETYGVNKPFVQWCTDNIETFYCTNSYRYENVPRPIYVWVLFQEDEWHGYRVEDNKFHRRYMYSTILHKRDTDWVENNPLKTPAQVEMYKFLLRISQLNRDGTGYESDSDPENEHFDDESFSSGEEDSSDEDDPTWAPDSDDSDWETETEEEPSVAARILEKGKLTITNLMKSLGFKPKPKKIQSIDRYFCSLDSNYNSEDEDFEYDSDSEDDDSDSEDDC",
@@ -30,7 +30,7 @@ class TestIndexedFastaCustom(unittest.TestCase):
         )
 
         identifier, data, full_description = ifc[2]
-        self.assertEqual(self.get_raw_identifier(identifier), "Q197F8")
+        self.assertEqual(identifier, "Q197F8")
         self.assertEqual(
             data,
             "MASNTVSAQGGSNRPVRDFSNIQDVAQFLLFDPIWNEQPGSIVPWKMNREQALAERYPELQTSEPSEDYSGPVESLELLPLEIKLDIMQYLSWEQISWCKHPWLWTRWYKDNVVRVSAITFEDFQREYAFPEKIQEIHFTDTRAEEIKAILETTPNVTRLVIRRIDDMNYNTHGDLGLDDLEFLTHLMVEDACGFTDFWAPSLTHLTIKNLDMHPRWFGPVMDGIKSMQSTLKYLYIFETYGVNKPFVQWCTDNIETFYCTNSYRYENVPRPIYVWVLFQEDEWHGYRVEDNKFHRRYMYSTILHKRDTDWVENNPLKTPAQVEMYKFLLRISQLNRDGTGYESDSDPENEHFDDESFSSGEEDSSDEDDPTWAPDSDDSDWETETEEEPSVAARILEKGKLTITNLMKSLGFKPKPKKIQSIDRYFCSLDSNYNSEDEDFEYDSDSEDDDSDSEDDC",
@@ -56,19 +56,6 @@ class TestIndexedFastaCustom(unittest.TestCase):
         ans_2 = ifc["Q197F8"]
 
         self.assertTupleEqual(ans_1, ans_2)
-
-    def get_raw_identifier(self, identifier: Union[str, Tuple[str, str]]) -> str:
-        """
-        An helper function to (maybe temporarily) address Yoel's changes in PR #20 at:
-        fusedrug_public/fusedrug/utils/file_formats/indexed_fasta_custom.py line 27~
-
-        TODO double check with Yoel
-        """
-
-        if isinstance(identifier, tuple):
-            return identifier[0]
-        else:
-            return identifier
 
 
 if __name__ == "__main__":
