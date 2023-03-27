@@ -115,28 +115,18 @@ else
     env_path="no"
 fi
 
-if [ "$#" -gt 2 ]; then
-    stage=$3
-else
-    stage="all"
-fi
+echo "Create core env"
+create_env $force_cuda_version $env_path "core"
+echo "Create core env - Done"
 
-if [ $stage = "core" ] || [ $mode = "all" ]; then
-    echo "Create core env"
-    create_env $force_cuda_version $env_path "core"
-    echo "Create core env - Done"
+echo "Running core unittests in $ENV_TO_USE"
+conda run $env --no-capture-output --live-stream python ./run_all_unit_tests.py core
+echo "Running core unittests - Done"
 
-    echo "Running core unittests in $ENV_TO_USE"
-    conda run $env --no-capture-output --live-stream python ./run_all_unit_tests.py core
-    echo "Running core unittests - Done"
-fi
+echo "Create examples env"
+create_env $force_cuda_version $env_path "examples"
+echo "Create examples env - Done"
 
-if [ $stage = "examples" ] || [ $mode = "all" ]; then
-    echo "Create examples env"
-    create_env $force_cuda_version $env_path "examples"
-    echo "Create examples env - Done"
-
-    echo "Running examples unittests in $ENV_TO_USE"
-    conda run $env --no-capture-output --live-stream python ./run_all_unit_tests.py examples
-    echo "Running examples unittests - Done"
-fi
+echo "Running examples unittests in $ENV_TO_USE"
+conda run $env --no-capture-output --live-stream python ./run_all_unit_tests.py examples
+echo "Running examples unittests - Done"

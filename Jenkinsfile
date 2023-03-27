@@ -9,23 +9,11 @@ pipeline {
             }
         }
 
-        stage('Core') {
+        stage('Unit Test') {
             steps {
                 sh '''
                 rm -rf test-reports/TEST-*.xml
-                jbsub -wait -out ccc_log.txt -queue x86_1h -mem 40g -cores "10+1" -require 'v100' ./run_all_unit_tests.sh 11.8 /dccstor/fuse_med_ml/fuse-drug/cicd/envs/ core
-                echo "------ printing ccc_log.txt -----"
-                cat "./ccc_log.txt"
-                echo "------ Done printing ccc_log.txt ------"
-                '''
-            }
-        }
-
-        stage('Examples') {
-            steps {
-                sh '''
-                rm -rf test-reports/TEST-*.xml
-                jbsub -wait -out ccc_log.txt -queue x86_1h -mem 40g -cores "10+1" -require 'v100' ./run_all_unit_tests.sh 11.8 /dccstor/fuse_med_ml/fuse-drug/cicd/envs/ examples
+                jbsub -wait -out ccc_log.txt -queue x86_1h -mem 40g -cores "10+1" -require 'v100' ./run_all_unit_tests.sh 11.8 /dccstor/fuse_med_ml/fuse-drug/cicd/envs/
                 echo "------ printing ccc_log.txt -----"
                 cat "./ccc_log.txt"
                 echo "------ Done printing ccc_log.txt ------"
