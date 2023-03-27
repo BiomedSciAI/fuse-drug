@@ -3,7 +3,7 @@ splits to train/val/test/etc. sets based on cluster_using_mmseqs.py output
 """
 
 from frozendict import frozendict
-from typing import Dict
+from typing import Dict, List
 from os.path import join, dirname, basename
 import mmap
 import numpy as np
@@ -12,6 +12,8 @@ from collections import defaultdict
 
 def split(
     cluster_tsv: str,
+    cluster_center_column_name: str,
+    columns_names: List[str] = None,    
     splits_desc: Dict = frozendict(train=0.90, val=0.05, test=0.05),
 ) -> Dict:
     """
@@ -25,7 +27,8 @@ def split(
 
     Args:
         cluster_tsv - a TSV (like csv but tab separated) at the expected columns structure (no title line)
-        cluster_center, member
+        cluster_center_column_name - the name of the column that contains the cluster center representative
+        columns_names - the name of the columns. If None, assumes that the first line contains the columns names
 
         for example:
             6usf_B  6usf_B
@@ -54,13 +57,21 @@ def split(
     with open(cluster_tsv, "rt") as f:
         mm_read = mmap.mmap(f.fileno(), 0, prot=mmap.PROT_READ)  # useful for massive files
         linenum = 0
+
+        if columns_names is None:
+            columns_names = mm_read.readline().split('\t')
+
+        if not cluster_center_column_name in columns_names:
+            raise Exception(f'Could not find {cluster_center_column_name} in columns: {columns_names}')
+        column_index = columns_names.index(cluster_center_column_name)
+
         line = None
         while True:
             line = mm_read.readline()
             if line == b"":
                 break
 
-            center, member = line.decode().rstrip().split("\t")
+            center = line.decode().rstrip().split("\t")[column_index]
             # print('center=',center,'member=',member)
 
             if center in assigned_centers:

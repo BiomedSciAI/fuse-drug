@@ -6,7 +6,7 @@ from fuse.utils.file_io import save_text_file_safe, read_text_file
 import os
 from typing import Dict
 from os.path import join
-
+import yaml
 
 def cached_cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict) -> Dict:
     """
