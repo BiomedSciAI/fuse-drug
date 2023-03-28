@@ -108,7 +108,7 @@ def create_balanced_sampling_tsv(
                 line = mm_read.readline()
                 if line == b"":
                     break
-                parts = line.decode().rstrip().split("\t")
+                parts = line.decode().rstrip().split("\t") ##make this and next line more efficient, just copy fulle line as pure text, rstrip() and add '\t' + value + '\n'
                 outfh.write("\t".join( parts + [f"{cluster_sizes[center]}"]) + "\n")
 
                 if not linenum % 10**5:

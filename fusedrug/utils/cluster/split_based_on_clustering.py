@@ -59,7 +59,7 @@ def split(
         linenum = 0
 
         if columns_names is None:
-            columns_names = mm_read.readline().split('\t')
+            columns_names = mm_read.decode().rstrip().readline().split('\t')
 
         if not cluster_center_column_name in columns_names:
             raise Exception(f'Could not find {cluster_center_column_name} in columns: {columns_names}')
