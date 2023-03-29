@@ -2,7 +2,7 @@ click
 pyfastx
 torch
 pytorch-lightning<2.0.0 # temp - need to make all tests pass with this version first
-torchvision<0.15  # temp
+torchvision
 tokenizers
 hydra-core
 rdkit
