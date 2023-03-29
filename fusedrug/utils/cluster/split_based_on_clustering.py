@@ -67,7 +67,7 @@ def split(
 
         #write the columns names in all sets outputs
         for _, fh in files_handles.items():
-            fh.write('\t'.join(columns_names)+'\n')
+            fh.write( ('\t'.join(columns_names)+'\n').encode())
 
         line = None
         while True:
