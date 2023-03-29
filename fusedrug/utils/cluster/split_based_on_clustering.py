@@ -13,7 +13,7 @@ from collections import defaultdict
 def split(
     cluster_tsv: str,
     cluster_center_column_name: str,
-    columns_names: List[str] = None,    
+    columns_names: List[str] = None,
     splits_desc: Dict = frozendict(train=0.90, val=0.05, test=0.05),
 ) -> Dict:
     """
@@ -59,15 +59,15 @@ def split(
         linenum = 0
 
         if columns_names is None:
-            columns_names = mm_read.readline().decode().rstrip().split('\t')
+            columns_names = mm_read.readline().decode().rstrip().split("\t")
 
-        if not cluster_center_column_name in columns_names:
-            raise Exception(f'Could not find {cluster_center_column_name} in columns: {columns_names}')
+        if cluster_center_column_name not in columns_names:
+            raise Exception(f"Could not find {cluster_center_column_name} in columns: {columns_names}")
         column_index = columns_names.index(cluster_center_column_name)
 
-        #write the columns names in all sets outputs
+        # write the columns names in all sets outputs
         for _, fh in files_handles.items():
-            fh.write( ('\t'.join(columns_names)+'\n').encode())
+            fh.write(("\t".join(columns_names) + "\n").encode())
 
         line = None
         while True:

@@ -32,7 +32,7 @@ try:
         mmcif_parsing,
     )
     from openfold.np import residue_constants as rc
-    from openfold.data.mmcif_parsing import MmcifObject    
+    from openfold.data.mmcif_parsing import MmcifObject
 
 except ImportError:
     print("Warning: import openfold failed - some functions might fail")
@@ -172,9 +172,7 @@ def get_chain_native_features(native_structure_filename: str, chain_id: str, pdb
             return None
     elif structure_file_format == "cif":
         try:
-            mmcif_object = parse_mmcif(
-                native_structure_filename, unique_file_id=pdb_id, quiet_parsing=True
-            )
+            mmcif_object = parse_mmcif(native_structure_filename, unique_file_id=pdb_id, quiet_parsing=True)
             chains_names = list(mmcif_object.chain_to_seqres.keys())
         except Exception as e:
             print(e)
@@ -446,7 +444,10 @@ def save_pdb_file(
 
 
 def parse_mmcif(
-    filename: str, unique_file_id: str, handle_residue_id_duplication: bool = True, quiet_parsing: bool = False,
+    filename: str,
+    unique_file_id: str,
+    handle_residue_id_duplication: bool = True,
+    quiet_parsing: bool = False,
 ) -> MmcifObject:
     """
     filename: path for the mmcif file to load (can be .gz compressed)
@@ -468,10 +469,10 @@ def parse_mmcif(
     # https://biopython-cn.readthedocs.io/zh_CN/latest/en/chr11.html#reading-an-mmcif-file
 
     # this is inefficient as I'm reading the mmcif file again, but choosing to do this to keep openfold code mostly unmodified for now
-    #handle = io.StringIO(raw_mmcif_str)
-    #mmcif_dict = MMCIF2Dict.MMCIF2Dict(handle)
+    # handle = io.StringIO(raw_mmcif_str)
+    # mmcif_dict = MMCIF2Dict.MMCIF2Dict(handle)
 
-    #entities_details = mmcif_parsing.mmcif_loop_to_list("_entity.", mmcif_dict)
+    # entities_details = mmcif_parsing.mmcif_loop_to_list("_entity.", mmcif_dict)
 
     # Crash if an error is encountered. Any parsing errors should have
     # been dealt with at the alignment stage.
@@ -485,9 +486,9 @@ def parse_mmcif(
 
     mmcif_object = mmcif_object.mmcif_object
 
-    #chain_id_to_seqres = list(mmcif_object.chain_to_seqres.keys())
+    # chain_id_to_seqres = list(mmcif_object.chain_to_seqres.keys())
 
-    return mmcif_object 
+    return mmcif_object
 
     # it does too much - templates search and MSA
     # data = self.data_pipeline.process_mmcif(
@@ -508,8 +509,8 @@ def get_chain_data(
 
     chain_id: author assigned chain id.
         For more details in author assigned chain id vs. pdb assigned chain id see https://www.rcsb.org/docs/general-help/identifiers-in-pdb
-    
-    
+
+
 
 
     """

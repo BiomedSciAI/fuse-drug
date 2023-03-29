@@ -5,19 +5,18 @@ from typing import List
 
 
 def create_balanced_sampling_tsv(
-        cluster_tsv: str, 
-        output_balanced_tsv: str,
-        cluster_center_column_name: str,
-        
-        columns_names: List[str] = None,    
-        ) -> None:
+    cluster_tsv: str,
+    output_balanced_tsv: str,
+    cluster_center_column_name: str,
+    columns_names: List[str] = None,
+) -> None:
     """
     processes cluster_tsv (see args for expected format) and generates a new tsv with an added column that
         represents what chance should it have for sampling, if you want to remove the bias of sampling too frequently from large clusters.
 
     Args:
         cluster_tsv - a TSV (like csv but tab separated) at the expected columns structure (no title line)
-            
+
 
             for example:
                 6usf_B  6usf_B
@@ -42,7 +41,7 @@ def create_balanced_sampling_tsv(
             6y6x_LW 6y6x_LW 0.01
 
         cluster_center_column_name - the name of the column that contains the cluster center representative
-        
+
         columns_names - the name of the columns. If None, assumes that the first line contains the columns names
 
     """
@@ -54,18 +53,11 @@ def create_balanced_sampling_tsv(
         cluster_sizes = defaultdict(int)
 
         if columns_names is None:
-            columns_names = mm_read.readline().decode().rstrip().split('\t')
+            columns_names = mm_read.readline().decode().rstrip().split("\t")
 
-        if not cluster_center_column_name in columns_names:
-            raise Exception(f'Could not find center column: {cluster_center_column_name} in columns: {columns_names}')
+        if cluster_center_column_name not in columns_names:
+            raise Exception(f"Could not find center column: {cluster_center_column_name} in columns: {columns_names}")
         center_index = columns_names.index(cluster_center_column_name)
-
-        
-        
-        
-
-
-
 
         linenum = 0
         print("going over the cluster info to calculate total count and cluster sizes")
@@ -75,10 +67,8 @@ def create_balanced_sampling_tsv(
                 break
 
             parts = line.decode().rstrip().split("\t")
-            
+
             center = parts[center_index]
-            
-            
 
             cluster_sizes[center] += 1
 
@@ -102,14 +92,15 @@ def create_balanced_sampling_tsv(
         mm_read = mmap.mmap(f.fileno(), 0, prot=mmap.PROT_READ)  # useful for massive files
         with open(output_balanced_tsv, "wt") as outfh:
             print(f"writing {output_balanced_tsv}")
-            outfh.write('\t'.join(columns_names+['inverse_balance_proportion'])+'\n')
+            outfh.write("\t".join(columns_names + ["inverse_balance_proportion"]) + "\n")
             linenum = 0
             while True:
                 line = mm_read.readline()
                 if line == b"":
                     break
-                parts = line.decode().rstrip().split("\t") ##make this and next line more efficient, just copy fulle line as pure text, rstrip() and add '\t' + value + '\n'
-                outfh.write("\t".join( parts + [f"{cluster_sizes[center]}"]) + "\n")
+                ##make this and next line more efficient, just copy fulle line as pure text, rstrip() and add '\t' + value + '\n'
+                parts = line.decode().rstrip().split("\t")
+                outfh.write("\t".join(parts + [f"{cluster_sizes[center]}"]) + "\n")
 
                 if not linenum % 10**5:
                     print(linenum, line)

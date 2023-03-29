@@ -1,7 +1,8 @@
 import mmap
-import gzip
+from typing import Union
 
-def mmap_lines_reader(filename:str, decode:bool=False, verbose:int=0):
+
+def mmap_lines_reader(filename: str, decode: bool = False, verbose: int = 0) -> Union[str,bytes]:
     """
     yields line by line, and uses mmap to map the file to memory.
     This is useful when reading big file (and having enough RAM to support it)
@@ -23,13 +24,12 @@ def mmap_lines_reader(filename:str, decode:bool=False, verbose:int=0):
             line = mm_read.readline()
             if line == b"":
                 break
-            
+
             if decode:
                 line = line.decode()
 
             yield line
 
-            if verbose>0 and linenum>0:
-                if not linenum%10**5:
-                    print('line num=',linenum)
-                     
+            if verbose > 0 and linenum > 0:
+                if not linenum % 10**5:
+                    print("line num=", linenum)
