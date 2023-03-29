@@ -59,11 +59,15 @@ def split(
         linenum = 0
 
         if columns_names is None:
-            columns_names = mm_read.decode().rstrip().readline().split('\t')
+            columns_names = mm_read.readline().decode().rstrip().split('\t')
 
         if not cluster_center_column_name in columns_names:
             raise Exception(f'Could not find {cluster_center_column_name} in columns: {columns_names}')
         column_index = columns_names.index(cluster_center_column_name)
+
+        #write the columns names in all sets outputs
+        for _, fh in files_handles.items():
+            fh.write('\t'.join(columns_names)+'\n')
 
         line = None
         while True:

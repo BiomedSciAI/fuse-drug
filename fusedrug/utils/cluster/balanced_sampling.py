@@ -54,7 +54,7 @@ def create_balanced_sampling_tsv(
         cluster_sizes = defaultdict(int)
 
         if columns_names is None:
-            columns_names = mm_read.readline().split('\t')
+            columns_names = mm_read.readline().decode().rstrip().split('\t')
 
         if not cluster_center_column_name in columns_names:
             raise Exception(f'Could not find center column: {cluster_center_column_name} in columns: {columns_names}')
