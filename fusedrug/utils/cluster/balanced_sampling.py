@@ -48,11 +48,13 @@ def create_balanced_sampling_tsv(
 
     os.makedirs(os.path.dirname(output_balanced_tsv), exist_ok=True)
 
+    first_line_is_title = columns_names is None
+
     with open(cluster_tsv, "rt") as f:
         mm_read = mmap.mmap(f.fileno(), 0, prot=mmap.PROT_READ)  # useful for massive files
         cluster_sizes = defaultdict(int)
 
-        if columns_names is None:
+        if first_line_is_title:
             columns_names = mm_read.readline().decode().rstrip().split("\t")
 
         if cluster_center_column_name not in columns_names:
@@ -92,6 +94,10 @@ def create_balanced_sampling_tsv(
         mm_read = mmap.mmap(f.fileno(), 0, prot=mmap.PROT_READ)  # useful for massive files
         with open(output_balanced_tsv, "wt") as outfh:
             print(f"writing {output_balanced_tsv}")
+
+            if first_line_is_title:
+                _ = mm_read.readline() #skip the title
+
             outfh.write("\t".join(columns_names + ["inverse_balance_proportion"]) + "\n")
             linenum = 0
             while True:
@@ -100,6 +106,8 @@ def create_balanced_sampling_tsv(
                     break
                 ##make this and next line more efficient, just copy fulle line as pure text, rstrip() and add '\t' + value + '\n'
                 parts = line.decode().rstrip().split("\t")
+                center = parts[center_index]
+
                 outfh.write("\t".join(parts + [f"{cluster_sizes[center]}"]) + "\n")
 
                 if not linenum % 10**5:
