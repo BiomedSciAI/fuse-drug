@@ -8,19 +8,21 @@ import click
 from torch.utils.data import Dataset
 from copy import deepcopy
 from fuse.utils.multiprocessing import run_multiprocessed, get_from_global_storage, get_chunks_ranges
-from typing import Tuple, Union
+from typing import Tuple, Union, Sequence, Callable
 
 # TODO: consider using SQLite for files with too big number of identifiers to fit in memory
 # maybe use "raw mode" in https://github.com/Congyuwang/RocksDict ? (or maybe not, as it just uses a DB in the backend, so maybe it's better to use a DB ourselves)
 
 
-def _default_identifier_extractor(identifier_line, also_return_comment: bool = True, verbose=0):
+def _default_identifier_extractor(
+    identifier_line: str, also_return_comment: bool = True, verbose: int = 0
+) -> Union[Tuple[str, str], str]:
     # return identifier_line.split('|')[1]
     pos = identifier_line.find(" ")
     if pos < 0:
         if verbose > 0:
             print("Warning: no space found in identifier line:", identifier_line)
-        return identifier_line, None
+        return (identifier_line, None) if also_return_comment else identifier_line
 
     identifier = identifier_line[:pos].rstrip()
     if also_return_comment:
@@ -46,12 +48,12 @@ class IndexedFastaCustom(Dataset):
     def __init__(
         self,
         filename: str,
-        index_filename=None,
-        process_identifier_pipeline=(_default_identifier_extractor,),
-        force_recreate_index=False,
-        allow_access_by_id=False,
-        num_workers="auto",
-        verbose=1,
+        index_filename: str = None,
+        process_identifier_pipeline: Sequence[Callable] = (_default_identifier_extractor,),
+        force_recreate_index: bool = False,
+        allow_access_by_id: bool = False,
+        num_workers: Union[int, str] = "auto",
+        verbose: int = 1,
     ):
         """
         args:
@@ -139,7 +141,7 @@ class IndexedFastaCustom(Dataset):
         if self._allow_access_by_id:
             self._offsets_map = self._build_offsets_map()
 
-    def _build_offsets_map(self):
+    def _build_offsets_map(self) -> dict:
         self._offsets_map = dict()  # maps from id to line index
         print(f"allow_access_by_id is enabled, building in-memory offset map (num_workers={self._num_workers})")
 
@@ -161,14 +163,14 @@ class IndexedFastaCustom(Dataset):
 
         return offsets_map
 
-    def __len__(self):
+    def __len__(self) -> int:
         return self.offsets.shape[0]
 
-    def __iter__(self):
+    def __iter__(self) -> Tuple[Union[Tuple[str], Tuple[str, str]], str, str]:
         for i in range(len(self)):
             yield self.__getitem__(i)
 
-    def __getitem__(self, index) -> Tuple[Union[Tuple[str], Tuple[str, str]], str, str]:
+    def __getitem__(self, index: Union[str, int]) -> Tuple[Union[Tuple[str], Tuple[str, str]], str, str]:
         """
         returns a single FASTA entry in as a tuple with 3 elements:
             element 0: a tuple with either a. a single element, the identifier of the entry or b. a tuple with 2 elements, the identifier of the entry followed by the comment of the entry
@@ -218,14 +220,14 @@ class IndexedFastaCustom(Dataset):
         return processed_identifier, data, identifier_line
 
 
-def uniprot_identifier_extractor(identifier_line, verbose=0):
+def uniprot_identifier_extractor(identifier_line: str, verbose: int = 0) -> str:
     """
     returns the first part of the identifier line, which is the uniprot accession number
     """
     return identifier_line.split("|")[1]
 
 
-def _key_map_build_worker(args):
+def _key_map_build_worker(args: Tuple[int, int]) -> dict:
     start_index, end_index = args
     ifc = get_from_global_storage("ifc")
     ans = {}

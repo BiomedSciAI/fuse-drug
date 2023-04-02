@@ -54,7 +54,7 @@ def dti_binding_dataset(
     if "cache_dir" in kwargs and kwargs["cache_dir"] is not None:
         ans_dict = run_cached_func(kwargs["cache_dir"], _load_dataframes, *_args, **kwargs)
     else:
-        ans_dict = _load_dataframes(*_args)
+        ans_dict = _load_dataframes(*_args, **kwargs)
 
     pairs_df = ans_dict["pairs"]
     ligands_df = ans_dict["ligands"]
