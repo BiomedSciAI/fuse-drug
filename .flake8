@@ -103,3 +103,6 @@ exclude =
     ## ./
     ./run_all_unit_tests.py
     ./setup.py
+
+    # submodule
+    fusedrug_examples/interaction/drug_target/affinity_prediction/PLM_DTI/Contrastive_PLM_DTI
