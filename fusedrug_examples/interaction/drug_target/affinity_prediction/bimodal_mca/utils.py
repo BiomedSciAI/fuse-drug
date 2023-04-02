@@ -1,8 +1,9 @@
 from pytorch_lightning.callbacks import Callback
-import os, sys
+import os
+import sys
 import pytoda
 from pathlib import Path
-from typing import Optional, Any, Dict
+from typing import Optional, Dict
 
 
 def _check_stopfile(stop_filename: str) -> None:
@@ -22,18 +23,14 @@ class ExitOnStopFileCallback(Callback):
             f"ExitOnStopFileCallback: To stop the session (even if it is detached) create a file named: {self.stop_filename}"
         )
 
-    def on_predict_batch_start(
-        self, trainer: Any, pl_module: Any, batch: Any, batch_idx: Any, dataloader_idx: Any
-    ) -> None:
+    def on_predict_batch_start(self, **kwargs: Dict) -> None:
         _check_stopfile(self.stop_filename)
 
     def on_train_batch_start(self, **kwargs: Dict) -> None:
         # RuntimeError: The `Callback.on_batch_start` hook was removed in v1.8. Please use `Callback.on_train_batch_start` instead.
         _check_stopfile(self.stop_filename)
 
-    def on_test_batch_start(
-        self, trainer: Any, pl_module: Any, batch: Any, batch_idx: Any, dataloader_idx: Any
-    ) -> None:
+    def on_test_batch_start(self, **kwargs: Dict) -> None:
         _check_stopfile(self.stop_filename)
 
 
