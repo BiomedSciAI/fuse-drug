@@ -123,6 +123,7 @@ create_env $force_cuda_version $env_path "examples"
 echo "Create examples env - Done"
 
 # update gitsubmodule - loading existing conda env doesn't solve it
+# each different clone of the repo should be followed by submodules initialization
 echo "Updating git submodules"
 git submodule sync
 git submodule update --init --recursive
