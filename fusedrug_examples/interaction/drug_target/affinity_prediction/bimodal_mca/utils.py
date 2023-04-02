@@ -2,7 +2,7 @@ from pytorch_lightning.callbacks import Callback
 import os, sys
 import pytoda
 from pathlib import Path
-from typing import Optional, Any
+from typing import Optional, Any, Dict
 
 
 def _check_stopfile(stop_filename: str) -> None:
@@ -27,7 +27,7 @@ class ExitOnStopFileCallback(Callback):
     ) -> None:
         _check_stopfile(self.stop_filename)
 
-    def on_train_batch_start(self, trainer: Any, pl_module: Any) -> None:
+    def on_train_batch_start(self, **kwargs: Dict) -> None:
         # RuntimeError: The `Callback.on_batch_start` hook was removed in v1.8. Please use `Callback.on_train_batch_start` instead.
         _check_stopfile(self.stop_filename)
 
