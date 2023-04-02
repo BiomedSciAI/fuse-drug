@@ -96,7 +96,7 @@ def create_balanced_sampling_tsv(
             print(f"writing {output_balanced_tsv}")
 
             if first_line_is_title:
-                _ = mm_read.readline() #skip the title
+                _ = mm_read.readline()  # skip the title
 
             outfh.write("\t".join(columns_names + ["inverse_balance_proportion"]) + "\n")
             linenum = 0
