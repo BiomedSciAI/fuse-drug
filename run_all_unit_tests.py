@@ -3,22 +3,29 @@ This script searches recursively for unit tests and generates the tests results 
 In the case that it's a Jenkins job, it should delete any created cache (not implemented yet)
 """
 
-import unittest
+import logging
+import sys
+from unittest import TestLoader
 import os
+import termcolor
+from xmlrunner import XMLTestRunner
+from os import listdir
+from os.path import isfile, join
 
 print(os.path.dirname(os.path.realpath(__file__)))
-import termcolor
 
 
-def mehikon(a, b):
+def mehikon(a, b):  # type: ignore
     print(a)
 
 
 termcolor.cprint = mehikon  # since junit/jenkins doesn't like text color ...
 
-import xmlrunner
-
 if __name__ == "__main__":
+    mode = None
+    if len(sys.argv) > 1:
+        mode = sys.argv[1]  # options "examples", "core" or None for both "core" and "examples"
+    os.environ["DISPLAY"] = ""  # disable display in unit tests
 
     is_jenkins_job = "WORKSPACE" in os.environ and len(os.environ["WORKSPACE"]) > 2
 
@@ -26,38 +33,49 @@ if __name__ == "__main__":
     output = f"{search_base}/test-reports/"
     print("will generate unit tests output xml at :", output)
 
-    # with open(f'{search_base}/packages.txt','r') as f:
-    #     sub_sections = [x.split('#')[-1].strip() for x in f.readlines() if len(x)>4]
-    # print('found sub_sections = ', sub_sections)
+    sub_sections_core = [("fusedrug", search_base)]
+    sub_sections_examples = [("fusedrug_examples/tests", search_base)]
 
-    sub_sections = ["fusedrug"]
+    if mode is None:
+        sub_sections = sub_sections_core + sub_sections_examples
+    elif mode == "core":
+        sub_sections = sub_sections_core
+    elif mode == "examples":
+        sub_sections = sub_sections_examples
+    else:
+        raise Exception(f"Error: unexpected mode {mode}")
 
     suite = None
-    for curr_subsection in sub_sections:
-        curr_subsuite = unittest.TestLoader().discover(
-            f"{search_base}/{curr_subsection}",
-            "test*.py",
-            top_level_dir=search_base,
-        )
+    for curr_subsection, top_dir in sub_sections:
+        curr_subsuite = TestLoader().discover(f"{search_base}/{curr_subsection}", "test*.py", top_level_dir=top_dir)
         if suite is None:
             suite = curr_subsuite
         else:
             suite.addTest(curr_subsuite)
 
-    test_results = xmlrunner.XMLTestRunner(output=output).run(
+    # enable fuse-drug logger and avoid colors format
+    lgr = logging.getLogger("Fuse")
+    lgr.setLevel(logging.INFO)
+
+    test_results = XMLTestRunner(output=output, verbosity=2, stream=sys.stdout).run(
         suite,
     )
 
-    if is_jenkins_job:
-        print("jenkins job is not supported yet, it requires a caching location etc.")
-        raise NotImplementedError
+    ### A workaround for "An invalid XML character" issue for the examples' unit-tests
+    examples_test_files = [f for f in listdir(output) if (isfile(join(output, f)) and f.startswith("TEST-"))]
 
-        # TODO: delete the created cache
-        cache_path = caching.get_current_read_locations(caching_kind="user_local")
-        assert 1 == len(cache_path)
-        cache_path = cache_path[0]
-        assert "ms_img_analytics" in cache_path
-        # delete the cache that we've created for this job
-        print(f"deleting eir cache {cache_path} ...")
-        os.system(f"rm -rf {cache_path}")
-        print("done deleting eir cache.")
+    for file in examples_test_files:
+        file_path = join(output, file)
+
+        # Open the file for reading
+        with open(file_path, "r") as f:
+            # Read the contents of the file
+            contents = f.read()
+
+        # Replace all occurrences
+        contents = contents.replace("\u001b", "?")
+
+        # Open the file for writing (this will overwrite the original file)
+        with open(file_path, "w") as f:
+            # Write the modified contents back to the file
+            f.write(contents)
