@@ -36,6 +36,7 @@ class AffinityDataModule(pl.LightningDataModule):
         pairs_table_ligand_column: str = "ligand_name",
         pairs_table_sequence_column: str = "uniprot_accession",
         pairs_table_affinity_column: str = "pIC50",
+        partial_sample_ids: Optional[List[int]] = None,
     ):
         """
         a ligand vs. target affinity prediction data module
@@ -61,6 +62,8 @@ class AffinityDataModule(pl.LightningDataModule):
             pairs_table_ligand_column: name of the ligand column in the smi file
             pairs_table_sequence_column: name of target sequence column in the smi file
             pairs_table_affinity_column: name of affinity measure column
+            partial_sample_ids: optional - use partial subset of sample ids for the train, val and test datasets. Useful for testing purposes.
+                                If None, uses all sample ids.
 
         """
 
@@ -88,6 +91,8 @@ class AffinityDataModule(pl.LightningDataModule):
         self.pairs_table_ligand_column = pairs_table_ligand_column
         self.pairs_table_sequence_column = pairs_table_sequence_column
         self.pairs_table_affinity_column = pairs_table_affinity_column
+
+        self.partial_sample_ids = partial_sample_ids
 
         if self.pytoda_wrapped_tokenizer:
             if self.pytoda_ligand_tokenizer_json is None:
@@ -264,7 +269,7 @@ class AffinityDataModule(pl.LightningDataModule):
         all_sample_ids = np.arange(len(affinity_loader_op.drug_target_affinity_dataset))
 
         train_dataset = DatasetDefault(
-            all_sample_ids,
+            all_sample_ids if self.partial_sample_ids is None else self.partial_sample_ids,
             static_pipeline=None,
             dynamic_pipeline=PipelineDefault(name="train_pipeline_affinity_predictor", ops_and_kwargs=pipeline_desc),
         )
@@ -295,7 +300,7 @@ class AffinityDataModule(pl.LightningDataModule):
         all_sample_ids = np.arange(len(affinity_loader_op.drug_target_affinity_dataset))
 
         val_dataset = DatasetDefault(
-            all_sample_ids,
+            all_sample_ids if self.partial_sample_ids is None else self.partial_sample_ids,
             static_pipeline=None,
             dynamic_pipeline=PipelineDefault(name="val_pipeline_affinity_predictor", ops_and_kwargs=pipeline_desc),
         )
@@ -321,7 +326,7 @@ class AffinityDataModule(pl.LightningDataModule):
         all_sample_ids = np.arange(len(affinity_loader_op.drug_target_affinity_dataset))
 
         test_dataset = DatasetDefault(
-            all_sample_ids,
+            all_sample_ids if self.partial_sample_ids is None else self.partial_sample_ids,
             static_pipeline=None,
             dynamic_pipeline=PipelineDefault(name="test_pipeline_affinity_predictor", ops_and_kwargs=pipeline_desc),
         )

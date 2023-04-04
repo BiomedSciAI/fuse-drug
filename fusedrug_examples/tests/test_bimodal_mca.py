@@ -23,7 +23,7 @@ class BimodalMCATestCase(unittest.TestCase):
             64  # solve "CUBLAS_STATUS_EXECUTION_FAILED" for 'test_data_and_model'.
         )
         os.environ["BIMCA_RESULTS"] = tempfile.mkdtemp()
-        setup_globals()  # defines resolver 'now'
+        setup_globals()  # defines omega conf resolver 'now'
 
     def test_data_and_model(self) -> None:
         """
