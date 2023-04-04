@@ -55,6 +55,7 @@ class BimodalMCATestCase(unittest.TestCase):
         """
         # short run
         self.cfg.trainer.max_epochs = 1
+        self.cfg.data.lightning_data_module.partial_sample_ids = [_ for _ in range(1000)]
         run_train_and_val(self.cfg)
 
     def tearDown(self) -> None:
