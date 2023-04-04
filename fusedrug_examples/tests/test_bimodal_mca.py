@@ -19,15 +19,17 @@ class BimodalMCATestCase(unittest.TestCase):
         )
         self.cfg = OmegaConf.load(self.config_path)
         self.cfg.data.lightning_data_module.num_workers = 10
-        self.cfg.data.lightning_data_module.train_batch_size = (
-            64  # solve "CUBLAS_STATUS_EXECUTION_FAILED" for 'test_data_and_model'.
-        )
+        self.cfg.data.lightning_data_module.train_batch_size = 64
+
+        # temp dir to store results
         os.environ["BIMCA_RESULTS"] = tempfile.mkdtemp()
-        setup_globals()  # defines omega conf resolver 'now'
+
+        # defines omega conf resolver 'now'
+        setup_globals()
 
     def test_data_and_model(self) -> None:
         """
-        basic test
+        Basic test which loads the data module with all sample ids and does one forward pass as a model sanity check
         """
         # get device
         device = torch.device("cuda")
@@ -48,17 +50,18 @@ class BimodalMCATestCase(unittest.TestCase):
         # forward pass
         lightning_module.forward(smiles, proteins)
 
-    # @unittest.skip("timing issues")
     def test_runner(self) -> None:
         """
-        end2end test - run a short runner
+        full runner test *with partial sample ids*.
+        (one epoch with full data can take up to 1h+)
         """
-        # short run
+        # config a short run with 1k samples
         self.cfg.trainer.max_epochs = 1
         self.cfg.data.lightning_data_module.partial_sample_ids = [_ for _ in range(1000)]
         run_train_and_val(self.cfg)
 
     def tearDown(self) -> None:
+        # delete test's temp dir
         shutil.rmtree(os.environ["BIMCA_RESULTS"])
 
 
