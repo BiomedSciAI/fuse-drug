@@ -18,7 +18,7 @@ class BimodalMCATestCase(unittest.TestCase):
             __file__, "../../interaction/drug_target/affinity_prediction/bimodal_mca/configs/train_config.yaml"
         )
         self.cfg = OmegaConf.load(self.config_path)
-        self.cfg.data.lightning_data_module.num_workers = 0  # TODO change to 10
+        self.cfg.data.lightning_data_module.num_workers = 10
         self.cfg.data.lightning_data_module.train_batch_size = (
             2  # solve "CUBLAS_STATUS_EXECUTION_FAILED" for 'test_data_and_model'.
         )
