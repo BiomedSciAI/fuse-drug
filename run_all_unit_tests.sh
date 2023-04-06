@@ -1,6 +1,8 @@
 #!/bin/bash
 source ~/.bashrc
 
+CUDA_HOME=/opt/share/cuda-11.8 #to prevent mismatch between cuda runtime and the cuda version used to compile pytorch
+
 # check if current env already exist
 find_in_conda_env(){
     conda env list | grep "${@}" >/dev/null 2>/dev/null

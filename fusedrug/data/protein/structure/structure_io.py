@@ -151,15 +151,21 @@ def save_structure_file(
                 )
 
 
-def get_chain_native_features(native_structure_filename: str, chain_id: str, pdb_id: str, device="cpu"):
+def get_chain_native_features(native_structure_filename: str, 
+        chain_id: str,         
+        pdb_id: str, 
+        chain_id_type: str = 'author_assigned',
+        device="cpu"):
     """
     Extracts ground truth features from a given filename. Note - only mmCIF is tested
     (using pdb will trigger an exception)
 
-    chain_id:
+    chain_id: 
         can be a single character (example: 'A')
         or an integer (zero-based) and then the i-th chain in the *sorted* list of available chains will be used
     """
+
+    assert chain_id_type in ['author_assigned', 'pdb_assigned']
 
     structure_file_format = get_structure_file_type(native_structure_filename)
     if structure_file_format == "pdb":
@@ -182,6 +188,8 @@ def get_chain_native_features(native_structure_filename: str, chain_id: str, pdb
         assert False
 
     if structure_file_format == "pdb":
+        if chain_id_type == 'pdb_assigned':
+            raise Exception("chain_id_type=pdb_assigned  is not supported yet for PDB, only for mmCIF")
         gt_data = pdb_to_openfold_protein(native_structure_filename, chain_id=chain_id)
         gt_sequence = gt_data.aasequence_str
 
@@ -201,6 +209,9 @@ def get_chain_native_features(native_structure_filename: str, chain_id: str, pdb
                 raise Exception(f"chain_id(int)={chain_id} is out of bound for the options: {chains_names}")
             chain_id = chains_names[chain_id]  # taking the i-th chain
 
+        if chain_id_type == 'pdb_assigned':
+            chain_id = mmcif_object.pdb_assigned_chain_id_to_author_assigned_chain_id[chain_id] #convert from pdb assigned to author assigned chain id
+        
         gt_data = get_chain_data(mmcif_object, chain_id=chain_id)
         gt_all_mmcif_feats = gt_data["mmcif_feats"]
         gt_sequence = gt_data["input_sequence"]
