@@ -96,16 +96,17 @@ AA_tokens = [
 ]
 
 
-def special_wrap_input(x:str)->str:
+def special_wrap_input(x: str) -> str:
     return special_token_marker[0] + x + special_token_marker[1]
 
-def strip_special_wrap(x:str)->str:
+
+def strip_special_wrap(x: str) -> str:
     for spec_wrap in special_token_marker:
-        x = x.replace(spec_wrap, '')
+        x = x.replace(spec_wrap, "")
     return x
 
 
-def special_mark_AA(in_str:str)->str:
+def special_mark_AA(in_str: str) -> str:
     """wraps every character of the input with special markers
 
     Args:

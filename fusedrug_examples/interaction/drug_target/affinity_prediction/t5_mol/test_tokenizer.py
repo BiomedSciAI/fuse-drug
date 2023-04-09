@@ -16,6 +16,7 @@ from tokenizers import (
     processors,
     trainers,
     Tokenizer,
+    AddedToken,
 )
 
 import pandas as pd
@@ -42,12 +43,30 @@ Tokenizer use:
 /zed_dti/zed_dti/fully_supervised/dti_classifier/data.py
 Tokenizer ops: /fuse-drug/fusedrug/data/tokenizer/ops/fast_tokenizer_ops.py
 
+Tokenizer
+Different molecule repr:
+    AAs AABBGGFDSGF
+    SMILES CCHH=C
+    SELFIES
+    ...
+Encode task definitions
+
+Decode
+
+-Single tokenizer
+-Modular tokenizer
+<BIDNING><start>AGFDGBSXDGSD<start2>CCCHHH={}F
+ -> yes/no
+ 0,1 2,3,4,5, 1000 ,34,5643,56
 Thoughts:
-1. You can't simply train a tokenizer on AA sequences and then manually wrap all tokens with <> within the tokenizer json using BPE. This causes a loading error.
-    It would seem that a vocabulary must first contain byte-level characters, and the merges part is where merging to more characters happens. Basically, for every 
-    complex token (with >1 characters) in a vocabulary of the tokenizer, e.g. "ABC", there must be a line in merges that creates it from smaller tokens, e.g. "A BC" 
+1. You can't simply train a tokenizer on AA sequences and then manually wrap all tokens with <> within the 
+    tokenizer json using BPE. This causes a loading error. 
+    It would seem that a vocabulary must first contain byte-level characters, and the merges part is where 
+    merging to more characters happens. Basically, for every complex token (with >1 characters) in a vocabulary 
+    of the tokenizer, e.g. "ABC", there must be a line in merges that creates it from smaller tokens, e.g. "A BC" 
     (tokens "A" and "BC" must exist in the vocabulary).
-    The resulting tokenizer is saved in fuse-drug/fusedrug_examples/interaction/drug_target/affinity_prediction/t5_mol/tokenizer/pretrained/simple_protein_tokenizer_wrapped_non_special_AA.json 
+    The resulting tokenizer is saved in 
+    fuse-drug/fusedrug_examples/interaction/drug_target/affinity_prediction/t5_mol/tokenizer/pretrained/simple_protein_tokenizer_wrapped_non_special_AA.json 
     This way, we have a vocabulary that must contain single-letter tokens. The only way around this is to introduce special tokens. 
     A version that only includes special tokens is saved here:
     fuse-drug/fusedrug_examples/interaction/drug_target/affinity_prediction/t5_mol/tokenizer/pretrained/simple_protein_tokenizer_wrapped_special_AA.json
@@ -67,6 +86,10 @@ Thoughts:
     - Merges    
         The most naive approach for now - concatenate the two merges and hope for the best. A slightly less naive approach, as mentioned here: https://github.com/huggingface/tokenizers/issues/690,
         would be to merge the merges by order of token length.
+        
+    It's also possible use tokenizer functions to add a list of tokens (tokenizer.add_tokens) extracted by get_vocab (with_added_tokens=False, 
+    https://huggingface.co/docs/tokenizers/api/tokenizer and special tokens (tokenizer.add_special_tokens) to the main tokenizer.
+    If we want a modular tokenizer, this may not be an option, because the resulting IDs cannot be controlled, so we can't force coherence between tokenizers.
 5. Questions ro raise:
     - Word Level or BPE tokenizer? Yoel uses word-level on AAs, but if we want to keep an option of training on SMILES, we should probably use BPE. A protein is a single molecule
         in terms of SMILES, and it's not straightforward to separate into words. It's simpler in AA representation, but I'm not sure we want to teach the network this way.
@@ -80,6 +103,38 @@ Thoughts:
             Cons:
             - Must be manually constructed
     - Do we want to represent AAs as "<A>", "<B>",... or, maybe, we can have them as non-ascii characters?
+    - Combined or modular tokenizer? AAABBB -> <A><B>...
+        Combined: Single tokenizer that takes care of AAs and SMILES (as well as, possibly, other representations). 
+            Pros:
+                - Single entity, compatible with other libraries (huggingface)
+                - Easy to add special tokens (i.e. task definitions)
+            Cons:
+                - Token overlaps between different representations are difficult to take care of.   
+                    * Solutions for AA+SMILES is to represent AAs as special tokens <AA>. Doesn't work if we add more representations
+                    * May not even be a problem as a network can learn to infer the meaning of the token from context
+                    * Do we even need representations other than AA and SMILES?
+        Modular: Several tokenizers, each applied according to context during encoding phaze. Since encoding is task-dependent, the context 
+            (i.e. which entity is being encoded - AAs, SMILES, etc.) is known and can be passed as argument. All tokenizers map to the same 
+            index space, so if two tokenizers map to the same index, it means that the mapped tokens are the same one.
+            Pros:
+                - Possible to add as many representations as we want
+            Cons:
+                - Complex, and not directly compatible with other systems
+                - Requires meticulous internal book-keeping to avoid collisions
+                    * (Special token, index) pairs must be the same over all the tokenizers, while regular token indices must not overlap. 
+                    Multiple steps that add special tokens (happens when we want to add an entirely new task, for instance) will create a 
+                    fragmented regular token space that will be hard to maintain.
+                    * Note: Index space need not be contiguous, so if tokenizer A has indices 1..100, and tokenizer B has indices 1..10000, we can
+                    add a special token at 10001 in both tokenizers
+                - Decoding becomes tricky, or, at least, less efficient - we need to infer the right decoder from the tokens, if we wand to apply 
+                    the built-in decoder of an existing tokenizer; or, we need to hold a combined decoder mapping of all the tokenizers
+                - We need to maintain a generator class that will create a tokenizer Op and a decoder Op together.
+                - Need to think what happens with all the other values returned by the tokenizer (mask, etc) - these probably will not be affected
+                
+                - Need to take care of padding separately, after combination of the resulting encodings, NOT for every single tokenizer
+                
+                AAABBB<SEP> -> (12,12,12,13,13,13,1,0,0,0); attention mask: (1,1,1,1,1,1,1,0,0,0,)
+                decoder
 
 """
 
@@ -349,6 +404,8 @@ def combine_tokenizers(
 
 
 def create_tokenizers(cfg_raw: Dict):
+    do_wrapped_AA_tokenizer = False
+
     vocab_data = pd.read_csv(
         TITAN_SMILES_PATH, sep="\t", header=None, names=["repr", "ID"]
     )
@@ -358,35 +415,76 @@ def create_tokenizers(cfg_raw: Dict):
 
     # Tokenizer example taken from https://huggingface.co/course/chapter6/8?fw=pt
     tokenizer = Tokenizer(models.BPE())
-    tokenizer.model = models.BPE()
     # tokenizer.pre_tokenizer = pre_tokenizers.ByteLevel(add_prefix_space=False) # Significantly reduces the resulting vocabulary size
-    AA_tokenizer = Tokenizer(models.BPE())
 
+    if do_wrapped_AA_tokenizer:
+        ######################## Wrapped AA tokenizer, using <AA> special tokens to mark amino acids #####################################
+        wrapped_AA_tokenizer = Tokenizer(models.BPE())
+        special_tokens = get_special_tokens()
+        trainer_AA = trainers.BpeTrainer(vocab_size=400, special_tokens=special_tokens)
+        AA_tokens = get_special_tokens(subset=["AA"])
+        AA_normalizer = normalizers.Sequence(
+            [normalizers.Replace(strip_special_wrap(x), x) for x in AA_tokens]
+        )
+        unwrapped_AA_vocab = list(AA_vocab_data["repr"])
+        t1 = time.perf_counter()
+        wrapped_AA_vocab = [special_mark_AA(x) for x in unwrapped_AA_vocab]
+        dt = time.perf_counter() - t1
+        print(f"Special wrapping took {dt} seconds")
+        t1 = time.perf_counter()
+        wrapped_AA_vocab = [AA_normalizer.normalize_str(x) for x in unwrapped_AA_vocab]
+        dt = time.perf_counter() - t1
+        print(f"Normalizer wrapping took {dt} seconds")
+        wrapped_AA_tokenizer.train_from_iterator(
+            get_training_corpus(dataset=wrapped_AA_vocab), trainer=trainer_AA
+        )
+        if not os.path.exists(
+            os.path.dirname(
+                cfg_raw["data"]["tokenizer"]["tokenizers_info"]["AA"]["json_path"]
+            )
+        ):
+            os.makedirs(
+                os.path.dirname(
+                    cfg_raw["data"]["tokenizer"]["tokenizers_info"]["AA"]["json_path"]
+                )
+            )
+        wrapped_AA_tokenizer.save(
+            path=cfg_raw["data"]["tokenizer"]["tokenizers_info"]["AA"]["json_path"]
+        )
+
+    else:
+        ############################## unwrapped AA tokenizer: AAs are treated as letters
+        unwrapped_AA_tokenizer = Tokenizer(models.BPE())
+        special_tokens = get_special_tokens(subset=["special", "task"])
+        trainer_AA = trainers.BpeTrainer(vocab_size=100, special_tokens=special_tokens)
+        AA_tokens = get_special_tokens(subset=["AA"])
+        unwrapped_AA_vocab = list(AA_vocab_data["repr"])
+        unwrapped_AA_tokenizer.train_from_iterator(
+            get_training_corpus(dataset=unwrapped_AA_vocab), trainer=trainer_AA
+        )
+        if not os.path.exists(
+            os.path.dirname(
+                cfg_raw["data"]["tokenizer"]["tokenizers_info"]["AA"]["json_path"]
+            )
+        ):
+            os.makedirs(
+                os.path.dirname(
+                    cfg_raw["data"]["tokenizer"]["tokenizers_info"]["AA"]["json_path"]
+                )
+            )
+        unwrapped_AA_tokenizer.save(
+            path=cfg_raw["data"]["tokenizer"]["tokenizers_info"]["AA"]["json_path"]
+        )
+
+    ############################## SMILES tokenizer
     special_tokens = get_special_tokens()
     trainer = trainers.BpeTrainer(vocab_size=8000, special_tokens=special_tokens)
-    trainer_AA_no_special = trainers.BpeTrainer(vocab_size=40)
-    trainer_AA = trainers.BpeTrainer(vocab_size=400, special_tokens=special_tokens)
 
     tokenizer.train_from_iterator(
         get_training_corpus(dataset=list(vocab_data["repr"])), trainer=trainer
     )
     # Normalizer (an alternative to special_mark_AA())
-    AA_tokens = get_special_tokens(subset=["AA"])
-    AA_normalizer = normalizers.Sequence(
-        [normalizers.Replace(strip_special_wrap(x), x) for x in AA_tokens]
-    )
-    tmp = list(AA_vocab_data["repr"])
-    t1 = time.perf_counter()
-    wrapped_AA_vocab = [special_mark_AA(x) for x in tmp]
-    dt = time.perf_counter() - t1
-    print(f"Special wrapping took {dt} seconds")
-    t1 = time.perf_counter()
-    wrapped_AA_vocab = [AA_normalizer.normalize_str(x) for x in tmp]
-    dt = time.perf_counter() - t1
-    print(f"Normalizer wrapping took {dt} seconds")
-    AA_tokenizer.train_from_iterator(
-        get_training_corpus(dataset=wrapped_AA_vocab), trainer=trainer_AA
-    )
+
     if not os.path.exists(
         os.path.dirname(cfg_raw["data"]["tokenizer"]["combined_tokenizer_path"])
     ):
@@ -394,12 +492,6 @@ def create_tokenizers(cfg_raw: Dict):
             os.path.dirname(cfg_raw["data"]["tokenizer"]["combined_tokenizer_path"])
         )
     tokenizer.save(path=cfg_raw["data"]["tokenizer"]["combined_tokenizer_path"])
-
-    if not os.path.exists(
-        os.path.dirname(cfg_raw["data"]["tokenizer"]["AA_tokenizer_path"])
-    ):
-        os.makedirs(os.path.dirname(cfg_raw["data"]["tokenizer"]["AA_tokenizer_path"]))
-    AA_tokenizer.save(path=cfg_raw["data"]["tokenizer"]["AA_tokenizer_path"])
 
     print("Fin")
 
@@ -430,7 +522,7 @@ def test_tokenizers(cfg_raw: Dict, test_token: Optional[str] = None):
     print(AA_normalizer.normalize_str(test_sequence))
 
     loaded_AA_tokenizer = Tokenizer.from_file(
-        cfg_raw["data"]["tokenizer"]["AA_tokenizer_path"]
+        cfg_raw["data"]["tokenizer"]["tokenizers_info"]["AA"]["json_path"]
     )
 
     if test_token == None:
@@ -443,10 +535,23 @@ def test_tokenizers(cfg_raw: Dict, test_token: Optional[str] = None):
         + aas_to_smiles(test_sequence)
         + special_wrap_input("SEP")
     )
-
     print(f"Combined tokenizer tokens ({len(encoding_norm.tokens)}):")
     print(encoding_norm.tokens)
     print(encoding_norm.ids)
+
+    encoding_unwrapped = loaded_AA_tokenizer.encode(
+        test_token
+        + special_wrap_input("BINDING")
+        + test_sequence
+        + special_wrap_input("SEP")
+        + aas_to_smiles(test_sequence)
+        + special_wrap_input("SEP")
+    )
+    print(
+        f"Unwrapped nonspecial AA tokenizer tokens ({len(encoding_unwrapped.tokens)}):"
+    )
+    print(encoding_unwrapped.tokens)
+    print(encoding_unwrapped.ids)
 
     encoding_AA = loaded_AA_tokenizer.encode(AA_normalizer.normalize_str(test_sequence))
     print(f"AA tokenizer tokens ({len(encoding_AA.tokens)}):")
@@ -465,7 +570,9 @@ def main(cfg: DictConfig) -> None:
 
     cfg = hydra.utils.instantiate(cfg)
     cfg_raw = OmegaConf.to_object(cfg)
-    # ppi_dataset, pairs_df = dti_dataset(**cfg_raw['data']['benchmarks']['TITAN_benchmark']['lightning_data_module'])
+    ppi_dataset = dti_dataset(
+        **cfg_raw["data"]["benchmarks"]["TITAN_benchmark"]["lightning_data_module"]
+    )
     # ppi_dataset, pairs_df = dti_dataset.dti_binding_dataset(
 
     #                     pairs_tsv=self.pairs_tsv,
@@ -485,15 +592,17 @@ def main(cfg: DictConfig) -> None:
     #                     dynamic_pipeline=[(OpLookup(map=self.class_label_to_idx), dict(key_in='data.label', key_out='data.label')),
     #                                       (OpToTensor(), {'dtype': torch.float32, 'key': 'data.label'})],
     #                     )
-    # create_tokenizers(cfg_raw=cfg_raw) #We don't want to run this with the same config, so as not to overwrite the tokenizer jsons we use
+    # create_tokenizers(
+    #     cfg_raw=cfg_raw
+    # )  # We don't want to run this with the same config, so as not to overwrite the tokenizer jsons we use
     test_token = special_wrap_input("TEST_TOKEN")
-    combine_tokenizers(
-        path_primary=cfg_raw["data"]["tokenizer"]["AA_tokenizer_path"],
-        path_secondary=cfg_raw["data"]["tokenizer"]["SMILES_tokenizer_path"],
-        path_out=cfg_raw["data"]["tokenizer"]["combined_tokenizer_path"],
-        add_tokens=test_token,
-    )
-    test_tokenizers(cfg_raw=cfg_raw, test_token=test_token)
+    # combine_tokenizers(
+    #     path_primary=cfg_raw["data"]["tokenizer"]["tokenizers_info"]["AA"]["json_path"],
+    #     path_secondary=cfg_raw["data"]["tokenizer"]["tokenizers_info"]["SMILES"]["json_path"],
+    #     path_out=cfg_raw["data"]["tokenizer"]["combined_tokenizer_path"],
+    #     add_tokens=test_token,
+    # )
+    test_tokenizers(cfg_raw=cfg_raw, test_token=None)
 
 
 if __name__ == "__main__":
