@@ -4,7 +4,7 @@ from multi_tokenizer import ModularTokenizer
 import os
 from typing import Dict, Optional
 
-from tokenizer.special_tokens import (
+from special_tokens import (
     get_special_tokens,
 )
 from tokenizers import (
