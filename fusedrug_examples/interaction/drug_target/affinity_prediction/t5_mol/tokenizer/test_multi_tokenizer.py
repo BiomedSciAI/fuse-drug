@@ -15,17 +15,11 @@ from tokenizers import (
 import pandas as pd
 
 
-TITAN_AA_PATH = (
-    "/dccstor/fmm/users/vadimra/dev/data/TITAN/08-02-2023/public/epitopes.csv"
-)
-TITAN_SMILES_PATH = (
-    "/dccstor/fmm/users/vadimra/dev/data/TITAN/08-02-2023/public/epitopes.smi"
-)
+TITAN_AA_PATH = "/dccstor/fmm/users/vadimra/dev/data/TITAN/08-02-2023/public/epitopes.csv"
+TITAN_SMILES_PATH = "/dccstor/fmm/users/vadimra/dev/data/TITAN/08-02-2023/public/epitopes.smi"
 
 
-def test_tokenizer(
-    t_inst: ModularTokenizer, cfg_raw: Dict, mode: Optional[str] = ""
-) -> None:
+def test_tokenizer(t_inst: ModularTokenizer, cfg_raw: Dict, mode: Optional[str] = "") -> None:
     input_strings = [
         ("AA", "<BINDING>ACDEFGHIJKLMNOPQRSTACDEF"),
         ("SMILES", "CCCHH"),
@@ -42,25 +36,19 @@ def test_tokenizer(
         typed_input_list=input_strings,
         max_len=50,
     )
-    assert (
-        len(enc_pad.ids) == 50
-    ), f"Didn't pad to the expected number of tokens, mode: {mode}"
+    assert len(enc_pad.ids) == 50, f"Didn't pad to the expected number of tokens, mode: {mode}"
     # Test overall cropping: (global truncation works)
     enc_trunc = t_inst.encode(
         typed_input_list=input_strings,
         max_len=15,
     )
-    assert (
-        len(enc_trunc.ids) == 15
-    ), f"Didn't truncate to the expected number of tokens, mode: {mode}"
+    assert len(enc_trunc.ids) == 15, f"Didn't truncate to the expected number of tokens, mode: {mode}"
 
     decoded_tokens = t_inst.decode(id_list=list(enc_pad.ids))
     assert (
         "".join(enc_pad.tokens) == decoded_tokens
     ), f"decoded tokens do not correspond to the original tokens, mode: {mode}"
-    decoded_tokens_no_special = t_inst.decode(
-        id_list=list(enc_pad.ids), skip_special_tokens=True
-    )
+    decoded_tokens_no_special = t_inst.decode(id_list=list(enc_pad.ids), skip_special_tokens=True)
     a = 1
 
 
@@ -69,9 +57,7 @@ def create_base_AA_tokenizer(cfg_raw: Dict):
         for i in range(0, len(dataset), 1000):
             yield dataset[i : i + 1000]
 
-    AA_vocab_data = pd.read_csv(
-        TITAN_AA_PATH, sep="\t", header=None, names=["repr", "ID"]
-    )
+    AA_vocab_data = pd.read_csv(TITAN_AA_PATH, sep="\t", header=None, names=["repr", "ID"])
 
     # Tokenizer example taken from https://huggingface.co/course/chapter6/8?fw=pt
 
@@ -80,22 +66,10 @@ def create_base_AA_tokenizer(cfg_raw: Dict):
     special_tokens = get_special_tokens(subset=["special", "task"])
     trainer_AA = trainers.BpeTrainer(vocab_size=100, special_tokens=special_tokens)
     unwrapped_AA_vocab = list(AA_vocab_data["repr"])
-    unwrapped_AA_tokenizer.train_from_iterator(
-        get_training_corpus(dataset=unwrapped_AA_vocab), trainer=trainer_AA
-    )
-    if not os.path.exists(
-        os.path.dirname(
-            cfg_raw["data"]["tokenizer"]["tokenizers_info"]["AA"]["json_path"]
-        )
-    ):
-        os.makedirs(
-            os.path.dirname(
-                cfg_raw["data"]["tokenizer"]["tokenizers_info"]["AA"]["json_path"]
-            )
-        )
-    unwrapped_AA_tokenizer.save(
-        path=cfg_raw["data"]["tokenizer"]["tokenizers_info"]["AA"]["json_path"]
-    )
+    unwrapped_AA_tokenizer.train_from_iterator(get_training_corpus(dataset=unwrapped_AA_vocab), trainer=trainer_AA)
+    if not os.path.exists(os.path.dirname(cfg_raw["data"]["tokenizer"]["tokenizers_info"]["AA"]["json_path"])):
+        os.makedirs(os.path.dirname(cfg_raw["data"]["tokenizer"]["tokenizers_info"]["AA"]["json_path"]))
+    unwrapped_AA_tokenizer.save(path=cfg_raw["data"]["tokenizer"]["tokenizers_info"]["AA"]["json_path"])
     print("Fin")
 
 
@@ -113,9 +87,7 @@ def main(cfg: DictConfig) -> None:
 
     test_tokenizer(t_mult, cfg_raw)
 
-    t_mult_loaded = ModularTokenizer.load_from_jsons(
-        tokenizers_info=cfg_raw["data"]["tokenizer"]["tokenizers_info"]
-    )
+    t_mult_loaded = ModularTokenizer.load_from_jsons(tokenizers_info=cfg_raw["data"]["tokenizer"]["tokenizers_info"])
 
     test_tokenizer(t_mult_loaded, cfg_raw, mode="loaded")
 
@@ -124,7 +96,5 @@ def main(cfg: DictConfig) -> None:
 
 if __name__ == "__main__":
     os.environ["TITAN_DATA"] = "/dccstor/fmm/users/vadimra/dev/data/TITAN/08-02-2023/"
-    os.environ[
-        "TITAN_RESULTS"
-    ] = "/dccstor/fmm/users/vadimra/dev/output/TITAN_t5/08-02-2023/"
+    os.environ["TITAN_RESULTS"] = "/dccstor/fmm/users/vadimra/dev/output/TITAN_t5/08-02-2023/"
     main()
