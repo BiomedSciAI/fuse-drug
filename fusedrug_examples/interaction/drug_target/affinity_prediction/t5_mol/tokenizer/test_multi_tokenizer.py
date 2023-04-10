@@ -2,7 +2,7 @@ import hydra
 from omegaconf import DictConfig, OmegaConf
 from multi_tokenizer import ModularTokenizer
 import os
-from typing import Dict, Optional
+from typing import Dict, Optional, Any
 
 from special_tokens import (
     get_special_tokens,
@@ -31,6 +31,7 @@ def test_tokenizer(t_inst: ModularTokenizer, cfg_raw: Dict, mode: Optional[str] 
         typed_input_list=input_strings,
         max_len=cfg_raw["data"]["tokenizer"]["overall_max_len"],
     )
+    print(f"encoded tokens: {enc.tokens}")
     # Test overall padding: (global padding works)
     enc_pad = t_inst.encode(
         typed_input_list=input_strings,
@@ -49,10 +50,12 @@ def test_tokenizer(t_inst: ModularTokenizer, cfg_raw: Dict, mode: Optional[str] 
         "".join(enc_pad.tokens) == decoded_tokens
     ), f"decoded tokens do not correspond to the original tokens, mode: {mode}"
     decoded_tokens_no_special = t_inst.decode(id_list=list(enc_pad.ids), skip_special_tokens=True)
-    a = 1
+    print(f"decoded tokens: {decoded_tokens}")
+    print(f"decoded tokens, no special tokens: {decoded_tokens_no_special}")
+    # a = 1
 
 
-def create_base_AA_tokenizer(cfg_raw: Dict):
+def create_base_AA_tokenizer(cfg_raw: Dict[str, Any]):
     def get_training_corpus(dataset):
         for i in range(0, len(dataset), 1000):
             yield dataset[i : i + 1000]
@@ -78,20 +81,22 @@ def main(cfg: DictConfig) -> None:
     print(str(cfg))
 
     cfg = hydra.utils.instantiate(cfg)
-    cfg_raw = OmegaConf.to_object(cfg)
+    tmp = OmegaConf.to_object(cfg)
+    cfg_raw: Dict[str, Any] = tmp
 
     create_base_AA_tokenizer(cfg_raw=cfg_raw)
 
-    t_mult = ModularTokenizer(**cfg_raw["data"]["tokenizer"])
+    cfg_tokenizer: Dict[str, Any] = cfg_raw["data"]["tokenizer"]
+    t_mult = ModularTokenizer(**cfg_tokenizer)
     t_mult.save_jsons(tokenizers_info=cfg_raw["data"]["tokenizer"]["tokenizers_info"])
 
     test_tokenizer(t_mult, cfg_raw)
 
     t_mult_loaded = ModularTokenizer.load_from_jsons(tokenizers_info=cfg_raw["data"]["tokenizer"]["tokenizers_info"])
 
-    test_tokenizer(t_mult_loaded, cfg_raw, mode="loaded")
+    test_tokenizer(t_mult_loaded, cfg_raw=cfg_raw, mode="loaded")
 
-    a = 1
+    print("Fin")
 
 
 if __name__ == "__main__":

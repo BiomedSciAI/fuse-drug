@@ -132,16 +132,16 @@ def get_special_tokens(subset: Optional[Union[str, List]] = None) -> List:
     """
     if isinstance(subset, str):
         subset = [subset]
-    if subset != None:
+    if subset is not None:
         for x in subset:
             assert x in ["special", "task", "AA"]
 
     tokens_wrapped = []
-    if subset == None or "special" in subset:
+    if subset is None or "special" in subset:
         tokens_wrapped += [special_wrap_input(x) for x in special_tokens]
-    if subset == None or "task" in subset:
+    if subset is None or "task" in subset:
         tokens_wrapped += [special_wrap_input(x) for x in task_tokens]
-    if subset == None or "AA" in subset:
+    if subset is None or "AA" in subset:
         tokens_wrapped += [special_wrap_input(x) for x in AA_tokens]
     return tokens_wrapped
 
