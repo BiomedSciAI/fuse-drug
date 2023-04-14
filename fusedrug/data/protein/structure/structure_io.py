@@ -161,6 +161,10 @@ def get_chain_native_features(
     chain_id:
         can be a single character (example: 'A')
         or an integer (zero-based) and then the i-th chain in the *sorted* list of available chains will be used
+
+    chain_id_type: one of the allowed options "author_assigned" or "pdb_assigned"
+        "author_assigned" means that the provided chain_id is using the chain id that the original author who uploaded to PDB assigned to it.
+        "pdb_assigned" means that the provided chain_d is using the chain id that PDB dataset assigned.
     """
 
     assert chain_id_type in ["author_assigned", "pdb_assigned"]
@@ -479,12 +483,6 @@ def parse_mmcif(
 
     # https://biopython-cn.readthedocs.io/zh_CN/latest/en/chr11.html#reading-an-mmcif-file
 
-    # this is inefficient as I'm reading the mmcif file again, but choosing to do this to keep openfold code mostly unmodified for now
-    # handle = io.StringIO(raw_mmcif_str)
-    # mmcif_dict = MMCIF2Dict.MMCIF2Dict(handle)
-
-    # entities_details = mmcif_parsing.mmcif_loop_to_list("_entity.", mmcif_dict)
-
     # Crash if an error is encountered. Any parsing errors should have
     # been dealt with at the alignment stage.
     if mmcif_object.mmcif_object is None:
@@ -497,17 +495,8 @@ def parse_mmcif(
 
     mmcif_object = mmcif_object.mmcif_object
 
-    # chain_id_to_seqres = list(mmcif_object.chain_to_seqres.keys())
-
     return mmcif_object
 
-    # it does too much - templates search and MSA
-    # data = self.data_pipeline.process_mmcif(
-    #     mmcif=mmcif_object,
-    #     alignment_dir=alignment_dir,
-    #     chain_id=chain_id,
-    #     alignment_index=alignment_index
-    # )
 
 
 def get_chain_data(
