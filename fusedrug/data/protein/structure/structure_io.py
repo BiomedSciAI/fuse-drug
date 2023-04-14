@@ -498,7 +498,6 @@ def parse_mmcif(
     return mmcif_object
 
 
-
 def get_chain_data(
     mmcif: mmcif_parsing.MmcifObject,
     chain_id: Union[str, int],
