@@ -1,10 +1,9 @@
 import pytorch_lightning as pl
-from typing import Optional
+from typing import Optional, List, Any
 from fusedrug.data.molecule.ops import SmilesRandomizeAtomOrder, SmilesToRDKitMol, RDKitMolToSmiles
 import os
 from fuse.data import OpBase
 from fuse.utils import NDict
-from fusedrug.utils.file_formats import IndexedTextTable
 from fusedrug.data.protein.ops import ProteinRandomFlipOrder, OpToUpperCase, OpKeepOnlyUpperCase
 from fusedrug.data.molecule.tokenizer.pretrained import get_path as get_molecule_pretrained_tokenizer_path
 from fusedrug.data.protein.tokenizer.pretrained import get_path as get_protein_pretrained_tokenizer_path
@@ -37,6 +36,7 @@ class AffinityDataModule(pl.LightningDataModule):
         pairs_table_ligand_column: str = "ligand_name",
         pairs_table_sequence_column: str = "uniprot_accession",
         pairs_table_affinity_column: str = "pIC50",
+        partial_sample_ids: Optional[List[int]] = None,
     ):
         """
         a ligand vs. target affinity prediction data module
@@ -62,6 +62,8 @@ class AffinityDataModule(pl.LightningDataModule):
             pairs_table_ligand_column: name of the ligand column in the smi file
             pairs_table_sequence_column: name of target sequence column in the smi file
             pairs_table_affinity_column: name of affinity measure column
+            partial_sample_ids: optional - use partial subset of sample ids for the train, val and test datasets. Useful for testing purposes.
+                                If None, uses all sample ids.
 
         """
 
@@ -89,6 +91,8 @@ class AffinityDataModule(pl.LightningDataModule):
         self.pairs_table_ligand_column = pairs_table_ligand_column
         self.pairs_table_sequence_column = pairs_table_sequence_column
         self.pairs_table_affinity_column = pairs_table_affinity_column
+
+        self.partial_sample_ids = partial_sample_ids
 
         if self.pytoda_wrapped_tokenizer:
             if self.pytoda_ligand_tokenizer_json is None:
@@ -140,7 +144,9 @@ class AffinityDataModule(pl.LightningDataModule):
             affinity_pairs_csv_affinity_value_column_name=self.pairs_table_affinity_column,  #'pIC50',
         )
 
-    def _create_pipeline_desc(self, is_training, drug_target_affinity_loader_op):
+    def _create_pipeline_desc(
+        self, is_training: bool, drug_target_affinity_loader_op: DrugTargetAffinityLoader
+    ) -> List[OpBase]:
         """
         Note: in the current implementation, augmentation is activated only if is_training==False
         """
@@ -247,7 +253,7 @@ class AffinityDataModule(pl.LightningDataModule):
 
         return pipeline_desc
 
-    def train_dataloader(self):
+    def train_dataloader(self) -> DataLoader:
 
         affinity_loader_op = DrugTargetAffinityLoader(
             ligands_smi=self.molecules_smi,
@@ -263,7 +269,7 @@ class AffinityDataModule(pl.LightningDataModule):
         all_sample_ids = np.arange(len(affinity_loader_op.drug_target_affinity_dataset))
 
         train_dataset = DatasetDefault(
-            all_sample_ids,
+            all_sample_ids if self.partial_sample_ids is None else self.partial_sample_ids,
             static_pipeline=None,
             dynamic_pipeline=PipelineDefault(name="train_pipeline_affinity_predictor", ops_and_kwargs=pipeline_desc),
         )
@@ -278,7 +284,7 @@ class AffinityDataModule(pl.LightningDataModule):
         )
         return dl
 
-    def val_dataloader(self):
+    def val_dataloader(self) -> DataLoader:
 
         affinity_loader_op = DrugTargetAffinityLoader(
             ligands_smi=self.molecules_smi,
@@ -294,7 +300,7 @@ class AffinityDataModule(pl.LightningDataModule):
         all_sample_ids = np.arange(len(affinity_loader_op.drug_target_affinity_dataset))
 
         val_dataset = DatasetDefault(
-            all_sample_ids,
+            all_sample_ids if self.partial_sample_ids is None else self.partial_sample_ids,
             static_pipeline=None,
             dynamic_pipeline=PipelineDefault(name="val_pipeline_affinity_predictor", ops_and_kwargs=pipeline_desc),
         )
@@ -305,7 +311,7 @@ class AffinityDataModule(pl.LightningDataModule):
         )
         return dl
 
-    def test_dataloader(self):
+    def test_dataloader(self) -> DataLoader:
         affinity_loader_op = DrugTargetAffinityLoader(
             ligands_smi=self.molecules_smi,
             proteins_smi=self.proteins_smi,
@@ -320,7 +326,7 @@ class AffinityDataModule(pl.LightningDataModule):
         all_sample_ids = np.arange(len(affinity_loader_op.drug_target_affinity_dataset))
 
         test_dataset = DatasetDefault(
-            all_sample_ids,
+            all_sample_ids if self.partial_sample_ids is None else self.partial_sample_ids,
             static_pipeline=None,
             dynamic_pipeline=PipelineDefault(name="test_pipeline_affinity_predictor", ops_and_kwargs=pipeline_desc),
         )
@@ -330,47 +336,3 @@ class AffinityDataModule(pl.LightningDataModule):
             test_dataset, batch_size=self.eval_batch_size, shuffle=False, drop_last=False, num_workers=self.num_workers
         )
         return dl
-
-
-### Ops
-# TODO: consider moving to fusedrug/data/ops
-
-
-class OpLoadActiveSiteAlignmentInfo(OpBase):
-    def __init__(self, kinase_alignment_smi, **kwargs):
-        """
-        #example kinase_alignment_smi found in '/gpfs/haifa/projects/m/msieve/MedicalSieve/mol_bio_datasets/paccmann_related/active_sites_alignment_from_Tien_Huynh/joint_alignment_info.smi'
-        """
-
-        super().__init__(**kwargs)
-        self.kinase_alignment_smi_name = kinase_alignment_smi
-        self.kinase_alignment_smi = IndexedTextTable(
-            self.kinase_alignment_smi_name,
-            first_row_is_columns_names=True,
-            id_column_idx=1,
-            columns_num_expectation=3,
-            allow_access_by_id=True,
-            # num_workers=0, #DEBUGGING! remove this
-        )
-
-    def __call__(
-        self,
-        sample_dict: NDict,
-        op_id: Optional[str] = None,
-        key_in="data.input.protein_str",
-        key_out="data.input.protein_str",
-    ):
-        """
-        params
-            key_in:str - expected to contain only the active site, in high case
-            key_out:str - will contain the entire sequence, high case for amino acids inside the active site, low case for amino acids outside it
-        """
-        data = sample_dict[key_in]
-        assert isinstance(data, str)
-
-        _, data = self.kinase_alignment_smi[data]
-        aligned_seq = data.aligned_protein_seq
-
-        sample_dict[key_out] = aligned_seq
-
-        return sample_dict

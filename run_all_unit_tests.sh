@@ -82,11 +82,6 @@ create_env() {
             echo "Installing core requirements - Done"
 
             if [ $mode = "examples" ]; then
-                echo "Updating git submodules"
-                git submodule sync
-                git submodule update --init --recursive
-                echo "Updating git submodules - Done"
-
                 echo "Installing examples requirements"
                 conda run $env --no-capture-output --live-stream pip install -r ./fusedrug_examples/requirements.txt
                 echo "Installing examples requirements - Done"
@@ -128,6 +123,13 @@ echo "Running core unittests - Done"
 echo "Create examples env"
 create_env $force_cuda_version $env_path "examples"
 echo "Create examples env - Done"
+
+# update gitsubmodule - loading existing conda env doesn't solve it
+# each different clone of the repo should be followed by submodules initialization
+echo "Updating git submodules"
+git submodule sync
+git submodule update --init --recursive
+echo "Updating git submodules - Done"
 
 echo "Running examples unittests in $ENV_TO_USE"
 conda run $env --no-capture-output --live-stream python ./run_all_unit_tests.py examples

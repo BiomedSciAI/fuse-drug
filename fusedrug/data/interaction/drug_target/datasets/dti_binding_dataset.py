@@ -1,15 +1,15 @@
-from typing import Tuple, Optional, Union, List
+from typing import Any, Optional, Union, List, Dict, Tuple
 from torch.utils.data import Dataset
 import pandas as pd
 import numpy as np
+from fuse.utils import NDict
 from fuse.data import DatasetDefault
-from fusedrug.data.interaction.drug_target.loaders.dti_binding_dataset_loader import DTIBindingDatasetLoader
 from fuse.data.ops.caching_tools import run_cached_func
 from fuse.data.ops.ops_read import OpReadDataframe
 from fuse.data.pipelines.pipeline_default import PipelineDefault
 
 
-def fix_df_types(df):
+def fix_df_types(df: pd.DataFrame) -> pd.DataFrame:
     if "source_dataset_activity_id" in df.columns:
         df.source_dataset_activity_id = df.source_dataset_activity_id.astype("string")
 
@@ -21,12 +21,12 @@ def fix_df_types(df):
     return df
 
 
-def set_activity_multiindex(df):
+def set_activity_multiindex(df: pd.DataFrame) -> pd.DataFrame:
     df.set_index(["source_dataset_versioned_name", "source_dataset_activity_id"], inplace=True)
     return df
 
 
-def itemify(x):
+def itemify(x: Any) -> Any:
     try:
         x.item()
     except:
@@ -39,13 +39,13 @@ def dti_binding_dataset(
     ligands_tsv: str,
     targets_tsv: str,
     split_tsv: str = None,
-    pairs_columns_to_extract=None,
-    pairs_rename_columns=None,
-    ligands_columns_to_extract=None,
-    ligands_rename_columns=None,
-    targets_columns_to_extract=None,
-    targets_rename_columns=None,
-    **kwargs,
+    pairs_columns_to_extract: Optional[List[str]] = None,
+    pairs_rename_columns: Optional[Dict[str, str]] = None,
+    ligands_columns_to_extract: Optional[List[str]] = None,
+    ligands_rename_columns: Optional[Dict[str, str]] = None,
+    targets_columns_to_extract: Optional[List[str]] = None,
+    targets_rename_columns: Optional[Dict[str, str]] = None,
+    **kwargs: Any,
 ) -> DatasetDefault:
 
     # load tsvs with opional caching:
@@ -163,14 +163,14 @@ class DTIBindingDataset(Dataset):
         self._ligands = ans_dict["ligands"]
         self._targets = ans_dict["targets"]
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self._pairs)
 
-    def __iter__(self):
+    def __iter__(self) -> dict:
         for i in range(len(self)):
             yield self[i]
 
-    def __getitem__(self, index):
+    def __getitem__(self, index: Union[int, Tuple[str, str]]) -> dict:
         """
         two options are supported:
         1. if index is an integer, the row with this index will be loaded (using .iloc).
@@ -255,8 +255,8 @@ def _load_dataframes(
     splits_tsv: str = None,
     use_folds: Optional[Union[List, str]] = None,
     keep_activity_labels: List[str] = None,
-    **kwargs,
-):
+    **kwargs: Any,
+) -> dict:
     """
     Loads pairs, ligands and targets, and optionally filters in a subset
 
@@ -348,7 +348,7 @@ def _load_dataframes(
     )
 
 
-def _fill_in_dummy_sample(sample_dict):
+def _fill_in_dummy_sample(sample_dict: NDict) -> NDict:
     _ligand_size = 696
     sample_dict["data.input.tokenized_ligand"] = np.random.randint(0, 3000, size=_ligand_size)
     sample_dict["data.input.tokenized_ligand_attention_mask"] = [True] * _ligand_size
