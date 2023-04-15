@@ -3,6 +3,7 @@ from fuse.data import OpBase, get_sample_id
 from tokenizers import Tokenizer
 from warnings import warn
 from collections import defaultdict
+from typing import Union, Tuple
 
 
 class FastTokenizer(OpBase):
@@ -13,19 +14,35 @@ class FastTokenizer(OpBase):
     def __init__(
         self,
         tokenizer_json,
-        max_size=None,  # determines both padding length and max size.
-        pad_id=None,
+        max_size=None,  
+        pad_id:Union[int,str]=None,
         pad_type_id=None,
-        verbose=0,
+        verbose:bool=False,
         **kwargs,
     ):
+        """
+        
+        Args:
+            tokenizer_json: full path to a json file that the tokenizer will be loaded from
+            max_size: sequences below this size will be padded, and above this size will be truncated
+            pad_id: either an int describing explicitly the token id, or a string of a token for which the token id will be looked up in the loaded tokenizer vocab
+            pad_type_id: see tokenizers.Tokenizer.enable_padding() docstring 
+            verbose:
+        """
         super().__init__(**kwargs)
 
-        if verbose > 0:
+        if verbose:
             print(f"DEBUG:FastTokenizer __init__ called for json {tokenizer_json}")
 
         self._tokenizer_json = tokenizer_json
         self._tokenizer = Tokenizer.from_file(self._tokenizer_json)
+        vocab = self._tokenizer.get_vocab()
+        if isinstance(pad_id, str):
+            if pad_id in vocab.keys():
+                pad_id = vocab[pad_id]
+            else:
+                raise Exception(f'Could not find pad token = {pad_id} in {tokenizer_json}')
+
         self._pad_id = pad_id
         self._verbose = verbose
 
@@ -48,7 +65,7 @@ class FastTokenizer(OpBase):
 
         self._max_size = max_size
 
-        if self._verbose > 0:
+        if self._verbose:
             self._debug_max_tokenized_len_encountered = defaultdict(int)
 
     # note: use normalizer.Sequence to chain multiple normalizers
@@ -64,6 +81,19 @@ class FastTokenizer(OpBase):
 
     def get_vocab_size(self):
         return self._tokenizer.get_vocab_size()
+
+    def get_max_token_id(self) -> Tuple[str,int]:
+        max_token_id = None
+        token_str_of_max_token_id = None
+        for k,d in self._tokenizer.get_vocab().items():
+            if (max_token_id is None) or (d>max_token_id):
+                token_str_of_max_token_id = k
+                max_token_id = d
+
+        if max_token_id is None:
+            raise Exception(f'Could not find max_token_id! possibly an empty vocab.')        
+        return token_str_of_max_token_id, max_token_id
+
 
     def get_token_id(self, token_str):
         ans = self._tokenizer.token_to_id(token_str)
@@ -90,7 +120,7 @@ class FastTokenizer(OpBase):
         if self._max_size is not None:  # we tightly couple padding length and max size.
             assert self._max_size == len(encoded.ids)
 
-        if self._verbose > 0:
+        if self._verbose:
             if self._pad_id in encoded.ids:
                 _encoded_len_unpadded = encoded.ids.index(self._pad_id)
             else:
