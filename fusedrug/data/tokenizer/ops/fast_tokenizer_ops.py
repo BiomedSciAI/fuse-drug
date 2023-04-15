@@ -83,6 +83,10 @@ class FastTokenizer(OpBase):
         return self._tokenizer.get_vocab_size()
 
     def get_max_token_id(self) -> Tuple[str,int]:
+        """
+        scans the vocab for the max observed token id and returns a tuple for it
+            [its token string (str), the token id (int)]
+        """
         max_token_id = None
         token_str_of_max_token_id = None
         for k,d in self._tokenizer.get_vocab().items():
