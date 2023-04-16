@@ -22,6 +22,7 @@ def mehikon(a, b):  # type: ignore
 termcolor.cprint = mehikon  # since junit/jenkins doesn't like text color ...
 
 if __name__ == "__main__":
+    print(f'info:in {__file__} in conda env {os.environ.get("CONDA_PREFIX", "missing???")}')
     mode = None
     if len(sys.argv) > 1:
         mode = sys.argv[1]  # options "examples", "core" or None for both "core" and "examples"
