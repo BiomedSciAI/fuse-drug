@@ -4,7 +4,8 @@ from tokenizers import Tokenizer
 from warnings import warn
 from collections import defaultdict
 from typing import Union, Tuple
-
+import os
+import re
 
 class FastTokenizer(OpBase):
     """
@@ -98,6 +99,43 @@ class FastTokenizer(OpBase):
             raise Exception(f'Could not find max_token_id! possibly an empty vocab.')        
         return token_str_of_max_token_id, max_token_id
 
+    def get_min_max_sentinels(self, sentinel_prefix='<SENTINEL_ID', integer_find_regex='\d{1,}') -> Tuple[int,int]:
+        """
+            returns a Tuple [min encountered sentinel name, max encountered sentinel name]
+            
+            For example, if the vocab contains:
+
+            SENTINEL_ID_101: 1000,
+            SENTINEL_ID_102: 1001,
+            SENTINEL_ID_103: 1002,
+
+            will return [101,103]
+        """
+        min_token = None
+        max_token = None        
+
+        for k,_ in self._tokenizer.get_vocab().items():
+            if sentinel_prefix in k:
+                val = re.findall(integer_find_regex, k)
+                if len(val)!=1:
+                    raise Exception(f'expected exactly one integer number in {k} but found {val}')
+                val = val[0]
+                val = int(val)
+
+                if (min_token is None) or (val < min_token):
+                    min_token = val
+
+                if (max_token is None) or (val > max_token):
+                    max_token = val
+                
+        if (min_token is None) or (max_token is None):
+            raise Exception(f'Could not find any sentinels with the prefix "{sentinel_prefix}"')
+        
+        return (min_token, max_token)
+            
+                
+
+
 
     def get_token_id(self, token_str):
         ans = self._tokenizer.token_to_id(token_str)
@@ -113,6 +151,9 @@ class FastTokenizer(OpBase):
         key_out_attention_mask: str = None,
         convert_attention_mask_to_bool=True,
     ):
+        if self._verbose:
+            print(f'PID:{os.getpid()} FastTokenizer op sample_id {sample_dict["data.sample_id"]} key_in={key_in} pdb={sample_dict["pdb"]} HeavyChain: {sample_dict["Hchain"]} LightChain: {sample_dict["Lchain"]}')
+        
         data_str = sample_dict[key_in]
         if not isinstance(data_str, str):
             raise Exception(
@@ -152,7 +193,7 @@ class FastTokenizer(OpBase):
 
         if len(encoded.overflowing) > 0:
             print(
-                f"Warning: FastTokenizer had to truncate sequence. Original Sequence Length = {len(data_str)} max supported = {self._max_size} for tokenizer: {self._tokenizer_json} for sample_id {get_sample_id(sample_dict)}"
+                f"Warning: FastTokenizer (pid={os.getpid()}) had to truncate sequence. Original Sequence Length = {len(data_str)} max supported = {self._max_size} for tokenizer: {self._tokenizer_json} for sample_id {get_sample_id(sample_dict)}"
             )
 
         if key_out_tokenized_object is not None:
