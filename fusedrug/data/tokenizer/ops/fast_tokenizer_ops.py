@@ -148,10 +148,10 @@ class FastTokenizer(OpBase):
         key_out_attention_mask: str = None,
         convert_attention_mask_to_bool=True,
     ):
-        if self._verbose:
-            print(
-                f'PID:{os.getpid()} FastTokenizer op sample_id {sample_dict["data.sample_id"]} key_in={key_in} pdb={sample_dict["pdb"]} HeavyChain: {sample_dict["Hchain"]} LightChain: {sample_dict["Lchain"]}'
-            )
+        # if self._verbose:
+        #     print(
+        #         f'PID:{os.getpid()} FastTokenizer op sample_id {sample_dict["data.sample_id"]} key_in={key_in} pdb={sample_dict["pdb"]} HeavyChain: {sample_dict["Hchain"]} LightChain: {sample_dict["Lchain"]}'
+        #     )
 
         data_str = sample_dict[key_in]
         if not isinstance(data_str, str):
