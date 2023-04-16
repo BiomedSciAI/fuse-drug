@@ -7,6 +7,7 @@ from typing import Union, Tuple
 import os
 import re
 
+
 class FastTokenizer(OpBase):
     """
     applies a tokenizers (https://github.com/huggingface/tokenizers) based tokenizer
@@ -15,19 +16,19 @@ class FastTokenizer(OpBase):
     def __init__(
         self,
         tokenizer_json,
-        max_size=None,  
-        pad_id:Union[int,str]=None,
+        max_size=None,
+        pad_id: Union[int, str] = None,
         pad_type_id=None,
-        verbose:bool=False,
+        verbose: bool = False,
         **kwargs,
     ):
         """
-        
+
         Args:
             tokenizer_json: full path to a json file that the tokenizer will be loaded from
             max_size: sequences below this size will be padded, and above this size will be truncated
             pad_id: either an int describing explicitly the token id, or a string of a token for which the token id will be looked up in the loaded tokenizer vocab
-            pad_type_id: see tokenizers.Tokenizer.enable_padding() docstring 
+            pad_type_id: see tokenizers.Tokenizer.enable_padding() docstring
             verbose:
         """
         super().__init__(**kwargs)
@@ -42,7 +43,7 @@ class FastTokenizer(OpBase):
             if pad_id in vocab.keys():
                 pad_id = vocab[pad_id]
             else:
-                raise Exception(f'Could not find pad token = {pad_id} in {tokenizer_json}')
+                raise Exception(f"Could not find pad token = {pad_id} in {tokenizer_json}")
 
         self._pad_id = pad_id
         self._verbose = verbose
@@ -83,42 +84,42 @@ class FastTokenizer(OpBase):
     def get_vocab_size(self):
         return self._tokenizer.get_vocab_size()
 
-    def get_max_token_id(self) -> Tuple[str,int]:
+    def get_max_token_id(self) -> Tuple[str, int]:
         """
         scans the vocab for the max observed token id and returns a tuple for it
             [its token string (str), the token id (int)]
         """
         max_token_id = None
         token_str_of_max_token_id = None
-        for k,d in self._tokenizer.get_vocab().items():
-            if (max_token_id is None) or (d>max_token_id):
+        for k, d in self._tokenizer.get_vocab().items():
+            if (max_token_id is None) or (d > max_token_id):
                 token_str_of_max_token_id = k
                 max_token_id = d
 
         if max_token_id is None:
-            raise Exception(f'Could not find max_token_id! possibly an empty vocab.')        
+            raise Exception(f"Could not find max_token_id! possibly an empty vocab.")
         return token_str_of_max_token_id, max_token_id
 
-    def get_min_max_sentinels(self, sentinel_prefix='<SENTINEL_ID', integer_find_regex='\d{1,}') -> Tuple[int,int]:
+    def get_min_max_sentinels(self, sentinel_prefix="<SENTINEL_ID", integer_find_regex="\d{1,}") -> Tuple[int, int]:
         """
-            returns a Tuple [min encountered sentinel name, max encountered sentinel name]
-            
-            For example, if the vocab contains:
+        returns a Tuple [min encountered sentinel name, max encountered sentinel name]
 
-            SENTINEL_ID_101: 1000,
-            SENTINEL_ID_102: 1001,
-            SENTINEL_ID_103: 1002,
+        For example, if the vocab contains:
 
-            will return [101,103]
+        SENTINEL_ID_101: 1000,
+        SENTINEL_ID_102: 1001,
+        SENTINEL_ID_103: 1002,
+
+        will return [101,103]
         """
         min_token = None
-        max_token = None        
+        max_token = None
 
-        for k,_ in self._tokenizer.get_vocab().items():
+        for k, _ in self._tokenizer.get_vocab().items():
             if sentinel_prefix in k:
                 val = re.findall(integer_find_regex, k)
-                if len(val)!=1:
-                    raise Exception(f'expected exactly one integer number in {k} but found {val}')
+                if len(val) != 1:
+                    raise Exception(f"expected exactly one integer number in {k} but found {val}")
                 val = val[0]
                 val = int(val)
 
@@ -127,15 +128,11 @@ class FastTokenizer(OpBase):
 
                 if (max_token is None) or (val > max_token):
                     max_token = val
-                
+
         if (min_token is None) or (max_token is None):
             raise Exception(f'Could not find any sentinels with the prefix "{sentinel_prefix}"')
-        
+
         return (min_token, max_token)
-            
-                
-
-
 
     def get_token_id(self, token_str):
         ans = self._tokenizer.token_to_id(token_str)
@@ -152,8 +149,10 @@ class FastTokenizer(OpBase):
         convert_attention_mask_to_bool=True,
     ):
         if self._verbose:
-            print(f'PID:{os.getpid()} FastTokenizer op sample_id {sample_dict["data.sample_id"]} key_in={key_in} pdb={sample_dict["pdb"]} HeavyChain: {sample_dict["Hchain"]} LightChain: {sample_dict["Lchain"]}')
-        
+            print(
+                f'PID:{os.getpid()} FastTokenizer op sample_id {sample_dict["data.sample_id"]} key_in={key_in} pdb={sample_dict["pdb"]} HeavyChain: {sample_dict["Hchain"]} LightChain: {sample_dict["Lchain"]}'
+            )
+
         data_str = sample_dict[key_in]
         if not isinstance(data_str, str):
             raise Exception(
