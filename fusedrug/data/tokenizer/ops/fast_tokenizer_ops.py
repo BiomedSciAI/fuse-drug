@@ -3,7 +3,7 @@ from fuse.data import OpBase, get_sample_id
 from tokenizers import Tokenizer
 from warnings import warn
 from collections import defaultdict
-from typing import Union, Tuple
+from typing import Tuple, Optional, Union
 import os
 import re
 
@@ -17,8 +17,9 @@ class FastTokenizer(OpBase):
         self,
         tokenizer_json,
         max_size=None,
-        pad_id: Union[int, str] = None,
+        pad_token: str = None,
         pad_type_id=None,
+        validate_ends_with_eos: Optional[str] = "<EOS>",
         verbose: bool = False,
         **kwargs,
     ):
@@ -27,8 +28,10 @@ class FastTokenizer(OpBase):
         Args:
             tokenizer_json: full path to a json file that the tokenizer will be loaded from
             max_size: sequences below this size will be padded, and above this size will be truncated
-            pad_id: either an int describing explicitly the token id, or a string of a token for which the token id will be looked up in the loaded tokenizer vocab
+            pad: a string of the pad token
             pad_type_id: see tokenizers.Tokenizer.enable_padding() docstring
+            validate_ends_with_eos: during encoder request (a _call_ to the op) will make sure that it ends with the provided eos token, and raise exception otherwise.
+                having an eos (end of sentence) token in the end is useful for multiple scenarios, for example in a generative transformer (like T5 encoder-decoder)
             verbose:
         """
         super().__init__(**kwargs)
@@ -39,11 +42,19 @@ class FastTokenizer(OpBase):
         self._tokenizer_json = tokenizer_json
         self._tokenizer = Tokenizer.from_file(self._tokenizer_json)
         vocab = self._tokenizer.get_vocab()
-        if isinstance(pad_id, str):
-            if pad_id in vocab.keys():
-                pad_id = vocab[pad_id]
-            else:
-                raise Exception(f"Could not find pad token = {pad_id} in {tokenizer_json}")
+
+        if pad_token in vocab.keys():
+            pad_id = vocab[pad_token]
+        else:
+            raise Exception(f"Could not find pad token = {pad_token} in {tokenizer_json}")
+
+        self._validate_ends_with_eos = validate_ends_with_eos
+
+        if self._validate_ends_with_eos is not None:
+            if self._validate_ends_with_eos not in vocab.keys():
+                raise Exception(
+                    f"Could not find eos token = {validate_ends_with_eos} in {tokenizer_json}. You can disable the validation by setting validate_ends_with_eos=None"
+                )
 
         self._pad_id = pad_id
         self._verbose = verbose
@@ -159,6 +170,12 @@ class FastTokenizer(OpBase):
                 f"Expected key_in={key_in} to point to a string, and instead got a {type(data_str)}. value={data_str}"
             )
 
+        if self._validate_ends_with_eos is not None:
+            if not data_str.rstrip().endswith(self._validate_ends_with_eos):
+                raise Exception(
+                    f"self._validate_ends_with_eos was set to {self._validate_ends_with_eos}, but about to encode a string that does not end with it. The str was: {data_str}"
+                )
+
         encoded = self._tokenizer.encode(data_str)
 
         if self._max_size is not None:  # we tightly couple padding length and max size.
@@ -190,7 +207,9 @@ class FastTokenizer(OpBase):
         # special_tokens_mask - 1 for anything that is a special token (e.g. padding, separator, etc.) 0 for the rest
         # overflowing - I *assume* it's any original content that get clipped out due to max length definition
 
-        if len(encoded.overflowing) > 0:
+        if (
+            len(encoded.overflowing) > 0
+        ):  # note, encoded.overflowing may have multiple items, and each item can contain multiple items
             print(
                 f"Warning: FastTokenizer (pid={os.getpid()}) had to truncate sequence. Original Sequence Length = {len(data_str)} max supported = {self._max_size} for tokenizer: {self._tokenizer_json} for sample_id {get_sample_id(sample_dict)}"
             )
