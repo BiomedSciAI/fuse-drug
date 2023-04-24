@@ -19,7 +19,7 @@ def worker_init_fn(worker_id: int) -> None:
     # add torch random seed selection as well?
 
 
-def set_rng_seed(seed:int) -> None:
+def set_rng_seed(seed: int) -> None:
     print(f"set_rng_seed: setting python random, numpy and torch rng seeds to {seed}")
     np.random.seed(seed)
     random.seed(seed)
