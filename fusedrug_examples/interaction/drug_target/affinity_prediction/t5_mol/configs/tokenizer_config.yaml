@@ -88,14 +88,12 @@ data:
         json_path:         "/dccstor/fmm/users/vadimra/dev/code/fuse-drug/fusedrug_examples/interaction/drug_target/affinity_prediction/t5_mol/tokenizer/pretrained/simple_protein_tokenizer_nonwrapped_nonspecial_AA.json"
         # updated for use with modular tokenizer json path:
         modular_json_path: "${data.tokenizer.modular_tokenizers_out_path}/simple_protein_tokenizer_nonwrapped_nonspecial_AA.json"
-        max_len: 15 #max len for this instance of the tokenizer. If null, then no limit is set (a limit can still be imposed when calling encode_list)
         start_delimiter: "<start_AA>"
-        end_delimiter: "<end_AA>"      
+        end_delimiter: "<end_AA>"
       - name: SMILES  #if None or undefined, type key will be used as the name
         tokenizer_id: 1 #unique identifier of the tokenizer
         json_path:         "/dccstor/fmm/users/vadimra/dev/code/fuse-drug/fusedrug_examples/interaction/drug_target/affinity_prediction/t5_mol/tokenizer/pretrained/bpe_tokenizer_trained_on_chembl_zinc_with_aug_4272372_samples_balanced_1_1.json"
         modular_json_path: "${data.tokenizer.modular_tokenizers_out_path}/bpe_tokenizer_trained_on_chembl_zinc_with_aug_4272372_samples_balanced_1_1.json"
-        max_len: 5
         start_delimiter: "<start_SMILES>" #String to start the sequence. If None or undefined, <start_${type key}> will be used as the name
         end_delimiter: "<end_SMILES>" #String to end the sequence. If None or undefined, <end_${type key}> will be used as the name
 

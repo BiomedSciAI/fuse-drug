@@ -3,28 +3,37 @@ from collections.abc import Iterable
 from fuse.utils import NDict
 from fuse.data import OpBase, get_sample_id
 from tokenizers import Tokenizer, Encoding
+import tokenizers
 from warnings import warn
-from typing import Optional, List, Set, Union, Tuple, Any
+from typing import Optional, List, Set, Union, Tuple, Any, Iterator
 import json
+import transformers
 
 
-class ModularTokenizer:
+class ModularTokenizer(transformers.PreTrainedTokenizerBase):
     def __init__(
         self,
-        tokenizers_info: Dict,
+        tokenizers_info: List,
         load_adjusted_jsons: Optional[bool] = False,
         **kwargs,
     ) -> None:
         """_summary_
 
         Args:
-            tokenizers_info (Dict): _description_
+            tokenizers_info (List): A list of dictionaries containing the following:
+            [
+                   {
+                        "name": a name of a tokenizer
+                        "modular_json_path":out_path for tokenizer_type
+                        "json_path": Optional - path to a json of the original sub-tokenizer, which will be merged into the modular tokenizer
+                    }
+            ]
             modular_tokenizers_out_path (Optional[str], optional): _description_. Defaults to None.
             load_adjusted_jsons (Optional[bool], optional): Whether to load json files created by ModularTokenizer, or to adjust the indices of given jsons. Defaults to False.
         """
-
-        # TODO: if there is only one tokenizer, leave it as is, without changing its id mappings. Not needed - if there's only one - we can just load its json
-        self.tokenizers_info = tokenizers_info
+        # super.__init__()
+        # TODO: if there is only one tokenizer, leave it as is, without changing its id mappings. Not needed - if there's only one, we can just load its json using load_from_jsons
+        self.tokenizers_info = ModularTokenizer.cfg_list_2_dict(tokenizers_info)
 
         if not load_adjusted_jsons:
             # store special tokens in a list to preserve their order:
@@ -67,11 +76,12 @@ class ModularTokenizer:
             # end operations on json
             json_str = json.dumps(t_json)
             tokenizer_inst = Tokenizer.from_str(json_str)
-            max_size = t_info["max_len"]
-            tokenizer_inst.enable_truncation(
-                max_length=max_size,
-                direction="right",
-            )
+            if "max_len" in t_info and t_info["max_len"] is not None:
+                max_size = t_info["max_len"]
+                tokenizer_inst.enable_truncation(
+                    max_length=max_size,
+                    direction="right",
+                )
             json_str = tokenizer_inst.to_str()
             t_json = json.loads(json_str)
             self.tokenizers_info[t_type]["tokenizer_inst"] = tokenizer_inst
@@ -208,7 +218,7 @@ class ModularTokenizer:
         return all_tokens - set(special_tokens)
 
     @staticmethod
-    def get_vocab(tokenizer_json_inst: Dict, token_list: Optional[List] = None) -> Dict:
+    def get_subtokenizer_vocab(tokenizer_json_inst: Dict, token_list: Optional[List] = None) -> Dict:
         """Returns a dictionary of {token:id} of tokenizer tokenizer_json_inst for all tokens in token_list
 
         Args:
@@ -225,13 +235,19 @@ class ModularTokenizer:
         return output
 
     @staticmethod
-    def load_from_jsons(tokenizers_info: Dict) -> Any:
+    def load_from_jsons(tokenizers_info: List) -> Any:
         """Reads a list of json paths (from tokenizer_info dictionary, as defined in the config), that were created by ModularTokenizer.save_jsons, and creates a modular tokenizer, keeping the ID mappings
         of the jsons.
         TODO: Check the resulting ModularTokenizer for consistency
 
         Args:
-            tokenizer_info (Dict): _description_
+            tokenizer_info (List): A list of dictionaries containing the following:
+            [
+                   {
+                        "name": a name of a tokenizer
+                        "modular_json_path":out_path for tokenizer_type
+                    }
+            ]
 
         Returns:
             object: _description_
@@ -287,12 +303,14 @@ class ModularTokenizer:
             ), f"tokenizer of type {t_type} hasn't been instantiated yet. Call init first."
             if len(self.decoder_dict) == 0:  # Add
                 sp_tokens = ModularTokenizer.get_special_tokens(t_info["json_instance"])
-                sp_vocab = ModularTokenizer.get_vocab(tokenizer_json_inst=t_info["json_instance"], token_list=sp_tokens)
+                sp_vocab = ModularTokenizer.get_subtokenizer_vocab(
+                    tokenizer_json_inst=t_info["json_instance"], token_list=sp_tokens
+                )
                 self.decoder_dict = ModularTokenizer.update_id2token_mapping(
                     id2token=self.decoder_dict, add_vocab=sp_vocab, is_special=True
                 )
             reg_tokens = ModularTokenizer.get_regular_tokens(t_info["json_instance"])
-            reg_vocab = ModularTokenizer.get_vocab(
+            reg_vocab = ModularTokenizer.get_subtokenizer_vocab(
                 tokenizer_json_inst=t_info["json_instance"], token_list=list(reg_tokens)
             )
             self.decoder_dict = ModularTokenizer.update_id2token_mapping(
@@ -313,13 +331,14 @@ class ModularTokenizer:
         result = {t_name: True for t_name in tests}
         result_details: Dict[str, Any] = {t_name: [] for t_name in tests}
         tokenizer_types = list(self.tokenizers_info.keys())
+        # TODO: If there are multiple tokenizer files that were derived from the same file - use only one for diagnosis
         all_inds_set: Set[int] = set()
         all_inds_len = 0
         if len(tokenizer_types) > 1:
             special_tokens = list(
                 ModularTokenizer.get_special_tokens(self.tokenizers_info[tokenizer_types[0]]["json_instance"])
             )
-            special_tokens_vocab = ModularTokenizer.get_vocab(
+            special_tokens_vocab = ModularTokenizer.get_subtokenizer_vocab(
                 tokenizer_json_inst=self.tokenizers_info[tokenizer_types[0]]["json_instance"],
                 token_list=special_tokens,
             )
@@ -329,7 +348,7 @@ class ModularTokenizer:
                 special_tokens_t = list(
                     ModularTokenizer.get_special_tokens(self.tokenizers_info[t_type]["json_instance"])
                 )
-                special_tokens_vocab_t = ModularTokenizer.get_vocab(
+                special_tokens_vocab_t = ModularTokenizer.get_subtokenizer_vocab(
                     tokenizer_json_inst=self.tokenizers_info[t_type]["json_instance"],
                     token_list=special_tokens_t,
                 )
@@ -343,7 +362,7 @@ class ModularTokenizer:
                 regular_tokens = list(
                     ModularTokenizer.get_regular_tokens(self.tokenizers_info[t_type]["json_instance"])
                 )
-                regular_tokens_vocab = ModularTokenizer.get_vocab(
+                regular_tokens_vocab = ModularTokenizer.get_subtokenizer_vocab(
                     tokenizer_json_inst=self.tokenizers_info[t_type]["json_instance"],
                     token_list=regular_tokens,
                 )
@@ -385,16 +404,29 @@ class ModularTokenizer:
         """
         raise Exception("Not implemented")
 
-    def save_jsons(self, tokenizers_info: Optional[Dict[str, Any]] = None) -> None:
+    @staticmethod
+    def cfg_list_2_dict(dict_list: List) -> Dict[str, Any]:
+        """Receives a list of dicts, each containing a key "name" and changes it to
+
+        Args:
+            dict_list (List): _description_
+
+        Returns:
+            Dict[str, Any]: _description_
+        """
+        return {d["name"]: d for d in dict_list}
+
+    def save_jsons(self, tokenizers_info: Optional[List] = None) -> None:
         """_summary_
 
         Args:
-            tokenizers_info (Optional[Dict], optional): Dictionary containing the following:
-            {
-                tokenizer_type: {
+            tokenizers_info_list (Optional[List], optional): A list of dictionaries containing the following:
+            [
+                   {
+                        "name": a name of a tokenizer
                         "modular_json_path":out_path for tokenizer_type
                     }
-            }
+            ]
             In case of None, paths stored in self.tokenizers_info (modular_json_path for each tokenizer) are used.
             In case of partial tokenizer_types, only those tokenizers will be saved
             Defaults to None.
@@ -406,20 +438,15 @@ class ModularTokenizer:
                 out_path = self.tokenizers_info[t_type]["modular_json_path"]
                 tokenizer_inst.save(out_path)
         else:
-            for t_type in tokenizers_info:
+            tokenizers_info_dict = ModularTokenizer.cfg_list_2_dict(tokenizers_info)
+            for t_type in tokenizers_info_dict:
                 tokenizer_inst = self.tokenizers_info[t_type]["tokenizer_inst"]
-                out_path = tokenizers_info[t_type]["modular_json_path"]
+                out_path = tokenizers_info_dict[t_type]["modular_json_path"]
                 tokenizer_inst.save(out_path)
 
     def _add_single_tokenizer(
         self,
         tokenizer_info: Dict,
-    ) -> None:
-        raise Exception("Not implemented")
-
-    def add_special_tokens(
-        self,
-        special_token_list: List,
     ) -> None:
         raise Exception("Not implemented")
 
@@ -450,7 +477,7 @@ class ModularTokenizer:
 
         return encoded
 
-    def encode(
+    def encode_list(
         self,
         typed_input_list: List,
         max_len: Optional[int] = None,
@@ -461,25 +488,36 @@ class ModularTokenizer:
         """_summary_
 
         Args:
-            typed_input_list (List): _description_
+            typed_input_list (List): list of collections.namedtuple("input_type", ["input_string", "max_len"]), with
+                input type: the name of input type,
+                input_string: the string to be encoded
+                max_len: maximal length of the encoding (in tokens). Only relevant for truncation, as we do not need to
+                pad individual sub-tokenizer encodings - we only pad the final encoding of the multitokenizer.
+                The smallest value between config-defined and tuple-defined is used. If None, the max_len
+                that was defined for the sub-tokenizer in the config is used.
             max_len (Optional[int], optional): _description_. Defaults to None.
-            padding_token_id (Optional[str], optional): _description_. Defaults to 0.
+            padding_token_id (Optional[str], optional): _description_. Defaults to 0. TODO: default to None and infer it
             padding_token (Optional[str], optional): _description_. Defaults to "<PAD>".
-            pad_type_id (Optional[int], optional): _description_. Defaults to 0.
+            pad_type_id (Optional[int], optional): _description_. Defaults to 0. (TODO: raise exception)
 
         Returns:
             Encoding: _description_
         """
         encoded_list = []
         curr_sequence_id = 0
-        for input_type, data_str in typed_input_list:
-            encoded_list.append(
-                self._encode_single_type(
-                    data_str=data_str,
-                    input_type=input_type,
-                    sequence_id=curr_sequence_id,
-                )
+        for inpt in typed_input_list:
+            input_type = inpt.input_type
+            data_str = inpt.input_string
+            sub_max_len = inpt.max_len
+            sub_encoding = self._encode_single_type(
+                data_str=data_str,
+                input_type=input_type,
+                sequence_id=curr_sequence_id,
             )
+            if sub_max_len is not None:
+                sub_encoding.truncate(max_length=sub_max_len)
+            encoded_list.append(sub_encoding)
+
             curr_sequence_id += 1
             # KEEP THIS AS DOC FOR NOW
             # encoded has attributes [ids, type_ids, tokens, offsets, attention_mask, special_tokens_mask, overflowing]
@@ -515,11 +553,11 @@ class ModularTokenizer:
 
         return merged_encoding
 
-    def decode(self, id_list: Iterable, skip_special_tokens: Optional[bool] = False) -> str:
+    def decode(self, ids: Iterable, skip_special_tokens: Optional[bool] = False) -> str:
         """Receives a list of IDs and returns a string of tokens
-
+            TODO: possibly output also the type of token (AA, SMILES, etc)
         Args:
-            id_list (Iterable): _description_
+            ids (Iterable): _description_
             skip_special_tokens (Optional[bool], optional): _description_. Defaults to False.
 
         Returns:
@@ -527,22 +565,23 @@ class ModularTokenizer:
         """
 
         if skip_special_tokens:
-            ret_val = [self.decoder_dict[id]["token"] for id in id_list if not self.decoder_dict[id]["is_special"]]
+            ret_val = [self.decoder_dict[id]["token"] for id in ids if not self.decoder_dict[id]["is_special"]]
         else:
-            ret_val = [self.decoder_dict[id]["token"] for id in id_list]
+            ret_val = [self.decoder_dict[id]["token"] for id in ids]
         return "".join(ret_val)
 
     def get_token_id(self, token: str) -> int:
         raise Exception("not implemented yet")
 
-    def encode_string(
+    def encode(
         self,
-        input_string: str,
+        sequence: str,
         max_len: Optional[int] = None,
         padding_token_id: Optional[int] = 0,
         padding_token: Optional[str] = "<PAD>",
         pad_type_id: Optional[int] = 0,
     ) -> Encoding:
+        # (self, sequence, pair=None, is_pretokenized=False, add_special_tokens=True)
         """Receives a user-supplied string that contains, in addition to the text that is to be tokenized, special delimiters signifying the type
         of input within each span of text (e.g. AA sequence, SMILES, task definition, etc.). These determine the type of tokenizer to use on each span,
         and are not encoded.
@@ -562,7 +601,467 @@ class ModularTokenizer:
     def get_tokenizer_types(self) -> List:
         return list(self.tokenizers_info.keys())
 
-    # TODO: add get_id method
+    ########## Original Tokenizer functions: ##################
+    def add_special_tokens(self, tokens: List) -> int:
+        """
+        Add the given special tokens to the Tokenizer.
+
+        If these tokens are already part of the vocabulary, it just let the Tokenizer know about
+        them. If they don't exist, the Tokenizer creates them, giving them a new id.
+
+        These special tokens will never be processed by the model (ie won't be split into
+        multiple tokens), and they can be removed from the output when decoding.
+
+        Args:
+            tokens (A :obj:`List` of :class:`~tokenizers.AddedToken` or :obj:`str`):
+                The list of special tokens we want to add to the vocabulary. Each token can either
+                be a string or an instance of :class:`~tokenizers.AddedToken` for more
+                customization.
+
+        Returns:
+            :obj:`int`: The number of tokens that were created in the vocabulary
+        """
+        pass
+
+    def add_tokens(self, tokens: Union[List, str]) -> int:
+        """
+        Add the given tokens to the vocabulary
+
+        The given tokens are added only if they don't already exist in the vocabulary.
+        Each token then gets a new attributed id.
+
+        Args:
+            tokens (A :obj:`List` of :class:`~tokenizers.AddedToken` or :obj:`str`):
+                The list of tokens we want to add to the vocabulary. Each token can be either a
+                string or an instance of :class:`~tokenizers.AddedToken` for more customization.
+
+        Returns:
+            :obj:`int`: The number of tokens that were created in the vocabulary
+        """
+        pass
+
+    def decode_batch(self, sequences: List, skip_special_tokens: Optional[bool] = True) -> List:
+        """
+        Decode a batch of ids back to their corresponding string
+
+        Args:
+            sequences (:obj:`List` of :obj:`List[int]`):
+                The batch of sequences we want to decode
+
+            skip_special_tokens (:obj:`bool`, defaults to :obj:`True`):
+                Whether the special tokens should be removed from the decoded strings
+
+        Returns:
+            :obj:`List[str]`: A list of decoded strings
+        """
+        raise Exception("Not implemented")
+
+    @property
+    def decoder(self):
+        """
+        The `optional` :class:`~tokenizers.decoders.Decoder` in use by the Tokenizer
+        """
+        raise Exception("Not implemented")
+
+    def enable_padding(
+        self,
+        direction="right",
+        pad_id=0,
+        pad_type_id=0,
+        pad_token="[PAD]",
+        length=None,
+        pad_to_multiple_of=None,
+    ):
+        """
+        Enable the padding
+
+        Args:
+            direction (:obj:`str`, `optional`, defaults to :obj:`right`):
+                The direction in which to pad. Can be either ``right`` or ``left``
+
+            pad_to_multiple_of (:obj:`int`, `optional`):
+                If specified, the padding length should always snap to the next multiple of the
+                given value. For example if we were going to pad witha length of 250 but
+                ``pad_to_multiple_of=8`` then we will pad to 256.
+
+            pad_id (:obj:`int`, defaults to 0):
+                The id to be used when padding
+
+            pad_type_id (:obj:`int`, defaults to 0):
+                The type id to be used when padding
+
+            pad_token (:obj:`str`, defaults to :obj:`[PAD]`):
+                The pad token to be used when padding
+
+            length (:obj:`int`, `optional`):
+                If specified, the length at which to pad. If not specified we pad using the size of
+                the longest sequence in a batch.
+        """
+        raise Exception("Not implemented")
+
+    def enable_truncation(self, max_length, stride=0, strategy="longest_first", direction="right"):
+        """
+        Enable truncation
+
+        Args:
+            max_length (:obj:`int`):
+                The max length at which to truncate
+
+            stride (:obj:`int`, `optional`):
+                The length of the previous first sequence to be included in the overflowing
+                sequence
+
+            strategy (:obj:`str`, `optional`, defaults to :obj:`longest_first`):
+                The strategy used to truncation. Can be one of ``longest_first``, ``only_first`` or
+                ``only_second``.
+
+            direction (:obj:`str`, defaults to :obj:`right`):
+                Truncate direction
+        """
+        raise Exception("Not implemented")
+
+    def encode_batch(self, input, is_pretokenized=False, add_special_tokens=True):
+        """
+        Encode the given batch of inputs. This method accept both raw text sequences
+        as well as already pre-tokenized sequences.
+
+        Example:
+            Here are some examples of the inputs that are accepted::
+
+                encode_batch([
+                    "A single sequence",
+                    ("A tuple with a sequence", "And its pair"),
+                    [ "A", "pre", "tokenized", "sequence" ],
+                    ([ "A", "pre", "tokenized", "sequence" ], "And its pair")
+                ])
+
+        Args:
+            input (A :obj:`List`/:obj:`Tuple` of :obj:`~tokenizers.EncodeInput`):
+                A list of single sequences or pair sequences to encode. Each sequence
+                can be either raw text or pre-tokenized, according to the ``is_pretokenized``
+                argument:
+
+                - If ``is_pretokenized=False``: :class:`~tokenizers.TextEncodeInput`
+                - If ``is_pretokenized=True``: :class:`~tokenizers.PreTokenizedEncodeInput`
+
+            is_pretokenized (:obj:`bool`, defaults to :obj:`False`):
+                Whether the input is already pre-tokenized
+
+            add_special_tokens (:obj:`bool`, defaults to :obj:`True`):
+                Whether to add the special tokens
+
+        Returns:
+            A :obj:`List` of :class:`~tokenizers.Encoding`: The encoded batch
+
+        """
+        raise Exception("Not implemented")
+
+    @staticmethod
+    def from_buffer(buffer):
+        """
+        Instantiate a new :class:`~tokenizers.Tokenizer` from the given buffer.
+
+        Args:
+            buffer (:obj:`bytes`):
+                A buffer containing a previously serialized :class:`~tokenizers.Tokenizer`
+
+        Returns:
+            :class:`~tokenizers.Tokenizer`: The new tokenizer
+        """
+        raise Exception("Not implemented")
+
+    @staticmethod
+    def from_file(path):
+        """
+        Instantiate a new :class:`~tokenizers.Tokenizer` from the file at the given path.
+
+        Args:
+            path (:obj:`str`):
+                A path to a local JSON file representing a previously serialized
+                :class:`~tokenizers.Tokenizer`
+
+        Returns:
+            :class:`~tokenizers.Tokenizer`: The new tokenizer
+        """
+        raise Exception("Not implemented")
+
+    @staticmethod
+    def from_pretrained(identifier, revision="main", auth_token=None):
+        """
+        Instantiate a new :class:`~tokenizers.Tokenizer` from an existing file on the
+        Hugging Face Hub.
+
+        Args:
+            identifier (:obj:`str`):
+                The identifier of a Model on the Hugging Face Hub, that contains
+                a tokenizer.json file
+            revision (:obj:`str`, defaults to `main`):
+                A branch or commit id
+            auth_token (:obj:`str`, `optional`, defaults to `None`):
+                An optional auth token used to access private repositories on the
+                Hugging Face Hub
+
+        Returns:
+            :class:`~tokenizers.Tokenizer`: The new tokenizer
+        """
+        raise Exception("Not implemented")
+
+    @staticmethod
+    def from_str(json):
+        """
+        Instantiate a new :class:`~tokenizers.Tokenizer` from the given JSON string.
+
+        Args:
+            json (:obj:`str`):
+                A valid JSON string representing a previously serialized
+                :class:`~tokenizers.Tokenizer`
+
+        Returns:
+            :class:`~tokenizers.Tokenizer`: The new tokenizer
+        """
+        raise Exception("Not implemented")
+
+    def get_vocab(self, with_added_tokens=True):
+        """
+        Get the underlying vocabulary
+
+        Args:
+            with_added_tokens (:obj:`bool`, defaults to :obj:`True`):
+                Whether to include the added tokens
+
+        Returns:
+            :obj:`Dict[str, int]`: The vocabulary
+
+        Note: Irrelevant to multitokenizer, since it may not be possible to express with a single vocabulary
+        """
+        raise Exception("Not implemented")
+
+    def get_vocab_size(self, with_added_tokens=True):
+        """
+        Get the size of the underlying vocabulary
+
+        Args:
+            with_added_tokens (:obj:`bool`, defaults to :obj:`True`):
+                Whether to include the added tokens
+
+        Returns:
+            :obj:`int`: The size of the vocabulary
+        """
+        # TODO: It may be possible to count all the unique IDs (i.e. sum of numbers of
+        # regular tokens of each subtokenizer plus the number of special tokens, which
+        # are the common to all subtokenizers)
+        raise Exception("Not implemented")
+
+    def id_to_token(self, id: int) -> Optional[str]:
+        """
+        Convert the given id to its corresponding token if it exists
+        In general, id_to_token is undefined for MultiTokenizer bec
+        Args:
+            id (:obj:`int`):
+                The id to convert
+
+        Returns:
+            :obj:`Optional[str]`: An optional token, :obj:`None` if out of vocabulary
+        """
+        token_info = self.decoder_dict.get(id, None)
+        if token_info is not None:
+            return token_info["token"]
+        return None
+
+    @property
+    def model(self):
+        """
+        The :class:`~tokenizers.models.Model` in use by the Tokenizer
+        """
+        raise Exception("Not implemented")
+
+    def no_padding(self):
+        """
+        Disable padding
+        """
+        raise Exception("Not implemented")
+
+    def no_truncation(self):
+        """
+        Disable truncation
+        """
+        raise Exception("Not implemented")
+
+    @property
+    def normalizer(self):
+        """
+        The `optional` :class:`~tokenizers.normalizers.Normalizer` in use by the Tokenizer
+        """
+        raise Exception("Not implemented")
+
+    def num_special_tokens_to_add(self, is_pair):
+        """
+        Return the number of special tokens that would be added for single/pair sentences.
+        :param is_pair: Boolean indicating if the input would be a single sentence or a pair
+        :return:
+        """
+        raise Exception("Not implemented")
+
+    @property
+    def padding(self):
+        """
+        Get the current padding parameters
+
+        `Cannot be set, use` :meth:`~tokenizers.Tokenizer.enable_padding` `instead`
+
+        Returns:
+            (:obj:`dict`, `optional`):
+                A dict with the current padding parameters if padding is enabled
+        """
+        raise Exception("Not implemented")
+
+    def post_process(self, encoding, pair=None, add_special_tokens=True):
+        """
+        Apply all the post-processing steps to the given encodings.
+
+        The various steps are:
+
+            1. Truncate according to the set truncation params (provided with
+               :meth:`~tokenizers.Tokenizer.enable_truncation`)
+            2. Apply the :class:`~tokenizers.processors.PostProcessor`
+            3. Pad according to the set padding params (provided with
+               :meth:`~tokenizers.Tokenizer.enable_padding`)
+
+        Args:
+            encoding (:class:`~tokenizers.Encoding`):
+                The :class:`~tokenizers.Encoding` corresponding to the main sequence.
+
+            pair (:class:`~tokenizers.Encoding`, `optional`):
+                An optional :class:`~tokenizers.Encoding` corresponding to the pair sequence.
+
+            add_special_tokens (:obj:`bool`):
+                Whether to add the special tokens
+
+        Returns:
+            :class:`~tokenizers.Encoding`: The final post-processed encoding
+        """
+        raise Exception("Not implemented")
+
+    @property
+    def post_processor(self):
+        """
+        The `optional` :class:`~tokenizers.processors.PostProcessor` in use by the Tokenizer
+        """
+        raise Exception("Not implemented")
+
+    @property
+    def pre_tokenizer(self):
+        """
+        The `optional` :class:`~tokenizers.pre_tokenizers.PreTokenizer` in use by the Tokenizer
+        """
+        raise Exception("Not implemented")
+
+    def save(self, path, pretty=True):
+        """
+        Save the :class:`~tokenizers.Tokenizer` to the file at the given path.
+
+        Args:
+            path (:obj:`str`):
+                A path to a file in which to save the serialized tokenizer.
+
+            pretty (:obj:`bool`, defaults to :obj:`True`):
+                Whether the JSON file should be pretty formatted.
+        """
+        raise Exception("Not implemented")
+
+    def to_str(self, pretty=False):
+        """
+        Gets a serialized string representing this :class:`~tokenizers.Tokenizer`.
+
+        Args:
+            pretty (:obj:`bool`, defaults to :obj:`False`):
+                Whether the JSON string should be pretty formatted.
+
+        Returns:
+            :obj:`str`: A string representing the serialized Tokenizer
+        """
+        raise Exception("Not implemented")
+
+    def token_to_id(self, token: str, t_type: Optional[str] = None) -> int:
+        """
+        Convert the given token to its corresponding id if it exists
+        In general, token_to_id is undefined for MultiTokenizer because the same
+        token may get mapped to different ids, depending on the subtokenizer type
+
+        Args:
+            token (:obj:`str`):
+                The token to convert
+            t_type (:obj:`str`): The subtokenizer to use. If None, the first (in order defined in the config)
+                subtokenizer is used. If the token is special, type should not be set. TODO: raise a warning
+                if type=None and the token is not special
+
+        Returns:
+            :obj:`Optional[int]`: An optional id, :obj:`None` if out of vocabulary
+        """
+        if t_type is None:
+            t_type_val = list(self.tokenizers_info.keys())[0]
+        else:
+            t_type_val = str(t_type)
+        return self.tokenizers_info[t_type_val]["tokenizer_inst"].token_to_id(token)
+
+    def train(self, files: List, trainer: Optional[tokenizers.trainers.Trainer] = None) -> None:
+        """
+        Train the Tokenizer using the given files.
+
+        Reads the files line by line, while keeping all the whitespace, even new lines.
+        If you want to train from data store in-memory, you can check
+        :meth:`~tokenizers.Tokenizer.train_from_iterator`
+
+        Args:
+            files (:obj:`List[str]`):
+                A list of path to the files that we should use for training
+
+            trainer (:obj:`~tokenizers.trainers.Trainer`, `optional`):
+                An optional trainer that should be used to train our Model
+        """
+        raise Exception("Not implemented")
+
+    def train_from_iterator(
+        self,
+        iterator: Iterator,
+        trainer: Optional[tokenizers.trainers.Trainer] = None,
+        length: Optional[int] = None,
+    ) -> None:
+        """
+        Train the Tokenizer using the provided iterator.
+
+        You can provide anything that is a Python Iterator
+
+            * A list of sequences :obj:`List[str]`
+            * A generator that yields :obj:`str` or :obj:`List[str]`
+            * A Numpy array of strings
+            * ...
+
+        Args:
+            iterator (:obj:`Iterator`):
+                Any iterator over strings or list of strings
+
+            trainer (:obj:`~tokenizers.trainers.Trainer`, `optional`):
+                An optional trainer that should be used to train our Model
+
+            length (:obj:`int`, `optional`):
+                The total number of sequences in the iterator. This is used to
+                provide meaningful progress tracking
+        """
+        raise Exception("Not implemented")
+
+    @property
+    def truncation(self) -> Optional[Dict]:
+        """
+        Get the currently set truncation parameters
+
+        `Cannot set, use` :meth:`~tokenizers.Tokenizer.enable_truncation` `instead`
+
+        Returns:
+            (:obj:`dict`, `optional`):
+                A dict with the current truncation parameters if truncation is enabled
+        """
+        raise Exception("Not implemented")
 
 
 class ModularMultiTokenizerOp(OpBase):
@@ -646,9 +1145,9 @@ class ModularMultiTokenizerOp(OpBase):
         typed_input_list = sample_dict[key_in]
         if not isinstance(typed_input_list, list):
             raise Exception(
-                f"Expected key_in={key_in} to point to a string, and instead got a {type(typed_input_list)}. value={typed_input_list}"
+                f"Expected key_in={key_in} to point to a list, and instead got a {type(typed_input_list)}. value={typed_input_list}"
             )
-        encoded = self.mtokenizer.encode(typed_input_list)
+        encoded = self.mtokenizer.encode_list(typed_input_list)
 
         if len(encoded.overflowing) > 0:
             print(
@@ -675,7 +1174,7 @@ class ModularMultiTokenizerOp(OpBase):
         return sample_dict
 
 
-class ModularStringTokenizer(OpBase):
+class ModularStringTokenizerOp(OpBase):
     """
     Tokenizes a raw input string containing multiple types of molecule representations (e.g. AA sequences, SMILES, SELFIES, etc.),
     by inferring which parts of the string correspond to which tokenizer, and applying the corresponding tokenizers.
@@ -741,7 +1240,7 @@ class ModularStringTokenizer(OpBase):
         raise Exception("Not implemented")
 
 
-class ModularMultiDecoder(OpBase):
+class ModularMultiDecoderOp(OpBase):
     """
     Decodes IDs encoded by ModularMultiTokenizer
     """
