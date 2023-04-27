@@ -698,7 +698,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerBase):
         raise Exception("Not implemented")
 
     @property
-    def decoder(self):
+    def decoder(self) -> None:
         """
         The `optional` :class:`~tokenizers.decoders.Decoder` in use by the Tokenizer
         """
@@ -706,13 +706,13 @@ class ModularTokenizer(transformers.PreTrainedTokenizerBase):
 
     def enable_padding(
         self,
-        direction="right",
-        pad_id=0,
-        pad_type_id=0,
-        pad_token="[PAD]",
-        length=None,
-        pad_to_multiple_of=None,
-    ):
+        direction: Optional[str] = "right",
+        pad_id: Optional[int] = 0,
+        pad_type_id: Optional[int] = 0,
+        pad_token: Optional[str] = "[PAD]",
+        length: Optional[int] = None,
+        pad_to_multiple_of: Optional[int] = None,
+    ) -> None:
         """
         Enable the padding
 
@@ -741,7 +741,11 @@ class ModularTokenizer(transformers.PreTrainedTokenizerBase):
         raise Exception("Not implemented")
 
     def enable_truncation(
-        self, max_length, stride=0, strategy="longest_first", direction="right"
+        self,
+        max_length: int,
+        stride: Optional[int] = 0,
+        strategy: Optional[str] = "longest_first",
+        direction: Optional[str] = "right",
     ):
         """
         Enable truncation
@@ -763,7 +767,12 @@ class ModularTokenizer(transformers.PreTrainedTokenizerBase):
         """
         raise Exception("Not implemented")
 
-    def encode_batch(self, input, is_pretokenized=False, add_special_tokens=True):
+    def encode_batch(
+        self,
+        input: List,
+        is_pretokenized: Optional[bool] = False,
+        add_special_tokens: Optional[bool] = True,
+    ) -> List:
         """
         Encode the given batch of inputs. This method accept both raw text sequences
         as well as already pre-tokenized sequences.
@@ -800,7 +809,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerBase):
         raise Exception("Not implemented")
 
     @staticmethod
-    def from_buffer(buffer):
+    def from_buffer(buffer: object) -> object:
         """
         Instantiate a new :class:`~tokenizers.Tokenizer` from the given buffer.
 
@@ -814,7 +823,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerBase):
         raise Exception("Not implemented")
 
     @staticmethod
-    def from_file(path):
+    def from_file(path: str) -> object:
         """
         Instantiate a new :class:`~tokenizers.Tokenizer` from the file at the given path.
 
@@ -829,7 +838,11 @@ class ModularTokenizer(transformers.PreTrainedTokenizerBase):
         raise Exception("Not implemented")
 
     @staticmethod
-    def from_pretrained(identifier, revision="main", auth_token=None):
+    def from_pretrained(
+        identifier: str,
+        revision: Optional[str] = "main",
+        auth_token: Optional[str] = None,
+    ):
         """
         Instantiate a new :class:`~tokenizers.Tokenizer` from an existing file on the
         Hugging Face Hub.
@@ -850,7 +863,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerBase):
         raise Exception("Not implemented")
 
     @staticmethod
-    def from_str(json):
+    def from_str(json: str) -> object:
         """
         Instantiate a new :class:`~tokenizers.Tokenizer` from the given JSON string.
 
@@ -864,7 +877,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerBase):
         """
         raise Exception("Not implemented")
 
-    def get_vocab(self, with_added_tokens=True):
+    def get_vocab(self, with_added_tokens: Optional[bool] = True) -> Dict:
         """
         Get the underlying vocabulary
 
@@ -879,7 +892,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerBase):
         """
         raise Exception("Not implemented")
 
-    def get_vocab_size(self, with_added_tokens=True):
+    def get_vocab_size(self, with_added_tokens: Optional[bool] = True) -> int:
         """
         Get the size of the underlying vocabulary
 
@@ -912,32 +925,32 @@ class ModularTokenizer(transformers.PreTrainedTokenizerBase):
         return None
 
     @property
-    def model(self):
+    def model(self) -> None:
         """
         The :class:`~tokenizers.models.Model` in use by the Tokenizer
         """
         raise Exception("Not implemented")
 
-    def no_padding(self):
+    def no_padding(self) -> None:
         """
         Disable padding
         """
         raise Exception("Not implemented")
 
-    def no_truncation(self):
+    def no_truncation(self) -> None:
         """
         Disable truncation
         """
         raise Exception("Not implemented")
 
     @property
-    def normalizer(self):
+    def normalizer(self) -> None:
         """
         The `optional` :class:`~tokenizers.normalizers.Normalizer` in use by the Tokenizer
         """
         raise Exception("Not implemented")
 
-    def num_special_tokens_to_add(self, is_pair):
+    def num_special_tokens_to_add(self, is_pair: bool) -> int:
         """
         Return the number of special tokens that would be added for single/pair sentences.
         :param is_pair: Boolean indicating if the input would be a single sentence or a pair
@@ -946,7 +959,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerBase):
         raise Exception("Not implemented")
 
     @property
-    def padding(self):
+    def padding(self) -> Optional[Dict]:
         """
         Get the current padding parameters
 
@@ -958,7 +971,12 @@ class ModularTokenizer(transformers.PreTrainedTokenizerBase):
         """
         raise Exception("Not implemented")
 
-    def post_process(self, encoding, pair=None, add_special_tokens=True):
+    def post_process(
+        self,
+        encoding: Encoding,
+        pair: Optional[Encoding] = None,
+        add_special_tokens: Optional[bool] = True,
+    ) -> Encoding:
         """
         Apply all the post-processing steps to the given encodings.
 
@@ -986,20 +1004,20 @@ class ModularTokenizer(transformers.PreTrainedTokenizerBase):
         raise Exception("Not implemented")
 
     @property
-    def post_processor(self):
+    def post_processor(self) -> None:
         """
         The `optional` :class:`~tokenizers.processors.PostProcessor` in use by the Tokenizer
         """
         raise Exception("Not implemented")
 
     @property
-    def pre_tokenizer(self):
+    def pre_tokenizer(self) -> None:
         """
         The `optional` :class:`~tokenizers.pre_tokenizers.PreTokenizer` in use by the Tokenizer
         """
         raise Exception("Not implemented")
 
-    def save(self, path, pretty=True):
+    def save(self, path: str, pretty: Optional[bool] = True) -> None:
         """
         Save the :class:`~tokenizers.Tokenizer` to the file at the given path.
 
@@ -1012,7 +1030,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerBase):
         """
         raise Exception("Not implemented")
 
-    def to_str(self, pretty=False):
+    def to_str(self, pretty: Optional[bool] = False) -> None:
         """
         Gets a serialized string representing this :class:`~tokenizers.Tokenizer`.
 
