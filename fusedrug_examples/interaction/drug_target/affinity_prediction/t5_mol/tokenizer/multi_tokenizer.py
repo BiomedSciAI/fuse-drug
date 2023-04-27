@@ -705,7 +705,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerBase):
         stride: Optional[int] = 0,
         strategy: Optional[str] = "longest_first",
         direction: Optional[str] = "right",
-    ):
+    ) -> None:
         """
         Enable truncation
 
@@ -801,7 +801,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerBase):
         identifier: str,
         revision: Optional[str] = "main",
         auth_token: Optional[str] = None,
-    ):
+    ) -> Any:
         """
         Instantiate a new :class:`~tokenizers.Tokenizer` from an existing file on the
         Hugging Face Hub.
@@ -1093,9 +1093,9 @@ class ModularMultiTokenizerOp(OpBase):
     def __init__(
         self,
         tokenizer_gen_inst: ModularTokenizer,
-        verbose=0,
+        verbose: Optional[int] = 0,
         **kwargs,
-    ):
+    ) -> Any:
         """
 
         Args:
@@ -1207,12 +1207,12 @@ class ModularStringTokenizerOp(OpBase):
         # Every value is a dict containing the following:
         # "tokenizer_inst": tokenizer instance
         # "max_size": max number of output tokens
-        max_size=None,  # determines both padding length and max size.
-        pad_id=None,
-        pad_type_id=None,
-        verbose=0,
+        max_size: Optional[int] = None,  # determines both padding length and max size.
+        pad_id: Optional[int] = None,
+        pad_type_id: Optional[int] = None,
+        verbose: Optional[int] = 0,
         **kwargs,
-    ):
+    ) -> None:
         """
 
         Args:
@@ -1268,12 +1268,12 @@ class ModularMultiDecoderOp(OpBase):
     def __init__(
         self,
         tokenizer_dict: Dict,  # a dictionary of tokenizer instances whose keys are the input types to be transferred to _call_
-        max_size=None,  # determines both padding length and max size.
-        pad_id=None,
-        pad_type_id=None,
-        verbose=0,
+        max_size: Optional[int] = None,  # determines both padding length and max size.
+        pad_id: Optional[int] = None,
+        pad_type_id: Optional[int] = None,
+        verbose: Optional[int] = 0,
         **kwargs,
-    ):
+    ) -> None:
         """
 
         Args:

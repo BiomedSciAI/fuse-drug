@@ -2,8 +2,9 @@ import hydra
 from omegaconf import DictConfig, OmegaConf
 from multi_tokenizer import ModularTokenizer
 import os
-from typing import Dict, Optional, Any
+from typing import Dict, Optional, Any, List
 import collections
+from collections.abc import Generator
 
 from special_tokens import (
     get_special_tokens,
@@ -65,8 +66,8 @@ def test_tokenizer(t_inst: ModularTokenizer, cfg_raw: Dict, mode: Optional[str] 
     # a = 1
 
 
-def create_base_AA_tokenizer(cfg_raw: Dict[str, Any]):
-    def get_training_corpus(dataset):
+def create_base_AA_tokenizer(cfg_raw: Dict[str, Any]) -> None:
+    def get_training_corpus(dataset: List) -> Generator:
         for i in range(0, len(dataset), 1000):
             yield dataset[i : i + 1000]
 
