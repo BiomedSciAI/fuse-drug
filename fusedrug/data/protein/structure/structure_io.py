@@ -1,4 +1,4 @@
-from typing import Optional, Dict, Union, List
+from typing import Optional, Dict, Union, List, Tuple
 import gzip
 import io
 import os
@@ -32,6 +32,7 @@ try:
         mmcif_parsing,
     )
     from openfold.np import residue_constants as rc
+    from openfold.data.mmcif_parsing import MmcifObject
 
 except ImportError:
     print("Warning: import openfold failed - some functions might fail")
@@ -150,7 +151,9 @@ def save_structure_file(
                 )
 
 
-def get_chain_native_features(native_structure_filename: str, chain_id: str, pdb_id: str, device="cpu"):
+def get_chain_native_features(
+    native_structure_filename: str, chain_id: str, pdb_id: str, chain_id_type: str = "author_assigned", device="cpu"
+):
     """
     Extracts ground truth features from a given filename. Note - only mmCIF is tested
     (using pdb will trigger an exception)
@@ -158,7 +161,13 @@ def get_chain_native_features(native_structure_filename: str, chain_id: str, pdb
     chain_id:
         can be a single character (example: 'A')
         or an integer (zero-based) and then the i-th chain in the *sorted* list of available chains will be used
+
+    chain_id_type: one of the allowed options "author_assigned" or "pdb_assigned"
+        "author_assigned" means that the provided chain_id is using the chain id that the original author who uploaded to PDB assigned to it.
+        "pdb_assigned" means that the provided chain_d is using the chain id that PDB dataset assigned.
     """
+
+    assert chain_id_type in ["author_assigned", "pdb_assigned"]
 
     structure_file_format = get_structure_file_type(native_structure_filename)
     if structure_file_format == "pdb":
@@ -171,9 +180,8 @@ def get_chain_native_features(native_structure_filename: str, chain_id: str, pdb
             return None
     elif structure_file_format == "cif":
         try:
-            mmcif_object, chains_names = parse_mmcif(
-                native_structure_filename, unique_file_id=pdb_id, quiet_parsing=True
-            )
+            mmcif_object = parse_mmcif(native_structure_filename, unique_file_id=pdb_id, quiet_parsing=True)
+            chains_names = list(mmcif_object.chain_to_seqres.keys())
         except Exception as e:
             print(e)
             print(f"Had an issue reading {native_structure_filename}")
@@ -182,6 +190,8 @@ def get_chain_native_features(native_structure_filename: str, chain_id: str, pdb
         assert False
 
     if structure_file_format == "pdb":
+        if chain_id_type == "pdb_assigned":
+            raise Exception("chain_id_type=pdb_assigned  is not supported yet for PDB, only for mmCIF")
         gt_data = pdb_to_openfold_protein(native_structure_filename, chain_id=chain_id)
         gt_sequence = gt_data.aasequence_str
 
@@ -200,6 +210,11 @@ def get_chain_native_features(native_structure_filename: str, chain_id: str, pdb
             if (chain_id < 0) or (chain_id >= len(chains_names)):
                 raise Exception(f"chain_id(int)={chain_id} is out of bound for the options: {chains_names}")
             chain_id = chains_names[chain_id]  # taking the i-th chain
+
+        if chain_id_type == "pdb_assigned":
+            chain_id = mmcif_object.pdb_assigned_chain_id_to_author_assigned_chain_id[
+                chain_id
+            ]  # convert from pdb assigned to author assigned chain id
 
         gt_data = get_chain_data(mmcif_object, chain_id=chain_id)
         gt_all_mmcif_feats = gt_data["mmcif_feats"]
@@ -444,29 +459,29 @@ def save_pdb_file(
 
 
 def parse_mmcif(
-    filename: str, unique_file_id: str, handle_residue_id_duplication: bool = True, quiet_parsing: bool = False
-):
+    filename: str,
+    unique_file_id: str,
+    handle_residue_id_duplication: bool = True,
+    quiet_parsing: bool = False,
+) -> MmcifObject:
     """
     filename: path for the mmcif file to load (can be .gz compressed)
     unique_file_id: a unique_id for this file
+
+    returns an MmcifObject
     """
     filename = get_mmcif_native_full_name(filename)
     raw_mmcif_str = read_file_raw_string(filename)
 
     mmcif_object = mmcif_parsing.parse(
         file_id=unique_file_id,
+        catch_all_errors=False,
         mmcif_string=raw_mmcif_str,
         handle_residue_id_duplication=handle_residue_id_duplication,
         quiet_parsing=quiet_parsing,
     )
 
     # https://biopython-cn.readthedocs.io/zh_CN/latest/en/chr11.html#reading-an-mmcif-file
-
-    # this is inefficient as I'm reading the mmcif file again, but choosing to do this to keep openfold code unmodified for now
-    handle = io.StringIO(raw_mmcif_str)
-    mmcif_dict = MMCIF2Dict.MMCIF2Dict(handle)
-
-    entities_details = mmcif_parsing.mmcif_loop_to_list("_entity.", mmcif_dict)
 
     # Crash if an error is encountered. Any parsing errors should have
     # been dealt with at the alignment stage.
@@ -480,15 +495,7 @@ def parse_mmcif(
 
     mmcif_object = mmcif_object.mmcif_object
 
-    return mmcif_object, list(mmcif_object.chain_to_seqres.keys())
-
-    # it does too much - templates search and MSA
-    # data = self.data_pipeline.process_mmcif(
-    #     mmcif=mmcif_object,
-    #     alignment_dir=alignment_dir,
-    #     chain_id=chain_id,
-    #     alignment_index=alignment_index
-    # )
+    return mmcif_object
 
 
 def get_chain_data(
@@ -498,6 +505,11 @@ def get_chain_data(
     """
     Assembles features for a specific chain in an mmCIF object.
             if chain_id is str, it is used
+
+    chain_id: author assigned chain id.
+        For more details in author assigned chain id vs. pdb assigned chain id see https://www.rcsb.org/docs/general-help/identifiers-in-pdb
+
+
 
 
     """
@@ -516,7 +528,8 @@ def load_mmcif_features(filename, pdb_id: str, chain_id: str):
     Features in the style that *Fold use
     """
     filename = get_mmcif_native_full_name(filename)
-    mmcif_data, chains_names = parse_mmcif(filename, "bananaphone")
+    mmcif_data = parse_mmcif(filename, "bananaphone")
+    chains_names = list(mmcif_data.chain_to_seqres.keys())
     if chain_id not in chains_names:
         raise Exception(f"Error requested chain_id={chain_id} not found in available chains {chains_names}")
     gt_data = get_chain_data(mmcif_data, chain_id=chain_id)

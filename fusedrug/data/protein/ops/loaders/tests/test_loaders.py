@@ -6,7 +6,7 @@ from fuse.data import create_initial_sample
 
 
 class TestLoaders(unittest.TestCase):
-    def test_fasta_loader(self):
+    def test_fasta_loader(self) -> None:
         fasta_file_loc = os.path.join(get_tests_data_dir(), "example_viral_proteins.fasta")
         op = FastaLoader(fasta_file_loc=fasta_file_loc)
 
@@ -16,9 +16,7 @@ class TestLoaders(unittest.TestCase):
         sample_2 = create_initial_sample("YP_009047135.1")
         sample_2 = op(sample_1)
 
-        self.assertEqual(sample_1["data.gt.seq"], sample_2["data.gt.seq"])
-
-        banana = 123
+        self.assertEqual(sample_1["data.seq"], sample_2["data.seq"])
 
 
 if __name__ == "__main__":

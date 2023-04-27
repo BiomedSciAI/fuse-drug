@@ -2,6 +2,7 @@ click
 pyfastx
 torch
 pytorch-lightning<2.0.0 # temp - need to make all tests pass with this version first
+torchvision
 tokenizers
 hydra-core
 rdkit
@@ -18,3 +19,6 @@ transformers
 termcolor
 xmlrunner
 pytoda @ git+https://git@github.com/PaccMann/paccmann_datasets/@0.2.5#egg=pytoda
+openfold @ git+https://github.com/aqlaboratory/openfold
+dm-tree
+ml_collections
