@@ -22,9 +22,7 @@ def fix_df_types(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def set_activity_multiindex(df: pd.DataFrame) -> pd.DataFrame:
-    df.set_index(
-        ["source_dataset_versioned_name", "source_dataset_activity_id"], inplace=True
-    )
+    df.set_index(["source_dataset_versioned_name", "source_dataset_activity_id"], inplace=True)
     return df
 
 
@@ -73,9 +71,7 @@ def dti_binding_dataset(
     _args = [pairs_tsv, ligands_tsv, targets_tsv, split_tsv, use_folds]
 
     if "cache_dir" in kwargs and kwargs["cache_dir"] is not None:
-        ans_dict = run_cached_func(
-            kwargs["cache_dir"], _load_dataframes, *_args, **kwargs
-        )
+        ans_dict = run_cached_func(kwargs["cache_dir"], _load_dataframes, *_args, **kwargs)
     else:
         ans_dict = _load_dataframes(*_args, **kwargs)
 
@@ -217,9 +213,7 @@ class DTIBindingDataset(Dataset):
             assert isinstance(index, tuple)
             assert 2 == len(index)
             source_dataset_versioned_name, source_dataset_activity_id = index
-            row = self._pairs.loc[
-                source_dataset_versioned_name, source_dataset_activity_id
-            ]
+            row = self._pairs.loc[source_dataset_versioned_name, source_dataset_activity_id]
 
         ground_truth_activity_value = itemify(row["activity_value"])
         if not np.isscalar(ground_truth_activity_value):
@@ -227,9 +221,7 @@ class DTIBindingDataset(Dataset):
                 ground_truth_activity_value = float(ground_truth_activity_value)
                 print(f"converted from nonscalar: {ground_truth_activity_value}")
             except:
-                raise Exception(
-                    f'Could not convert activity value "{ground_truth_activity_value}" to float!'
-                )
+                raise Exception(f'Could not convert activity value "{ground_truth_activity_value}" to float!')
 
         ground_truth_activity_label = itemify(row["activity_label"])
 
@@ -306,15 +298,11 @@ def _load_dataframes(
 
     if splits_tsv is not None:
         if use_folds is None:
-            raise Exception(
-                f"splits_tsv was provided ({splits_tsv}) but no use_folds provided"
-            )
+            raise Exception(f"splits_tsv was provided ({splits_tsv}) but no use_folds provided")
 
     if use_folds is not None:
         if splits_tsv is None:
-            raise Exception(
-                f"use_folds was provided ({use_folds}) but no splits_tsv provided"
-            )
+            raise Exception(f"use_folds was provided ({use_folds}) but no splits_tsv provided")
 
     if splits_tsv is not None:
         print(f"loading split file {splits_tsv}")
@@ -352,9 +340,7 @@ def _load_dataframes(
     _ligands.set_index("ligand_id", inplace=True)
     print(f"ligands num: {len(_ligands)}")
     _ligands = _ligands[~_ligands.canonical_smiles.isnull()]
-    print(
-        f"ligands num after keeping only ligands with non-NaN canonical_smiles: {len(_ligands)}"
-    )
+    print(f"ligands num after keeping only ligands with non-NaN canonical_smiles: {len(_ligands)}")
 
     assert isinstance(targets_tsv, str)
     print(f"loading {targets_tsv}")
@@ -363,24 +349,16 @@ def _load_dataframes(
     _targets.set_index("target_id", inplace=True)
     print(f"tagets num: {len(_targets)}")
 
-    print(
-        f"pairs num before keeping only pairs with ligands found in the (preprocessed) ligands table: {len(_pairs)}"
-    )
+    print(f"pairs num before keeping only pairs with ligands found in the (preprocessed) ligands table: {len(_pairs)}")
     _pairs = _pairs[_pairs.ligand_id.isin(_ligands.index)]
-    print(
-        f"pairs num after keeping only pairs with ligands found in the (preprocessed) ligands table: {len(_pairs)}"
-    )
+    print(f"pairs num after keeping only pairs with ligands found in the (preprocessed) ligands table: {len(_pairs)}")
 
     _pairs = _pairs[_pairs.target_id.isin(_targets.index)]
-    print(
-        f"pairs num after keeping only pairs with target found in the (preprocessed) targets table: {len(_pairs)}"
-    )
+    print(f"pairs num after keeping only pairs with target found in the (preprocessed) targets table: {len(_pairs)}")
 
     if keep_activity_labels is not None:
         _pairs = _pairs[_pairs.activity_label.isin(keep_activity_labels)]
-        print(
-            f"pairs num after keeping only activity_label in {keep_activity_labels}: {len(_pairs)}"
-        )
+        print(f"pairs num after keeping only activity_label in {keep_activity_labels}: {len(_pairs)}")
 
     return dict(
         pairs=_pairs,
@@ -391,15 +369,11 @@ def _load_dataframes(
 
 def _fill_in_dummy_sample(sample_dict: NDict) -> NDict:
     _ligand_size = 696
-    sample_dict["data.input.tokenized_ligand"] = np.random.randint(
-        0, 3000, size=_ligand_size
-    )
+    sample_dict["data.input.tokenized_ligand"] = np.random.randint(0, 3000, size=_ligand_size)
     sample_dict["data.input.tokenized_ligand_attention_mask"] = [True] * _ligand_size
 
     _target_size = 2536
-    sample_dict["data.input.tokenized_target"] = np.random.randint(
-        0, 33, size=_target_size
-    )
+    sample_dict["data.input.tokenized_target"] = np.random.randint(0, 33, size=_target_size)
     sample_dict["data.input.tokenized_target_attention_mask"] = [True] * _target_size
 
     sample_dict["data.gt.activity_value"] = np.random.rand(1).item()
