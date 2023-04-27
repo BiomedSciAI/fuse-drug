@@ -15,7 +15,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerBase):
         self,
         tokenizers_info: List,
         load_adjusted_jsons: Optional[bool] = False,
-        **kwargs,
+        **kwargs: Any,
     ) -> None:
         """_summary_
 
@@ -1094,7 +1094,7 @@ class ModularMultiTokenizerOp(OpBase):
         self,
         tokenizer_gen_inst: ModularTokenizer,
         verbose: Optional[int] = 0,
-        **kwargs,
+        **kwargs: Any,
     ) -> Any:
         """
 
@@ -1211,7 +1211,7 @@ class ModularStringTokenizerOp(OpBase):
         pad_id: Optional[int] = None,
         pad_type_id: Optional[int] = None,
         verbose: Optional[int] = 0,
-        **kwargs,
+        **kwargs: Any,
     ) -> None:
         """
 
@@ -1272,7 +1272,7 @@ class ModularMultiDecoderOp(OpBase):
         pad_id: Optional[int] = None,
         pad_type_id: Optional[int] = None,
         verbose: Optional[int] = 0,
-        **kwargs,
+        **kwargs: Any,
     ) -> None:
         """
 
