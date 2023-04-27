@@ -1,7 +1,6 @@
 from typing import Union, Optional
 from tokenizers import Tokenizer
 from tokenizers.models import Model
-from tokenizers import Tokenizer
 from tokenizers.trainers import Trainer
 from torch.utils.data import Dataset, Sampler, DataLoader
 from time import time

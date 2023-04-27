@@ -94,7 +94,6 @@ exclude =
     ./fusedrug_examples/interaction/drug_target/affinity_prediction/bimodal_mca/data.py
     ./fusedrug_examples/interaction/drug_target/affinity_prediction/bimodal_mca/model.py
     ./fusedrug_examples/interaction/drug_target/affinity_prediction/bimodal_mca/runner.py
-    ./fusedrug_examples/interaction/drug_target/affinity_prediction/bimodal_mca/utils.py
     ./fusedrug_examples/tests/test_design_amp.py
 
     ## tutorials/
@@ -103,3 +102,6 @@ exclude =
     ## ./
     ./run_all_unit_tests.py
     ./setup.py
+
+    # submodule
+    fusedrug_examples/interaction/drug_target/affinity_prediction/PLM_DTI/Contrastive_PLM_DTI
