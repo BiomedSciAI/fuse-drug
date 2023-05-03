@@ -1,2 +1,0 @@
-# new depdencies for T5 example
-sentencepiece
