@@ -257,17 +257,13 @@ def aa_sequence_from_pdb(pdb_filename: str) -> Dict[str, str]:
 
     Returns a dictionary that maps chain_id to sequence
     """
+    structure = structure_from_pdb(pdb_filename)
+    return aa_sequence_from_pdb_structure(structure)
 
-    pdb_filename = get_pdb_native_full_name(pdb_filename)
-    text = read_file_raw_string(pdb_filename)
 
-    pdb_fh = io.StringIO(text)
-
-    parser = PDBParser(QUIET=True)
-    structure = parser.get_structure("struct", pdb_fh)
+def aa_sequence_from_pdb_structure(structure):
     # iterate each model, chain, and residue
     # printing out the sequence for each chain
-
     chains = {}
 
     for model in structure:
@@ -276,6 +272,32 @@ def aa_sequence_from_pdb(pdb_filename: str) -> Dict[str, str]:
             chains[chain.id] = seq
 
     return chains
+
+
+def aa_sequence_coord_from_pdb_structure(structure):
+    # iterate each model, chain, and residue
+    # printing out the sequence coordinates for the atoms in each chain
+    chains = {}
+
+    for model in structure:
+        for chain in model:
+            chains[chain.id] = [
+                np.asarray([atom.coord for atom in residue.get_atoms()])
+                for residue in chain
+                if residue.resname in restype_3to1
+            ]
+    return chains
+
+
+def structure_from_pdb(pdb_filename: str):
+    pdb_filename = get_pdb_native_full_name(pdb_filename)
+    text = read_file_raw_string(pdb_filename)
+
+    pdb_fh = io.StringIO(text)
+
+    parser = PDBParser(QUIET=True)
+    structure = parser.get_structure("struct", pdb_fh)
+    return structure
 
 
 def pdb_to_openfold_protein(filename: str, chain_id: Optional[str] = None) -> protein_utils.Protein:
