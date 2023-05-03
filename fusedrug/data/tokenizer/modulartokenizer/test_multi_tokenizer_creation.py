@@ -29,13 +29,22 @@ def test_tokenizer(t_inst: ModularTokenizer, cfg_raw: Dict, mode: Optional[str] 
     ]
     # TODO: named tuples with specific properties, e.g. max_len for every input, not for input type
     # Test general encoding: (per-tokenizer truncation works)
-    enc = t_inst.encode_list(typed_input_list=input_strings, max_len=cfg_raw["data"]["tokenizer"]["overall_max_len"],)
+    enc = t_inst.encode_list(
+        typed_input_list=input_strings,
+        max_len=cfg_raw["data"]["tokenizer"]["overall_max_len"],
+    )
     print(f"encoded tokens: {enc.tokens}")
     # Test overall padding: (global padding works)
-    enc_pad = t_inst.encode_list(typed_input_list=input_strings, max_len=50,)
+    enc_pad = t_inst.encode_list(
+        typed_input_list=input_strings,
+        max_len=50,
+    )
     assert len(enc_pad.ids) == 50, f"Didn't pad to the expected number of tokens, mode: {mode}"
     # Test overall cropping: (global truncation works)
-    enc_trunc = t_inst.encode_list(typed_input_list=input_strings, max_len=15,)
+    enc_trunc = t_inst.encode_list(
+        typed_input_list=input_strings,
+        max_len=15,
+    )
     assert len(enc_trunc.ids) == 15, f"Didn't truncate to the expected number of tokens, mode: {mode}"
 
     decoded_tokens = t_inst.decode(ids=list(enc_pad.ids))
