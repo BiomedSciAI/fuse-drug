@@ -498,7 +498,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerBase):
         if sequence_id is None:
             sequence_id = int(self.tokenizers_info[input_type]["tokenizer_id"])
         # set_sequence_id does not always work.
-        # Instead of changing the sequence IDS, it sometimes does nothing (probably due to nonunique seq. ids)
+        # Instead of changing the sequence IDS, it sometimes does nothing (probably due to nonunique seq. ids, if we use the same tokenizer for several sequences)
         # In order for this to work, IDs must start with 0 and continue as a sequence of integers.
         encoded.set_sequence_id(sequence_id)
 

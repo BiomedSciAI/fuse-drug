@@ -88,7 +88,7 @@ def create_base_AA_tokenizer(cfg_raw: Dict[str, Any]) -> None:
     print("Fin")
 
 
-@hydra.main(config_path="./configs", config_name="tokenizer_config", version_base=None)
+@hydra.main(config_path="./configs", config_name="tokenizer_config_personal", version_base=None)
 def main(cfg: DictConfig) -> None:
     print(str(cfg))
 
@@ -96,7 +96,7 @@ def main(cfg: DictConfig) -> None:
     tmp = OmegaConf.to_object(cfg)
     cfg_raw: Dict[str, Any] = tmp
 
-    # create_base_AA_tokenizer(cfg_raw=cfg_raw)  # uncomment if an AA tokenizer is needed
+    create_base_AA_tokenizer(cfg_raw=cfg_raw)  # uncomment if a new AA tokenizer is needed
 
     cfg_tokenizer: Dict[str, Any] = cfg_raw["data"]["tokenizer"]
     t_mult = ModularTokenizer(**cfg_tokenizer)
@@ -108,6 +108,6 @@ def main(cfg: DictConfig) -> None:
 
 
 if __name__ == "__main__":
-    os.environ["TITAN_DATA"] = "/dccstor/fmm/users/vadimra/dev/data/TITAN/08-02-2023/"
-    os.environ["TITAN_RESULTS"] = "/dccstor/fmm/users/vadimra/dev/output/TITAN_t5/08-02-2023/"
+    # os.environ["TITAN_DATA"] = "/dccstor/fmm/users/vadimra/dev/data/TITAN/08-02-2023/"
+    # os.environ["TITAN_RESULTS"] = "/dccstor/fmm/users/vadimra/dev/output/TITAN_t5/08-02-2023/"
     main()
