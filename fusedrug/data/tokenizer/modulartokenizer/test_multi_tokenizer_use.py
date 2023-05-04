@@ -22,6 +22,4 @@ def main(cfg: DictConfig) -> None:
 
 
 if __name__ == "__main__":
-    os.environ["TITAN_DATA"] = "/dccstor/fmm/users/vadimra/dev/data/TITAN/08-02-2023/"
-    os.environ["TITAN_RESULTS"] = "/dccstor/fmm/users/vadimra/dev/output/TITAN_t5/08-02-2023/"
     main()
