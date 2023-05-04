@@ -1,7 +1,6 @@
 import hydra
 from omegaconf import DictConfig, OmegaConf
 from multi_tokenizer import ModularTokenizer
-import os
 from typing import Dict, Any
 from .test_multi_tokenizer_creation import test_tokenizer
 
