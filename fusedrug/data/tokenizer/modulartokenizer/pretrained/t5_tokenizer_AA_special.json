@@ -2246,16 +2246,23 @@
     }
   ],
   "normalizer": null,
-  "pre_tokenizer": null,
+  "pre_tokenizer": {
+    "type": "Sequence",
+    "pretokenizers": [
+      {
+        "type": "Split",
+        "pattern": {
+          "Regex": "<.*?>|\\S"
+        },
+        "behavior": "Removed",
+        "invert": true
+      }
+    ]
+  },
   "post_processor": null,
   "decoder": null,
   "model": {
-    "type": "BPE",
-    "dropout": null,
-    "unk_token": null,
-    "continuing_subword_prefix": null,
-    "end_of_word_suffix": null,
-    "fuse_unk": false,
+    "type": "WordLevel",
     "vocab": {
       "<UNK>": 0,
       "<PAD>": 1,
@@ -2506,28 +2513,34 @@
       "<MOLECULAR_ENTITY_TYPE_ANTIGEN>": 246,
       "<MOLECULAR_ENTITY_TYPE_ANTIBODY_LIGHT_CHAIN>": 247,
       "<MOLECULAR_ENTITY_TYPE_ANTIBODY_HEAVY_CHAIN>": 248,
-      "<": 249,
+      "<EOS>": 249,
       "A": 250,
-      "C": 251,
-      "D": 252,
-      "E": 253,
-      "F": 254,
-      "G": 255,
-      "H": 256,
-      "I": 257,
-      "K": 258,
-      "L": 259,
-      "M": 260,
-      "N": 261,
-      "P": 262,
-      "Q": 263,
-      "R": 264,
-      "S": 265,
-      "T": 266,
-      "V": 267,
-      "W": 268,
-      "Y": 269
+      "B": 251,
+      "C": 252,
+      "D": 253,
+      "E": 254,
+      "F": 255,
+      "G": 256,
+      "H": 257,
+      "I": 258,
+      "K": 259,
+      "L": 260,
+      "M": 261,
+      "N": 262,
+      "O": 263,
+      "P": 264,
+      "Q": 265,
+      "R": 266,
+      "S": 267,
+      "T": 268,
+      "U": 269,
+      "V": 270,
+      "W": 271,
+      "X": 272,
+      "Y": 273,
+      "Z": 274,
+      ":": 275
     },
-    "merges": []
+    "unk_token": "<UNK>"
   }
 }

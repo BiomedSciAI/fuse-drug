@@ -6,7 +6,7 @@ from typing import Dict, Optional, Any, List
 import collections
 from collections.abc import Generator
 
-from special_tokens import get_special_tokens
+from special_tokens import get_additional_tokens, get_special_tokens_dict
 from tokenizers import (
     models,
     trainers,
@@ -75,12 +75,17 @@ def create_base_AA_tokenizer(cfg_raw: Dict[str, Any]) -> None:
 
     ############################## unwrapped AA tokenizer: AAs are treated as letters
     unwrapped_AA_tokenizer = Tokenizer(models.BPE())
-    special_tokens = get_special_tokens(subset=["special", "task"])
-    trainer_AA = trainers.BpeTrainer(vocab_size=100, special_tokens=special_tokens)
+    added_tokens = get_additional_tokens(subset=["special", "task"])
+    initial_alphabet = get_additional_tokens(subset="AA")
+    trainer_AA = trainers.BpeTrainer(vocab_size=100, special_tokens=added_tokens, initial_alphabet=initial_alphabet)
     unwrapped_AA_vocab = list(AA_vocab_data["repr"])
-    unwrapped_AA_tokenizer.train_from_iterator(get_training_corpus(dataset=unwrapped_AA_vocab), trainer=trainer_AA)
+    unwrapped_AA_tokenizer.train_from_iterator(
+        get_training_corpus(dataset=unwrapped_AA_vocab),
+        trainer=trainer_AA,
+    )
+    # unwrapped_AA_tokenizer.add_special_tokens(special_token_dict)
     for d in cfg_raw["data"]["tokenizer"]["tokenizers_info"]:
-        if "AA" in d["name"]:
+        if "AA" == d["name"]:
             AA_json_path = d["json_path"]
     if not os.path.exists(os.path.dirname(AA_json_path)):
         os.makedirs(os.path.dirname(AA_json_path))
@@ -96,12 +101,10 @@ def main(cfg: DictConfig) -> None:
     tmp = OmegaConf.to_object(cfg)
     cfg_raw: Dict[str, Any] = tmp
 
-    # create_base_AA_tokenizer(
-    #     cfg_raw=cfg_raw
-    # )  # uncomment if a new AA tokenizer is needed
-
+    create_base_AA_tokenizer(cfg_raw=cfg_raw)  # uncomment if a new AA tokenizer is needed
+    special_tokens_dict = get_special_tokens_dict()
     cfg_tokenizer: Dict[str, Any] = cfg_raw["data"]["tokenizer"]
-    t_mult = ModularTokenizer(**cfg_tokenizer)
+    t_mult = ModularTokenizer(**cfg_tokenizer, special_tokens_dict=special_tokens_dict)
     t_mult.save_jsons(tokenizers_info=cfg_raw["data"]["tokenizer"]["tokenizers_info"])
 
     test_tokenizer(t_mult, cfg_raw)
