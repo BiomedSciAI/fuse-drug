@@ -30,3 +30,8 @@ pip install -e .[examples]
 ```
 
 In case of a CUDA related error, we recommend working in a conda environment with Python>=3.9 (Create one by running `conda create -n ENV_NAME python=3.9`) and updating PyTorch following the official [PyTorch installation instructions](https://pytorch.org/get-started/locally/) **after** completing the above steps.
+
+3. [Optional] Install `abnumber` python package. This package is used for antibody numbering and alignment (see [antibody.py](https://github.com/BiomedSciAI/fuse-drug/blob/main/fusedrug/visualization/protein_structure/antibody.py#:~:text=chain%20%3D%20abnumber.Chain(aa_seq%2C%20scheme%3Dscheme)))
+```
+conda install -c bioconda abnumber
+```
