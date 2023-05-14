@@ -31,3 +31,7 @@ Returns the size of the vocabulary of the modular tokenizer (i.e. the number of 
 Returns the token that maps to the input ID.
 ### token_to_id():
 Returns the input token's corresponding ID.
+## Use example
+### Creation:
+An example of creation of a new modular tokenizer from an AA sequence tokenizer is found here: [ModularTokenizer creation](https://github.com/BiomedSciAI/fuse-drug/blob/a1b9564eb54b9fe39890645fb5378c13aedde6fb/fusedrug/data/tokenizer/modulartokenizer/test_multi_tokenizer_creation.py#L107)
+It uses this config: [tokenizer_config.py](https://github.com/BiomedSciAI/fuse-drug/blob/main/fusedrug/data/tokenizer/modulartokenizer/configs/tokenizer_config.yaml). Note: this line [path definition](https://github.com/BiomedSciAI/fuse-drug/blob/a1b9564eb54b9fe39890645fb5378c13aedde6fb/fusedrug/data/tokenizer/modulartokenizer/configs/tokenizer_config.yaml#L3) needs to be changed so that _your_path_ points to cloned fuse-drug parent directory.
