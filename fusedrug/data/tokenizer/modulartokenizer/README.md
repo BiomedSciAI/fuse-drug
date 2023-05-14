@@ -1,0 +1,3 @@
+## Modular Tokenizer:
+* A modular tokenizer combines multiple pre-trained (huggingface-based) tokenizers and maps their tokens to a single, consistent ID space. It's useful for sequence-to-sequence problems, where different tokenizers should be used for different parts of the input sequence, depending on the context, and straightforward merging of the tokenizers may not be possible due to token overlap (e.g. 'C' in an amino acid sequence, standing for Cysteine, and 'C' in a SMILES sequence, standing for Carbon, should be mapped to different IDs). 
+* The modular tokenizer retains huggingface tokenizer interface, so it can be plugged into existing code with very few (if any at all) changes.
