@@ -37,3 +37,10 @@ An example of creation of a new modular tokenizer from an AA sequence tokenizer 
 It uses this config: [tokenizer_config.py](https://github.com/BiomedSciAI/fuse-drug/blob/main/fusedrug/data/tokenizer/modulartokenizer/configs/tokenizer_config.yaml). Note: this line [path definition](https://github.com/BiomedSciAI/fuse-drug/blob/a1b9564eb54b9fe39890645fb5378c13aedde6fb/fusedrug/data/tokenizer/modulartokenizer/configs/tokenizer_config.yaml#L3) needs to be changed so that _your_path_ points to cloned fuse-drug parent directory.
 ### Usage:
 An example of usage of the modular tokenizer is found here: [ModularTokenizer use](https://github.com/BiomedSciAI/fuse-drug/blob/a1b9564eb54b9fe39890645fb5378c13aedde6fb/fusedrug/data/tokenizer/modulartokenizer/test_multi_tokenizer_use.py#L16). It uses the same config as the creation example, and loads the jsons that were saved by the creation code.
+### Config structure:
+The init and load_from_jsons functiona both receive a list of dictionaries, each defining a single type of tokenizer. The dictionaries have the following fields:
+    * name: Name of the tokenizer (usually depicting its use context - AA sequences, SMILES, etc)
+    * tokenizer_id:    unique int identifier of the tokenizer
+    * json_path:       a path to a json file containint the initial input tokenizer
+    * modular_json_path: a path to json that will contain the updated (remapped) sub-tokenizer that will be derived from the initial tokenizer:
+    * max_len: (Optional) maximum number of tokens encoded by each instance of this tokenizer. If not given or None - no limit is set. If max_len is defined both here and during a call to encode_list, the smallest one is used.
