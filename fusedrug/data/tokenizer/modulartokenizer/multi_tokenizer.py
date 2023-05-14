@@ -11,11 +11,12 @@ import transformers
 import os
 
 
-class ModularTokenizer(transformers.PreTrainedTokenizerBase):
+class ModularTokenizer(transformers.PreTrainedTokenizerFast):
     def __init__(
         self,
         tokenizers_info: List,
         load_adjusted_jsons: Optional[bool] = False,
+        special_tokens_dict: Optional[Dict] = None,
         **kwargs: Any,
     ) -> None:
         """Creates a modular tokenizer that combines multiple existing tokenizers, adjusting them so that:
@@ -37,23 +38,33 @@ class ModularTokenizer(transformers.PreTrainedTokenizerBase):
             load_adjusted_jsons (Optional[bool], optional): Whether to load json files created by ModularTokenizer (True),
                 or to adjust the indices of given non-modular jsons (False). This should not ordinarily be set to False, as loading
                 from modular jsons is best done through the load_from_jsons method. Defaults to False.
+            special_tokens_dict (Optional[Dict], optional): A dictionary of special tokens that should be common among all tokenizers, with keys
+                from ["bos_token", "eos_token", "unk_token", "sep_token", "pad_token", "cls_token", "mask_token"]
         """
         # ModularTokenizer inherits the interface of PreTrainedTokenizerBase, but not the underlying logic, therefore super.__init__() is not called
 
         # If there is only one tokenizer, remapping it is not needed - if there's only one, we can just load its json using load_from_jsons.
         self.tokenizers_info = ModularTokenizer.cfg_list_2_dict(tokenizers_info)
+        self.special_tokens_dict = special_tokens_dict
 
         if not load_adjusted_jsons:
             # store special tokens in a list to preserve their order:
-            all_special_tokens: List = list([])
+            all_special_tokens: List
+            if self.special_tokens_dict is None:
+                all_special_tokens = list([])
+            else:
+                all_special_tokens = list(self.special_tokens_dict.values())
 
-            # collect all special tokens (without keeping indices):
+            # collect all special tokens (without indices):
             for t_type in self.tokenizers_info:
                 t_info = self.tokenizers_info[t_type]
                 t_json = json.load(open(t_info["json_path"]))
                 self.tokenizers_info[t_type]["json_instance"] = t_json
 
-                part_special_tokens = ModularTokenizer.get_special_tokens(t_json, enforce_special=False)
+                part_special_tokens = ModularTokenizer.get_special_tokens(
+                    t_json,
+                    enforce_special=False,
+                )
                 part_special_tokens = [t for t in part_special_tokens if t not in all_special_tokens]
                 all_special_tokens = all_special_tokens + part_special_tokens
 
@@ -78,8 +89,16 @@ class ModularTokenizer(transformers.PreTrainedTokenizerBase):
                     starting_index=next_index,
                 )
             # end operations on json
+            # operations on the tokenizer instance (if possible, operations should be done here, using built-in tokenizer methods)
             json_str = json.dumps(t_json)
             tokenizer_inst = Tokenizer.from_str(json_str)
+            if self.special_tokens_dict is not None:
+                # At this point, tokens from self.special_tokens_dict are in every tokenizer.
+                num_add = tokenizer_inst.add_special_tokens(list(self.special_tokens_dict.values()))
+                if num_add > 0:
+                    raise Exception(
+                        f"All special tokens should have been in the vocabulary at this point. {num_add} were added - need to check why."
+                    )
             if "max_len" in t_info and t_info["max_len"] is not None:
                 max_size = t_info["max_len"]
                 tokenizer_inst.enable_truncation(
@@ -181,7 +200,10 @@ class ModularTokenizer(transformers.PreTrainedTokenizerBase):
         return special_tokens
 
     @staticmethod
-    def get_special_tokens(tokenizer_json_inst: Dict, enforce_special: Optional[bool] = False) -> List:
+    def get_special_tokens(
+        tokenizer_json_inst: Dict,
+        enforce_special: Optional[bool] = False,
+    ) -> List:
         """returns the special tokens from tokenizer defined by json_inst.
             Note: An alternative would be to call tokenizer_inst.get_vocab(with_added_tokens), using with_added_tokens False and True, which
             should've given us just regular and regular+special tokens, but for some reason both these options return the same output,
@@ -889,7 +911,10 @@ class ModularTokenizer(transformers.PreTrainedTokenizerBase):
         # TODO: It may be possible to count all the unique IDs (i.e. sum of numbers of
         # regular tokens of each subtokenizer plus the number of special tokens, which
         # are the common to all subtokenizers)
-        raise Exception("Not implemented")
+        if not with_added_tokens:
+            raise Exception("Not implemented")
+        else:
+            return len(list(self.decoder_dict.values()))
 
     def id_to_token(self, id: int) -> Optional[str]:
         """
