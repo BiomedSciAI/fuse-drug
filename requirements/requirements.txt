@@ -19,6 +19,9 @@ transformers
 termcolor
 xmlrunner
 pytoda @ git+https://git@github.com/PaccMann/paccmann_datasets/@0.2.5#egg=pytoda
-openfold @ git+https://github.com/aqlaboratory/openfold
+openfold @ git+https://github.com/BiomedSciAI/openfold  
 dm-tree
 ml_collections
+biopython
+
+# conda install -c bioconda abnumber
