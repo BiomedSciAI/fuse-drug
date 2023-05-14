@@ -1,17 +1,33 @@
 # Modular Tokenizer:
 * A modular tokenizer combines multiple pre-trained (huggingface-based) tokenizers and maps their tokens to a single, consistent ID space. It's useful for sequence-to-sequence problems, where different tokenizers should be used for different parts of the input sequence, depending on the context, and straightforward merging of the tokenizers may not be possible due to token overlap (e.g. 'C' in an amino acid sequence, standing for Cysteine, and 'C' in a SMILES sequence, standing for Carbon, should be mapped to different IDs). 
 * The modular tokenizer retains most of huggingface tokenizer interface (but not the underlying logic), so it can be plugged into existing code with very few (if any at all) changes.
+## Definitions:
+* __sub-tokenizer__: One of several underlying tokenizers of the modular tokenizer. Maps to a consistent ID space.
+* __initial (input) tokenizer__: One of several pre-trained tokenizers used to create a modular tokenizer. Maps to an ID space of its own, which may (and probably does) overlap with those of other initial tokenizers.
 ## Interface:
 ### __init__(): 
-Creates a modular tokenizer that combines multiple existing tokenizers, adjusting them so that:
-        a. They all share the same special tokens (combined special tokens from all the source tokenizers),
-        b. Each tokenizer retains its regular tokens, however their IDs are remapped to a single space, with no overlaps.
+Creates a modular tokenizer that combines multiple initial tokenizers, adjusting them so that:
+* They all share the same special tokens (combined special tokens from all the source tokenizers),
+* Each tokenizer retains its regular tokens, however their IDs are remapped to a single space, with no overlaps.
+Note: If a token has the same meaning across all input types (e.g. special tokens, like SEP, EOS, sentinel tokens), it should be defined as special token in at least one of the initial (input) tokenizers.
 ### save_jsons():
+Saves the underlying adjusted tokenizers as jsons.
 ### load_from_jsons(): 
+Loads a group of adjusted tokenizers (created by __init__, andsaved by save_jsons), and returns a modular tokenizer with the same ID mapping.
 ### diagnose():
+Tests a modular tokenizer for underlying ID mapping consistency, checking that the following hold for all sub-tokenizers:
+* Special tokens are the same (and map to the same indices) across all the tokenizers
+* Regular token ID mappings of any given tokenizer do not collide with special token mappings
+* Regular token ID mappings of any given tokenizer do not collide with ID mappings of other tokenizers
 ### encode_list():
-### encode():
+Receives a list of named tuples, each containing the type of tokenizer to use, a string to be tokenized, and, optionally, maximum length (in tokens) of the result. Tokenizes each input string.
+### encode(): 
+(Not implemented yet) Receives a string, infers which tokenizers to use on it and returns its tokenization.
 ### decode():
+Decodes a list of tokens
 ### get_vocab_size(): 
 Returns the size of the vocabulary of the modular tokenizer (i.e. the number of unique IDs, which may be greater than the number of unique tokens)
-### 
+### id_to_token():
+Returns the token that maps to the input ID.
+### token_to_id():
+Returns the input token's corresponding ID.
