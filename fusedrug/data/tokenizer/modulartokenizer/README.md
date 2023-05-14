@@ -33,10 +33,11 @@ Returns the token that maps to the input ID.
 Returns the input token's corresponding ID.
 ## Use example
 ### Creation:
-An example of creation of a new modular tokenizer from an AA sequence tokenizer is found here: [ModularTokenizer creation](https://github.com/BiomedSciAI/fuse-drug/blob/a1b9564eb54b9fe39890645fb5378c13aedde6fb/fusedrug/data/tokenizer/modulartokenizer/test_multi_tokenizer_creation.py#L107)
+An example of creation of a new modular tokenizer from a word-level AA sequence tokenizer and a BPE SMILES tokenizer is found here: [ModularTokenizer creation](https://github.com/BiomedSciAI/fuse-drug/blob/a1b9564eb54b9fe39890645fb5378c13aedde6fb/fusedrug/data/tokenizer/modulartokenizer/test_multi_tokenizer_creation.py#L107)
 It uses this config: [tokenizer_config.py](https://github.com/BiomedSciAI/fuse-drug/blob/main/fusedrug/data/tokenizer/modulartokenizer/configs/tokenizer_config.yaml). Note: this line [path definition](https://github.com/BiomedSciAI/fuse-drug/blob/a1b9564eb54b9fe39890645fb5378c13aedde6fb/fusedrug/data/tokenizer/modulartokenizer/configs/tokenizer_config.yaml#L3) needs to be changed so that _your_path_ points to cloned fuse-drug parent directory.
 ### Usage:
 An example of usage of the modular tokenizer is found here: [ModularTokenizer use](https://github.com/BiomedSciAI/fuse-drug/blob/a1b9564eb54b9fe39890645fb5378c13aedde6fb/fusedrug/data/tokenizer/modulartokenizer/test_multi_tokenizer_use.py#L16). It uses the same config as the creation example, and loads the jsons that were saved by the creation code.
+The example loads a ready ModularTokenizer stored here: [Word AA + BPE SMILES](https://github.com/BiomedSciAI/fuse-drug/tree/main/fusedrug/data/tokenizer/modulartokenizer/pretrained/modular_wordlevelAA_BPESMILES)
 ### Config structure:
 The init and load_from_jsons functiona both receive a list of dictionaries, each defining a single type of tokenizer. The dictionaries have the following fields:
     * name: Name of the tokenizer (usually depicting its use context - AA sequences, SMILES, etc)
