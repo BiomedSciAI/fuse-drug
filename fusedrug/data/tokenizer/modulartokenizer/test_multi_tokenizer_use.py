@@ -13,9 +13,12 @@ def main(cfg: DictConfig) -> None:
     tmp = OmegaConf.to_object(cfg)
     cfg_raw: Dict[str, Any] = tmp
 
-    t_mult_loaded = ModularTokenizer.load_from_jsons(tokenizers_info=cfg_raw["data"]["tokenizer"]["tokenizers_info"])
+    ### load_from_jsons example. This is a less preferable way to load a tokenizer
+    # t_mult_loaded = ModularTokenizer.load_from_jsons(
+    #     tokenizers_info=cfg_raw["data"]["tokenizer"]["tokenizers_info"]
+    # )
 
-    test_tokenizer(t_mult_loaded, cfg_raw=cfg_raw, mode="loaded")
+    # test_tokenizer(t_mult_loaded, cfg_raw=cfg_raw, mode="loaded")
 
     t_mult_loaded_path = ModularTokenizer.load(path=cfg_raw["data"]["tokenizer"]["out_path"])
 

@@ -326,7 +326,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 Union[omegaconf.listconfig.ListConfig]: _description_
             """
             for ind, t_conf in enumerate(loaded_conf):
-                loaded_conf[ind]["json_path"] = os.path.join(path, os.path.basename(t_conf["json_path"]))
+                if ("json_path" in t_conf) and (t_conf["json_path"] is not None):
+                    loaded_conf[ind]["json_path"] = os.path.join(path, os.path.basename(t_conf["json_path"]))
                 loaded_conf[ind]["modular_json_path"] = os.path.join(
                     path, os.path.basename(t_conf["modular_json_path"])
                 )
@@ -585,12 +586,12 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 val=config_out_path,
             )
             # Original json path (for the json of the tokenizer used to create the original instance of this ModularTokenizer) is no longer relevant,
-            # since it may be located on another machine. modular_json_path is used instead.
+            # since it may be located on another machine. None is used instead.
             tokenizers_info_cfg = set_field(
                 tokenizers_info_cfg=tokenizers_info_cfg,
                 name=t_type,
                 key="json_path",
-                val=config_out_path,
+                val=None,
             )
             tokenizer_inst.save(write_out_path)
         # yaml_data: str = OmegaConf.to_yaml(tokenizers_info_cfg)

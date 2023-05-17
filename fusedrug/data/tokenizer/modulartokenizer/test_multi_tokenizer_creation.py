@@ -112,7 +112,8 @@ def main(cfg: DictConfig) -> None:
     special_tokens_dict = get_special_tokens_dict()
     cfg_tokenizer: Dict[str, Any] = cfg_raw["data"]["tokenizer"]
     t_mult = ModularTokenizer(**cfg_tokenizer, special_tokens_dict=special_tokens_dict)
-    t_mult.save_jsons(tokenizers_info=cfg_raw["data"]["tokenizer"]["tokenizers_info"])
+    # t_mult.save_jsons(tokenizers_info=cfg_raw["data"]["tokenizer"]["tokenizers_info"]) #This is a less preferable way to save a tokenizer
+
     t_mult.save(path=cfg_raw["data"]["tokenizer"]["out_path"])
 
     test_tokenizer(t_mult, cfg_raw)
