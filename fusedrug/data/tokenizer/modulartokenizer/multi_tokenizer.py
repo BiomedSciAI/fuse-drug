@@ -333,7 +333,10 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 )
             return loaded_conf
 
-        loaded_conf = OmegaConf.load(os.path.join(path, "config.yaml"))
+        try:
+            loaded_conf = OmegaConf.load(os.path.join(path, "config.yaml"))
+        except:
+            raise Exception(f"couldn't load config.yaml from {path}")
         loaded_conf_fixed = fix_json_paths(loaded_conf, path)
         return ModularTokenizer(tokenizers_info=loaded_conf_fixed, load_adjusted_jsons=True)
 
@@ -952,17 +955,19 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
     @staticmethod
     def from_file(path: str) -> object:
         """
-        Instantiate a new :class:`~tokenizers.Tokenizer` from the file at the given path.
+        Accepts a file or directory, and loads a modular tokenizer stored in that directory
 
         Args:
             path (:obj:`str`):
-                A path to a local JSON file representing a previously serialized
-                :class:`~tokenizers.Tokenizer`
+                A path to a local config file representing a previously saved
+                :class:`ModularTokenizer`
 
         Returns:
-            :class:`~tokenizers.Tokenizer`: The new tokenizer
+            :class:`ModularTokenizer`: The new tokenizer
         """
-        raise Exception("Not implemented")
+        if os.path.isfile(path):
+            path = os.path.dirname(path)
+        return ModularTokenizer.load(path)
 
     @staticmethod
     def from_pretrained(
