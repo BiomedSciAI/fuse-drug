@@ -93,8 +93,8 @@ def cluster(
     cluster_method: str = "cluster",
     deduplicate: bool = True,
     override: bool = False,
-    kmer_per_seq: Optional[int] = None, 
-    split_memory_limit: Optional[str] = None, # should be max 70% of system's available RAM
+    kmer_per_seq: Optional[int] = None,
+    split_memory_limit: Optional[str] = None,  # should be max 70% of system's available RAM
 ) -> None:
     """
     see cached_cluster()
@@ -123,7 +123,7 @@ def cluster(
             shutil.rmtree(workspace_dir)
         else:
             raise Exception("ABORTING")
-        
+
     os.makedirs(join(workspace_dir))
     mmseqs_db_path = join(output_dir, "mmseqs_workspace", "mmseqs_DB")
 
@@ -213,6 +213,7 @@ def cluster(
     print("--------------------------------------")
     print("Final generated key files summary:")
     print("--------------------------------------")
+
     if deduplicate:
         print(f"a deduplicated FASTA file: {mmseqs_only_unique_sequences_representatives_fasta}")
         ans["deduplicated_fasta"] = mmseqs_only_unique_sequences_representatives_fasta
@@ -231,7 +232,7 @@ def cluster(
 cluster_impl = cluster  # for backward compatibility
 
 
-def _run_system_cmd(cmd: str, capture_output: bool = False) -> None: # TODO expose 'capture_output' 
+def _run_system_cmd(cmd: str, capture_output: bool = False) -> None:  # TODO expose 'capture_output'
     print(f"about to run: {cmd}")
     res = subprocess.run(cmd, shell=True, check=False, capture_output=capture_output)
     if res.stdout and len(res.stdout) > 0:
