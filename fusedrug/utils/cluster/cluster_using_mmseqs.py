@@ -81,8 +81,6 @@ def cached_cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict)
 
     return ans
 
-    return ans
-
 
 def cluster(
     *,

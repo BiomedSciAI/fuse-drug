@@ -22,4 +22,4 @@ pytoda @ git+https://git@github.com/PaccMann/paccmann_datasets/@0.2.5#egg=pytoda
 openfold @ git+https://github.com/aqlaboratory/openfold
 dm-tree
 ml_collections
-abnumber
+abnumber @ git+https://github.com/prihoda/AbNumber

@@ -224,10 +224,15 @@ def get_chain_native_features(
         gt_all_mmcif_feats = gt_data["mmcif_feats"]
         gt_sequence = gt_data["input_sequence"]
         # move to device
-        gt_mmcif_feats = {k: gt_all_mmcif_feats[k] for k in ["aatype", "all_atom_positions", "all_atom_mask"]}
+        gt_mmcif_feats = {
+            k: gt_all_mmcif_feats[k] for k in ["aatype", "all_atom_positions", "all_atom_mask", "resolution"]
+        }
 
         to_tensor = lambda t: torch.tensor(np.array(t)).to(device)
         gt_mmcif_feats = tree_map(to_tensor, gt_mmcif_feats, np.ndarray)
+
+        if gt_mmcif_feats["resolution"].shape[0] == 0:
+            banana = 123
         # as make_atom14_masks & make_atom14_positions seems to expect indices and not one-hots !
         gt_mmcif_feats["aatype"] = gt_mmcif_feats["aatype"].argmax(axis=-1)
 
