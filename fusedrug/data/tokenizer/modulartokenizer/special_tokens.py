@@ -17,6 +17,7 @@ special_tokens = {
     "cls_token": "CLS",  # Classifier token (probably irrelevant in the T5 setting)
     "sep_token": "SEP",  # Separator token
     "mask_token": "MASK",  # Mask token
+    "eos_token": "EOS",  # End of Sentence token
 }
 task_tokens = [  # pairwise tasks
     "DECODER_START",

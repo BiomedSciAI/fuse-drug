@@ -16,6 +16,8 @@ Saves all mudular tokenizer information to a given path.
 Saves the underlying adjusted tokenizers as jsons.
 ### load():
 Loads a modular tokenizer saved by save()
+### from_file(): 
+Receives a path to a file or a directory and loads a modular tokenizer from that directory.
 ### load_from_jsons(): 
 Loads a group of adjusted tokenizers (created by __init__, andsaved by save_jsons), and returns a modular tokenizer with the same ID mapping.
 ### diagnose():
