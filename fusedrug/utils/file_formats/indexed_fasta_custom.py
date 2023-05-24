@@ -189,9 +189,9 @@ class IndexedFastaCustom(Dataset):
                 index = self._offsets_map[index]
             else:
                 raise KeyError(f"Could not find identifier {index}")
-        elif not isinstance(index, int):
+        elif not isinstance(index, (int, np.int32, np.int64)):
             raise Exception(
-                "indexing is supported by integer index, or by string identifier if allow_access_by_id=True was set"
+                f"indexing is supported by integer index, or by string identifier if allow_access_by_id=True was set, got {type(index)}"
             )
         offset = self.offsets[index].item()
 

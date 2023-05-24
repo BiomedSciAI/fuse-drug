@@ -138,11 +138,17 @@ dmypy.json
 # VSCode
 .vscode
 
+# hydra
+.hydra
+
 # should not push data
 tutorials/data/*
 
 # CCC outputs
 outputs
+
+# personal configs
+*_personal.yaml
 
 # Unit test outputs
 fusedrug_examples/tests/cls_amp

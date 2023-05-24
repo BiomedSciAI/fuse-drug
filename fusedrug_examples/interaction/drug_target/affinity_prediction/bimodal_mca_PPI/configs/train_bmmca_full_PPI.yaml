@@ -4,7 +4,6 @@ seed_everything: null
 
 only_get_expected_working_dir: false
 
-
 task_info:
   class_label_to_idx: 
     Inactive: 0
