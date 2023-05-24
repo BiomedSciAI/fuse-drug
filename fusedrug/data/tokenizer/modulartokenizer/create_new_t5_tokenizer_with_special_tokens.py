@@ -98,25 +98,36 @@ def create_base_AA_tokenizer(cfg_raw: Dict[str, Any]) -> None:
     print("Fin")
 
 
-@hydra.main(config_path="./configs", config_name="tokenizer_config_personal", version_base=None)
+@hydra.main(
+    config_path="./configs",
+    config_name="tokenizer_add_special_tokens_config_personal",
+    version_base=None,
+)
 def main(cfg: DictConfig) -> None:
+    """This script loads an AA tokenizer, and creates a similar tokenizer
+    (in terms of vocabulary, model type, and pre/post-processors) that contains special tokens as defined in ./special_tokens.py
+
+    Args:
+        cfg (DictConfig): _description_
+    """
     print(str(cfg))
 
     cfg = hydra.utils.instantiate(cfg)
     tmp = OmegaConf.to_object(cfg)
     cfg_raw: Dict[str, Any] = tmp
 
-    # create_base_AA_tokenizer(
-    #     cfg_raw=cfg_raw
-    # )  # uncomment if a new AA tokenizer is needed. Note - be really careful about it as this will override any existing tokenizer
+    create_base_AA_tokenizer(
+        cfg_raw=cfg_raw
+    )  # uncomment if a new AA tokenizer is needed. Note - be really careful about it as this will override any existing tokenizer
     special_tokens_dict = get_special_tokens_dict()
     cfg_tokenizer: Dict[str, Any] = cfg_raw["data"]["tokenizer"]
     t_mult = ModularTokenizer(**cfg_tokenizer, special_tokens_dict=special_tokens_dict)
-    # t_mult.save_jsons(tokenizers_info=cfg_raw["data"]["tokenizer"]["tokenizers_info"]) #This is a less preferable way to save a tokenizer
 
-    t_mult.save(path=cfg_raw["data"]["tokenizer"]["out_path"])
+    t_mult.save_jsons(tokenizers_info=cfg_raw["data"]["tokenizer"]["tokenizers_info"])
 
-    test_tokenizer(t_mult, cfg_raw)
+    # t_mult.save(path=cfg_raw["data"]["tokenizer"]["out_path"])
+
+    # test_tokenizer(t_mult, cfg_raw)
 
     print("Fin")
 
