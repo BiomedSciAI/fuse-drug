@@ -56,7 +56,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         else:
             raise Exception("unexpected tokenizers_info type")
         self.tokenizers_info_raw_cfg = copy.deepcopy(tokenizers_info_list)
-        self.tokenizers_info = ModularTokenizer.cfg_list_2_dict(copy.deepcopy(tokenizers_info_list))
+        self.tokenizers_info = ModularTokenizer.cfg_list_2_dict(
+            copy.deepcopy(tokenizers_info_list)
+        )
         self.special_tokens_dict = special_tokens_dict
 
         if not load_adjusted_jsons:
@@ -73,14 +75,18 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 t_json = json.load(open(t_info["json_path"]))
                 self.tokenizers_info[t_type]["json_instance"] = t_json
 
-                part_special_tokens = ModularTokenizer.get_special_tokens(
+                part_special_tokens = ModularTokenizer.get_subtokenizer_added_tokens(
                     t_json,
                     enforce_special=False,
                 )
-                part_special_tokens = [t for t in part_special_tokens if t not in all_special_tokens]
+                part_special_tokens = [
+                    t for t in part_special_tokens if t not in all_special_tokens
+                ]
                 all_special_tokens = all_special_tokens + part_special_tokens
 
-            all_special_token_structs = ModularTokenizer.build_special_token_list(all_special_tokens)
+            all_special_token_structs = ModularTokenizer.build_special_token_list(
+                all_special_tokens
+            )
             # rearrange regular token indices
             next_index = max([t["id"] for t in all_special_token_structs]) + 1
         else:
@@ -95,7 +101,10 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             # operations on the tokenizer json
             if not load_adjusted_jsons:
                 t_json["added_tokens"] = all_special_token_structs
-                (t_json["model"]["vocab"], next_index,) = ModularTokenizer.remap_vocab(
+                (
+                    t_json["model"]["vocab"],
+                    next_index,
+                ) = ModularTokenizer.remap_vocab(
                     vocab=t_json["model"]["vocab"],
                     special_token_structs=all_special_token_structs,
                     starting_index=next_index,
@@ -106,7 +115,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             tokenizer_inst = Tokenizer.from_str(json_str)
             if self.special_tokens_dict is not None:
                 # At this point, tokens from self.special_tokens_dict are in every tokenizer.
-                num_add = tokenizer_inst.add_special_tokens(list(self.special_tokens_dict.values()))
+                num_add = tokenizer_inst.add_special_tokens(
+                    list(self.special_tokens_dict.values())
+                )
                 if num_add > 0:
                     raise Exception(
                         f"All special tokens should have been in the vocabulary at this point. {num_add} were added - need to check why."
@@ -212,11 +223,11 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         return special_tokens
 
     @staticmethod
-    def get_special_tokens(
+    def get_subtokenizer_added_tokens(
         tokenizer_json_inst: Dict,
         enforce_special: Optional[bool] = False,
     ) -> List:
-        """returns the special tokens from tokenizer defined by json_inst.
+        """returns the special tokens from a tokenizer defined by json_inst.
             Note: An alternative would be to call tokenizer_inst.get_vocab(with_added_tokens), using with_added_tokens False and True, which
             should've given us just regular and regular+special tokens, but for some reason both these options return the same output,
             so we must resort to json parsing.
@@ -231,14 +242,18 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         """
         special_token_structs = tokenizer_json_inst["added_tokens"]
         if enforce_special:
-            special_tokens = [t["content"] for t in special_token_structs if t["special"]]
+            special_tokens = [
+                t["content"] for t in special_token_structs if t["special"]
+            ]
         else:
             special_tokens = [t["content"] for t in special_token_structs]
 
         return special_tokens
 
     @staticmethod
-    def get_regular_tokens(tokenizer_json_inst: Dict, enforce_special: Optional[bool] = False) -> Set:
+    def get_subtokenizer_regular_tokens(
+        tokenizer_json_inst: Dict, enforce_special: Optional[bool] = False
+    ) -> Set:
         """returns the regular tokens from tokenizer defined by json_inst.
             Note: An alternative would be to call tokenizer_inst.get_vocab(with_added_tokens), using with_added_tokens False and True, which
             should've given us just regular and regular+special tokens, but for some reason both these options return the same output,
@@ -253,14 +268,16 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         Returns:
             Set: _description_
         """
-        special_tokens = ModularTokenizer.get_special_tokens(
+        special_tokens = ModularTokenizer.get_subtokenizer_added_tokens(
             tokenizer_json_inst=tokenizer_json_inst, enforce_special=enforce_special
         )
         all_tokens = set(tokenizer_json_inst["model"]["vocab"].keys())
         return all_tokens - set(special_tokens)
 
     @staticmethod
-    def get_subtokenizer_vocab(tokenizer_json_inst: Dict, token_list: Optional[List] = None) -> Dict:
+    def get_subtokenizer_vocab(
+        tokenizer_json_inst: Dict, token_list: Optional[List] = None
+    ) -> Dict:
         """Returns a dictionary of {token:id} of tokenizer tokenizer_json_inst for all tokens in token_list
 
         Args:
@@ -293,7 +310,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         Returns:
             object: _description_
         """
-        return ModularTokenizer(tokenizers_info=tokenizers_info, load_adjusted_jsons=True)
+        return ModularTokenizer(
+            tokenizers_info=tokenizers_info, load_adjusted_jsons=True
+        )
 
     @staticmethod
     def load(path: str) -> Any:
@@ -327,7 +346,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             """
             for ind, t_conf in enumerate(loaded_conf):
                 if ("json_path" in t_conf) and (t_conf["json_path"] is not None):
-                    loaded_conf[ind]["json_path"] = os.path.join(path, os.path.basename(t_conf["json_path"]))
+                    loaded_conf[ind]["json_path"] = os.path.join(
+                        path, os.path.basename(t_conf["json_path"])
+                    )
                 loaded_conf[ind]["modular_json_path"] = os.path.join(
                     path, os.path.basename(t_conf["modular_json_path"])
                 )
@@ -338,10 +359,14 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         except:
             raise Exception(f"couldn't load config.yaml from {path}")
         loaded_conf_fixed = fix_json_paths(loaded_conf, path)
-        return ModularTokenizer(tokenizers_info=loaded_conf_fixed, load_adjusted_jsons=True)
+        return ModularTokenizer(
+            tokenizers_info=loaded_conf_fixed, load_adjusted_jsons=True
+        )
 
     @staticmethod
-    def update_id2token_mapping(id2token: Dict, add_vocab: Dict, is_special: Optional[bool] = False) -> Dict:
+    def update_id2token_mapping(
+        id2token: Dict[int, str], add_vocab: Dict, is_special: Optional[bool] = False
+    ) -> Dict[int, str]:
         """Updates id2token mapping with tokens from add_vocab. Returns the updated id2token
 
         Args:
@@ -355,7 +380,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
 
         for token in add_vocab:
             if add_vocab[token] in id2token:
-                print("Warning: ID collision during update_id2token_mapping for token {token}, id {add_vocab[token]}")
+                print(
+                    "Warning: ID collision during update_id2token_mapping for token {token}, id {add_vocab[token]}"
+                )
             else:
                 tmp_dict = {"token": token, "is_special": is_special}
                 id2token[add_vocab[token]] = tmp_dict
@@ -388,14 +415,18 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 "json_instance" in t_info
             ), f"tokenizer of type {t_type} hasn't been instantiated yet. Call init first."
             if len(self.decoder_dict) == 0:  # Add
-                sp_tokens = ModularTokenizer.get_special_tokens(t_info["json_instance"])
+                sp_tokens = ModularTokenizer.get_subtokenizer_added_tokens(
+                    t_info["json_instance"]
+                )
                 sp_vocab = ModularTokenizer.get_subtokenizer_vocab(
                     tokenizer_json_inst=t_info["json_instance"], token_list=sp_tokens
                 )
                 self.decoder_dict = ModularTokenizer.update_id2token_mapping(
                     id2token=self.decoder_dict, add_vocab=sp_vocab, is_special=True
                 )
-            reg_tokens = ModularTokenizer.get_regular_tokens(t_info["json_instance"])
+            reg_tokens = ModularTokenizer.get_subtokenizer_regular_tokens(
+                t_info["json_instance"]
+            )
             reg_vocab = ModularTokenizer.get_subtokenizer_vocab(
                 tokenizer_json_inst=t_info["json_instance"], token_list=list(reg_tokens)
             )
@@ -422,17 +453,23 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         all_inds_len = 0
         if len(tokenizer_types) > 1:
             special_tokens = list(
-                ModularTokenizer.get_special_tokens(self.tokenizers_info[tokenizer_types[0]]["json_instance"])
+                ModularTokenizer.get_subtokenizer_added_tokens(
+                    self.tokenizers_info[tokenizer_types[0]]["json_instance"]
+                )
             )
             special_tokens_vocab = ModularTokenizer.get_subtokenizer_vocab(
-                tokenizer_json_inst=self.tokenizers_info[tokenizer_types[0]]["json_instance"],
+                tokenizer_json_inst=self.tokenizers_info[tokenizer_types[0]][
+                    "json_instance"
+                ],
                 token_list=special_tokens,
             )
 
             # check if all special tokens are the same across all tokenizers
             for t_type in tokenizer_types:
                 special_tokens_t = list(
-                    ModularTokenizer.get_special_tokens(self.tokenizers_info[t_type]["json_instance"])
+                    ModularTokenizer.get_subtokenizer_added_tokens(
+                        self.tokenizers_info[t_type]["json_instance"]
+                    )
                 )
                 special_tokens_vocab_t = ModularTokenizer.get_subtokenizer_vocab(
                     tokenizer_json_inst=self.tokenizers_info[t_type]["json_instance"],
@@ -446,7 +483,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             # check if there are no ID collisions within/between vocabs
             for t_type in tokenizer_types:
                 regular_tokens = list(
-                    ModularTokenizer.get_regular_tokens(self.tokenizers_info[t_type]["json_instance"])
+                    ModularTokenizer.get_subtokenizer_regular_tokens(
+                        self.tokenizers_info[t_type]["json_instance"]
+                    )
                 )
                 regular_tokens_vocab = ModularTokenizer.get_subtokenizer_vocab(
                     tokenizer_json_inst=self.tokenizers_info[t_type]["json_instance"],
@@ -612,7 +651,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
     ) -> None:
         raise Exception("Not implemented")
 
-    def _encode_single_type(self, data_str: str, input_type: str, sequence_id: Optional[int] = None) -> Encoding:
+    def _encode_single_type(
+        self, data_str: str, input_type: str, sequence_id: Optional[int] = None
+    ) -> Encoding:
         """_summary_
 
         Args:
@@ -739,7 +780,11 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         """
 
         if skip_special_tokens:
-            ret_val = [self.decoder_dict[id]["token"] for id in ids if not self.decoder_dict[id]["is_special"]]
+            ret_val = [
+                self.decoder_dict[id]["token"]
+                for id in ids
+                if not self.decoder_dict[id]["is_special"]
+            ]
         else:
             ret_val = [self.decoder_dict[id]["token"] for id in ids]
         return "".join(ret_val)
@@ -811,7 +856,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         """
         pass
 
-    def decode_batch(self, sequences: List, skip_special_tokens: Optional[bool] = True) -> List:
+    def decode_batch(
+        self, sequences: List, skip_special_tokens: Optional[bool] = True
+    ) -> List:
         """
         Decode a batch of ids back to their corresponding string
 
@@ -1022,6 +1069,55 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
 
         Note: Irrelevant to ModularTokenizer, since it may not be possible to express with a single vocabulary
         """
+        raise Exception(
+            "Not implemented, because the functionality is not defined for ModularTokenizer. Use either get_added_vocab() or get_typed_vocab()"
+        )
+
+    def get_added_vocab(self) -> Dict:
+        """
+        Get the underlying vocabulary including only the added tokens (i.e. the ones that are present in all sub-tokenizers, and map to the same ids)
+        as token to id dictionary.
+
+        Args:
+            with_added_tokens (:obj:`bool`, defaults to :obj:`True`):
+                Whether to include the added tokens
+
+        Returns:
+            :obj:`Dict[str, int]`: The vocabulary
+
+        Note: Irrelevant to ModularTokenizer, since it may not be possible to express with a single vocabulary
+        """
+        t_types = self.get_tokenizer_types()
+        assert len(t_types) >= 1
+        t_type = t_types[0]
+        tokenizer_json_inst = self.tokenizers_info[t_type]["json_instance"]
+        special_tokens_list = ModularTokenizer.get_subtokenizer_added_tokens(
+            tokenizer_json_inst=tokenizer_json_inst
+        )
+        special_tokens_dict = ModularTokenizer.get_subtokenizer_vocab(
+            tokenizer_json_inst=tokenizer_json_inst, token_list=special_tokens_list
+        )
+        return special_tokens_dict
+
+    def get_typed_vocab(self, with_added_tokens: Optional[bool] = True) -> Dict:
+        """
+        Get the underlying vocabulary, as (token type, token) to id dictionary
+
+        Args:
+            with_added_tokens (:obj:`bool`, defaults to :obj:`True`):
+                Whether to include the added tokens
+
+        Returns:
+            :obj:`Dict[Tuple[str, str], int]`: The following dictionary:
+            {
+                (type of tokenizer, token):id
+                }
+            with type of tokenizer being the sub-tokenizer name, token - a token in the sub-tokenizer and id - the id of the token in the sub-tokenizer.
+            If a token is present in several sub-tokenizers, with the same id (e.g. if it's an added/special token), only one occurrence is present. If a token
+            is present in several sub-tokenizers, but with different ids - all occurrences are present.
+
+        Note: Irrelevant to ModularTokenizer, since it may not be possible to express with a single vocabulary
+        """
         raise Exception("Not implemented")
 
     def get_vocab_size(self, with_added_tokens: Optional[bool] = True) -> int:
@@ -1042,6 +1138,22 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             raise Exception("Not implemented")
         else:
             return len(list(self.decoder_dict.values()))
+
+    def get_max_id(self, with_added_tokens: Optional[bool] = True) -> int:
+        """
+        Get value of the highest ID of the underlying vocabulary
+
+        Args:
+            with_added_tokens (:obj:`bool`, defaults to :obj:`True`):
+                Whether to include the added tokens
+
+        Returns:
+            :obj:`int`: The size of the vocabulary
+        """
+        if not with_added_tokens:
+            raise Exception("Not implemented")
+        else:
+            return max(list(self.decoder_dict.keys()))
 
     def id_to_token(self, id: int) -> Optional[str]:
         """
@@ -1187,7 +1299,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             t_type_val = str(t_type)
         return self.tokenizers_info[t_type_val]["tokenizer_inst"].token_to_id(token)
 
-    def train(self, files: List, trainer: Optional[tokenizers.trainers.Trainer] = None) -> None:
+    def train(
+        self, files: List, trainer: Optional[tokenizers.trainers.Trainer] = None
+    ) -> None:
         """
         Train the Tokenizer using the given files.
 
@@ -1348,7 +1462,9 @@ class ModularMultiTokenizerOp(OpBase):
         if key_out_attention_mask is not None:
             sample_dict[key_out_attention_mask] = encoded.attention_mask
             if convert_attention_mask_to_bool:
-                sample_dict[key_out_attention_mask] = [bool(x) for x in sample_dict[key_out_attention_mask]]
+                sample_dict[key_out_attention_mask] = [
+                    bool(x) for x in sample_dict[key_out_attention_mask]
+                ]
 
         if (key_out_tokens_ids is None) and (key_out_tokenized_object is None):
             warn(
