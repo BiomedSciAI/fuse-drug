@@ -26,14 +26,13 @@ class MetricSeqAccuracy(MetricDefault):
     Accuracy of a generated sequence.
     """
 
-    def __init__(self, pred: Optional[str] = None, target: Optional[str] = None, **kwargs):
+    def __init__(self, pred: Optional[str] = None, target: Optional[str] = None, **kwargs: dict):
         super().__init__(metric_func=self.sequence_accuracy, pred=pred, target=target, **kwargs)
 
     @staticmethod
-    def sequence_accuracy(pred: List[str], target: List[str]):
+    def sequence_accuracy(pred: List[str], target: List[str]) -> float:
         accuracy_list = []
         for pred_i, target_i in zip(pred, target):
-            # print(f"{target_i}->{pred_i}")
             correct_count = 0
             for pred_char, target_char in zip(pred_i, target_i):
                 if pred_char == target_char:
@@ -46,11 +45,11 @@ class MetricSeqAccuracy(MetricDefault):
 class MetricPrintRandomSubsequence(MetricDefault):
     """Dump prediction and target of random samples (num_sample_to_print)"""
 
-    def __init__(self, pred, target, num_sample_to_print):
+    def __init__(self, pred: str, target: str, num_sample_to_print: int):
         super().__init__(metric_func=self.dump, pred=pred, target=target)
         self._num_samples_to_print = num_sample_to_print
 
-    def dump(self, pred, target):
+    def dump(self, pred: list, target: list) -> None:
         indices = random.sample(range(len(pred)), self._num_samples_to_print)
         for index in indices:
             print(f"\n{target[index]}->\n{pred[index]}\n---------")

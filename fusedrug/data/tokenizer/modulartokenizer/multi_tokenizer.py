@@ -9,12 +9,15 @@ from typing import Optional, List, Set, Union, Tuple, Any, Iterator
 import json
 import transformers
 import os
+from omegaconf import OmegaConf
+import omegaconf
+import copy
 
 
 class ModularTokenizer(transformers.PreTrainedTokenizerFast):
     def __init__(
         self,
-        tokenizers_info: List,
+        tokenizers_info: Union[List, omegaconf.listconfig.ListConfig],
         load_adjusted_jsons: Optional[bool] = False,
         special_tokens_dict: Optional[Dict] = None,
         **kwargs: Any,
@@ -44,7 +47,16 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         # ModularTokenizer inherits the interface of PreTrainedTokenizerBase, but not the underlying logic, therefore super.__init__() is not called
 
         # If there is only one tokenizer, remapping it is not needed - if there's only one, we can just load its json using load_from_jsons.
-        self.tokenizers_info = ModularTokenizer.cfg_list_2_dict(tokenizers_info)
+        if isinstance(tokenizers_info, omegaconf.listconfig.ListConfig) or isinstance(
+            tokenizers_info, omegaconf.dictconfig.DictConfig
+        ):
+            tokenizers_info_list: List = OmegaConf.to_object(tokenizers_info)
+        elif isinstance(tokenizers_info, list):
+            tokenizers_info_list = tokenizers_info
+        else:
+            raise Exception("unexpected tokenizers_info type")
+        self.tokenizers_info_raw_cfg = copy.deepcopy(tokenizers_info_list)
+        self.tokenizers_info = ModularTokenizer.cfg_list_2_dict(copy.deepcopy(tokenizers_info_list))
         self.special_tokens_dict = special_tokens_dict
 
         if not load_adjusted_jsons:
@@ -268,7 +280,6 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
     def load_from_jsons(tokenizers_info: List) -> Any:
         """Reads a list of json paths (from tokenizer_info dictionary, as defined in the config), that were created by ModularTokenizer.save_jsons, and creates a modular tokenizer, keeping the ID mappings
         of the jsons.
-        TODO: Check the resulting ModularTokenizer for consistency
 
         Args:
             tokenizer_info (List): A list of dictionaries containing the following:
@@ -283,6 +294,51 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             object: _description_
         """
         return ModularTokenizer(tokenizers_info=tokenizers_info, load_adjusted_jsons=True)
+
+    @staticmethod
+    def load(path: str) -> Any:
+        """Reads all information that was saved by ModularTokenizer.save(), and creates a modular tokenizer based on it.
+
+        Args:
+            path: directory that contains a file named config.yaml which defines list of dictionaries containing the following:
+            [
+                   {
+                        "name": a name of a tokenizer
+                        "modular_json_path":out_path for tokenizer_type
+                    }
+            ]
+
+        Returns:
+            object: Loaded ModularTokenizer
+        """
+
+        def fix_json_paths(
+            loaded_conf: omegaconf.listconfig.ListConfig,
+            path: str,
+        ) -> omegaconf.listconfig.ListConfig:
+            """Since the path passed to ModularTokenizer.load() must contain all of the modular jsons and the config that defines their relations, all json
+            paths in the config must point to path. This function replaces any dirname of any json in the loaded config (found in path) with path.
+            Args:
+                loaded_conf (Union[List, omegaconf.listconfig.ListConfig]): _description_
+                path (str): _description_
+
+            Returns:
+                Union[omegaconf.listconfig.ListConfig]: _description_
+            """
+            for ind, t_conf in enumerate(loaded_conf):
+                if ("json_path" in t_conf) and (t_conf["json_path"] is not None):
+                    loaded_conf[ind]["json_path"] = os.path.join(path, os.path.basename(t_conf["json_path"]))
+                loaded_conf[ind]["modular_json_path"] = os.path.join(
+                    path, os.path.basename(t_conf["modular_json_path"])
+                )
+            return loaded_conf
+
+        try:
+            loaded_conf = OmegaConf.load(os.path.join(path, "config.yaml"))
+        except:
+            raise Exception(f"couldn't load config.yaml from {path}")
+        loaded_conf_fixed = fix_json_paths(loaded_conf, path)
+        return ModularTokenizer(tokenizers_info=loaded_conf_fixed, load_adjusted_jsons=True)
 
     @staticmethod
     def update_id2token_mapping(id2token: Dict, add_vocab: Dict, is_special: Optional[bool] = False) -> Dict:
@@ -475,6 +531,75 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 if not os.path.exists(os.path.dirname(out_path)):
                     os.makedirs(os.path.dirname(out_path))
                 tokenizer_inst.save(out_path)
+
+    def save(self, path: str) -> None:
+        """Saves all information needed to reconstruct the modular tokenizer to path.
+        After saving, path will contain the following:
+        - json files: modular json files (i.e. that have common special tokens, and that all map to consistent ID space)
+        - config.yaml: a config file that contains the tokenizer_info list with information from self.tokenizer_info, defining the relations between the different tokenizers.
+        ** Since all modular tokenizers are found in the same path, and the path may change when it's passed between users, the path is not included in the config
+        (i.e. all json paths have base dir of './'). The correct path is updated upon calling ModularTokenizer.load()
+
+        Args:
+            path (str): a directory there the modular tokenizer info will be saved.
+        """
+
+        def get_out_path(input_json_path: str, base_path: Optional[str] = None) -> str:
+            """_summary_
+
+            Args:
+                input_json_path (str): _description_
+                base_path (str, optional): _description_. Defaults to None.
+
+            Returns:
+                str: _description_
+            """
+            fname: str = os.path.basename(input_json_path)
+            if base_path is None:
+                return os.path.join("./", fname)
+            return os.path.join(base_path, fname)
+
+        def set_field(tokenizers_info_cfg: List, name: str, key: str, val: Any) -> List:
+            for i, t in enumerate(tokenizers_info_cfg):
+                if t["name"] == name:
+                    t[key] = val
+                    tokenizers_info_cfg[i] = t
+                    return tokenizers_info_cfg
+            raise Exception(f"name {name} not found")
+
+        tokenizers_info_cfg = self.tokenizers_info_raw_cfg
+
+        if not os.path.exists(os.path.dirname(path)):
+            os.makedirs(os.path.dirname(path))
+        for t_type in self.tokenizers_info:
+            tokenizer_inst = self.tokenizers_info[t_type]["tokenizer_inst"]
+            write_out_path = get_out_path(
+                input_json_path=self.tokenizers_info[t_type]["json_path"],
+                base_path=path,
+            )
+            # json paths in the save config are meaningless, since the saves may pass between machines, and the base directory for the save may change.
+            config_out_path = get_out_path(
+                input_json_path=self.tokenizers_info[t_type]["json_path"],
+                base_path=None,
+            )
+            tokenizers_info_cfg = set_field(
+                tokenizers_info_cfg=tokenizers_info_cfg,
+                name=t_type,
+                key="modular_json_path",
+                val=config_out_path,
+            )
+            # Original json path (for the json of the tokenizer used to create the original instance of this ModularTokenizer) is no longer relevant,
+            # since it may be located on another machine. None is used instead.
+            tokenizers_info_cfg = set_field(
+                tokenizers_info_cfg=tokenizers_info_cfg,
+                name=t_type,
+                key="json_path",
+                val=None,
+            )
+            tokenizer_inst.save(write_out_path)
+        # yaml_data: str = OmegaConf.to_yaml(tokenizers_info_cfg)
+        with open(os.path.join(path, "config.yaml"), "w") as f:
+            OmegaConf.save(tokenizers_info_cfg, f)
 
     def _add_single_tokenizer(
         self,
@@ -830,17 +955,19 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
     @staticmethod
     def from_file(path: str) -> object:
         """
-        Instantiate a new :class:`~tokenizers.Tokenizer` from the file at the given path.
+        Accepts a file or directory, and loads a modular tokenizer stored in that directory
 
         Args:
             path (:obj:`str`):
-                A path to a local JSON file representing a previously serialized
-                :class:`~tokenizers.Tokenizer`
+                A path to a local config file representing a previously saved
+                :class:`ModularTokenizer`
 
         Returns:
-            :class:`~tokenizers.Tokenizer`: The new tokenizer
+            :class:`ModularTokenizer`: The new tokenizer
         """
-        raise Exception("Not implemented")
+        if os.path.isfile(path):
+            path = os.path.dirname(path)
+        return ModularTokenizer.load(path)
 
     @staticmethod
     def from_pretrained(
@@ -1022,19 +1149,6 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
     def pre_tokenizer(self) -> None:
         """
         The `optional` :class:`~tokenizers.pre_tokenizers.PreTokenizer` in use by the Tokenizer
-        """
-        raise Exception("Not implemented")
-
-    def save(self, path: str, pretty: Optional[bool] = True) -> None:
-        """
-        Save the :class:`~tokenizers.Tokenizer` to the file at the given path.
-
-        Args:
-            path (:obj:`str`):
-                A path to a file in which to save the serialized tokenizer.
-
-            pretty (:obj:`bool`, defaults to :obj:`True`):
-                Whether the JSON file should be pretty formatted.
         """
         raise Exception("Not implemented")
 

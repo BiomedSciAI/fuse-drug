@@ -89,6 +89,11 @@ def create_base_AA_tokenizer(cfg_raw: Dict[str, Any]) -> None:
             AA_json_path = d["json_path"]
     if not os.path.exists(os.path.dirname(AA_json_path)):
         os.makedirs(os.path.dirname(AA_json_path))
+
+    if os.path.exists(AA_json_path):
+        raise Exception(
+            f"{AA_json_path} already exists. Make sure you want to override  and then comment this exception"
+        )
     unwrapped_AA_tokenizer.save(path=AA_json_path)
     print("Fin")
 
@@ -101,11 +106,15 @@ def main(cfg: DictConfig) -> None:
     tmp = OmegaConf.to_object(cfg)
     cfg_raw: Dict[str, Any] = tmp
 
-    create_base_AA_tokenizer(cfg_raw=cfg_raw)  # uncomment if a new AA tokenizer is needed
+    # create_base_AA_tokenizer(
+    #     cfg_raw=cfg_raw
+    # )  # uncomment if a new AA tokenizer is needed. Note - be really careful about it as this will override any existing tokenizer
     special_tokens_dict = get_special_tokens_dict()
     cfg_tokenizer: Dict[str, Any] = cfg_raw["data"]["tokenizer"]
     t_mult = ModularTokenizer(**cfg_tokenizer, special_tokens_dict=special_tokens_dict)
-    t_mult.save_jsons(tokenizers_info=cfg_raw["data"]["tokenizer"]["tokenizers_info"])
+    # t_mult.save_jsons(tokenizers_info=cfg_raw["data"]["tokenizer"]["tokenizers_info"]) #This is a less preferable way to save a tokenizer
+
+    t_mult.save(path=cfg_raw["data"]["tokenizer"]["out_path"])
 
     test_tokenizer(t_mult, cfg_raw)
 

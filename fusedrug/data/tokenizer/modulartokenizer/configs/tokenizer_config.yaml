@@ -21,6 +21,7 @@ data:
   tokenizer:
     # modular_tokenizers_out_path: "${paths.tokenizers_path}/modular_wordlevelAA_BPESMILES/"
     overall_max_len: 70
+    out_path: "${paths.tokenizers_path}/modular_AA_SMILES_single_path/"
     tokenizers_info:
       - name: AA
         tokenizer_id: 0 #unique int identifier of the tokenizer
@@ -28,6 +29,7 @@ data:
         json_path:         "${paths.original_tokenizers_path}/${paths.AA_tokenizer_json}"
         # updated for use with modular tokenizer json path:
         modular_json_path: "${paths.modular_tokenizers_out_path}/${paths.AA_tokenizer_json}"
+        # max_len: 100 # [Optional] max number of tokens to be used by all instances of this tokenizer. If None or undefined, no limit is set.
         start_delimiter: "<start_AA>"
         end_delimiter: "<end_AA>"
       - name: SMILES  #if None or undefined, type key will be used as the name
