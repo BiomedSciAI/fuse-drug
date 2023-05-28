@@ -171,19 +171,24 @@ class FastModularTokenizer(OpBase):
         #         f'PID:{os.getpid()} FastModularTokenizer op sample_id {sample_dict["data.sample_id"]} key_in={key_in} pdb={sample_dict["pdb"]} HeavyChain: {sample_dict["Hchain"]} LightChain: {sample_dict["Lchain"]}'
         #     )
 
-        data_str = sample_dict[key_in]
-        if not isinstance(data_str, str):
+        data_lst = sample_dict[key_in]
+        if not isinstance(data_lst, list):
+            # data_lst is a list of named tuples of type collections.namedtuple("TypedInput", ["input_type", "input_string", "max_len"])
             raise Exception(
-                f"Expected key_in={key_in} to point to a string, and instead got a {type(data_str)}. value={data_str}"
+                f"Expected key_in={key_in} to point to a list of inputs, and instead got a {type(data_lst)}. value={data_lst}"
             )
 
         if self._validate_ends_with_eos is not None:
-            if not data_str.rstrip().endswith(self._validate_ends_with_eos):
+            if (
+                not data_lst[-1]["input_string"]
+                .rstrip()
+                .endswith(self._validate_ends_with_eos)
+            ):
                 raise Exception(
-                    f"self._validate_ends_with_eos was set to {self._validate_ends_with_eos}, but about to encode a string that does not end with it. The str was: {data_str}"
+                    f"self._validate_ends_with_eos was set to {self._validate_ends_with_eos}, but about to encode a string that does not end with it. The str end was: {data_lst[-1]['input_string']}"
                 )
 
-        encoded = self._tokenizer.encode(data_str)
+        encoded = self._tokenizer.encode(data_lst)
 
         if self._max_size is not None:  # we tightly couple padding length and max size.
             assert self._max_size == len(encoded.ids)
@@ -222,8 +227,9 @@ class FastModularTokenizer(OpBase):
         if (
             len(encoded.overflowing) > 0
         ):  # note, encoded.overflowing may have multiple items, and each item can contain multiple items
+            overall_char_len = sum([len(x["input_string"]) for x in data_lst])
             print(
-                f"Warning: FastModularTokenizer (pid={os.getpid()}) had to truncate sequence. Original Sequence Length = {len(data_str)} max supported = {self._max_size} for tokenizer: {self._tokenizer_path} for sample_id {get_sample_id(sample_dict)}"
+                f"Warning: FastModularTokenizer (pid={os.getpid()}) had to truncate sequence. Original Sequence Length = {overall_char_len} max supported = {self._max_size} for tokenizer: {self._tokenizer_path} for sample_id {get_sample_id(sample_dict)}"
             )
 
         if key_out_tokenized_object is not None:
