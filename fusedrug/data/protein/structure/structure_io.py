@@ -373,7 +373,7 @@ def extract_single_chain(full_structure: Structure, chain_id: str) -> Structure:
     return create_single_chain_structure(selected_chain)
 
 
-def create_single_chain_structure(selected_chain):
+def create_single_chain_structure(selected_chain: Chain) -> Structure:
     single_chain_model = Model(id="bananaphone", serial_num="999")
     single_chain_model.add(selected_chain)
 
