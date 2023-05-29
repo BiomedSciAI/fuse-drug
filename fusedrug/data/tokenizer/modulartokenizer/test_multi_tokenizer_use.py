@@ -5,9 +5,7 @@ from typing import Dict, Any
 from test_multi_tokenizer_creation import test_tokenizer
 
 
-@hydra.main(
-    config_path="./configs", config_name="tokenizer_config_personal", version_base=None
-)
+@hydra.main(config_path="./configs", config_name="tokenizer_config_personal", version_base=None)
 def main(cfg: DictConfig) -> None:
     print(str(cfg))
 
@@ -22,9 +20,7 @@ def main(cfg: DictConfig) -> None:
 
     # test_tokenizer(t_mult_loaded, cfg_raw=cfg_raw, mode="loaded")
 
-    t_mult_loaded_path = ModularTokenizer.load(
-        path=cfg_raw["data"]["tokenizer"]["out_path"]
-    )
+    t_mult_loaded_path = ModularTokenizer.load(path=cfg_raw["data"]["tokenizer"]["out_path"])
 
     test_tokenizer(t_mult_loaded_path, cfg_raw=cfg_raw, mode="loaded_path")
 

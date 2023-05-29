@@ -1,6 +1,6 @@
 paths:
-  # tokenizers_path: "_your_path_/modulartokenizer/pretrained/"
-  tokenizers_path: "_your_path_/fuse-drug/fusedrug/data/tokenizer/modulartokenizer/pretrained/" #tokenizer base work path
+  # tokenizers_path: "_your_path_/modulartokenizer/pretrained_tokenizers/"
+  tokenizers_path: "_your_path_/fuse-drug/fusedrug/data/tokenizer/modulartokenizer/pretrained_tokenizers/" #tokenizer base work path
   AA_tokenizer_json: "t5_tokenizer_AA_special.json"
   AA_new_tokenizer_json: "new_AA_special.json"
   AA_tokenizer_nonspecial_json: "t5_tokenizer_AA.json"

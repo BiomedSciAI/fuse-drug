@@ -1,3 +1,4 @@
+tokenizers_info:
 - name: AA
   tokenizer_id: 0
   json_path: null
@@ -10,3 +11,4 @@
   modular_json_path: ./bpe_tokenizer_trained_on_chembl_zinc_with_aug_4272372_samples_balanced_1_1.json
   start_delimiter: <start_SMILES>
   end_delimiter: <end_SMILES>
+max_possible_token_id: 5000

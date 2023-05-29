@@ -1,6 +1,6 @@
 paths:
-  # tokenizers_path: "_your_path_/modulartokenizer/pretrained/"
-  tokenizers_path: "_your_path_/fuse-drug/fusedrug/data/tokenizer/modulartokenizer/pretrained/" #tokenizer base work path
+  # tokenizers_path: "_your_path_/modulartokenizer/pretrained_tokenizers/"
+  tokenizers_path: "_your_path_/fuse-drug/fusedrug/data/tokenizer/modulartokenizer/pretrained_tokenizers/" #tokenizer base work path
   AA_tokenizer_json: "t5_tokenizer_AA_special.json"
   SMILES_tokenizer_json: "bpe_tokenizer_trained_on_chembl_zinc_with_aug_4272372_samples_balanced_1_1.json"
   modular_tokenizers_out_path: "${paths.tokenizers_path}/modular_AA_SMILES/"
@@ -21,6 +21,7 @@ data:
   tokenizer:
     # modular_tokenizers_out_path: "${paths.tokenizers_path}/modular_wordlevelAA_BPESMILES/"
     overall_max_len: 70
+    max_possible_token_id: 5000
     out_path: "${paths.tokenizers_path}/modular_AA_SMILES_single_path/"
     tokenizers_info:
       - name: AA
