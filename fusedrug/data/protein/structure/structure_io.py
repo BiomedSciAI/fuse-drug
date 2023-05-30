@@ -391,11 +391,15 @@ def extract_single_chain(full_structure: Structure, chain_id: str) -> Structure:
     if selected_chain is None:
         raise Exception(f"could not find request chain_id={chain_id}  available chains are {seen_chain_ids}")
 
-    single_structure_model = Model(id="bananaphone", serial_num="999")
-    single_structure_model.add(selected_chain)
+    return create_single_chain_structure(selected_chain)
+
+
+def create_single_chain_structure(selected_chain: Chain) -> Structure:
+    single_chain_model = Model(id="bananaphone", serial_num="999")
+    single_chain_model.add(selected_chain)
 
     single_chain_structure = Structure("bananaphone")
-    single_chain_structure.add(single_structure_model)
+    single_chain_structure.add(single_chain_model)
 
     return single_chain_structure
 
