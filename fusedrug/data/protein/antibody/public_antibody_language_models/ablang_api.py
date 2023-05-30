@@ -26,38 +26,6 @@ from typing import Any
 
 """
 
-# def method_1():
-#     import ablang
-
-#     heavy_ablang = ablang.pretrained("heavy") # Use "light" if you are working with light chains
-#     heavy_ablang.freeze()
-
-
-#     seqs = [
-#         'EVKLVESGPGLVQPGKSLRLSCVASGFTFSGYGMHWVRQAPGKGLEWIALIIYDESNKYYADSVKGRFTISRDNSKNTLYLQMSSLRAEDTAVFYCAKVKFYDPTAPNDYWGQGTLVTVSS',
-#         'EV*LVESGPGLVQPGKSLRLSCVASGFTFSGYGMHWVRQAPGKGLEWIALIIYDESNKYYADSVKGRFTISRDNSKNTLYLQMSSLRAEDTAVFYCAKVKFYDPTAPNDYWGQGTLVTVSS',
-#         '*************PGKSLRLSCVASGFTFSGYGMHWVRQAPGKGLEWIALIIYDESNK*YADSVKGRFTISRDNSKNTLYLQMSSLRAEDTAVFYCAKVKFYDPTAPNDYWGQGTL*****',
-#     ]
-
-#     encodings = heavy_ablang(seqs, mode='rescoding') #'restore')
-
-#     banana = 123
-
-
-# def method_2_huggingface():
-#     from transformers import AutoModel, AutoTokenizer
-
-#     tokenizer = AutoTokenizer.from_pretrained("qilowoq/AbLang_heavy")
-#     model = AutoModel.from_pretrained("qilowoq/AbLang_heavy", trust_remote_code=True)
-
-#     sequence_Example = " ".join(
-#         "EVQLQESGPGLVKPSETLSLTCTVSGGPINNAYWTWIRQPPGKGLEYLGYVYHTGVTNYNPSLKSRLTITIDTSRKQLSLSLKFVTAADSAVYYCAREWAEDGDFGNAFHVWGQGTMVAVSSASTKGPSVFPLAPSSKSTSGGTAALGCL"
-#     )
-#     encoded_input = tokenizer(sequence_Example, return_tensors="pt")
-#     model_output = model(**encoded_input)
-
-#     banana = 123
-
 
 class AbLang:
     def __init__(self) -> None:
@@ -103,9 +71,24 @@ class AbLang:
         return last_hidden_state
 
 
-if __name__ == "__main__":
-    # method_2_huggingface()
+# kept for reference
+def alternative_ablang_usage_approach() -> None:
+    import ablang
 
+    heavy_ablang = ablang.pretrained("heavy")  # Use "light" if you are working with light chains
+    heavy_ablang.freeze()
+
+    seqs = [
+        "EVKLVESGPGLVQPGKSLRLSCVASGFTFSGYGMHWVRQAPGKGLEWIALIIYDESNKYYADSVKGRFTISRDNSKNTLYLQMSSLRAEDTAVFYCAKVKFYDPTAPNDYWGQGTLVTVSS",
+        "EV*LVESGPGLVQPGKSLRLSCVASGFTFSGYGMHWVRQAPGKGLEWIALIIYDESNKYYADSVKGRFTISRDNSKNTLYLQMSSLRAEDTAVFYCAKVKFYDPTAPNDYWGQGTLVTVSS",
+        "*************PGKSLRLSCVASGFTFSGYGMHWVRQAPGKGLEWIALIIYDESNK*YADSVKGRFTISRDNSKNTLYLQMSSLRAEDTAVFYCAKVKFYDPTAPNDYWGQGTL*****",
+    ]
+
+    encodings = heavy_ablang(seqs, mode="rescoding")  # 'restore')
+    print(encodings)
+
+
+if __name__ == "__main__":
     ablang = AbLang()
 
     emb = ablang.get_embeddings(
