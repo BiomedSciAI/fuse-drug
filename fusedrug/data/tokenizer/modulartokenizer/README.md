@@ -10,31 +10,59 @@ Creates a modular tokenizer that combines multiple initial tokenizers, adjusting
 * They all share the same special tokens (combined special tokens from all the source tokenizers),
 * Each tokenizer retains its regular tokens, however their IDs are remapped to a single space, with no overlaps.
 Note: If a token has the same meaning across all input types (e.g. special tokens, like SEP, EOS, sentinel tokens), it should be defined as special token in at least one of the initial (input) tokenizers.
-### save():
-Saves all mudular tokenizer information to a given path.
-### save_jsons():
-Saves the underlying adjusted tokenizers as jsons.
-### load():
-Loads a modular tokenizer saved by save()
-### from_file(): 
-Receives a path to a file or a directory and loads a modular tokenizer from that directory.
-### load_from_jsons(): 
-Loads a group of adjusted tokenizers (created by __init__, andsaved by save_jsons), and returns a modular tokenizer with the same ID mapping.
+
+* __init__() has two optional parameters: upper special token ID limit, and upper ID limit for all tokens. Depending on their values, there are three options of ID mapping:
+
+        1. There is no limitation on IDs. In this case, new IDs are added after the last taken ID, and the ID space is 
+            compact, with no holes.
+
+        2. There's an upper limit on all IDs (self._max_possible_token_id). In this case, the new IDs (regular and special) 
+            are also mapped after the last taken ID, and ID space is compact, but limited in size. Any tokens added beyond 
+            the limit must raise an exception.
+
+        3. There's an upper limit in special IDs (self._max_special_token_id). In this case, special IDs are mapped after 
+            the last taken special ID and before special ID limit, and regular IDs are mapped after last taken regular ID 
+            (and before all ID limit, if such is defined). Any tokens mapped beyond the limit must raise an exception. The 
+            ID space consists of two parts (with an empty buffer between them): 
+            - [0..upper special ID limit], containing special IDs only, compacted at the beginning of the range
+            - (upper special id limit, infinity or upper all ID limit], containing regular IDs only, compacted at the 
+                beginning of the range.
+
+### add_special_tokens():
+Adds a list of special tokens to the modular tokenizer
+### decode():
+Decodes a list of tokens
 ### diagnose():
 Tests a modular tokenizer for underlying ID mapping consistency, checking that the following hold for all sub-tokenizers:
 * Special tokens are the same (and map to the same indices) across all the tokenizers
 * Regular token ID mappings of any given tokenizer do not collide with special token mappings
 * Regular token ID mappings of any given tokenizer do not collide with ID mappings of other tokenizers
-### encode_list():
-Receives a list of named tuples, each containing the type of tokenizer to use, a string to be tokenized, and, optionally, maximum length (in tokens) of the result. Tokenizes each input string.
+### enable_padding():
+Enables padding to a given length, using a given padding token. Also enables truncation of sequences to the same length.
+### enable_truncation():
+Enables truncation of encoded sequences to a given length. If padding is enabled, padding length is also set to given length.
 ### encode(): 
 (Not implemented yet) Receives a string, infers which tokenizers to use on it and returns its tokenization.
-### decode():
-Decodes a list of tokens
+### encode_list():
+Receives a list of named tuples, each containing the type of tokenizer to use, a string to be tokenized, and, optionally, maximum length (in tokens) of the result. Tokenizes each input string.
+### from_file(): 
+Receives a path to a file or a directory and loads a modular tokenizer from that directory.
+### get_added_vocab():
+Returns a vocabulary of all special tokens (ones common between all subtokenizers)
+### get_max_id():
+Returns the highest mapped ID in the vocabulary, or the upper limit to ID, if it was set
 ### get_vocab_size(): 
 Returns the size of the vocabulary of the modular tokenizer (i.e. the number of unique IDs, which may be greater than the number of unique tokens)
 ### id_to_token():
 Returns the token that maps to the input ID.
+### load():
+Loads a modular tokenizer saved by save()
+### load_from_jsons(): 
+Loads a group of adjusted tokenizers (created by __init__, andsaved by save_jsons), and returns a modular tokenizer with the same ID mapping.
+### save():
+Saves all mudular tokenizer information to a given path.
+### save_jsons():
+Saves the underlying adjusted tokenizers as jsons.
 ### token_to_id():
 Returns the input token's corresponding ID.
 ## Use example

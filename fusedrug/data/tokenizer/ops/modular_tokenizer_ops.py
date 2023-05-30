@@ -176,9 +176,9 @@ class FastModularTokenizer(OpBase):
             )
 
         if self._validate_ends_with_eos is not None:
-            if not data_lst[-1]["input_string"].rstrip().endswith(self._validate_ends_with_eos):
+            if not data_lst[-1].input_string.rstrip().endswith(self._validate_ends_with_eos):
                 raise Exception(
-                    f"self._validate_ends_with_eos was set to {self._validate_ends_with_eos}, but about to encode a string that does not end with it. The str end was: {data_lst[-1]['input_string']}"
+                    f"self._validate_ends_with_eos was set to {self._validate_ends_with_eos}, but about to encode a string that does not end with it. The str end was: {data_lst[-1].input_string}"
                 )
 
         encoded = self._tokenizer.encode_list(data_lst)
@@ -215,7 +215,7 @@ class FastModularTokenizer(OpBase):
         if (
             len(encoded.overflowing) > 0
         ):  # note, encoded.overflowing may have multiple items, and each item can contain multiple items
-            overall_char_len = sum([len(x["input_string"]) for x in data_lst])
+            overall_char_len = sum([len(x.input_string) for x in data_lst])
             print(
                 f"Warning: FastModularTokenizer (pid={os.getpid()}) had to truncate sequence. Original Sequence Length = {overall_char_len} max supported = {self._max_size} for tokenizer: {self._tokenizer_path} for sample_id {get_sample_id(sample_dict)}"
             )

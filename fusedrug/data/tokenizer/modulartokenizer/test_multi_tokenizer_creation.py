@@ -78,6 +78,23 @@ def test_tokenizer(t_inst: ModularTokenizer, cfg_raw: Dict, mode: Optional[str] 
     added_vocab = t_inst.get_added_vocab()
     print(f"Found {len(added_vocab)} added tokens")
 
+    print("Addint 6 special tokens, of which 2 are already in the tokenizer vocabulary (as special)")
+    special_tokens_to_add = [
+        "<test_token_1>",
+        "<test_token_2>",
+        "<test_token_3>",
+        "<test_token_4>",
+        "<SEP>",
+        "<SENTINEL_ID_1>",
+    ]
+    t_inst.add_special_tokens(special_tokens_to_add)
+    max_id = t_inst.get_max_id()
+    tokenizer_vocab_size = t_inst.get_vocab_size()
+    print(
+        f"tokenizer max id is {max_id}, of which max mapped id is {t_inst._get_max_mapped_id()}, and vocabulary size: {tokenizer_vocab_size}"
+    )
+    added_vocab = t_inst.get_added_vocab()
+    print(f"Found {len(added_vocab)} added tokens")
     # a = 1
 
 

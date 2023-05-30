@@ -22,6 +22,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         special_tokens_dict: Optional[Dict] = None,
         additional_tokens_list: Optional[List] = None,
         max_possible_token_id: Optional[int] = None,
+        max_special_token_id: Optional[int] = None,
         **kwargs: Any,
     ) -> None:
         """Creates a modular tokenizer that combines multiple existing tokenizers, adjusting them so that:
@@ -50,6 +51,11 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             max_possible_token_id (Optional[int], optional): An upper limit to a token ID. When IDs of tokens added to modular tokenizer
                 go above this, an exception is thrown. Defaults to None (i.e. no limit is set).
                 TODO: Currently not fully implemented. Only used during tokenizer creation.
+            max_special_token_id (Optional[int], optional): An upper limit to special token ID. Special tokens are shared between all sub-tokenizers.
+                If max_special_token_id is set, when special tokens are added, they are mapped to IDs between 0 and max_special_token_id
+                (after which come regular token IDs). Once max_special_token_id is reached, no more special tokens may be added.
+                If it is not set, new special tokens may be mapped to IDs higher that regular token IDs. If Defaults to None (i.e. no limit is set).
+                TODO: Currently not fully implemented. Only used during tokenizer creation.
         """
         # ModularTokenizer inherits the interface of PreTrainedTokenizerBase, but not the underlying logic, therefore super.__init__() is not called
 
@@ -65,6 +71,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         self.tokenizers_info_raw_cfg = copy.deepcopy(tokenizers_info_list)
         self.tokenizers_info = ModularTokenizer.cfg_list_2_dict(copy.deepcopy(tokenizers_info_list))
         self.special_tokens_dict = special_tokens_dict
+        self._max_possible_token_id = max_possible_token_id
+        self._max_special_token_id = max_special_token_id
 
         if not load_adjusted_jsons:
             # store special tokens in a list to preserve their order:
@@ -90,12 +98,19 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 all_special_tokens = all_special_tokens + part_special_tokens
 
             all_special_token_structs = ModularTokenizer.build_special_token_list(all_special_tokens)
-            # rearrange regular token indices
+
+            # Set the starting ID for regular token mapping:
             next_index = max([t["id"] for t in all_special_token_structs]) + 1
+            if self._max_special_token_id is not None:
+                if next_index > self._max_special_token_id:
+                    raise Exception(
+                        f"Max special token ID {self._max_special_token_id} is too small to contain all special tokens {next_index}. Either increase or do not set it."
+                    )
+                next_index = self._max_special_token_id + 1
         else:
             if special_tokens_dict is not None:
                 raise Exception(
-                    "when loading a tokenizer special_tokens_dict must be None. Use ModularTokenizer.add_special_tokens instead"
+                    "When loading a tokenizer special_tokens_dict must be None. Use ModularTokenizer.add_special_tokens instead"
                 )
             if additional_tokens_list is not None:
                 raise Exception(
@@ -106,6 +121,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 t_json = json.load(open(t_info["modular_json_path"]))
                 self.tokenizers_info[t_type]["json_instance"] = t_json
 
+        # rearrange regular token indices to map to IDs starting from next_index:
         for t_type in self.tokenizers_info:
             t_info = self.tokenizers_info[t_type]
             t_json = self.tokenizers_info[t_type]["json_instance"]
@@ -122,7 +138,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             json_str = json.dumps(t_json)
             tokenizer_inst = Tokenizer.from_str(json_str)
             if self.special_tokens_dict is not None:
-                # At this point, tokens from self.special_tokens_dict are in every tokenizer.
+                # At this point, tokens from self.special_tokens_dict are in every tokenizer. This is only to test that all special tokens were added.
                 num_add = tokenizer_inst.add_special_tokens(list(self.special_tokens_dict.values()))
                 if num_add > 0:
                     raise Exception(
@@ -146,7 +162,6 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
 
         self._pad_token_type_id = 0
         self._pad_token: Union[str, None] = None
-        self._max_possible_token_id = max_possible_token_id
 
         test_res, test_res_detail = self.diagnose()
         assert False not in test_res.values(), "resulting tokenizer is not consistent"
@@ -208,12 +223,16 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         return init_vocab, starting_index_new
 
     @staticmethod
-    def build_special_token_list(special_tokens: Union[List, Set]) -> List:
+    def build_special_token_list(
+        special_tokens: Union[List, Set],
+        starting_index: Union[int, None] = None,
+        token_ids: Union[List, Set, None] = None,
+    ) -> List:
         """Creates a list of special token structures with consecutive indices, according to the following template
             special token template:
             {
-                'id': 0,
-                'content': '<UNK>',
+                'id': int id value,
+                'content': string token name,
                 'single_word': False,
                 'lstrip': False,
                 'rstrip': False,
@@ -223,23 +242,48 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
 
 
         Args:
-            special_tokens (Union[List, Set]): _description_
+            special_tokens (Union[List, Set]): a list of token names to be added
+            starting_index (Optional[int], optional): The tokens are mapped to consecutive IDs starting from this. Defaults to 0.
+            token_ids (Union[List, Set, None], optional): a list of corresponding token IDs to be set as is. Defaults to None
+            (i.e. new consecutive IDs, starting with starting index are used). Cannot be set together with starting_index
 
         Returns:
             List: _description_
         """
-        special_tokens = [
-            {
-                "id": i,
-                "content": v,
-                "single_word": False,
-                "lstrip": False,
-                "rstrip": False,
-                "normalized": False,
-                "special": True,
-            }
-            for i, v in enumerate(special_tokens)
-        ]
+        if starting_index is None:
+            starting_index_to_use = 0
+        else:
+            starting_index_to_use = starting_index
+        if token_ids is None:
+            special_tokens = [
+                {
+                    "id": i + starting_index_to_use,
+                    "content": v,
+                    "single_word": False,
+                    "lstrip": False,
+                    "rstrip": False,
+                    "normalized": False,
+                    "special": True,
+                }
+                for i, v in enumerate(special_tokens)
+            ]
+        else:
+            assert len(special_tokens) == len(
+                token_ids
+            ), f"Number of tokens {len(special_tokens)} and number of IDs {len(token_ids)} must be the same."
+            assert starting_index is None, "Either starting index, or a list of IDs may be given, not both."
+            special_tokens = [
+                {
+                    "id": i,
+                    "content": v,
+                    "single_word": False,
+                    "lstrip": False,
+                    "rstrip": False,
+                    "normalized": False,
+                    "special": True,
+                }
+                for i, v in zip(token_ids, special_tokens)
+            ]
         return special_tokens
 
     @staticmethod
@@ -369,10 +413,22 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         except:
             raise Exception(f"couldn't load config.yaml from {path}")
         tokenizers_info_fixed = fix_json_paths(loaded_conf["tokenizers_info"], path)
+
+        if "max_possible_token_id" in loaded_conf:
+            max_possible_token_id: Union[int, None] = loaded_conf["max_possible_token_id"]
+        else:
+            max_possible_token_id = None
+
+        if "max_special_token_id" in loaded_conf:
+            max_special_token_id: Union[int, None] = loaded_conf["max_special_token_id"]
+        else:
+            max_special_token_id = None
+
         return ModularTokenizer(
             tokenizers_info=tokenizers_info_fixed,
             load_adjusted_jsons=True,
-            max_possible_token_id=loaded_conf["max_possible_token_id"],
+            max_possible_token_id=max_possible_token_id,
+            max_special_token_id=max_special_token_id,
         )
 
     @staticmethod
@@ -639,6 +695,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         tokenizer_config_overall = {
             "tokenizers_info": tokenizers_info_cfg,
             "max_possible_token_id": self._max_possible_token_id,
+            "max_special_token_id": self._max_special_token_id,
         }
         # yaml_data: str = OmegaConf.to_yaml(tokenizers_info_cfg)
         with open(os.path.join(path, "config.yaml"), "w") as f:
@@ -846,32 +903,183 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         return list(self.tokenizers_info.keys())
 
     ########## Original Tokenizer functions: ##################
-    def add_special_tokens(self, tokens: List) -> int:
+    def add_special_tokens(self, tokens: List[str]) -> int:
         """
-        Add the given special tokens to the Tokenizer.
+        Add the given special tokens to the Tokenizer. If max_special_token_id was set, the new token are mapped to IDs below it,
+        and if some tokens on the list are existing regular tokens,
 
-        If these tokens are already part of the vocabulary, it just let the Tokenizer know about
+        If these tokens are already part of the vocabulary, it just lets the Tokenizer know about
         them. If they don't exist, the Tokenizer creates them, giving them a new id.
 
         These special tokens will never be processed by the model (ie won't be split into
         multiple tokens), and they can be removed from the output when decoding.
 
+        General token addition notes:
+        There are three general cases when adding:
+        1. There is no limitation on IDs. In this case, new IDs are added after the last taken ID, and the ID space is
+            compact, with no holes.
+        2. There's an upper limit on all IDs (self._max_possible_token_id). In this case, the new IDs (regular and special)
+            are also added after the last taken ID, and ID space is compact, but limited in size. Any tokens added beyond
+            the limit must raise an exception.
+        3. There's an upper limit in special IDs (self._max_special_token_id). In this case, special IDs are added after
+            the last taken special ID and before special ID limit, and regular IDs are added after last taken regular ID
+            (and before all ID limit, if such is defined). Any tokens added beyond the limit must raise an exception. The
+            ID space consists of two parts (with an empty buffer between them):
+            - [0..upper special ID limit], containing special IDs only, compacted at the beginning of the range
+            - (upper special id limit, infinity or upper all ID limit], containing regular IDs only, compacted at the
+                beginning of the range.
+
+        When we add special tokens, there are three options:
+        - Special tokens that already exist as special tokens in the tokenizer:
+            - These do not need to be added
+        - Special tokens that already exist as regular tokens: For now, this causes an error.
+            - If there is an upper limit on special token IDs, then the regular tokens that turn into special need to
+                have their IDs remapped to values lower than the upper limit. This is not an acceptable option, since
+                remapping IDs will break all models trained with this tokenizer. The only way around this is to choose
+                other token names to add.
+            - If there is no upper limit on special token IDs, we could add them to the special token struct, retaining
+                their original IDs. However this may not be possible, since some tokens map to multiple IDs, depending
+                on context. It could be possible to detect such cases and raise an error only when there is no 1:1 mapping
+                between tokens and IDs, but for now, we raise an error in any case.
+        - Special tokens that do not exist in the tokenizer
+            - Depending on whether there is or there is not an upper limit on special IDs, these are added after the
+                last taken special ID, or after the last taken general ID (special or regular).
+
+        When we add regular tokens as part of a new sub-tokenizer:
+        - Tokens that already exist as special tokens: These need not be added to the tokenizer - we just need to add
+            the entire common special token vocab to the new subtokenizer.
+        - Tokens that already exist in another subtokenizer as regular tokens/tokens that do not exist: Since we allow
+            similar regular token names in different tokenizers (as long as they map to different IDs), these two are
+            the same - we just add the tokens to the new subtokenizer, remapping their IDs after the last taken ID (and
+            before all ID limit, if there is such).
+
+        When we add regular tokens to a given sub-tokenizer):
+        - Tokens that already exist as special tokens: These need not be added to the tokenizer.
+        - Tokens that already exist in the same sub-tokenizer: need not be added
+        - Tokens that already exist in another subtokenizer as regular tokens/tokens that do not exist: We just add the
+            tokens to the new subtokenizer, remapping their IDs after the last taken ID (and before all ID limit, if
+            there is such).
+
         Args:
-            tokens (A :obj:`List` of :class:`~tokenizers.AddedToken` or :obj:`str`):
-                The list of special tokens we want to add to the vocabulary. Each token can either
-                be a string or an instance of :class:`~tokenizers.AddedToken` for more
-                customization.
+            tokens (A :obj:`List` of  :obj:`str`):
+                The list of special tokens we want to add to the vocabulary. Each token must
+                be a string.
 
         Returns:
             :obj:`int`: The number of tokens that were created in the vocabulary
         """
-        raise Exception("not implemented")
-        # self.build_inner_decoder()
-        # if self._max_possible_token_id is not None:
-        #     if self._get_max_mapped_id() > self._max_possible_token_id:
-        #         raise Exception(
-        #             f"tokenizer remapping resulted in IDs greater (max_id={self._get_max_mapped_id()}) than max_possible_id ({self._max_possible_token_id}). Reinitialize the modular tokenizer with larger max_possible_id"
-        #         )
+
+        def update_vocab(
+            vocab: Dict,
+            special_token_structs: List,
+        ) -> Dict:
+            """Receives a vocabulary and a list of special token structures. Returns a new vocabulary that
+            a. contains all the special tokens with their IDs, as were given in special_token_structs.
+            b. contains all the tokens in vocab (except special ones), with their original IDs.
+
+            Args:
+                vocab (Dict): vocabulary of tokens to be included in the ModularTokenizer. If there is an overlap between tokens in vocab and tokens
+                in special_token_structs, raises an exception.
+                special_token_structs (Optional[List]): a list of special token structures to be added to the tokenizer.
+
+            Returns:
+                Dict: Returns the updated vocabulary, sorted by value
+            """
+            if special_token_structs is not None and len(special_token_structs) > 0:
+                special_vocab = {t["content"]: t["id"] for t in special_token_structs}
+            else:
+                raise Exception("Got empty special tokens")
+            vocab.update(special_vocab)
+            return dict(sorted(vocab.items(), key=lambda x: x[1], reverse=False))
+
+        # remove from tokens all currently existing special_tokens
+        special_vocab = self.get_added_vocab()
+        current_special_tokens = set(special_vocab.keys())
+        tokens = list(set(tokens) - current_special_tokens)
+
+        # go over all tokens that already exist as regular tokens, and if such exist and self._max_special_token_id is
+        # not set, mark them as special (adding them to special token strictures for all sub-tokenizers), otherwise raise an exception.
+        #   An alternative would be to either:
+        #   - Make them special, while keeping their ID (works only if self._max_special_token_id is not set,
+        #   because if not it'll break the condition that they must have IDs below self._max_special_token_id) or
+        #   - Remove them from regular tokens (so that when they're added to special tokens they'll be assigned new IDs)
+        #       This way we preserve the condition of special token IDs being below self._max_special_token_id. However
+        #       this will change IDs of existing tokens, and break the logic of the model,
+        #       which will require retraining - not something we want
+        # tokens <- new tokens, without existing special tokens, and, possibly, without existing regular tokens (depending on the above choice)
+
+        # At this point tokens contain to existing special tokens, but may contain regular tokens
+        all_existing_tokens = set([x["token"] for x in self.decoder_dict.values()])
+        tokens_regular = list(set(tokens).intersection(all_existing_tokens))
+        tokens = list(set(tokens) - set(tokens_regular))
+        # At this point tokens contain no tokens that currently exist in the modular tokenizer, and tokens_regular contain
+        # special tokens to be added that are currently regular tokens in the tokenizer
+
+        if len(tokens_regular) > 0:
+            raise Exception(
+                f"Trying to add to the tokenizer tokens that are currently regular tokens in the tokenizer. Choose other token names. Conflicting tokens are {tokens_regular}"
+            )
+
+        if self._max_special_token_id is not None:
+            if len(tokens_regular) > 0:
+                raise Exception(
+                    f"Trying to add to the tokenizer tokens that are currently regular tokens in the tokenizer. Since _max_special_token_id is set, there is no way to uphold it without remapping existing IDs. Conflicting tokens are {tokens_regular}"
+                )
+            max_id = self._max_special_token_id
+            next_id: Union[int, None] = max(special_vocab.values()) + 1
+            if max_id - next_id < len(tokens):
+                raise Exception("Not enough free special token space left")
+        elif self._max_possible_token_id is not None:
+            max_id = self.self._max_possible_token_id
+            next_id = self._get_max_mapped_id() + 1
+            if max_id - next_id < len(tokens):
+                raise Exception("Not enough free token space left")
+        else:
+            next_id = self._get_max_mapped_id() + 1
+
+        all_special_token_structs = ModularTokenizer.build_special_token_list(
+            special_tokens=tokens, starting_index=next_id
+        )
+
+        for t_type in self.tokenizers_info:
+            t_info = self.tokenizers_info[t_type]
+            t_json = self.tokenizers_info[t_type]["json_instance"]
+            # operations on the tokenizer json
+            if "added_tokens" in t_json and t_json["added_tokens"] is not None:
+                t_json["added_tokens"] += all_special_token_structs
+            else:
+                t_json["added_tokens"] = all_special_token_structs
+
+            t_json["model"]["vocab"] = update_vocab(
+                vocab=t_json["model"]["vocab"],
+                special_token_structs=all_special_token_structs,
+            )
+            # end operations on json
+            # operations on the tokenizer instance (if possible, operations should be done here, using built-in tokenizer methods)
+            json_str = json.dumps(t_json)
+            tokenizer_inst = Tokenizer.from_str(json_str)
+            if self.special_tokens_dict is not None:
+                # At this point, tokens from self.special_tokens_dict are in every tokenizer. This takes care that the special tokens are added to the tokenizer instance.
+                num_add = tokenizer_inst.add_special_tokens(list(self.special_tokens_dict.values()))
+                if num_add > 0:
+                    raise Exception(
+                        f"All special tokens should have been in the vocabulary at this point. {num_add} were added - need to check why."
+                    )
+            # restore truncation that was lost when we reset the tokenizer instance
+            if "max_len" in t_info and t_info["max_len"] is not None:
+                max_size = t_info["max_len"]
+                tokenizer_inst.enable_truncation(
+                    max_length=max_size,
+                    direction="right",
+                )
+            json_str = tokenizer_inst.to_str()
+            t_json = json.loads(json_str)
+            self.tokenizers_info[t_type]["tokenizer_inst"] = tokenizer_inst
+            self.tokenizers_info[t_type]["json_instance"] = t_json
+
+        # Rebuild inner decoder information
+        self.build_inner_decoder()
+        return len(tokens)
 
     def add_tokens(self, tokens: Union[List, str]) -> int:
         """
@@ -1198,6 +1406,22 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             return len(list(self.decoder_dict.values()))
 
     def _get_max_mapped_id(self, with_added_tokens: Optional[bool] = True) -> int:
+        """
+        Get value of the highest used ID of the underlying vocabulary (i.e. the highest ID that has a token mapped to it)
+
+        Args:
+            with_added_tokens (:obj:`bool`, defaults to :obj:`True`):
+                Whether to include the added tokens
+
+        Returns:
+            :obj:`int`: The size of the vocabulary
+        """
+        if not with_added_tokens:
+            raise Exception("Not implemented")
+        else:
+            return max(list(self.decoder_dict.keys()))
+
+    def _get_max_mapped_special_id(self, with_added_tokens: Optional[bool] = True) -> int:
         """
         Get value of the highest used ID of the underlying vocabulary (i.e. the highest ID that has a token mapped to it)
 

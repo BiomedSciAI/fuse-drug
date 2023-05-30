@@ -12,3 +12,4 @@ tokenizers_info:
   start_delimiter: <start_SMILES>
   end_delimiter: <end_SMILES>
 max_possible_token_id: 5000
+max_special_token_id: 500
