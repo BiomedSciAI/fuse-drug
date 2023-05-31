@@ -1,6 +1,6 @@
 from typing import Optional
 from rdkit import Chem
-import rdkit.Chem.rdmolops.SanitizeFlags as SanitizeFlags
+from rdkit.Chem.rdmolops import SanitizeFlags
 from fuse.utils import NDict
 from fuse.data import OpBase, get_sample_id
 
