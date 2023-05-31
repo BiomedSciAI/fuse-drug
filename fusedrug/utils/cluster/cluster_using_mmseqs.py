@@ -30,7 +30,7 @@ def cached_cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict)
         input_fasta_filename: a fasta with an entry per molecular entity
         output_dir: where the output will be generated
         cluster_min_sequence_identity: the minimal sequence identity for member within a cluster
-        threads: number of threads (for multithreading)
+        threads: number of threads (for multithreading). if None -> by default it will use as many as the system has
         cluster_method: any of 'cluster', 'linclust':
             'cluster' is the "vanilla" one
             'linclust' is faster (claims linear runtime) but less accurate. Might be suitable for massive data.
@@ -118,11 +118,14 @@ def cluster(
     # Create workspace (supports override)
     workspace_dir = join(output_dir, "mmseqs_workspace")
     if override and os.path.exists(workspace_dir):
-        ans = input("You are about to override mmseqs' workspace! Are you sure? (y/n):")
-        if ans in ["y", "yes"]:
-            shutil.rmtree(workspace_dir)
-        else:
-            raise Exception("ABORTING")
+        # TODO doesn't suit for non-interactive jobs
+        # ans = input("You are about to override mmseqs' workspace! Are you sure? (y/n):")
+        # if ans in ["y", "yes"]:
+        #     shutil.rmtree(workspace_dir)
+        # else:
+        #     raise Exception("ABORTING")
+
+        shutil.rmtree(workspace_dir)
 
     os.makedirs(join(workspace_dir))
     mmseqs_db_path = join(output_dir, "mmseqs_workspace", "mmseqs_DB")
@@ -165,7 +168,7 @@ def cluster(
     ########### Major step B - create clusters
 
     # description on how to read the cluster files format: https://mmseqs.com/latest/userguide.pdf - search for "Internal cluster format",
-    # also describes how to convert it to TSV for convinience
+    # also describes how to convert it to TSV for convenience
 
     print("B.1 - creating mmseqs DB for our unique DB")
     step_B_initial_db = join(output_dir, "mmseqs_workspace", "step_B_initial_DB")
@@ -189,7 +192,7 @@ def cluster(
     _run_system_cmd(cmd)
 
     print(
-        "B.3 - generate cluster TSV for convinience"
+        "B.3 - generate cluster TSV for convenience"
     )  # for massive datasets, we might skip this and use mmseqs output format directly (possibly worth checking if there's already a python lib that handles this)
     clustered_tsv = join(output_dir, "clustered.tsv")
     cmd = f"mmseqs createtsv {step_B_initial_db} {step_B_initial_db} {clustered_db} {clustered_tsv}"
