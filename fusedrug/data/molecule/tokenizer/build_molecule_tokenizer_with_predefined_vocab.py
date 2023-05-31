@@ -1,12 +1,11 @@
 from typing import Union, Optional
-from tokenizers.models import WordLevel, BPE, Model, WordPiece
+from tokenizers.models import WordPiece
 from tokenizers import pre_tokenizers
 from tokenizers import normalizers
 from tokenizers import processors
 import json
-from warnings import warn
 from fusedrug.data.tokenizer.fast_tokenizer_learn import build_tokenizer
-
+from pytoda.proteins.processing import IUPAC_VOCAB, UNIREP_VOCAB
 
 import click
 
@@ -58,7 +57,7 @@ def build_molecule_tokenizer_with_predefined_vocab(
 
 # Split(pattern='.', behavior='isolated').pre_tokenize_str('blah')
 
-
+# TODO delete function? located at: ./fusedrug/data/protein/tokenizer/build_protein_tokenizer_pair_encoding.py
 def _get_raw_vocab_dict(name):
     if "iupac" == name:
         return IUPAC_VOCAB
@@ -100,7 +99,7 @@ def main(input_vocab_json_file: str, output_tokenizer_json_file: str, unknown_to
 
     build_molecule_tokenizer_with_predefined_vocab(
         vocab=input_vocab_json_file,
-        unknown_token=unknown_token,  #'<UNK>',
+        unknown_token=unknown_token,  # '<UNK>',
         save_to_json_file=output_tokenizer_json_file,
     )
 

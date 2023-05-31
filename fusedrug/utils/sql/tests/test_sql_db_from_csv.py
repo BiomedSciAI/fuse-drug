@@ -2,7 +2,6 @@ import unittest
 from fusedrug.utils.sql.sql_db_from_csv import SQLfromCSV
 from fusedrug.tests_data import get_tests_data_dir
 import os
-import pandas as pd
 import numpy as np
 
 

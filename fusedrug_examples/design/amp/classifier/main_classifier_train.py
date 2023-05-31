@@ -33,7 +33,6 @@ from fuse.data.utils.samplers import BatchSamplerDefault
 from fuse.dl.models.model_wrapper import ModelWrapSeqToDict
 from fuse.dl.lightning.pl_module import LightningModuleDefault
 from fuse.dl.models.heads import Head1D
-from fuse.eval.metrics.metrics_common import Filter
 from fuse.eval.metrics.classification.metrics_classification_common import MetricAUCROC
 from fuse.dl.losses import LossDefault
 from fuse.utils import NDict

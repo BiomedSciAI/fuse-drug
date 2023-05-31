@@ -10,7 +10,6 @@ from fusedrug.data.tokenizer.fast_tokenizer_learn import build_tokenizer
 
 # TODO: make this import and related code below optional
 # TODO: consider removing the dependency altogether
-from pytoda.proteins.processing import IUPAC_VOCAB
 import click
 
 # https://github.com/huggingface/tokenizers/issues/547
@@ -53,7 +52,7 @@ def build_simple_vocab_protein_tokenizer(
         assert "per_char_split" == override_pre_tokenizer
         per_char_regex_split = Split(
             pattern=Regex("\S"), behavior="removed", invert=True
-        )  ##.pre_tokenize_str('b  an\nana  \t\r\n')
+        )  # .pre_tokenize_str('b  an\nana  \t\r\n')
         override_pre_tokenizer = pre_tokenizers.Sequence([per_char_regex_split])
 
     tokenizer = build_tokenizer(
@@ -111,7 +110,7 @@ def main(vocab_name: str, output_tokenizer_json_file: str, unknown_token: str):
 
     build_simple_vocab_protein_tokenizer(
         vocab=vocab_name,
-        unknown_token=unknown_token,  #'<UNK>',
+        unknown_token=unknown_token,  # '<UNK>',
         save_to_json_file=output_tokenizer_json_file,
     )
 

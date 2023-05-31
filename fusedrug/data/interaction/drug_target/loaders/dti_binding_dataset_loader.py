@@ -1,8 +1,7 @@
-from typing import List, Callable, Optional, Union, Dict
+from typing import List, Optional, Union
 from fuse.utils import NDict
 from fuse.data import OpBase, get_sample_id
 import fusedrug.data.interaction.drug_target.datasets.dti_binding_dataset as dbd
-from fuse.utils.cpu_profiling import Timer
 
 
 class DTIBindingDatasetLoader(OpBase):

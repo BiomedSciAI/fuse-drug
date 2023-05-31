@@ -64,8 +64,6 @@ class TestAAOps(unittest.TestCase):
 
         self.assertEqual(sample_1["data.gt.seq"], sample_2["data.gt.seq"])
 
-        banana = 123
-
 
 if __name__ == "__main__":
     unittest.main()

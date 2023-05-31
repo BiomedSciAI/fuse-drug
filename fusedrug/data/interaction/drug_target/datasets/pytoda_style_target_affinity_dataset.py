@@ -1,4 +1,4 @@
-from typing import Tuple, Optional, Union
+from typing import Optional, Union
 from torch.utils.data import Dataset
 from fusedrug.utils.file_formats import IndexedTextTable
 import pandas as pd

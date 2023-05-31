@@ -1,5 +1,3 @@
-import numpy as np
-
 from fuse.utils import NDict
 from fuse.data import OpBase
 

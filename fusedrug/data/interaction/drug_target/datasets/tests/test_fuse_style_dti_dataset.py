@@ -11,7 +11,7 @@ class TestFuseStyleDTIDataset(unittest.TestCase):
         train_data_path = os.path.join(os.environ["BINDINGDB_SMALL"], "train.csv")
 
         dataset = DTIDataset.dataset(data_path=train_data_path)
-        sample = dataset[42]
+        sample = dataset[42]  # noqa: F841
 
 
 if __name__ == "__main__":

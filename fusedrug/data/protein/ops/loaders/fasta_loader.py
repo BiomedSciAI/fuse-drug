@@ -1,7 +1,4 @@
-import torch
-from typing import List, Callable, Optional, Dict
-from functools import partial
-from copy import deepcopy
+from typing import Dict
 from fuse.utils import NDict
 from fuse.data import OpBase, get_sample_id
 from fusedrug.utils.file_formats import IndexedFasta, IndexedFastaCustom
