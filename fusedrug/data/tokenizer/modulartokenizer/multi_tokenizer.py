@@ -10,9 +10,13 @@ import json
 import transformers
 import os
 from omegaconf import OmegaConf
+import collections
 import omegaconf
 import copy
 
+TypedInput = collections.namedtuple(
+            "TypedInput", ["input_type", "input_string", "max_len"]
+        )
 
 class ModularTokenizer(transformers.PreTrainedTokenizerFast):
     def __init__(

@@ -8,6 +8,7 @@ import pytorch_lightning as pl
 from fuse.utils import NDict
 from fusedrug.data.tokenizer.ops import FastModularTokenizer as FastTokenizer
 from fusedrug.data.tokenizer.modulartokenizer import pretrained_tokenizers
+from fusedrug.data.tokenizer.modulartokenizer.multi_tokenizer import TypedInput
 
 
 def seed(seed_value: int) -> int:
@@ -37,8 +38,9 @@ def tokenizer(
     return encoder_inputs_tokenizer_op, labels_tokenizer_op
 
 
-def test_tokenizer_op(tokenizer_op_inst: FastTokenizer, max_len: int = None, mode: Optional[str] = "") -> None:
-    TypedInput = collections.namedtuple("TypedInput", ["input_type", "input_string", "max_len"])
+def test_tokenizer_op(
+    tokenizer_op_inst: FastTokenizer, max_len: int = None, mode: Optional[str] = ""
+) -> None:
     print("Testing limited-in-length sub-tokenizer inputs")
     input_list = [
         TypedInput("AA", "<BINDING>ACDEFGHIJKLMNPQRSUVACDEF", 10),
@@ -47,7 +49,9 @@ def test_tokenizer_op(tokenizer_op_inst: FastTokenizer, max_len: int = None, mod
         TypedInput("SMILES", "C=H==CC=HCCC<EOS>", None),
     ]
 
-    test_input = NDict(dict_like={"data.query.encoder_input": input_list, "data.sample_id": 1})
+    test_input = NDict(
+        dict_like={"data.query.encoder_input": input_list, "data.sample_id": 1}
+    )
     # TODO: named tuples with specific properties, e.g. max_len for every input, not for input type
     # Test general encoding: (per-tokenizer truncation works)
     enc = tokenizer_op_inst(
@@ -74,7 +78,9 @@ def test_tokenizer_op(tokenizer_op_inst: FastTokenizer, max_len: int = None, mod
         TypedInput("SMILES", "C=H==CC=HCCC<EOS>", None),
     ]
 
-    test_input = NDict(dict_like={"data.query.encoder_input": input_list, "data.sample_id": 1})
+    test_input = NDict(
+        dict_like={"data.query.encoder_input": input_list, "data.sample_id": 1}
+    )
     # TODO: named tuples with specific properties, e.g. max_len for every input, not for input type
     # Test general encoding: (per-tokenizer truncation works)
     enc = tokenizer_op_inst(
