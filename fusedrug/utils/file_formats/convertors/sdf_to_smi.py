@@ -13,7 +13,7 @@ import click
     default="SDF_",
     help="the prefix that will be added to each ID in the generated smi file. If you do not change it it will be SDF_0, SDF_1 etc.",
 )
-def main(input_sdf_file: str, output_smi_file: str, id_prefix: Optional[str]):
+def main(input_sdf_file: str, output_smi_file: str, id_prefix: Optional[str]) -> None:
     """
     Converts sdf file which contains molecules into a smi files containing their SMILES representation
 

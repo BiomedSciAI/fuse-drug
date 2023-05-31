@@ -1,11 +1,8 @@
 from typing import Union, Optional
 from tokenizers.models import WordLevel
-from tokenizers import Regex
-from tokenizers import pre_tokenizers
+from tokenizers import Regex, Tokenizer, pre_tokenizers, normalizers, processors
 from tokenizers.pre_tokenizers import Split
-from tokenizers import normalizers
 from pytoda.proteins.processing import IUPAC_VOCAB, UNIREP_VOCAB
-from tokenizers import processors
 from fusedrug.data.tokenizer.fast_tokenizer_learn import build_tokenizer
 
 # TODO: make this import and related code below optional
@@ -23,7 +20,7 @@ def build_simple_vocab_protein_tokenizer(
     override_normalizer: Optional[normalizers.Normalizer] = None,
     override_pre_tokenizer: Optional[Union[pre_tokenizers.PreTokenizer, str]] = "per_char_split",
     override_post_processor: Optional[processors.PostProcessor] = None,
-):
+) -> Tokenizer:
     """
     Builds a simple tokenizer, without any learning aspect (so it doesn't require any iterations on a dataset)
 
@@ -69,7 +66,7 @@ def build_simple_vocab_protein_tokenizer(
 # Split(pattern='.', behavior='isolated').pre_tokenize_str('blah')
 
 
-def _get_raw_vocab_dict(name):
+def _get_raw_vocab_dict(name: str) -> Union[IUPAC_VOCAB, UNIREP_VOCAB]:
     if "iupac" == name:
         return IUPAC_VOCAB
     elif "unirep" == name:
@@ -97,7 +94,7 @@ def _get_raw_vocab_dict(name):
 @click.argument("vocab_name")
 @click.argument("output_tokenizer_json_file")
 @click.option("--unknown-token", default="<UNK>", help="allows to override the default unknown token")
-def main(vocab_name: str, output_tokenizer_json_file: str, unknown_token: str):
+def main(vocab_name: str, output_tokenizer_json_file: str, unknown_token: str) -> None:
     """
     Builds a simple (not learned) vocabulary based tokenizer.
     Args:

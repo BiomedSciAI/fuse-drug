@@ -36,7 +36,7 @@ class DTIDataset:
         return True
 
     @staticmethod
-    def sample_ids(data: pd.DataFrame):
+    def sample_ids(data: pd.DataFrame) -> np.ndarray:
         """
         :param data: path to the csv
         """
@@ -163,7 +163,7 @@ class DTIDataModule(pl.LightningDataModule):
         self._drug_fixed_size = drug_fixed_size
         self._target_fixed_size = target_fixed_size
 
-    def setup(self, stage: str):
+    def setup(self, stage: str) -> None:
 
         if stage == "fit":
             self._dataset_train = DTIDataset.dataset(
@@ -180,7 +180,7 @@ class DTIDataModule(pl.LightningDataModule):
                 target_fixed_size=self._target_fixed_size,
             )
 
-    def train_dataloader(self):
+    def train_dataloader(self) -> DataLoader:
         batch_sampler = BatchSamplerDefault(
             dataset=self._dataset_train,
             balanced_class_name="data.label",
@@ -196,7 +196,7 @@ class DTIDataModule(pl.LightningDataModule):
         )
         return dl_train
 
-    def val_dataloader(self):
+    def val_dataloader(self) -> DataLoader:
         dl_val = DataLoader(
             dataset=self._dataset_val,
             collate_fn=CollateDefault(),
@@ -205,7 +205,7 @@ class DTIDataModule(pl.LightningDataModule):
         )
         return dl_val
 
-    def predict_dataloader(self):
+    def predict_dataloader(self) -> DataLoader:
         dl_predict = DataLoader(
             dataset=self._dataset_predict,
             collate_fn=CollateDefault(),
