@@ -1,6 +1,7 @@
-from typing import List, Union, Iterator
+from typing import List, Union
 from torch.utils.data import Dataset, Sampler
 import numpy as np
+
 
 # TODO: consider moving to core fuse if needed on top of the existing balanced sampler
 class FastBalancedSampler(Sampler):

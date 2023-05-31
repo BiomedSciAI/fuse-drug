@@ -1,11 +1,12 @@
 from sqlalchemy import create_engine
 import pandas as pd
-from typing import Optional, Union
+from typing import Optional
 import os
 from fuse.utils.file_io import save_text_file_safe
 from fuse.utils.file_io.path import change_extension
 from fuse.utils.cpu_profiling import Timer
 from .sql_db_from_csv import SQLfromCSV
+
 
 # NOTE: NOT multi process/threading safe!
 class SQL:

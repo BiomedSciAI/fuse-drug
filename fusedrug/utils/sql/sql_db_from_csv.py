@@ -48,7 +48,7 @@ class SQLfromCSV:
             self.db_filepath = db_filepath
         elif db_type.lower() in ("postgres", "postgresql"):
             self.conn = psycopg2.connect("user=postgress password=password")
-            curs = self.conn.cursor()
+            # curs = self.conn.cursor()
             # TODO: implement it
 
         else:

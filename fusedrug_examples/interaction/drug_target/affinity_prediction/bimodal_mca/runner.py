@@ -22,7 +22,7 @@ def run_train_and_val(cfg: DictConfig) -> None:
 
     if len(cfg) == 0:
         raise Exception(
-            f"You should provide --config-dir and --config-name  . Note --config-name should be WITHOUT the .yaml postfix"
+            "You should provide --config-dir and --config-name  . Note --config-name should be WITHOUT the .yaml postfix"
         )
 
     SESSION_FULL_PATH = os.path.realpath(os.getcwd())

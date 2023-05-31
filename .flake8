@@ -48,17 +48,6 @@ exclude =
     ./fusedrug/data/protein/ops/omegafold_plm.py
     ./fusedrug/data/protein/tokenizer/build_protein_tokenizer_pair_encoding.py
     ./fusedrug/data/protein/tokenizer/build_protein_tokenizer_simple.py
-    ./fusedrug/data/tokenizer/fast_tokenizer_learn.py
-    ./fusedrug/data/tokenizer/ops/fast_tokenizer_ops.py
-    ./fusedrug/utils/file_formats/tests/test_indexed_text_file.py
-    ./fusedrug/utils/file_formats/tests/test_indexed_text_table.py
-    ./fusedrug/utils/file_formats/tests/test_sdf_iterable_dataset.py
-    ./fusedrug/utils/samplers/fast_balanced_sampler.py
-    ./fusedrug/utils/samplers/tests/test_fast_balanced_sampler.py
-    ./fusedrug/utils/session_manager/session_creator.py
-    ./fusedrug/utils/sql/rdf.py
-    ./fusedrug/utils/sql/sql.py
-    ./fusedrug/utils/sql/sql_db_from_csv.py
     ./fusedrug/utils/sql/tests/test_sql_db_from_csv.py
     ./fusedrug/data/protein/structure/utils.py
     ./fusedrug/data/protein/structure/sabdab.py
@@ -69,15 +58,6 @@ exclude =
     ## fusedrug_examples/
     ./fusedrug_examples/design/amp/classifier/main_classifier_train.py
     ./fusedrug_examples/design/amp/design/main_design_train.py
-    ./fusedrug_examples/interaction/drug_target/affinity_prediction/PLM_DTI/data.py
-    ./fusedrug_examples/interaction/drug_target/affinity_prediction/PLM_DTI/metrics.py
-    ./fusedrug_examples/interaction/drug_target/affinity_prediction/PLM_DTI/plm_dti.py
-    ./fusedrug_examples/interaction/drug_target/affinity_prediction/PLM_DTI/runner.py
-    ./fusedrug_examples/interaction/drug_target/affinity_prediction/PLM_DTI/utils.py
-    ./fusedrug_examples/interaction/drug_target/affinity_prediction/bimodal_mca/data.py
-    ./fusedrug_examples/interaction/drug_target/affinity_prediction/bimodal_mca/model.py
-    ./fusedrug_examples/interaction/drug_target/affinity_prediction/bimodal_mca/runner.py
-    ./fusedrug_examples/tests/test_design_amp.py
 
     ## tutorials/
     ./tutorials/utils.py

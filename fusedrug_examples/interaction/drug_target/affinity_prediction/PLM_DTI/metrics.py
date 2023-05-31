@@ -1,4 +1,4 @@
-import torch, torchmetrics
+import torchmetrics
 
 
 def get_metrics(task):

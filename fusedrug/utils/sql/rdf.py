@@ -1,4 +1,4 @@
-from rdflib import Graph, Literal, URIRef
+from rdflib import Graph, Literal
 import os
 
 
