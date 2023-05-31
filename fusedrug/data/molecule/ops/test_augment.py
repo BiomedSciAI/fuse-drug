@@ -12,7 +12,7 @@ class TestMoleculesAugmentations(unittest.TestCase):
     tests 'SmilesRandomizeAtomOrder' augmentation op
     """
 
-    def test_smiles_random_order(self):
+    def test_smiles_random_order(self) -> None:
         """
         unit-tests SmilesRandomizeAtomOrder op
         """

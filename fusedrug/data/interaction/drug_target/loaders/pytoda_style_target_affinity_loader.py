@@ -1,4 +1,4 @@
-from typing import List, Callable, Optional, Union
+from typing import List, Optional, Union
 from fuse.utils import NDict
 from fuse.data import OpBase, get_sample_id
 from fusedrug.data.interaction.drug_target.datasets.pytoda_style_target_affinity_dataset import (
@@ -67,7 +67,7 @@ if __name__ == "__main__":
     from fuse.data import create_initial_sample
     from fuse.data.pipelines.pipeline_default import PipelineDefault
     from fuse.data import OpKeepKeypaths
-    from fusedrug.data.molecule.ops import SmilesRandomizeAtomOrder, SmilesToRDKitMol, RDKitMolToSmiles, SanitizeMol
+    from fusedrug.data.molecule.ops import SmilesRandomizeAtomOrder, SmilesToRDKitMol, RDKitMolToSmiles
     from fusedrug.data.protein.ops import ProteinRandomFlipOrder
     from fusedrug.data.tokenizer.ops import FastTokenizer
     from fusedrug.data.molecule.tokenizer.pretrained import get_path as get_molecule_pretrained_tokenizer_path

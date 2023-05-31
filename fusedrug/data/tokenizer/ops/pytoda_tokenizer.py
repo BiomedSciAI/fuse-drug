@@ -14,16 +14,16 @@ import torch
 
 
 class Op_pytoda_SMILESTokenizer(OpBase):
-    def __init__(self, SMILES_Tokenizer_kwargs: dict, **kwargs):
+    def __init__(self, SMILES_Tokenizer_kwargs: dict, **kwargs: dict):
         super().__init__(**kwargs)
         self.language = SMILESTokenizer(
             **SMILES_Tokenizer_kwargs,
-            device=torch.device("cpu"),  ## this is critical for DataLoader multiprocessing to work well !!!
+            device=torch.device("cpu"),  # this is critical for DataLoader multiprocessing to work well !!!
         )
 
     def __call__(
-        self, sample: NDict, key_in=None, key_out_tokens_ids=None
-    ):  # key_out_tokens_ids=None, key_out_tokenized_object=None,
+        self, sample: NDict, key_in: str = None, key_out_tokens_ids: str = None
+    ) -> NDict:  # key_out_tokens_ids=None, key_out_tokenized_object=None,
         data_str = sample[key_in]
         if not isinstance(data_str, str):
             raise Exception(f"Expected key_in={key_in} to point to a string, and instead got a {type(data_str)}")
@@ -40,7 +40,7 @@ class Op_pytoda_ProteinTokenizer(OpBase):
         add_start_and_stop: bool = True,
         padding: bool = False,
         padding_length: Optional[int] = None,
-        **kwargs,
+        **kwargs: dict,
     ):
         super().__init__(**kwargs)
         self.protein_language = ProteinLanguage(amino_acid_dict=amino_acid_dict, add_start_and_stop=add_start_and_stop)
@@ -68,7 +68,7 @@ class Op_pytoda_ProteinTokenizer(OpBase):
 
     def __call__(
         self, sample: NDict, key_in: str, key_out_tokens_ids: str
-    ):  # key_out_tokens_ids=None, key_out_tokenized_object=None,
+    ) -> NDict:  # key_out_tokens_ids=None, key_out_tokenized_object=None,
         data_str = sample[key_in]
         if not isinstance(data_str, str):
             raise Exception(f"Expected key_in={key_in} to point to a string, and instead got a {type(data_str)}")

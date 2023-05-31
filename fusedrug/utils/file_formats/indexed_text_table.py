@@ -3,11 +3,9 @@ from torch.utils.data import Dataset
 from warnings import warn
 from fusedrug.utils.file_formats import IndexedTextFile
 import numbers
-from warnings import warn
 import pandas as pd
 from fuse.utils.multiprocessing import run_multiprocessed, get_from_global_storage, get_chunks_ranges
 import os
-from copy import deepcopy
 
 
 class IndexedTextTable(Dataset):
@@ -86,7 +84,7 @@ class IndexedTextTable(Dataset):
         # read columns names
         if self._first_row_is_columns_names:
             first_line = self._indexed_text_file[0]
-            print(f"")
+            print("")
             first_line_splitted = self._split_line_basic(first_line)
             if 1 == len(first_line_splitted):
                 warn(f"columns line only contains a single column! maybe a separator issue? first line = {first_line}")

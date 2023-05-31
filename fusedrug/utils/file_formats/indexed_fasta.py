@@ -1,8 +1,6 @@
 import pyfastx  # https://pyfastx.readthedocs.io/en/latest/usage.html
-import torch
-from copy import deepcopy
 from torch.utils.data import Dataset
-
+from typing import Optional
 # pyfast - access sequence data: https://pyfastx.readthedocs.io/en/latest/usage.html#get-a-sequence-from-fasta
 
 
@@ -12,7 +10,7 @@ class IndexedFasta(Dataset):
     Usage example: see tests/indexed_fasta.py
     """
 
-    def __init__(self, fasta_file_loc=None, check_for_duplicate_names=False, process_funcs_pipeline=None, **kwargs):
+    def __init__(self, fasta_file_loc: Optional[str]=None, check_for_duplicate_names=False, process_funcs_pipeline=None, **kwargs):
         """
         :param fasta_file_loc: location of .fasta or .fasta.gz file
         :param check_for_duplicate_names: checks for duplicates (in names, does not check sequences!)

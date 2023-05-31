@@ -8,12 +8,12 @@ import selfies as sf
 #     there are multiple important things there, including the [nop] operation that is used for padding
 
 
-def smiles_to_selfies(smiles_str):
+def smiles_to_selfies(smiles_str: str) -> str:
     ans = sf.encoder(smiles_str)
     return ans
 
 
-def selfies_to_smiles(selfies_str):
+def selfies_to_smiles(selfies_str: str) -> str:
     ans = sf.decoder(selfies_str)
     return ans
 

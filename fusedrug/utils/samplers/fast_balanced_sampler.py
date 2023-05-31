@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Union, Iterator
 from torch.utils.data import Dataset, Sampler
 import numpy as np
 
@@ -12,7 +12,7 @@ class FastBalancedSampler(Sampler):
         shuffle_within_minibatch: bool = None,
         yield_minibatch: bool = True,
         epoch_minibatches_count_mode: str = "see_all",
-        verbose=1,
+        verbose: int = 1,
     ):
         """
         Creates a balanced sampler of indices. Useful when combined with ConcatDataset.
@@ -130,12 +130,12 @@ class FastBalancedSampler(Sampler):
 
         assert isinstance(self._epoch_minibatches_count_mode, int)
 
-    def __len__(self):
+    def __len__(self) -> int:
         if self._yield_minibatch:
             return self._epoch_minibatches_count_mode
         return self._epoch_minibatches_count_mode * self._minibatch_size
 
-    def __iter__(self):
+    def __iter__(self) -> Union[int, List[int]]:
         for _ in range(self._epoch_minibatches_count_mode):
             curr_mb = self._get_one_minibatch()
             if self._yield_minibatch:
@@ -144,7 +144,7 @@ class FastBalancedSampler(Sampler):
                 for idx in curr_mb:
                     yield idx
 
-    def _get_one_minibatch(self):
+    def _get_one_minibatch(self) -> List[int]:
         # build our minibatch indices
         mb_indices = []
         for dataset_index, count in enumerate(self._minibatch_pattern):
@@ -157,7 +157,7 @@ class FastBalancedSampler(Sampler):
 
         return mb_indices
 
-    def _get_next_sample_idx(self, dataset_index):
+    def _get_next_sample_idx(self, dataset_index: int) -> int:
         assert dataset_index >= 0 and dataset_index < self._datasets_num
         indices_num = len(self._per_dataset_indices[dataset_index])
 

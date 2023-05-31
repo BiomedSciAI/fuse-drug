@@ -1,5 +1,5 @@
 import pytoda
-from fuse.data import OpBase, OpFunc, OpLambda
+from fuse.data import OpFunc
 
 
 def get_pyotda_chem_transforms_ON_STRING_SEQUENCE(**kwargs):

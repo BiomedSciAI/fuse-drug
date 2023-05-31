@@ -6,7 +6,7 @@ from rdkit import Chem
 
 
 class TestSDFIterableDataset(unittest.TestCase):
-    def test_sdf_iteration(self):
+    def test_sdf_iteration(self) -> None:
         file_path = os.path.join(get_tests_data_dir(), "tiny_chembl_30.sdf")
         it = SDFIterableDataset(file_path)
 

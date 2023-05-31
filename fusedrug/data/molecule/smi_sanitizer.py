@@ -4,7 +4,6 @@ from fuse.utils.multiprocessing import run_multiprocessed, get_from_global_stora
 from typing import Union
 import numpy as np
 import os
-from tqdm import tqdm
 import click
 
 # def sanitize_smi_file(input_smi_path,

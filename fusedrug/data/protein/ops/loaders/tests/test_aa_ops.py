@@ -16,7 +16,7 @@ from fuse.data import OpRepeat
 
 
 class TestAAOps(unittest.TestCase):
-    def test_aa_ops(self):
+    def test_aa_ops(self) -> None:
 
         # hf_dir = os.path.join(get_tests_data_dir(), 'prot_bert_bfd')
         # hf_tokenizer = BertTokenizer.from_pretrained(hf_dir)

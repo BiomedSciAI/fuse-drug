@@ -1,7 +1,6 @@
 from typing import Optional
 from rdkit import Chem
-
-from typing import List, Callable, Optional
+import rdkit.Chem.rdmolops.SanitizeFlags as SanitizeFlags
 from fuse.utils import NDict
 from fuse.data import OpBase, get_sample_id
 
@@ -11,12 +10,14 @@ class SmilesToRDKitMol(OpBase):
     Converts a smiles string into Chem.rdchem.Mol molecule representation
     """
 
-    def __init__(self, sanitize=False, verbose=0, **kwargs):
+    def __init__(self, sanitize: bool = False, verbose: int = 0, **kwargs: dict):
         super().__init__(**kwargs)
         self._verbose = verbose
         self._sanitize = sanitize
 
-    def __call__(self, sample_dict: NDict, key_in="data.input.ligand_str", key_out="data.input.ligand"):
+    def __call__(
+        self, sample_dict: NDict, key_in: str = "data.input.ligand_str", key_out: str = "data.input.ligand"
+    ) -> NDict:
         smiles_seq = sample_dict[key_in]
         if not isinstance(smiles_seq, str):
             raise Exception(f"Expected key_in={key_in} to point to a string, and instead got a {type(smiles_seq)}")
@@ -36,7 +37,7 @@ class SmilesToRDKitMol(OpBase):
 
 
 class RDKitMolToSmiles(OpBase):
-    def __init__(self, verbose=1, kwargs_SmilesFromMol: Optional[dict] = None, **kwargs):
+    def __init__(self, verbose: int = 1, kwargs_SmilesFromMol: Optional[dict] = None, **kwargs: dict):
         """
         Creates an Op which converts Chem.rdchem.Mol to smiles string
 
@@ -55,7 +56,9 @@ class RDKitMolToSmiles(OpBase):
         if self._kwargs_SmilesFromMol is None:
             self._kwargs_SmilesFromMol = dict(canonical=False)
 
-    def __call__(self, sample_dict: NDict, key_in="data.input.ligand", key_out="data.input.ligand_str"):
+    def __call__(
+        self, sample_dict: NDict, key_in: str = "data.input.ligand", key_out: str = "data.input.ligand_str"
+    ) -> NDict:
         mol = sample_dict[key_in]
         if not isinstance(mol, Chem.rdchem.Mol):
             raise Exception(
@@ -80,7 +83,7 @@ class SanitizeMol(OpBase):
     Discards the sample (returns None) if the smiles string representation seems to be invalid
     """
 
-    def __init__(self, sanitize_flags=Chem.rdmolops.SANITIZE_NONE, verbose=1, **kwargs):
+    def __init__(self, sanitize_flags: SanitizeFlags = Chem.rdmolops.SANITIZE_NONE, verbose: int = 1, **kwargs: dict):
         """
         Args:
             sanitize_flags: use flags from https://www.rdkit.org/docs/source/rdkit.Chem.rdmolops.html#rdkit.Chem.rdmolops.SanitizeFlags
@@ -91,7 +94,7 @@ class SanitizeMol(OpBase):
         self._verbose = verbose
         self._sanitize_flags = sanitize_flags
 
-    def __call__(self, sample_dict: NDict, key):
+    def __call__(self, sample_dict: NDict, key: str) -> NDict:
         mol = sample_dict[key]
 
         if not isinstance(mol, Chem.rdchem.Mol):
@@ -106,7 +109,7 @@ class SanitizeMol(OpBase):
             if self._verbose > 0:
                 sid = get_sample_id(sample_dict)
                 print(
-                    f"The following smiles string did not pass SanitizeSmiles: {Chem.MolToSmiles(mol)} - dropping sample."
+                    f"The following smiles string did not pass SanitizeSmiles: {Chem.MolToSmiles(mol)} - dropping sample. Sample ID = {sid}"
                 )
             return None
 

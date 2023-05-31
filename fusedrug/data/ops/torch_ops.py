@@ -14,7 +14,7 @@ class OpConvertAllNumpyToTorch(OpBase):
     def __call__(self, sample_dict: NDict, device: str = "cpu", keys: Optional[List[str]] = None) -> NDict:
         """
         :param keys: if None will recursively look for numpy arrays and move them to torch
-            if it is a list, will only conver the items found in it
+            if it is a list, will only convert the items found in it
         """
 
         if keys is None:
