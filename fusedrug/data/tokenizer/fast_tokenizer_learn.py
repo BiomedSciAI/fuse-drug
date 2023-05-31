@@ -18,11 +18,11 @@ def build_tokenizer(
     override_normalizer=None,
     override_pre_tokenizer=None,
     override_post_processor=None,
-    full_cycles_num=None,
-    iterations_num=None,
-    time_limit_minutes=None,
-    stop_filename=None,
-):
+    full_cycles_num: Optional[int] = None,
+    iterations_num: Optional[int] = None,
+    time_limit_minutes: Optional[int] = None,
+    stop_filename: Optional[str] = None,
+) -> Tokenizer:
     """
     Helper function to create tokenizers, used for both protein and small-molecules tokenization
     Args:
@@ -90,6 +90,8 @@ def build_tokenizer(
     if save_to_json_file is not None:
         tokenizer.save(save_to_json_file)
 
+    return tokenizer
+
 
 def iterator_func(
     train_dataset,
@@ -99,7 +101,7 @@ def iterator_func(
     time_limit_minutes,
     stop_filename,
     num_workers=0,
-):
+) -> None:
     # TODO: allow multiprocessing (but consider collate and pickles/copies...)
     dataloader = DataLoader(
         dataset=train_dataset,

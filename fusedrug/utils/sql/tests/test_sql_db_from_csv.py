@@ -6,7 +6,7 @@ import numpy as np
 
 
 class TestSQLfromCSV(unittest.TestCase):
-    def test_single_chunk(self):
+    def test_single_chunk(self) -> None:
 
         small_csv_filepath = os.path.join(get_tests_data_dir(), "sql_from_csv", "small_input.tsv")
         db_dir = os.path.join(get_tests_data_dir(), "sql_from_csv")
@@ -24,7 +24,7 @@ class TestSQLfromCSV(unittest.TestCase):
         self.assertEquals(df["Int Column"].tolist(), [1, 2, 3])
         self.assertEquals(df["Float Column"].tolist(), [1.3, 2.2, 3.5])
 
-    def test_many_chunks(self):
+    def test_many_chunks(self) -> None:
         large_csv_filepath = os.path.join(get_tests_data_dir(), "sql_from_csv", "large_input.tsv")
         db_dir = os.path.join(get_tests_data_dir(), "sql_from_csv")
         db_name = "large_output_db"
@@ -38,7 +38,7 @@ class TestSQLfromCSV(unittest.TestCase):
         self.assertEquals(df["Int Column"].tolist(), list(range(1, 105)))
         self.assertTrue(np.isclose(np.array(df["Float Column"]), np.linspace(1.1, 11.4, 104)).all())
 
-    def test_multiple_files(self):
+    def test_multiple_files(self) -> None:
         # create a database with two tables, each coming from a different TSV file
         small_csv_filepath = os.path.join(get_tests_data_dir(), "sql_from_csv", "small_input.tsv")
         large_csv_filepath = os.path.join(get_tests_data_dir(), "sql_from_csv", "large_input.tsv")

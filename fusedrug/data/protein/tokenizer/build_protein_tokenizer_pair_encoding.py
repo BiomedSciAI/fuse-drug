@@ -1,11 +1,11 @@
-from typing import Union, Optional
+from typing import Union, Optional, Any
 from tokenizers.models import WordLevel, BPE
 from tokenizers import Regex
 from tokenizers import pre_tokenizers
 from tokenizers.pre_tokenizers import Split
 from tokenizers import normalizers
 from pytoda.proteins.processing import IUPAC_VOCAB, UNIREP_VOCAB
-from tokenizers import processors
+from tokenizers import processors, Tokenizer
 from tokenizers.processors import TemplateProcessing
 from torch.utils.data import RandomSampler, BatchSampler
 import numpy as np
@@ -26,7 +26,7 @@ def build_simple_vocab_protein_tokenizer(
     override_normalizer: Optional[normalizers.Normalizer] = None,
     override_pre_tokenizer: Optional[Union[pre_tokenizers.PreTokenizer, str]] = "per_char_split",
     override_post_processor: Optional[processors.PostProcessor] = None,
-):
+) -> Tokenizer:
     """
     Builds a simple tokenizer, without any learning aspect (so it doesn't require any iterations on a dataset)
 
@@ -72,7 +72,7 @@ def build_simple_vocab_protein_tokenizer(
 # Split(pattern='.', behavior='isolated').pre_tokenize_str('blah')
 
 
-def _get_raw_vocab_dict(name):
+def _get_raw_vocab_dict(name: str) -> Union[IUPAC_VOCAB, UNIREP_VOCAB]:
     if "iupac" == name:
         return IUPAC_VOCAB
     elif "unirep" == name:
@@ -111,14 +111,14 @@ def _get_raw_vocab_dict(name):
 )
 def main(
     train_on_fasta_file: str,
-    output_tokenizer_json_file: Optional[str],
+    output_tokenizer_json_file: str,
     vocab_size: int,
     augment: bool,
     shuffle: bool,
     full_cycles_num: int,
     iterations_num: int,
     time_limit_minutes: int,
-):
+) -> None:
     """
     builds a pair-encoding based tokenizer, which is trained on the provided fasta file
     """
@@ -166,13 +166,13 @@ def main(
             special_tokens=special_tokens_tuples,
         )
 
-    def to_string(x):
+    def to_string(x: Any) -> str:
         return str(x)
 
-    def to_upper_case(x):
+    def to_upper_case(x: str) -> str:
         return x.upper()
 
-    def random_flip_order(x):
+    def random_flip_order(x: list) -> list:
         if 0 == np.random.choice(2):
             return x
         return x[::-1]

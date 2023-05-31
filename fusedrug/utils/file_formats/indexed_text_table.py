@@ -1,4 +1,4 @@
-from typing import Tuple, Optional, List
+from typing import Tuple, Optional, List, Union
 from torch.utils.data import Dataset
 from warnings import warn
 from fusedrug.utils.file_formats import IndexedTextFile
@@ -13,17 +13,17 @@ class IndexedTextTable(Dataset):
         self,
         filename: str,
         seperator="\t",
-        first_row_is_columns_names=True,
+        first_row_is_columns_names: bool = True,
         columns_names: Optional[List[str]] = None,
         id_column_idx: Optional[int] = None,
         id_column_name: Optional[str] = None,
         columns_num_expectation: Optional[int] = None,
-        allow_access_by_id=True,
-        index_filename=None,
+        allow_access_by_id: bool = True,
+        index_filename: Optional[str] = None,
         process_funcs_pipeline=None,
         force_recreate_index=False,
         limit_lines=None,  # useful for debugging
-        num_workers="auto",  # will be used when building the in-memory key-search map
+        num_workers: Union[str, int] = "auto",  # will be used when building the in-memory key-search map
     ):
         """
         Args:
@@ -147,7 +147,7 @@ class IndexedTextTable(Dataset):
             for m in all_offsets_maps:
                 self._offsets_map.update(m)
 
-    def _split_line_basic(self, line_str) -> Tuple:
+    def _split_line_basic(self, line_str: str) -> Tuple:
         splitted = line_str.split(self._seperator)
 
         if self._columns_num_expectation is not None:
@@ -159,7 +159,7 @@ class IndexedTextTable(Dataset):
         splitted[-1] = splitted[-1].rstrip()  # remove trailing endline etc.
         return splitted
 
-    def _process_line(self, line_str) -> Tuple[str, Tuple]:
+    def _process_line(self, line_str: str) -> Tuple[str, Tuple]:
         """
         returns (id, tuple of the other elements in the parsed text row)
         """
@@ -168,7 +168,7 @@ class IndexedTextTable(Dataset):
         ans_id = ser[self._id_column_idx]
         return ans_id, ser
 
-    def __len__(self):
+    def __len__(self) -> int:
         # since the first line might be columns description, we must consider it
         valid_text_file_lines = len(self._indexed_text_file)
         if self._first_row_is_columns_names:
@@ -185,7 +185,7 @@ class IndexedTextTable(Dataset):
                     break
             yield self.__getitem__(i)
 
-    def __getitem__(self, index):
+    def __getitem__(self, index: int):
         if isinstance(index, numbers.Number):
             index = int(index)
 
@@ -215,7 +215,7 @@ class IndexedTextTable(Dataset):
         return ans
 
 
-def _key_map_build_worker(args):
+def _key_map_build_worker(args: Tuple[int, int]) -> dict:
     start_index, end_index = args
     itf = get_from_global_storage("itf")
     ans = {}

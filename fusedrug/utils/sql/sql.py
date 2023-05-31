@@ -35,10 +35,10 @@ class SQL:
         else:
             self._engine = create_engine(connection_url)
 
-    def __del__(self):
+    def __del__(self) -> None:
         self._engine.dispose()
 
-    def query(self, query: str, chunksize: Optional[int] = None):
+    def query(self, query: str, chunksize: Optional[int] = None) -> pd.DataFrame:
         return pd.read_sql_query(query, con=self._engine, chunksize=chunksize)
 
 
