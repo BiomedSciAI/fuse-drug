@@ -1,4 +1,4 @@
-from typing import Tuple, Optional, List, Union
+from typing import Tuple, Optional, List, Union, Callable, Any
 from torch.utils.data import Dataset
 from warnings import warn
 from fusedrug.utils.file_formats import IndexedTextFile
@@ -12,7 +12,7 @@ class IndexedTextTable(Dataset):
     def __init__(
         self,
         filename: str,
-        seperator="\t",
+        seperator: str = "\t",
         first_row_is_columns_names: bool = True,
         columns_names: Optional[List[str]] = None,
         id_column_idx: Optional[int] = None,
@@ -20,9 +20,9 @@ class IndexedTextTable(Dataset):
         columns_num_expectation: Optional[int] = None,
         allow_access_by_id: bool = True,
         index_filename: Optional[str] = None,
-        process_funcs_pipeline=None,
-        force_recreate_index=False,
-        limit_lines=None,  # useful for debugging
+        process_funcs_pipeline: Optional[List[Callable]] = None,
+        force_recreate_index: bool = False,
+        limit_lines: Optional[int] = None,  # useful for debugging
         num_workers: Union[str, int] = "auto",  # will be used when building the in-memory key-search map
     ):
         """
@@ -178,14 +178,14 @@ class IndexedTextTable(Dataset):
             return min(self._limit_lines, valid_text_file_lines)
         return valid_text_file_lines
 
-    def __iter__(self):
+    def __iter__(self) -> Union[Tuple[str, Tuple], Any]:
         for i in range(len(self)):
             if self._limit_lines is not None:
                 if i >= self._limit_lines:
                     break
             yield self.__getitem__(i)
 
-    def __getitem__(self, index: int):
+    def __getitem__(self, index: int) -> Union[Tuple[str, Tuple], Any]:
         if isinstance(index, numbers.Number):
             index = int(index)
 
