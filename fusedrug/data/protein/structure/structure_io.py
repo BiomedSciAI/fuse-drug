@@ -1,4 +1,4 @@
-from typing import Optional, Dict, Union, List, Tuple
+from typing import Optional, Dict, Union, List, Tuple, Any
 import gzip
 import io
 import os
@@ -59,12 +59,12 @@ def save_structure_file(
     # optional args
     chain_to_aa_str_seq: Optional[Dict[str, str]] = None,
     chain_to_aa_index_seq: Optional[Dict[str, torch.Tensor]] = None,
-    save_pdb=True,
-    save_cif=True,
+    save_pdb: bool = True,
+    save_cif: bool = True,
     b_factors: Optional[Dict[str, torch.Tensor]] = None,
     reference_cif_filename: Optional[str] = None,
     mask: Optional[List] = None,
-):
+) -> List[str]:
     """
     A helper function allowing to save single or multi chain structure into pdb and/or mmcif format.
 
@@ -80,6 +80,9 @@ def save_structure_file(
         b_factors -
         reference_cif_filename:Optional[str] - for mmCIF outputs you must provide an mmCIF reference file (you can use the ground truth one)
         mask:Optional[List] - a mask describing which residues to store
+
+    Returns:
+        A list with paths for all saved files
     """
     assert save_pdb or save_cif
     assert len(chain_to_atom14) > 0
@@ -92,6 +95,8 @@ def save_structure_file(
         sorted_chain_ids = sorted(list(chain_to_aa_str_seq.keys()))
 
     assert (chain_to_aa_str_seq is not None) or (chain_to_aa_index_seq is not None)
+
+    all_saved_files = []
 
     if save_cif:
         if len(chain_to_aa_str_seq) > 1:
@@ -107,6 +112,8 @@ def save_structure_file(
                     chain_to_atom14=chain_to_atom14,
                     output_mmcif_filename=out_multimer_cif_filename,
                 )
+
+                all_saved_files.append(out_multimer_cif_filename)
             else:
                 print(
                     f'not writing multimer file because "reference_cif_filename" was not provided for {reference_cif_filename}'
@@ -134,6 +141,8 @@ def save_structure_file(
                 model=0,
             )
 
+            all_saved_files.append(out_pdb)
+
         if save_cif:
             out_cif = output_filename_extensionless + "_chain_" + chain_id + ".cif"
             if reference_cif_filename is not None:
@@ -145,15 +154,22 @@ def save_structure_file(
                     chain_to_atom14={chain_id: chain_to_atom14[chain_id]},
                     output_mmcif_filename=out_cif,
                 )
+
+                all_saved_files.append(out_cif)
             else:
                 print(
                     f'not writing chain cif file because no "reference_cif_filename" was provided for {reference_cif_filename}'
                 )
+    return all_saved_files
 
 
 def get_chain_native_features(
-    native_structure_filename: str, chain_id: str, pdb_id: str, chain_id_type: str = "author_assigned", device="cpu"
-):
+    native_structure_filename: str,
+    chain_id: str,
+    pdb_id: str,
+    chain_id_type: str = "author_assigned",
+    device: str = "cpu",
+) -> dict:
     """
     Extracts ground truth features from a given filename. Note - only mmCIF is tested
     (using pdb will trigger an exception)
@@ -220,10 +236,13 @@ def get_chain_native_features(
         gt_all_mmcif_feats = gt_data["mmcif_feats"]
         gt_sequence = gt_data["input_sequence"]
         # move to device
-        gt_mmcif_feats = {k: gt_all_mmcif_feats[k] for k in ["aatype", "all_atom_positions", "all_atom_mask"]}
+        gt_mmcif_feats = {
+            k: gt_all_mmcif_feats[k] for k in ["aatype", "all_atom_positions", "all_atom_mask", "resolution"]
+        }
 
         to_tensor = lambda t: torch.tensor(np.array(t)).to(device)
         gt_mmcif_feats = tree_map(to_tensor, gt_mmcif_feats, np.ndarray)
+
         # as make_atom14_masks & make_atom14_positions seems to expect indices and not one-hots !
         gt_mmcif_feats["aatype"] = gt_mmcif_feats["aatype"].argmax(axis=-1)
 
@@ -237,13 +256,13 @@ def get_chain_native_features(
     gt_mmcif_feats = data_transforms.make_atom14_positions(gt_mmcif_feats)
 
     # for reference, remember .../openfold/openfold/data/input_pipeline.py
-    # data_transforms.make_atom14_masks,
-    # data_transforms.make_atom14_positions,
-    # data_transforms.atom37_to_frames,
+    # data_transforms.make_atom14_masks
+    # data_transforms.make_atom14_positions
+    # data_transforms.atom37_to_frames
     # data_transforms.atom37_to_torsion_angles(""),
-    # data_transforms.make_pseudo_beta(""),
-    # data_transforms.get_backbone_frames,
-    # data_transforms.get_chi_angles,
+    gt_mmcif_feats = data_transforms.make_pseudo_beta_no_curry(gt_mmcif_feats)
+    # data_transforms.get_backbone_frames
+    # data_transforms.get_chi_angles
 
     gt_mmcif_feats["pdb_id"] = pdb_id
     gt_mmcif_feats["chain_id"] = chain_id
@@ -261,7 +280,7 @@ def aa_sequence_from_pdb(pdb_filename: str) -> Dict[str, str]:
     return aa_sequence_from_pdb_structure(structure)
 
 
-def aa_sequence_from_pdb_structure(structure):
+def aa_sequence_from_pdb_structure(structure: Structure) -> dict:
     # iterate each model, chain, and residue
     # printing out the sequence for each chain
     chains = {}
@@ -274,7 +293,7 @@ def aa_sequence_from_pdb_structure(structure):
     return chains
 
 
-def aa_sequence_coord_from_pdb_structure(structure):
+def aa_sequence_coord_from_pdb_structure(structure: Structure) -> dict:
     # iterate each model, chain, and residue
     # printing out the sequence coordinates for the atoms in each chain
     chains = {}
@@ -289,7 +308,7 @@ def aa_sequence_coord_from_pdb_structure(structure):
     return chains
 
 
-def structure_from_pdb(pdb_filename: str):
+def structure_from_pdb(pdb_filename: str) -> Structure:
     pdb_filename = get_pdb_native_full_name(pdb_filename)
     text = read_file_raw_string(pdb_filename)
 
@@ -383,7 +402,7 @@ def create_single_chain_structure(selected_chain: Chain) -> Structure:
     return single_chain_structure
 
 
-def is_pdb_id(pdb_id: str):
+def is_pdb_id(pdb_id: str) -> bool:
     """
     Checks if the given string is a pdb id
     Currently only checks for string length.
@@ -392,7 +411,7 @@ def is_pdb_id(pdb_id: str):
     return 4 == len(pdb_id)
 
 
-def get_pdb_native_full_name(pdb_id, strict=False):
+def get_pdb_native_full_name(pdb_id: str, strict: bool = False) -> str:
     """
     Uses the PDB_DIR environment variable to get a full path filename from pdb_id
     """
@@ -549,7 +568,7 @@ def get_chain_data(
     )
 
 
-def load_mmcif_features(filename, pdb_id: str, chain_id: str):
+def load_mmcif_features(filename: str, pdb_id: str, chain_id: str) -> dict:
     """
     Features in the style that *Fold use
     """
@@ -589,7 +608,7 @@ def save_updated_mmcif_file(
     chain_to_aa_seq: Dict[str, str],
     chain_to_atom14: Dict[str, np.ndarray],
     output_mmcif_filename: str,
-):
+) -> None:
     """ """
 
     biopython_structure = create_biopython_structure(
@@ -735,11 +754,11 @@ def create_biopython_structure(
 
 
 def biopython_structure_to_mmcif_file(
-    biopython_structure,
+    biopython_structure: Structure,
     store_chains: List[str],
     output_mmcif_filename: str,
     verbose: int = 0,
-):
+) -> None:
     io = MMCIFIO()
     os.makedirs(os.path.dirname(output_mmcif_filename), exist_ok=True)
     io.set_structure(biopython_structure)
@@ -752,7 +771,7 @@ class ChainsSelector(Select):
     def __init__(self, keep_chains: List[str]):
         self._keep_chains = deepcopy(keep_chains)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Represent the output as a string for debugging."""
         return f"selects only the chains: {self._keep_chains}"
 
@@ -760,7 +779,7 @@ class ChainsSelector(Select):
     #     """Overload this to reject models for output."""
     #     return 1
 
-    def accept_chain(self, chain):
+    def accept_chain(self, chain: Any) -> bool:
         """Overload this to reject chains for output."""
         return chain.id in self._keep_chains
         # return 1
@@ -774,11 +793,7 @@ class ChainsSelector(Select):
     #     return 1
 
 
-def is_pdb_id(pdb_id: str):
-    return 4 == len(pdb_id)
-
-
-def get_mmcif_native_full_name(pdb_id, strict=False):
+def get_mmcif_native_full_name(pdb_id: str, strict: bool = False) -> str:
     if not is_pdb_id(pdb_id):
         if strict:
             raise Exception(
@@ -795,7 +810,7 @@ def get_mmcif_native_full_name(pdb_id, strict=False):
     return ans
 
 
-def load_mmcif_biopython(filename: str, structure_name: str = "bananaphone"):
+def load_mmcif_biopython(filename: str, structure_name: str = "bananaphone") -> Structure:
     if is_pdb_id(filename):
         filename = get_mmcif_native_full_name(filename)
     print(f"loading: {filename}")

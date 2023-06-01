@@ -31,7 +31,7 @@ class FastTokenizer(OpBase):
         Args:
             tokenizer_json: full path to a json file that the tokenizer will be loaded from
             max_size: sequences below this size will be padded, and above this size will be truncated
-            pad: a string of the pad token
+            pad_token: a string of the pad token
             pad_type_id: see tokenizers.Tokenizer.enable_padding() docstring
             validate_ends_with_eos: during encoder request (a _call_ to the op) will make sure that it ends with the provided eos token, and raise exception otherwise.
                 having an eos (end of sentence) token in the end is useful for multiple scenarios, for example in a generative transformer (like T5 encoder-decoder)
