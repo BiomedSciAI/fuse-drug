@@ -1,4 +1,4 @@
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Tuple
 from fuse.utils import NDict
 from fuse.data import OpBase, get_sample_id
 from fusedrug.data.interaction.drug_target.datasets.pytoda_style_target_affinity_dataset import (
@@ -165,7 +165,7 @@ if __name__ == "__main__":
     s3 = get_sample(300)
     s4 = get_sample(400)
 
-    def _split_sample(sample: NDict, default_collate_keys: Optional[List[str]] = None):
+    def _split_sample(sample: NDict, default_collate_keys: Optional[List[str]] = None) -> Tuple[NDict, NDict]:
         assert isinstance(sample, NDict)
         if default_collate_keys is None:
             return sample, []
@@ -181,7 +181,7 @@ if __name__ == "__main__":
 
         return to_default_collate, append_in_list
 
-    def my_collate(samples, default_collate_keys: Optional[List[str]] = None):
+    def my_collate(samples: List[NDict], default_collate_keys: Optional[List[str]] = None) -> Union[list, dict]:
         for_default_collate_minibatch = []
         # for_just_list_minibatch = []
 

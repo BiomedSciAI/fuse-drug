@@ -263,7 +263,7 @@ def aa_sequence_from_pdb(pdb_filename: str) -> Dict[str, str]:
     return aa_sequence_from_pdb_structure(structure)
 
 
-def aa_sequence_from_pdb_structure(structure):
+def aa_sequence_from_pdb_structure(structure: Structure) -> dict:
     # iterate each model, chain, and residue
     # printing out the sequence for each chain
     chains = {}
@@ -551,7 +551,7 @@ def get_chain_data(
     )
 
 
-def load_mmcif_features(filename, pdb_id: str, chain_id: str):
+def load_mmcif_features(filename: str, pdb_id: str, chain_id: str) -> Tuple[dict, str]:
     """
     Features in the style that *Fold use
     """
@@ -591,7 +591,7 @@ def save_updated_mmcif_file(
     chain_to_aa_seq: Dict[str, str],
     chain_to_atom14: Dict[str, np.ndarray],
     output_mmcif_filename: str,
-):
+) -> None:
     """ """
 
     biopython_structure = create_biopython_structure(
@@ -736,12 +736,12 @@ def create_biopython_structure(
     return pred_structure
 
 
-def biopython_structure_to_mmcif_file(
+def biopython_structure_to_mmcif_file(  # type: ignore
     biopython_structure,
     store_chains: List[str],
     output_mmcif_filename: str,
     verbose: int = 0,
-):
+) -> None:
     io = MMCIFIO()
     os.makedirs(os.path.dirname(output_mmcif_filename), exist_ok=True)
     io.set_structure(biopython_structure)
@@ -754,7 +754,7 @@ class ChainsSelector(Select):
     def __init__(self, keep_chains: List[str]):
         self._keep_chains = deepcopy(keep_chains)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Represent the output as a string for debugging."""
         return f"selects only the chains: {self._keep_chains}"
 
@@ -762,7 +762,7 @@ class ChainsSelector(Select):
     #     """Overload this to reject models for output."""
     #     return 1
 
-    def accept_chain(self, chain):
+    def accept_chain(self, chain: Chain) -> bool:
         """Overload this to reject chains for output."""
         return chain.id in self._keep_chains
         # return 1
@@ -776,7 +776,7 @@ class ChainsSelector(Select):
     #     return 1
 
 
-def get_mmcif_native_full_name(pdb_id, strict=False):
+def get_mmcif_native_full_name(pdb_id: str, strict: bool = False) -> str:
     if not is_pdb_id(pdb_id):
         if strict:
             raise Exception(
@@ -793,7 +793,7 @@ def get_mmcif_native_full_name(pdb_id, strict=False):
     return ans
 
 
-def load_mmcif_biopython(filename: str, structure_name: str = "bananaphone"):
+def load_mmcif_biopython(filename: str, structure_name: str = "bananaphone") -> Structure:
     if is_pdb_id(filename):
         filename = get_mmcif_native_full_name(filename)
     print(f"loading: {filename}")

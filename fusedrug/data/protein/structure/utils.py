@@ -7,7 +7,7 @@ except ImportError:
     print("Warning: import openfold failed - some functions might fail")
 
 
-def aa_sequence_from_aa_integers(aatype: List[int]):
+def aa_sequence_from_aa_integers(aatype: List[int]) -> str:
     ans = "".join(["X" if x == 20 else rc.restypes[x] for x in aatype])
     return ans
 
