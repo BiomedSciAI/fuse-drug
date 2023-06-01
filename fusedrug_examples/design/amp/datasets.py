@@ -24,7 +24,7 @@ Based on Payel Das et al. Accelerated antimicrobial discovery via deep generativ
 Some parts of the code (mostly the part that infer the AMP and Toxicity labels in DBAASP dataset) are based on repo https://github.com/IBM/controlled-peptide-generation
 """
 
-from typing import Sequence, Any
+from typing import Sequence, Union, List, Tuple, Any
 import re
 import os
 from glob import glob
@@ -37,6 +37,7 @@ from fuse.data import DatasetDefault, PipelineDefault, OpBase
 from fuse.data.ops.ops_read import OpReadDataframe
 from fuse.data.ops.ops_common import OpCond, OpSet
 from fuse.data.utils.split import dataset_balanced_division_to_folds
+from fuse.utils import NDict
 from Bio import SeqIO
 
 
@@ -57,14 +58,14 @@ def _seq_is_valid(seq: str) -> bool:
     return True
 
 
-def _seq_len_less_50(seq: str):
+def _seq_len_less_50(seq: str) -> bool:
     if len(seq) > 50:
         return False
     return True
 
 
 class OpProcessTargetActivities(OpBase):
-    def __call__(self, sample_dict) -> Any:
+    def __call__(self, sample_dict: NDict) -> NDict:
 
         target_activties = sample_dict["targetActivities"]
         seq = sample_dict["sequence"]
@@ -114,7 +115,7 @@ class OpProcessTargetActivities(OpBase):
         return sample_dict
 
     @staticmethod
-    def parse_concentration(concentration) -> float:
+    def parse_concentration(concentration: str) -> float:
         if concentration == "NA":
             return None
 
@@ -137,7 +138,7 @@ class OpProcessTargetActivities(OpBase):
 
 
 class OpProcessHemoliticCytotoxicActivities(OpBase):
-    def __call__(self, sample_dict) -> Any:
+    def __call__(self, sample_dict: NDict) -> NDict:
 
         targets = sample_dict["hemoliticCytotoxicActivities"]
         seq = sample_dict["sequence"]
@@ -187,7 +188,7 @@ class OpProcessHemoliticCytotoxicActivities(OpBase):
         return sample_dict
 
     @staticmethod
-    def parse_concentration(concentration) -> float:
+    def parse_concentration(concentration: str) -> Union[float, None]:
         if concentration == "NA":
             return None
 
@@ -247,7 +248,7 @@ class Dbaasp:
         return peptides
 
     @staticmethod
-    def process_pipeline():
+    def process_pipeline() -> List[Tuple]:
         return [
             (OpProcessTargetActivities(), dict()),
             (OpProcessHemoliticCytotoxicActivities(), dict()),
@@ -289,21 +290,21 @@ class ToxinPred:
         return peptides
 
     @staticmethod
-    def process_pipeline():
+    def process_pipeline() -> List[Tuple]:
         return [(OpSet(), dict(key="amp.label", value=-1))]
 
 
 class AsciiHandle:
     """workaround to remove non-ascii characters from file while iterating"""
 
-    def __init__(self, handle):
+    def __init__(self, handle: Sequence):
         self._handle = handle
 
-    def __iter__(self):
+    def __iter__(self) -> str:
         for line in self._handle:
             yield line.encode("ascii", errors="ignore").decode()
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> Any:
         try:
             return super().__getattr__(name)
         except:
@@ -356,7 +357,7 @@ class Satpdb:
         return peptides
 
     @staticmethod
-    def process_pipeline():
+    def process_pipeline() -> list:
         return []
 
 
@@ -400,7 +401,7 @@ class Axpep:
         return peptides
 
     @staticmethod
-    def process_pipeline():
+    def process_pipeline() -> List[Tuple]:
         return [(OpSet(), dict(key="toxicity.label", value=-1))]
 
 
@@ -437,7 +438,7 @@ class Uniprot:
         return peptides
 
     @staticmethod
-    def process_pipeline():
+    def process_pipeline() -> List[Tuple[OpBase, dict]]:
         return [
             (OpSet(), dict(key="amp.label", value=-1)),
             (OpSet(), dict(key="toxicity.label", value=-1)),

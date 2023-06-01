@@ -131,7 +131,7 @@ def model(
     z_dim: int,
     cls_detached: bool,
     max_seq_len: int,
-):
+) -> Tuple[torch.nn.Module, Tokenizer]:
     """
     :param seqs: list of all train sequences - used to create a tokenizer
     :param encoder_type: either "transformer" or "gru"
@@ -251,7 +251,7 @@ def train(
     trainer_kwargs: dict,
     losses: dict,
     track_clearml: Optional[dict] = None,
-):
+) -> None:
     """
     train code for the task
     :param model: the model to train
@@ -347,7 +347,7 @@ def train(
 
 
 @hydra.main(config_path=".", config_name="config")
-def main(cfg: DictConfig):
+def main(cfg: DictConfig) -> None:
     cfg = hydra.utils.instantiate(cfg)
     print(NDict(cfg).print_tree(True))
 
