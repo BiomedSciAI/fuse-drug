@@ -29,9 +29,5 @@ exclude =
     ## all __init__.py files
     __init__.py
 
-    ## ./
-    ./run_all_unit_tests.py
-    ./setup.py
-
     # submodule
     fusedrug_examples/interaction/drug_target/affinity_prediction/PLM_DTI/Contrastive_PLM_DTI
