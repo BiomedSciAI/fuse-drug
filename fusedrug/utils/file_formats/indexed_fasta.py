@@ -1,6 +1,6 @@
 import pyfastx  # https://pyfastx.readthedocs.io/en/latest/usage.html
 from torch.utils.data import Dataset
-from typing import Optional
+from typing import Optional, List, Callable, Any
 
 # pyfast - access sequence data: https://pyfastx.readthedocs.io/en/latest/usage.html#get-a-sequence-from-fasta
 
@@ -14,9 +14,9 @@ class IndexedFasta(Dataset):
     def __init__(
         self,
         fasta_file_loc: Optional[str] = None,
-        check_for_duplicate_names=False,
-        process_funcs_pipeline=None,
-        **kwargs,
+        check_for_duplicate_names: bool = False,
+        process_funcs_pipeline: Optional[List[Callable]] = None,
+        **kwargs: dict,
     ):
         """
         :param fasta_file_loc: location of .fasta or .fasta.gz file
@@ -54,14 +54,14 @@ class IndexedFasta(Dataset):
 
         self._length = len(self._fasta)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return self._length
 
-    def __iter__(self):
+    def __iter__(self) -> Any:
         for i in range(self._length):
             yield self.__getitem__(i)
 
-    def __getitem__(self, index):
+    def __getitem__(self, index: int) -> Any:
         """ """
         entry = self._fasta[index]
 

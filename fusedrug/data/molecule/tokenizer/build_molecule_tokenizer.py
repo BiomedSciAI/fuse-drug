@@ -3,6 +3,7 @@ from tokenizers.models import BPE
 from tokenizers.processors import TemplateProcessing
 from fusedrug.data.tokenizer.fast_tokenizer_learn import build_tokenizer
 from tokenizers.trainers import BpeTrainer
+from tokenizers import Tokenizer
 from torch.utils.data import Dataset, IterableDataset, Sampler
 import click
 
@@ -16,11 +17,11 @@ def build_molecule_tokenizer(
     output_tokenizer_json: str,
     batch_sampler: Optional[Sampler],
     num_workers: int = 0,
-    full_cycles_num=None,
-    iterations_num=None,
-    time_limit_minutes=None,
-    stop_filename=None,
-):
+    full_cycles_num: Optional[int] = None,
+    iterations_num: Optional[int] = None,
+    time_limit_minutes: Optional[int] = None,
+    stop_filename: Optional[str] = None,
+) -> Tokenizer:
     """
     Trains a byte-pair encoding (BPE) based tokenizer on the provided SMI file.
 
@@ -123,10 +124,10 @@ def main(
     output_tokenizer_json: Optional[str],
     augment: bool,
     shuffle: bool,
-    full_cycles_num,
-    iterations_num,
-    time_limit_minutes,
-):
+    full_cycles_num: int,
+    iterations_num: int,
+    time_limit_minutes: int,
+) -> None:
     """
     Trains a pair-encoding based tokenizer on the provided SMI file.
     NOTE: expects the SMI file to already be (rdkit) sanitized!

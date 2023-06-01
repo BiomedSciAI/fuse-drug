@@ -2,7 +2,7 @@ import pytoda
 from fuse.data import OpFunc
 
 
-def get_pyotda_chem_transforms_ON_STRING_SEQUENCE(**kwargs):
+def get_pyotda_chem_transforms_ON_STRING_SEQUENCE(**kwargs: dict) -> OpFunc:
     """
     Note - the input and output is a string representation (SMILES or SELFIES)
     but internally during the transforms different representations are used
@@ -15,7 +15,7 @@ def get_pyotda_chem_transforms_ON_STRING_SEQUENCE(**kwargs):
     return OpFunc(func)
 
 
-def get_pytoda_chem_transforms_ON_TOKEN_INDEXES(**kwargs):
+def get_pytoda_chem_transforms_ON_TOKEN_INDEXES(**kwargs: dict) -> OpFunc:
     """
     Note - the input and output are token indexes
     a numpy 1d array of integers or a list of integers
