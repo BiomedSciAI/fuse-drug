@@ -13,10 +13,10 @@ from omegaconf import OmegaConf
 import collections
 import omegaconf
 import copy
+import traceback
 
-TypedInput = collections.namedtuple(
-            "TypedInput", ["input_type", "input_string", "max_len"]
-        )
+TypedInput = collections.namedtuple("TypedInput", ["input_type", "input_string", "max_len"])
+
 
 class ModularTokenizer(transformers.PreTrainedTokenizerFast):
     def __init__(
@@ -54,12 +54,10 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 tokens of the new modular tokenizer (will be in all sub-tokenizers). Defaults to None (i.e. no tokens to be added)
             max_possible_token_id (Optional[int], optional): An upper limit to a token ID. When IDs of tokens added to modular tokenizer
                 go above this, an exception is thrown. Defaults to None (i.e. no limit is set).
-                TODO: Currently not fully implemented. Only used during tokenizer creation.
             max_special_token_id (Optional[int], optional): An upper limit to special token ID. Special tokens are shared between all sub-tokenizers.
                 If max_special_token_id is set, when special tokens are added, they are mapped to IDs between 0 and max_special_token_id
                 (after which come regular token IDs). Once max_special_token_id is reached, no more special tokens may be added.
                 If it is not set, new special tokens may be mapped to IDs higher that regular token IDs. If Defaults to None (i.e. no limit is set).
-                TODO: Currently not fully implemented. Only used during tokenizer creation.
         """
         # ModularTokenizer inherits the interface of PreTrainedTokenizerBase, but not the underlying logic, therefore super.__init__() is not called
 
@@ -415,6 +413,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         try:
             loaded_conf: omegaconf.dictconfig.DictConfig = OmegaConf.load(os.path.join(path, "config.yaml"))
         except:
+            traceback.print_exc()
             raise Exception(f"couldn't load config.yaml from {path}")
         tokenizers_info_fixed = fix_json_paths(loaded_conf["tokenizers_info"], path)
 
@@ -833,21 +832,19 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         if max_len is not None:
             merged_encoding.truncate(max_length=max_len)
 
-        rnd_type = list(self.tokenizers_info.keys())[0]
-        rnd_inst = self.tokenizers_info[rnd_type]["tokenizer_inst"]
         if padding_token_id is None and padding_token is None:
             # if either padding token or id were given, or enable_padding was called earlier
             padding_token_id = self._pad_token_id
             padding_token = self._pad_token
         if padding_token is not None:
             # find the actual padding token ID from padding token
-            padding_token_id = rnd_inst.token_to_id(padding_token)
+            padding_token_id = self.token_to_id(padding_token)
         else:
             if padding_token_id is not None:
-                padding_token = rnd_inst.id_to_token(padding_token_id)
+                padding_token = self.id_to_token(padding_token_id)
         if pad_type_id is None:
             pad_type_id = self._pad_token_type_id
-        if padding_token_id is not None and padding_token is not None:
+        if padding_token_id is not None and padding_token is not None and max_len is not None:
             merged_encoding.pad(
                 length=max_len,
                 direction="right",
@@ -857,7 +854,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             )
         else:
             if max_len is not None:
-                raise Exception(f"both padding token and padding id are None, but padding length is {max_len}")
+                warn(
+                    f"both padding token and padding id are None, but padding length is {max_len}. It's possible that it was set for truncation alone."
+                )
 
         return merged_encoding
 
@@ -1596,9 +1595,25 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         """
         if t_type is None:
             t_type_val = list(self.tokenizers_info.keys())[0]
+            possible_ids = []
+            possible_id_types = []
+            for t_type_val in self.tokenizers_info.keys():
+                tok_id = self.tokenizers_info[t_type_val]["tokenizer_inst"].token_to_id(token)
+                if tok_id is not None:
+                    possible_ids.append(tok_id)
+                    possible_id_types.append(t_type_val)
+            possible_ids_unique = list(set(possible_ids))
+            if len(possible_ids_unique) == 0:
+                return None
+            elif len(possible_ids_unique) == 1:
+                return possible_ids_unique[0]
+            else:
+                raise Exception(
+                    f"Token {token} maps to several possible ids {possible_ids}, of types {possible_id_types}, and the t_type argument was not set"
+                )
         else:
             t_type_val = str(t_type)
-        return self.tokenizers_info[t_type_val]["tokenizer_inst"].token_to_id(token)
+            return self.tokenizers_info[t_type_val]["tokenizer_inst"].token_to_id(token)
 
     def train(self, files: List, trainer: Optional[tokenizers.trainers.Trainer] = None) -> None:
         """
