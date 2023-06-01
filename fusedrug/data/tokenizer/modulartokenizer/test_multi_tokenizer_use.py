@@ -5,7 +5,7 @@ from typing import Dict, Any
 from test_multi_tokenizer_creation import test_tokenizer
 
 
-@hydra.main(config_path="./configs", config_name="tokenizer_config", version_base=None)
+@hydra.main(config_path="./configs", config_name="tokenizer_config_personal", version_base=None)
 def main(cfg: DictConfig) -> None:
     print(str(cfg))
 
