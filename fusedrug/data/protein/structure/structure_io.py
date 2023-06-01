@@ -1,4 +1,4 @@
-from typing import Optional, Dict, Union, List
+from typing import Optional, Dict, Union, List, Tuple
 import gzip
 import io
 import os
@@ -57,12 +57,12 @@ def save_structure_file(
     # optional args
     chain_to_aa_str_seq: Optional[Dict[str, str]] = None,
     chain_to_aa_index_seq: Optional[Dict[str, torch.Tensor]] = None,
-    save_pdb=True,
-    save_cif=True,
+    save_pdb: bool = True,
+    save_cif: bool = True,
     b_factors: Optional[Dict[str, torch.Tensor]] = None,
     reference_cif_filename: Optional[str] = None,
     mask: Optional[List] = None,
-):
+) -> None:
     """
     A helper function allowing to save single or multi chain structure into pdb and/or mmcif format.
 
@@ -150,8 +150,12 @@ def save_structure_file(
 
 
 def get_chain_native_features(
-    native_structure_filename: str, chain_id: str, pdb_id: str, chain_id_type: str = "author_assigned", device="cpu"
-):
+    native_structure_filename: str,
+    chain_id: str,
+    pdb_id: str,
+    chain_id_type: str = "author_assigned",
+    device: str = "cpu",
+) -> Union[Tuple[str, dict], None]:
     """
     Extracts ground truth features from a given filename. Note - only mmCIF is tested
     (using pdb will trigger an exception)
@@ -272,7 +276,7 @@ def aa_sequence_from_pdb_structure(structure):
     return chains
 
 
-def aa_sequence_coord_from_pdb_structure(structure):
+def aa_sequence_coord_from_pdb_structure(structure: Structure) -> dict:
     # iterate each model, chain, and residue
     # printing out the sequence coordinates for the atoms in each chain
     chains = {}
@@ -287,7 +291,7 @@ def aa_sequence_coord_from_pdb_structure(structure):
     return chains
 
 
-def structure_from_pdb(pdb_filename: str):
+def structure_from_pdb(pdb_filename: str) -> Structure:
     pdb_filename = get_pdb_native_full_name(pdb_filename)
     text = read_file_raw_string(pdb_filename)
 
@@ -381,7 +385,7 @@ def create_single_chain_structure(selected_chain: Chain) -> Structure:
     return single_chain_structure
 
 
-def is_pdb_id(pdb_id: str):
+def is_pdb_id(pdb_id: str) -> bool:
     """
     Checks if the given string is a pdb id
     Currently only checks for string length.
@@ -390,7 +394,7 @@ def is_pdb_id(pdb_id: str):
     return 4 == len(pdb_id)
 
 
-def get_pdb_native_full_name(pdb_id, strict=False):
+def get_pdb_native_full_name(pdb_id: str, strict: bool = False) -> str:
     """
     Uses the PDB_DIR environment variable to get a full path filename from pdb_id
     """

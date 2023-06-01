@@ -7,7 +7,7 @@ class SDFIterableDataset(IterableDataset):
     Usage example: see tests/test_sdf_iterable_dataset.py
     """
 
-    def __init__(self, sdf_filename):
+    def __init__(self, sdf_filename: str):
         super().__init__()
         self._sdf_filename = sdf_filename
 

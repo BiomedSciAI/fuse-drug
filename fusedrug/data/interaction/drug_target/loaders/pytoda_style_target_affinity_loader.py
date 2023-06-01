@@ -25,7 +25,7 @@ class DrugTargetAffinityLoader(OpBase):
         #
         ligands_indexed_text_table_kwargs: Optional[dict] = None,
         proteins_indexed_text_table_kwargs: Optional[dict] = None,
-        **kwargs,
+        **kwargs: dict,
     ):
         super().__init__(**kwargs)
         self.drug_target_affinity_dataset = PytodaStyleDrugTargetAffinityDataset(
@@ -46,10 +46,10 @@ class DrugTargetAffinityLoader(OpBase):
     def __call__(
         self,
         sample_dict: NDict,
-        key_out_ligand="data.input.ligand",
-        key_out_protein="data.input.protein",
-        key_out_ground_truth_affinity="data.gt.affinity_val",
-    ):
+        key_out_ligand: str = "data.input.ligand",
+        key_out_protein: str = "data.input.protein",
+        key_out_ground_truth_affinity: str = "data.gt.affinity_val",
+    ) -> NDict:
         """ """
         sid = get_sample_id(sample_dict)
         if isinstance(sid, str) or not np.isscalar(sid):
@@ -155,7 +155,7 @@ if __name__ == "__main__":
 
     pipeline = PipelineDefault("test_drug_target_affinity_pipeline", pipeline_desc)
 
-    def get_sample(sid):
+    def get_sample(sid: int) -> NDict:
         sample = create_initial_sample(sid)
         processed_sample = pipeline(sample, "")
         return processed_sample
