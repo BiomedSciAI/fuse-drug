@@ -39,18 +39,14 @@ class FastModularTokenizer(OpBase):
         super().__init__(**kwargs)
 
         if verbose:
-            print(
-                f"DEBUG:FastModularTokenizer __init__ called for path {tokenizer_path}"
-            )
+            print(f"DEBUG:FastModularTokenizer __init__ called for path {tokenizer_path}")
 
         self._tokenizer_path = tokenizer_path
         self._tokenizer = Tokenizer.from_file(self._tokenizer_path)
         pad_id = self._tokenizer.token_to_id(pad_token)
 
         if pad_token is None:
-            raise Exception(
-                f"Could not find pad token = {pad_token} in {tokenizer_path}"
-            )
+            raise Exception(f"Could not find pad token = {pad_token} in {tokenizer_path}")
 
         self._validate_ends_with_eos = validate_ends_with_eos
 
@@ -100,9 +96,7 @@ class FastModularTokenizer(OpBase):
         if max_token_id is None:
             raise Exception("Could not find max_token_id! possibly an empty vocab.")
         if token_str_of_max_token_id is None:
-            warn(
-                "max_token_id does not correspond to a token. It may be an upper bound placeholder."
-            )
+            warn("max_token_id does not correspond to a token. It may be an upper bound placeholder.")
             return "placeholder upper-bound token", max_token_id
         return token_str_of_max_token_id, max_token_id
 
@@ -129,9 +123,7 @@ class FastModularTokenizer(OpBase):
             if sentinel_prefix in k:
                 val = re.findall(integer_find_regex, k)
                 if len(val) != 1:
-                    raise Exception(
-                        f"expected exactly one integer number in {k} but found {val}"
-                    )
+                    raise Exception(f"expected exactly one integer number in {k} but found {val}")
                 val = val[0]
                 val = int(val)
 
@@ -142,9 +134,7 @@ class FastModularTokenizer(OpBase):
                     max_token = val
 
         if (min_token is None) or (max_token is None):
-            raise Exception(
-                f'Could not find any sentinels with the prefix "{sentinel_prefix}"'
-            )
+            raise Exception(f'Could not find any sentinels with the prefix "{sentinel_prefix}"')
 
         return (min_token, max_token)
 
@@ -175,11 +165,7 @@ class FastModularTokenizer(OpBase):
             )
 
         if self._validate_ends_with_eos is not None:
-            if (
-                not data_lst[-1]
-                .input_string.rstrip()
-                .endswith(self._validate_ends_with_eos)
-            ):
+            if not data_lst[-1].input_string.rstrip().endswith(self._validate_ends_with_eos):
                 raise Exception(
                     f"self._validate_ends_with_eos was set to {self._validate_ends_with_eos}, but about to encode a string that does not end with it. The str end was: {data_lst[-1].input_string}"
                 )
@@ -196,19 +182,14 @@ class FastModularTokenizer(OpBase):
                 # no padding, therefore it was fully used (either exactly the size, or most likely it was clipped)
                 _encoded_len_unpadded = len(encoded.ids)
 
-            if (
-                _encoded_len_unpadded
-                > self._debug_max_tokenized_len_encountered[self._tokenizer_path]
-            ):
+            if _encoded_len_unpadded > self._debug_max_tokenized_len_encountered[self._tokenizer_path]:
                 print(
                     "DEBUG: FastModularTokenizer: encountered new max encoded size:",
                     _encoded_len_unpadded,
                     " for tokenizer: ",
                     self._tokenizer_path,
                 )
-                self._debug_max_tokenized_len_encountered[
-                    self._tokenizer_path
-                ] = _encoded_len_unpadded
+                self._debug_max_tokenized_len_encountered[self._tokenizer_path] = _encoded_len_unpadded
 
         # KEEP THIS AS DOC FOR NOW
         # encoded has attributes [ids, type_ids, tokens, offsets, attention_mask, special_tokens_mask, overflowing]
@@ -238,9 +219,7 @@ class FastModularTokenizer(OpBase):
         if key_out_attention_mask is not None:
             sample_dict[key_out_attention_mask] = encoded.attention_mask
             if convert_attention_mask_to_bool:
-                sample_dict[key_out_attention_mask] = [
-                    bool(x) for x in sample_dict[key_out_attention_mask]
-                ]
+                sample_dict[key_out_attention_mask] = [bool(x) for x in sample_dict[key_out_attention_mask]]
 
         if (key_out_tokens_ids is None) and (key_out_tokenized_object is None):
             warn(
