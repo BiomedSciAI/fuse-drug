@@ -7,9 +7,10 @@ import os
 from typing import Dict
 from os.path import join
 import yaml
+import pandas as pd
 
 
-def cached_cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict) -> Dict:
+def cached_cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict) -> Dict[str, str]:
     """
     Uses mmseqs to:
 
@@ -81,8 +82,6 @@ def cached_cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict)
 
     return ans
 
-    return ans
-
 
 def cluster(
     *,
@@ -92,9 +91,9 @@ def cluster(
     threads: int = 30,
     cluster_method: str = "cluster",
     deduplicate: bool = True,
-) -> None:
+) -> Dict[str, str]:
     """
-    see cluster() doc
+    see cached_cluster() doc
     """
 
     which_mmseqs = shutil.which("mmseqs")
@@ -166,11 +165,11 @@ def cluster(
     _run_system_cmd(cmd)
 
     print(
-        "B.2 - cluster the remaining unique representatives into different clusters based on the requested sequence identity threshold"
+        "B.2 - cluster the remaining (unique representatives if deduplication was used) into different clusters based on the requested sequence identity threshold"
     )
     mmseqs_tmp_2_for_clustering = join(output_dir, "mmseqs_workspace", "mmseqs_DB_tmp_2")
     clustered_db = join(output_dir, "mmseqs_workspace", "mmseqs_DB_clustered")
-    cmd = f"mmseqs {cluster_method} {step_B_initial_db} {clustered_db} {mmseqs_tmp_2_for_clustering} -c 1.0 --min-seq-id {cluster_min_seqeunce_identity} --threads {threads}"
+    cmd = f"mmseqs {cluster_method} {step_B_initial_db} {clustered_db} {mmseqs_tmp_2_for_clustering} --cov-mode 0 -c 1.0 --min-seq-id {cluster_min_seqeunce_identity} --threads {threads}"
     _run_system_cmd(cmd)
 
     print(
@@ -179,6 +178,13 @@ def cluster(
     clustered_tsv = join(output_dir, "clustered.tsv")
     cmd = f"mmseqs createtsv {step_B_initial_db} {step_B_initial_db} {clustered_db} {clustered_tsv}"
     _run_system_cmd(cmd)
+
+    # sort it to avoid issues with people assuming it's sorted
+
+    clustered_tsv_df = pd.read_csv(filepath_or_buffer=clustered_tsv, sep="\t", header=None, names=["center", "id"])
+    clustered_tsv_df.sort_values(by="id", inplace=True)
+    clustered_tsv_df.set_index("id", inplace=True)
+    clustered_tsv_df.to_csv(clustered_tsv, sep="\t")
 
     ####
     final_clusters_mmseqs_only_representatives = join(

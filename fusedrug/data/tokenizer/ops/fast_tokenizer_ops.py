@@ -1,6 +1,9 @@
 from fuse.utils import NDict
 from fuse.data import OpBase, get_sample_id
 from tokenizers import Tokenizer
+from tokenizers.normalizers import Normalizer
+from tokenizers.pre_tokenizers import PreTokenizer
+from tokenizers.processors import PostProcessor
 from warnings import warn
 from collections import defaultdict
 from typing import Tuple, Optional, Union
@@ -15,20 +18,20 @@ class FastTokenizer(OpBase):
 
     def __init__(
         self,
-        tokenizer_json,
-        max_size=None,
+        tokenizer_json: str,
+        max_size: int = None,
         pad_token: str = None,
-        pad_type_id=None,
+        pad_type_id: str = None,
         validate_ends_with_eos: Optional[str] = "<EOS>",
         verbose: bool = False,
-        **kwargs,
+        **kwargs: dict,
     ):
         """
 
         Args:
             tokenizer_json: full path to a json file that the tokenizer will be loaded from
             max_size: sequences below this size will be padded, and above this size will be truncated
-            pad: a string of the pad token
+            pad_token: a string of the pad token
             pad_type_id: see tokenizers.Tokenizer.enable_padding() docstring
             validate_ends_with_eos: during encoder request (a _call_ to the op) will make sure that it ends with the provided eos token, and raise exception otherwise.
                 having an eos (end of sentence) token in the end is useful for multiple scenarios, for example in a generative transformer (like T5 encoder-decoder)
@@ -82,17 +85,17 @@ class FastTokenizer(OpBase):
             self._debug_max_tokenized_len_encountered = defaultdict(int)
 
     # note: use normalizer.Sequence to chain multiple normalizers
-    def set_normalizer(self, normalizer):
+    def set_normalizer(self, normalizer: Normalizer) -> None:
         self._tokenizer.normalizer = normalizer
 
-    # note: use pre_toknizers.Sequence to chain multiple pre_toknizers
-    def set_pre_tokenizer(self, pre_tokenizer):
+    # note: use pre_tokenizers.Sequence to chain multiple pre_tokenizers
+    def set_pre_tokenizer(self, pre_tokenizer: PreTokenizer) -> None:
         self._tokenizer.pre_tokenizer = pre_tokenizer
 
-    def set_post_processor(self, post_processor):
+    def set_post_processor(self, post_processor: PostProcessor) -> None:
         self._tokenizer.post_processor = post_processor
 
-    def get_vocab_size(self):
+    def get_vocab_size(self) -> int:
         return self._tokenizer.get_vocab_size()
 
     def get_max_token_id(self) -> Tuple[str, int]:
@@ -111,7 +114,9 @@ class FastTokenizer(OpBase):
             raise Exception(f"Could not find max_token_id! possibly an empty vocab.")
         return token_str_of_max_token_id, max_token_id
 
-    def get_min_max_sentinels(self, sentinel_prefix="<SENTINEL_ID", integer_find_regex="\d{1,}") -> Tuple[int, int]:
+    def get_min_max_sentinels(
+        self, sentinel_prefix: str = "<SENTINEL_ID", integer_find_regex: str = "\d{1,}"
+    ) -> Tuple[int, int]:
         """
         returns a Tuple [min encountered sentinel name, max encountered sentinel name]
 
@@ -145,7 +150,7 @@ class FastTokenizer(OpBase):
 
         return (min_token, max_token)
 
-    def get_token_id(self, token_str):
+    def get_token_id(self, token_str: str) -> int:
         ans = self._tokenizer.token_to_id(token_str)
         assert ans is not None, f"could not find token id for token:{token_str}!"
         return ans
@@ -153,12 +158,12 @@ class FastTokenizer(OpBase):
     def __call__(
         self,
         sample_dict: NDict,
-        key_in,
+        key_in: str,
         key_out_tokenized_object: str = None,
         key_out_tokens_ids: str = None,
         key_out_attention_mask: str = None,
-        convert_attention_mask_to_bool=True,
-    ):
+        convert_attention_mask_to_bool: bool = True,
+    ) -> NDict:
         # if self._verbose:
         #     print(
         #         f'PID:{os.getpid()} FastTokenizer op sample_id {sample_dict["data.sample_id"]} key_in={key_in} pdb={sample_dict["pdb"]} HeavyChain: {sample_dict["Hchain"]} LightChain: {sample_dict["Lchain"]}'
