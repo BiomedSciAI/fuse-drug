@@ -25,8 +25,9 @@ task_tokens = [  # pairwise tasks
     "MOLECULAR_ENTITY_ANTIGEN",
     "MOLECULAR_ENTITY_ANTIBODY_HEAVY_CHAIN",
     "MOLECULAR_ENTITY_ANTIBODY_LIGHT_CHAIN",
-    "MOLECULAR_ENTITY_TCR_LIGHT_CHAIN",
-    "MOLECULAR_ENTITY_TCR_HEAVY_CHAIN",
+    "MOLECULAR_ENTITY_TCR_ALPHA_CHAIN",  # TCR "light" chain - only V, J and C segments
+    "MOLECULAR_ENTITY_TCR_BETA_VDJ",  # TCR "heavy" chain - V(ariable), D(iversity), and J(oining) segments, as well as the C(onstant) segment
+    "MOLECULAR_ENTITY_TCR_BETA_CDR3",
     "BINDING_AFFINITY_CLASS",
     "DECODER_START",
     "BINDING",  # Binding affinity prediction task
@@ -347,7 +348,7 @@ def get_additional_tokens(subset: Optional[Union[str, List]] = None) -> List:
 
 
     Args:
-        subset ([Union[str, List]]): a subset of ['special_tokens', 'task_tokens', 'AA_tokens'], marking which groups of tokens to include. Defaults to None (include all).
+        subset ([Union[str, List]]): a subset of ['special', 'task', 'AA'], marking which groups of tokens to include. Defaults to None (include all).
 
     Returns:
         List: _description_

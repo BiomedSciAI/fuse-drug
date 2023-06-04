@@ -1,10 +1,10 @@
 import hydra
 from omegaconf import DictConfig, OmegaConf
-from multi_tokenizer import ModularTokenizer
+from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import ModularTokenizer
 import os
 from typing import Dict, Optional, Any, List
 from collections.abc import Generator
-from fusedrug.data.tokenizer.modulartokenizer.multi_tokenizer import TypedInput
+from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import TypedInput
 
 from special_tokens import get_additional_tokens, get_special_tokens_dict
 from tokenizers import (
@@ -14,6 +14,7 @@ from tokenizers import (
 )
 import pandas as pd
 import traceback
+import copy
 
 TITAN_AA_PATH = os.environ["TITAN_DATA"] + "/public/epitopes.csv"
 TITAN_SMILES_PATH = os.environ["TITAN_DATA"] + "/public/epitopes.smi"
@@ -28,6 +29,7 @@ def test_tokenizer(t_inst: ModularTokenizer, cfg_raw: Dict, mode: Optional[str] 
     ]
     # TODO: named tuples with specific properties, e.g. max_len for every input, not for input type
     # Test general encoding: (per-tokenizer truncation works)
+    t_inst = copy.deepcopy(t_inst)
 
     enc = t_inst.encode_list(
         typed_input_list=input_strings,
