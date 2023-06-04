@@ -1,4 +1,4 @@
-from typing import Optional, Dict, Union, List, Tuple
+from typing import Optional, Dict, Union, List, Tuple, Any
 import gzip
 import io
 import os
@@ -62,7 +62,7 @@ def save_structure_file(
     b_factors: Optional[Dict[str, torch.Tensor]] = None,
     reference_cif_filename: Optional[str] = None,
     mask: Optional[List] = None,
-) -> None:
+) -> List[str]:
     """
     A helper function allowing to save single or multi chain structure into pdb and/or mmcif format.
 
@@ -78,6 +78,9 @@ def save_structure_file(
         b_factors -
         reference_cif_filename:Optional[str] - for mmCIF outputs you must provide an mmCIF reference file (you can use the ground truth one)
         mask:Optional[List] - a mask describing which residues to store
+
+    Returns:
+        A list with paths for all saved files
     """
     assert save_pdb or save_cif
     assert len(chain_to_atom14) > 0
@@ -90,6 +93,8 @@ def save_structure_file(
         sorted_chain_ids = sorted(list(chain_to_aa_str_seq.keys()))
 
     assert (chain_to_aa_str_seq is not None) or (chain_to_aa_index_seq is not None)
+
+    all_saved_files = []
 
     if save_cif:
         if len(chain_to_aa_str_seq) > 1:
@@ -105,6 +110,8 @@ def save_structure_file(
                     chain_to_atom14=chain_to_atom14,
                     output_mmcif_filename=out_multimer_cif_filename,
                 )
+
+                all_saved_files.append(out_multimer_cif_filename)
             else:
                 print(
                     f'not writing multimer file because "reference_cif_filename" was not provided for {reference_cif_filename}'
@@ -132,6 +139,8 @@ def save_structure_file(
                 model=0,
             )
 
+            all_saved_files.append(out_pdb)
+
         if save_cif:
             out_cif = output_filename_extensionless + "_chain_" + chain_id + ".cif"
             if reference_cif_filename is not None:
@@ -143,10 +152,13 @@ def save_structure_file(
                     chain_to_atom14={chain_id: chain_to_atom14[chain_id]},
                     output_mmcif_filename=out_cif,
                 )
+
+                all_saved_files.append(out_cif)
             else:
                 print(
                     f'not writing chain cif file because no "reference_cif_filename" was provided for {reference_cif_filename}'
                 )
+    return all_saved_files
 
 
 def get_chain_native_features(
@@ -222,10 +234,13 @@ def get_chain_native_features(
         gt_all_mmcif_feats = gt_data["mmcif_feats"]
         gt_sequence = gt_data["input_sequence"]
         # move to device
-        gt_mmcif_feats = {k: gt_all_mmcif_feats[k] for k in ["aatype", "all_atom_positions", "all_atom_mask"]}
+        gt_mmcif_feats = {
+            k: gt_all_mmcif_feats[k] for k in ["aatype", "all_atom_positions", "all_atom_mask", "resolution"]
+        }
 
         to_tensor = lambda t: torch.tensor(np.array(t)).to(device)
         gt_mmcif_feats = tree_map(to_tensor, gt_mmcif_feats, np.ndarray)
+
         # as make_atom14_masks & make_atom14_positions seems to expect indices and not one-hots !
         gt_mmcif_feats["aatype"] = gt_mmcif_feats["aatype"].argmax(axis=-1)
 
@@ -239,13 +254,13 @@ def get_chain_native_features(
     gt_mmcif_feats = data_transforms.make_atom14_positions(gt_mmcif_feats)
 
     # for reference, remember .../openfold/openfold/data/input_pipeline.py
-    # data_transforms.make_atom14_masks,
-    # data_transforms.make_atom14_positions,
-    # data_transforms.atom37_to_frames,
+    # data_transforms.make_atom14_masks
+    # data_transforms.make_atom14_positions
+    # data_transforms.atom37_to_frames
     # data_transforms.atom37_to_torsion_angles(""),
-    # data_transforms.make_pseudo_beta(""),
-    # data_transforms.get_backbone_frames,
-    # data_transforms.get_chi_angles,
+    gt_mmcif_feats = data_transforms.make_pseudo_beta_no_curry(gt_mmcif_feats)
+    # data_transforms.get_backbone_frames
+    # data_transforms.get_chi_angles
 
     gt_mmcif_feats["pdb_id"] = pdb_id
     gt_mmcif_feats["chain_id"] = chain_id
@@ -736,8 +751,8 @@ def create_biopython_structure(
     return pred_structure
 
 
-def biopython_structure_to_mmcif_file(  # type: ignore
-    biopython_structure,
+def biopython_structure_to_mmcif_file(
+    biopython_structure: Structure,
     store_chains: List[str],
     output_mmcif_filename: str,
     verbose: int = 0,

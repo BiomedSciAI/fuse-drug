@@ -19,8 +19,8 @@ import sys
 import socket
 from fuse.utils.file_io import read_simple_int_file
 from clearml import Task
-from pl_model import AffinityPredictorModule  # TODO: fix import path for fuse drug
-from pl_data import AffinityDataModule  # TODO: fix import path
+from pl_model import AffinityPredictorModule
+from pl_data import AffinityDataModule
 import colorama
 
 from colorama import Fore
