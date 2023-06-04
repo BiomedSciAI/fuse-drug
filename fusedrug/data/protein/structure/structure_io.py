@@ -1,4 +1,4 @@
-from typing import Optional, Dict, Union, List, Tuple, Any
+from typing import Optional, Dict, Union, List, Tuple
 import gzip
 import io
 import os
