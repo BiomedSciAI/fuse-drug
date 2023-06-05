@@ -1,10 +1,10 @@
 import hydra
 from omegaconf import DictConfig, OmegaConf
-from multi_tokenizer import ModularTokenizer
+from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import ModularTokenizer
 import os
 from typing import Dict, Optional, Any, List
 from collections.abc import Generator
-from fusedrug.data.tokenizer.modulartokenizer.multi_tokenizer import TypedInput
+from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import TypedInput
 
 from special_tokens import get_additional_tokens, get_special_tokens_dict
 from tokenizers import (
@@ -14,6 +14,7 @@ from tokenizers import (
 )
 import pandas as pd
 import traceback
+import copy
 
 TITAN_AA_PATH = os.environ["TITAN_DATA"] + "/public/epitopes.csv"
 TITAN_SMILES_PATH = os.environ["TITAN_DATA"] + "/public/epitopes.smi"
@@ -28,6 +29,7 @@ def test_tokenizer(t_inst: ModularTokenizer, cfg_raw: Dict, mode: Optional[str] 
     ]
     # TODO: named tuples with specific properties, e.g. max_len for every input, not for input type
     # Test general encoding: (per-tokenizer truncation works)
+    t_inst = copy.deepcopy(t_inst)
 
     enc = t_inst.encode_list(
         typed_input_list=input_strings,
@@ -40,6 +42,13 @@ def test_tokenizer(t_inst: ModularTokenizer, cfg_raw: Dict, mode: Optional[str] 
         max_len=50,
     )
     assert len(enc_pad.ids) == 50, f"Didn't pad to the expected number of tokens, mode: {mode}"
+
+    t_inst.enable_padding(length=70, pad_token="<PAD>")
+    # Test overall padding: (global padding works)
+    enc_pad = t_inst.encode_list(
+        typed_input_list=input_strings,
+    )
+    assert len(enc_pad.ids) == 70, f"Didn't pad to the expected number of tokens, mode: {mode}"
 
     t_inst.enable_padding(length=70, pad_token="<PAD>")
     # Test overall padding: (global padding works)
@@ -65,7 +74,13 @@ def test_tokenizer(t_inst: ModularTokenizer, cfg_raw: Dict, mode: Optional[str] 
 
     # test id_to_token and token_to_id
     # for a special token
+
+    # test id_to_token and token_to_id
+    # for a special token
     test_token = "<PAD>"
+    print(
+        f"Trying to encode special token {test_token} using token_to_id without supplying context (subtokenizer type). This should succeed since special tokens have unique IDs."
+    )
     print(
         f"Trying to encode special token {test_token} using token_to_id without supplying context (subtokenizer type). This should succeed since special tokens have unique IDs."
     )
@@ -90,9 +105,63 @@ def test_tokenizer(t_inst: ModularTokenizer, cfg_raw: Dict, mode: Optional[str] 
     id1 = t_inst.token_to_id(t_type="AA", token=test_token)
     id2 = t_inst.token_to_id(token=test_token, t_type="SMILES")
     print(f"{test_token} encodes to {id1} (AA) and {id2} (SMILES)")
+    print(f"{test_token} encodes to {id1} (default) and {id2} (SMILES)")
     test_token_dec = t_inst.id_to_token(id1)
     print(f"{id1} decodes to {test_token_dec} ")
     assert test_token == test_token_dec, "id_to_token(token_to_id) is not consistent"
+
+    # for a regular token
+    test_token = "C"
+    print(
+        f"Trying to encode regular token {test_token} using token_to_id without supplying context (subtokenizer type). This should fail, since there are several ids C encodes to."
+    )
+    try:
+        id1 = t_inst.token_to_id(test_token)
+    except:
+        print("As expected, this did not work. Got the following exception:")
+        traceback.print_exc()
+    print(f"Now trying to encode token {test_token} using token_to_id using specific subtokenizer:")
+    id1 = t_inst.token_to_id(t_type="AA", token=test_token)
+    id2 = t_inst.token_to_id(token=test_token, t_type="SMILES")
+    print(f"{test_token} encodes to {id1} (AA) and {id2} (SMILES)")
+    test_token_dec = t_inst.id_to_token(id1)
+    print(f"{id1} decodes to {test_token_dec} ")
+    assert test_token == test_token_dec, "id_to_token(token_to_id) is not consistent"
+
+    test_token = "abracadabra"
+    print(f"Trying to encode a nonexisting token {test_token} using token_to_id. This should return None.")
+    id1 = t_inst.token_to_id(test_token)
+    assert id1 is None, "encoded a nonexisting token {test_token} to a valid id {id1}"
+
+    # test max token ID
+    max_id = t_inst.get_max_id()
+    tokenizer_vocab_size = t_inst.get_vocab_size()
+    print(
+        f"tokenizer max id is {max_id}, of which max mapped id is {t_inst._get_max_mapped_id()}, and vocabulary size: {tokenizer_vocab_size}"
+    )
+    added_vocab = t_inst.get_added_vocab()
+    print(f"Found {len(added_vocab)} added tokens")
+
+    # Test special token addition to the tokenizer
+    print(
+        f"Adding 6 special tokens, of which 2 are already in the tokenizer vocabulary (as special). Expecting the number of special tokens to increase by 4, from {len(added_vocab)} to {len(added_vocab)+4}"
+    )
+    special_tokens_to_add = [
+        "<test_token_1>",
+        "<test_token_2>",
+        "<test_token_3>",
+        "<test_token_4>",
+        "<SEP>",
+        "<SENTINEL_ID_1>",
+    ]
+    t_inst.add_special_tokens(special_tokens_to_add)
+    max_id = t_inst.get_max_id()
+    tokenizer_vocab_size = t_inst.get_vocab_size()
+    print(
+        f"tokenizer max id is {max_id}, of which max mapped id is {t_inst._get_max_mapped_id()}, and vocabulary size: {tokenizer_vocab_size}"
+    )
+    added_vocab = t_inst.get_added_vocab()
+    print(f"Found {len(added_vocab)} added tokens")
 
     test_token = "abracadabra"
     print(f"Trying to encode a nonexisting token {test_token} using token_to_id. This should return None.")
@@ -178,7 +247,13 @@ def main(cfg: DictConfig) -> None:
     # )  # uncomment if a new AA tokenizer is needed. Note - be really careful about it as this will override any existing tokenizer
     special_tokens_dict = get_special_tokens_dict()
     added_tokens_list = get_additional_tokens(["task"])
+    added_tokens_list = get_additional_tokens(["task"])
     cfg_tokenizer: Dict[str, Any] = cfg_raw["data"]["tokenizer"]
+    t_mult = ModularTokenizer(
+        **cfg_tokenizer,
+        special_tokens_dict=special_tokens_dict,
+        additional_tokens_list=added_tokens_list,
+    )
     t_mult = ModularTokenizer(
         **cfg_tokenizer,
         special_tokens_dict=special_tokens_dict,
