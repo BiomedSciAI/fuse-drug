@@ -1034,7 +1034,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             )
 
         if len(tokens) == 0:
-            return
+            return 0
 
         if self._max_special_token_id is not None:
             if len(tokens_regular) > 0:

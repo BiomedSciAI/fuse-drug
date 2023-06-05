@@ -1,8 +1,6 @@
 from fuse.utils import NDict
 from fuse.data import OpBase, get_sample_id
-from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import (
-    ModularTokenizer as Tokenizer,
-)
+from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import ModularTokenizer as Tokenizer
 from warnings import warn
 from collections import defaultdict
 from typing import Tuple, Optional, Union, Any
