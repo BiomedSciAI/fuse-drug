@@ -733,7 +733,6 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         #             f"tokenizer remapping resulted in IDs greater (max_id={self._get_max_mapped_id()}) than max_possible_id ({self._max_possible_token_id}). Reinitialize the modular tokenizer with larger max_possible_id"
         #         )
 
-
     def add_tokenizers(
         self,
     ) -> None:
@@ -991,7 +990,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
 
         TODO: If we try to add special tokens and reach max_special ID, allow the option to add part of the tokens to the
         remaining buffer space, and the rest after max taken regular ID
-
+        """
 
         def update_vocab(
             vocab: Dict,
