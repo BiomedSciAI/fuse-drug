@@ -1,9 +1,19 @@
-from typing import List
+from typing import List, Dict
 from fusedrug.data.protein.structure.sabdab import load_sabdab_dataframe
 import pandas as pd
-from collections import namedtuple
+from collections import namedtuple, defaultdict
+import abnumber
 
 Antibody = namedtuple("Antibody", "pdb_id index_within_pdb light_chain_id heavy_chain_id antigen_chain_id")
+
+
+def get_antibody_regions(sequence: str, scheme: str = "chothia") -> Dict[str, str]:
+    chain = abnumber.Chain(sequence, scheme=scheme)
+    ans = {
+        region: getattr(chain, region)
+        for region in ["fr1_seq", "cdr1_seq", "fr2_seq", "cdr2_seq", "fr3_seq", "cdr3_seq", "fr4_seq"]
+    }
+    return ans
 
 
 def get_antibodies_info_from_sabdab(antibodies_pdb_ids: List[str]) -> List[Antibody]:
@@ -44,7 +54,7 @@ def get_antibodies_info_from_sabdab(antibodies_pdb_ids: List[str]) -> List[Antib
     return antibodies
 
 
-def get_omegafold_preprint_test_antibodies():
+def get_omegafold_preprint_test_antibodies() -> List[str]:
     """
     https://www.biorxiv.org/content/10.1101/2022.07.21.500999v1
     Figure 2
