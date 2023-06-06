@@ -1,8 +1,6 @@
 from fuse.utils import NDict
 from fuse.data import OpBase, get_sample_id
-from fusedrug.data.tokenizer.modulartokenizer.multi_tokenizer import (
-    ModularTokenizer as Tokenizer,
-)
+from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import ModularTokenizer as Tokenizer
 from warnings import warn
 from collections import defaultdict
 from typing import Tuple, Optional, Union, Any
@@ -81,20 +79,6 @@ class FastModularTokenizer(OpBase):
 
         if self._verbose:
             self._debug_max_tokenized_len_encountered = defaultdict(int)
-
-    # note: use normalizer.Sequence to chain multiple normalizers
-    def set_normalizer(self, normalizer: Any) -> None:
-        # self._tokenizer.normalizer = normalizer
-        raise Exception("Not implemented")
-
-    # note: use pre_toknizers.Sequence to chain multiple pre_toknizers
-    def set_pre_tokenizer(self, pre_tokenizer: Any) -> None:
-        # self._tokenizer.pre_tokenizer = pre_tokenizer
-        raise Exception("Not implemented")
-
-    def set_post_processor(self, post_processor: Any) -> None:
-        # self._tokenizer.post_processor = post_processor
-        raise Exception("Not implemented")
 
     def get_vocab_size(self) -> int:
         return self._tokenizer.get_vocab_size()

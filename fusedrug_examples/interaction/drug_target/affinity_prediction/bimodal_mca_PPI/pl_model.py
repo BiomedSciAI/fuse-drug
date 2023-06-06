@@ -25,8 +25,8 @@ MODEL_FACTORY = {
 class AffinityPredictorModule(pl.LightningModule):
     def __init__(
         self,
-        **model_params: dict,  # will be passed to base model
-    ) -> None:
+        **model_params: dict,
+    ) -> None:  # will be passed to base model
         """
         Affinity Predictor
 

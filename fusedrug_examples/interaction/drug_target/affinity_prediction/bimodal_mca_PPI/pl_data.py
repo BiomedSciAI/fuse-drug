@@ -25,17 +25,11 @@ from fusedrug.data.tokenizer.ops import (
     Op_pytoda_SMILESTokenizer,
     Op_pytoda_ProteinTokenizer,
 )
-from fusedrug.data.interaction.drug_target.loaders import (
-    DrugTargetAffinityLoader as PeptideTargetAffinityLoader,
-)
+from fusedrug.data.interaction.drug_target.loaders import DrugTargetAffinityLoader as PeptideTargetAffinityLoader
 from torch.utils.data import DataLoader
 
-from fusedrug.data.molecule.tokenizer.pretrained import (
-    get_path as get_molecule_pretrained_tokenizer_path,
-)
-from fusedrug.data.protein.tokenizer.pretrained import (
-    get_path as get_protein_pretrained_tokenizer_path,
-)
+from fusedrug.data.molecule.tokenizer.pretrained import get_path as get_molecule_pretrained_tokenizer_path
+from fusedrug.data.protein.tokenizer.pretrained import get_path as get_protein_pretrained_tokenizer_path
 from typing import Optional
 from fuse.utils import NDict
 from fusedrug.utils.file_formats import IndexedTextTable
