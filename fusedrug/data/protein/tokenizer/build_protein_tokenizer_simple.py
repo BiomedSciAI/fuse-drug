@@ -97,7 +97,11 @@ def _get_raw_vocab_dict(name):
 @click.command()
 @click.argument("vocab_name")
 @click.argument("output_tokenizer_json_file")
-@click.option("--unknown-token", default="<UNK>", help="allows to override the default unknown token")
+@click.option(
+    "--unknown-token",
+    default="<UNK>",
+    help="allows to override the default unknown token",
+)
 def main(vocab_name: str, output_tokenizer_json_file: str, unknown_token: str):
     """
     Builds a simple (not learned) vocabulary based tokenizer.
@@ -111,8 +115,8 @@ def main(vocab_name: str, output_tokenizer_json_file: str, unknown_token: str):
 
     build_simple_vocab_protein_tokenizer(
         vocab=vocab_name,
-        unknown_token=unknown_token,
-        save_to_json_file=output_tokenizer_json_file,  #'<UNK>',
+        unknown_token=unknown_token,  #'<UNK>',
+        save_to_json_file=output_tokenizer_json_file,
     )
 
 
