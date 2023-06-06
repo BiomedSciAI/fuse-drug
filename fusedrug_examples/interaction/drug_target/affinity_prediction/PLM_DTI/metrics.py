@@ -1,7 +1,9 @@
-import torch, torchmetrics
+from typing import Tuple
+import torchmetrics
+from torchmetrics.metric import Metric
 
 
-def get_metrics(task):
+def get_metrics(task: str) -> Tuple[Metric, Metric]:
     if task == "dti_dg":
         val_metrics = {
             "val/mse": torchmetrics.MeanSquaredError,
@@ -25,7 +27,7 @@ def get_metrics(task):
     return val_metrics, test_metrics
 
 
-def get_metrics_instances(metrics):
+def get_metrics_instances(metrics: Metric) -> dict:
     metric_dict = {}
     for k, met_class in metrics.items():
         met_instance = met_class()

@@ -2,7 +2,6 @@ import unittest
 from fusedrug.utils.file_formats import IndexedFastaCustom, uniprot_identifier_extractor
 from fusedrug.tests_data import get_tests_data_dir
 import os
-from typing import Union, Tuple
 
 
 class TestIndexedFastaCustom(unittest.TestCase):

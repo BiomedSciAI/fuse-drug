@@ -1,13 +1,13 @@
 from fusedrug.utils.file_formats import IndexedTextFile
 from fuse.utils.multiprocessing import run_multiprocessed, get_from_global_storage
-from typing import Union
+from typing import Union, Tuple
 import numpy as np
 import os
 import click
 from collections import Counter
 
 
-def worker_func(arg):
+def worker_func(arg: Tuple) -> Counter:
     input_smi_path, start_index, chunk_size, read_delim, read_molecule_sequence_column_idx, verbose = arg
     # itf = IndexedTextFile(input_smi_path, process_line_func = lambda x:x)
     itf = get_from_global_storage("indexed_text_file")
@@ -24,13 +24,13 @@ def worker_func(arg):
 
 
 def smi_file_character_histogram_multiprocessed(
-    input_smi_path,
+    input_smi_path: str,
     read_delim: str = "\t",
-    read_molecule_sequence_column_idx=0,
+    read_molecule_sequence_column_idx: int = 0,
     chunk_size: int = 1000,
     num_workers: Union[int, str] = "auto",  # either int or 'auto'
     verbose: int = 1,
-):
+) -> None:
 
     try:
         num_workers_int = int(num_workers)
@@ -83,7 +83,7 @@ def smi_file_character_histogram_multiprocessed(
     default="auto",
     help='number of multliprocessing workers. Pass "auto" to decide based on available cpu cores, pass an integer to specificy a specific number, pass 0 to disable multiprocessing',
 )
-def main(input_smi, read_molecule_sequence_column_idx, chunk, workers):
+def main(input_smi: str, read_molecule_sequence_column_idx: int, chunk: int, workers: int) -> None:
     """
     Outputs a rdkit sanitized version of an smi file (usually containing molecules)
 

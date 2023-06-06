@@ -44,7 +44,7 @@ def get_antibodies_info_from_sabdab(antibodies_pdb_ids: List[str]) -> List[Antib
     return antibodies
 
 
-def get_omegafold_preprint_test_antibodies():
+def get_omegafold_preprint_test_antibodies() -> List[str]:
     """
     https://www.biorxiv.org/content/10.1101/2022.07.21.500999v1
     Figure 2

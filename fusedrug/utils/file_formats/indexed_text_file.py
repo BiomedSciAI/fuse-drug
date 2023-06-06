@@ -1,10 +1,11 @@
 import os
 from fuse.utils.cpu_profiling import Timer
-from fuse.utils.file_io import save_hdf5_safe, load_hdf5, change_extension
+from fuse.utils.file_io import save_hdf5_safe, load_hdf5
 import numpy as np
 from fuse.utils.misc.context import DummyContext
-import click
 from torch.utils.data import Dataset
+from typing import Optional, List, Callable
+
 
 # TODO: add ignore column line (default to False)
 class IndexedTextFile(Dataset):
@@ -21,7 +22,12 @@ class IndexedTextFile(Dataset):
     """
 
     def __init__(
-        self, filename: str, index_filename=None, process_funcs_pipeline=None, force_recreate_index=False, verbose=1
+        self,
+        filename: str,
+        index_filename: Optional[str] = None,
+        process_funcs_pipeline: Optional[List[Callable]] = None,
+        force_recreate_index: bool = False,
+        verbose: int = 1,
     ):
         """
         args:
@@ -88,14 +94,14 @@ class IndexedTextFile(Dataset):
         loaded_hdf5 = load_hdf5(self.index_filename)  # reloading even in the creation time (intentional)
         self.offsets = loaded_hdf5["lines_offsets"]
 
-    def __len__(self):
+    def __len__(self) -> int:
         return self.offsets.shape[0]
 
-    def __iter__(self):
+    def __iter__(self) -> str:
         for i in range(len(self)):
             yield self.__getitem__(i)
 
-    def __getitem__(self, index):
+    def __getitem__(self, index: int) -> str:
         assert isinstance(index, int)  # not supporting named access yet
         offset = self.offsets[index].item()
         with open(self.filename, "rb") as f:

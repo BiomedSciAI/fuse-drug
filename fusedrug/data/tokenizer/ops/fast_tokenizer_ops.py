@@ -6,7 +6,7 @@ from tokenizers.pre_tokenizers import PreTokenizer
 from tokenizers.processors import PostProcessor
 from warnings import warn
 from collections import defaultdict
-from typing import Tuple, Optional, Union
+from typing import Tuple, Optional
 import os
 import re
 
@@ -111,7 +111,7 @@ class FastTokenizer(OpBase):
                 max_token_id = d
 
         if max_token_id is None:
-            raise Exception(f"Could not find max_token_id! possibly an empty vocab.")
+            raise Exception("Could not find max_token_id! possibly an empty vocab.")
         return token_str_of_max_token_id, max_token_id
 
     def get_min_max_sentinels(
