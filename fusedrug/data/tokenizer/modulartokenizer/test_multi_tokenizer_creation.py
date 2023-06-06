@@ -20,7 +20,9 @@ TITAN_AA_PATH = os.environ["TITAN_DATA"] + "/public/epitopes.csv"
 TITAN_SMILES_PATH = os.environ["TITAN_DATA"] + "/public/epitopes.smi"
 
 
-def test_tokenizer(t_inst: ModularTokenizer, cfg_raw: Dict, mode: Optional[str] = "") -> None:
+def test_tokenizer(
+    t_inst: ModularTokenizer, cfg_raw: Dict, mode: Optional[str] = ""
+) -> None:
     input_strings = [
         TypedInput("AA", "<BINDING>ACDEFGHIJKLMNPQRSUVACDEF", 10),
         TypedInput("SMILES", "CCCHHCCCHC", 4),
@@ -41,34 +43,44 @@ def test_tokenizer(t_inst: ModularTokenizer, cfg_raw: Dict, mode: Optional[str] 
         typed_input_list=input_strings,
         max_len=50,
     )
-    assert len(enc_pad.ids) == 50, f"Didn't pad to the expected number of tokens, mode: {mode}"
+    assert (
+        len(enc_pad.ids) == 50
+    ), f"Didn't pad to the expected number of tokens, mode: {mode}"
 
     t_inst.enable_padding(length=70, pad_token="<PAD>")
     # Test overall padding: (global padding works)
     enc_pad = t_inst.encode_list(
         typed_input_list=input_strings,
     )
-    assert len(enc_pad.ids) == 70, f"Didn't pad to the expected number of tokens, mode: {mode}"
+    assert (
+        len(enc_pad.ids) == 70
+    ), f"Didn't pad to the expected number of tokens, mode: {mode}"
 
     t_inst.enable_padding(length=70, pad_token="<PAD>")
     # Test overall padding: (global padding works)
     enc_pad = t_inst.encode_list(
         typed_input_list=input_strings,
     )
-    assert len(enc_pad.ids) == 70, f"Didn't pad to the expected number of tokens, mode: {mode}"
+    assert (
+        len(enc_pad.ids) == 70
+    ), f"Didn't pad to the expected number of tokens, mode: {mode}"
 
     # Test overall cropping: (global truncation works)
     enc_trunc = t_inst.encode_list(
         typed_input_list=input_strings,
         max_len=15,
     )
-    assert len(enc_trunc.ids) == 15, f"Didn't truncate to the expected number of tokens, mode: {mode}"
+    assert (
+        len(enc_trunc.ids) == 15
+    ), f"Didn't truncate to the expected number of tokens, mode: {mode}"
 
     decoded_tokens = t_inst.decode(ids=list(enc_pad.ids))
     assert (
         "".join(enc_pad.tokens) == decoded_tokens
     ), f"decoded tokens do not correspond to the original tokens, mode: {mode}"
-    decoded_tokens_no_special = t_inst.decode(ids=list(enc_pad.ids), skip_special_tokens=True)
+    decoded_tokens_no_special = t_inst.decode(
+        ids=list(enc_pad.ids), skip_special_tokens=True
+    )
     print(f"decoded tokens: {decoded_tokens}")
     print(f"decoded tokens, no special tokens: {decoded_tokens_no_special}")
 
@@ -101,7 +113,9 @@ def test_tokenizer(t_inst: ModularTokenizer, cfg_raw: Dict, mode: Optional[str] 
     except:
         print("As expected, this did not work. Got the following exception:")
         traceback.print_exc()
-    print(f"Now trying to encode token {test_token} using token_to_id using specific subtokenizer:")
+    print(
+        f"Now trying to encode token {test_token} using token_to_id using specific subtokenizer:"
+    )
     id1 = t_inst.token_to_id(t_type="AA", token=test_token)
     id2 = t_inst.token_to_id(token=test_token, t_type="SMILES")
     print(f"{test_token} encodes to {id1} (AA) and {id2} (SMILES)")
@@ -120,7 +134,9 @@ def test_tokenizer(t_inst: ModularTokenizer, cfg_raw: Dict, mode: Optional[str] 
     except:
         print("As expected, this did not work. Got the following exception:")
         traceback.print_exc()
-    print(f"Now trying to encode token {test_token} using token_to_id using specific subtokenizer:")
+    print(
+        f"Now trying to encode token {test_token} using token_to_id using specific subtokenizer:"
+    )
     id1 = t_inst.token_to_id(t_type="AA", token=test_token)
     id2 = t_inst.token_to_id(token=test_token, t_type="SMILES")
     print(f"{test_token} encodes to {id1} (AA) and {id2} (SMILES)")
@@ -129,7 +145,9 @@ def test_tokenizer(t_inst: ModularTokenizer, cfg_raw: Dict, mode: Optional[str] 
     assert test_token == test_token_dec, "id_to_token(token_to_id) is not consistent"
 
     test_token = "abracadabra"
-    print(f"Trying to encode a nonexisting token {test_token} using token_to_id. This should return None.")
+    print(
+        f"Trying to encode a nonexisting token {test_token} using token_to_id. This should return None."
+    )
     id1 = t_inst.token_to_id(test_token)
     assert id1 is None, "encoded a nonexisting token {test_token} to a valid id {id1}"
 
@@ -164,7 +182,9 @@ def test_tokenizer(t_inst: ModularTokenizer, cfg_raw: Dict, mode: Optional[str] 
     print(f"Found {len(added_vocab)} added tokens")
 
     test_token = "abracadabra"
-    print(f"Trying to encode a nonexisting token {test_token} using token_to_id. This should return None.")
+    print(
+        f"Trying to encode a nonexisting token {test_token} using token_to_id. This should return None."
+    )
     id1 = t_inst.token_to_id(test_token)
     assert id1 is None, "encoded a nonexisting token {test_token} to a valid id {id1}"
 
@@ -205,7 +225,9 @@ def create_base_AA_tokenizer(cfg_raw: Dict[str, Any]) -> None:
         for i in range(0, len(dataset), 1000):
             yield dataset[i : i + 1000]
 
-    AA_vocab_data = pd.read_csv(TITAN_AA_PATH, sep="\t", header=None, names=["repr", "ID"])
+    AA_vocab_data = pd.read_csv(
+        TITAN_AA_PATH, sep="\t", header=None, names=["repr", "ID"]
+    )
 
     # Tokenizer example taken from https://huggingface.co/course/chapter6/8?fw=pt
 
@@ -213,7 +235,9 @@ def create_base_AA_tokenizer(cfg_raw: Dict[str, Any]) -> None:
     unwrapped_AA_tokenizer = Tokenizer(models.BPE())
     added_tokens = get_additional_tokens(subset=["special", "task"])
     initial_alphabet = get_additional_tokens(subset="AA")
-    trainer_AA = trainers.BpeTrainer(vocab_size=100, special_tokens=added_tokens, initial_alphabet=initial_alphabet)
+    trainer_AA = trainers.BpeTrainer(
+        vocab_size=100, special_tokens=added_tokens, initial_alphabet=initial_alphabet
+    )
     unwrapped_AA_vocab = list(AA_vocab_data["repr"])
     unwrapped_AA_tokenizer.train_from_iterator(
         get_training_corpus(dataset=unwrapped_AA_vocab),
@@ -234,7 +258,9 @@ def create_base_AA_tokenizer(cfg_raw: Dict[str, Any]) -> None:
     print("Fin")
 
 
-@hydra.main(config_path="./configs", config_name="tokenizer_config_personal", version_base=None)
+@hydra.main(
+    config_path="./configs", config_name="tokenizer_config_personal", version_base=None
+)
 def main(cfg: DictConfig) -> None:
     print(str(cfg))
 
@@ -248,11 +274,6 @@ def main(cfg: DictConfig) -> None:
     special_tokens_dict = get_special_tokens_dict()
     added_tokens_list = get_additional_tokens(["task"])
     cfg_tokenizer: Dict[str, Any] = cfg_raw["data"]["tokenizer"]
-    t_mult = ModularTokenizer(
-        **cfg_tokenizer,
-        special_tokens_dict=special_tokens_dict,
-        additional_tokens_list=added_tokens_list,
-    )
     t_mult = ModularTokenizer(
         **cfg_tokenizer,
         special_tokens_dict=special_tokens_dict,
