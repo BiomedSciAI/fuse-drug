@@ -70,7 +70,7 @@ Returns the input token's corresponding ID.
 ### Creation:
 An example of creation of a new modular tokenizer from a word-level AA sequence tokenizer and a BPE SMILES tokenizer is found here: [ModularTokenizer creation](https://github.com/BiomedSciAI/fuse-drug/blob/5aaef572df7679606ec8a8a181013e54448f5ad5/fusedrug/data/tokenizer/modulartokenizer/test_multi_tokenizer_creation.py#L238)
 
-It uses this config: [tokenizer_config.py](https://github.com/BiomedSciAI/fuse-drug/blob/main/fusedrug/data/tokenizer/modulartokenizer/configs/tokenizer_config.yaml). Note: this line [path definition](https://github.com/BiomedSciAI/fuse-drug/blob/5aaef572df7679606ec8a8a181013e54448f5ad5/fusedrug/data/tokenizer/modulartokenizer/configs/tokenizer_config.yaml#L3) needs to be changed so that _your_path_ points to cloned fuse-drug parent directory.
+It uses this config: [tokenizer_config.py](configs/tokenizer_config.yaml). Note: this line [path definition](configs/tokenizer_config.yaml#L3) needs to be changed so that _your_path_ points to cloned fuse-drug parent directory.
 
 Additional tokens that are added to the newly created tokenizer are defined in [special_tokens.py](https://github.com/BiomedSciAI/fuse-drug/blob/main/fusedrug/data/tokenizer/modulartokenizer/special_tokens.py) in special_tokens and task_tokens. Any additional tokens related to task definitions and queries need to be added to task_tokens. special_tokens and task_tokens are loaded in [ModularTokenizer creation](https://github.com/BiomedSciAI/fuse-drug/blob/5aaef572df7679606ec8a8a181013e54448f5ad5/fusedrug/data/tokenizer/modulartokenizer/test_multi_tokenizer_creation.py#L248) by calling get_special_tokens_dict() and get_additional_tokens(["task"]), respectively.
 
