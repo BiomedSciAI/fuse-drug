@@ -719,6 +719,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         tokenizer_info: Dict,
     ) -> None:
         raise Exception("Not implemented")
+
         # 1. Load the tokenizer
         # 2. Create a list of its special tokens
         # 3. Call self.add_special_tokens with the new list
@@ -731,7 +732,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         #         raise Exception(
         #             f"tokenizer remapping resulted in IDs greater (max_id={self._get_max_mapped_id()}) than max_possible_id ({self._max_possible_token_id}). Reinitialize the modular tokenizer with larger max_possible_id"
         #         )
-        #
+
 
     def add_tokenizers(
         self,
@@ -988,10 +989,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         Returns:
             :obj:`int`: The number of tokens that were created in the vocabulary
 
-
         TODO: If we try to add special tokens and reach max_special ID, allow the option to add part of the tokens to the
         remaining buffer space, and the rest after max taken regular ID
-        """
+
 
         def update_vocab(
             vocab: Dict,
