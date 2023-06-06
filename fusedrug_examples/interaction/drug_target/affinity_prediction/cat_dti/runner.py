@@ -13,9 +13,7 @@ import pytorch_lightning as pl
 from pytorch_lightning.callbacks import LearningRateMonitor
 
 from fuse.dl.losses.loss_default import LossDefault
-from fusedrug.data.interaction.drug_target.datasets.fuse_style_dti import (
-    DTIDataModule,
-)
+from fusedrug.data.interaction.drug_target.datasets.fuse_style_dti import DTIDataModule
 from fuse.dl.models.model_wrapper import ModelWrapSeqToDict
 from fuse.dl.models.backbones.backbone_transformer import CrossAttentionTransformerEncoder
 from fuse.dl.models.heads.heads_1D import Head1D
@@ -27,9 +25,7 @@ from fuse.eval.metrics.classification.metrics_classification_common import (
     MetricAUCROC,
     MetricROCCurve,
 )
-from fuse.eval.metrics.classification.metrics_thresholding_common import (
-    MetricApplyThresholds,
-)
+from fuse.eval.metrics.classification.metrics_thresholding_common import MetricApplyThresholds
 
 from fuse.utils.file_io.file_io import create_dir, save_dataframe
 from fuse.dl.lightning.pl_funcs import convert_predictions_to_dataframe

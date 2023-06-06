@@ -1,13 +1,11 @@
-import os
 import hydra
 from omegaconf import DictConfig, OmegaConf
 
-from typing import Tuple, Dict, Optional, Any
+from typing import Dict, Optional, Any
 import pytorch_lightning as pl
 from fuse.utils import NDict
 from fusedrug.data.tokenizer.ops import FastModularTokenizer as FastTokenizer
-from fusedrug.data.tokenizer.modulartokenizer import pretrained_tokenizers
-from fusedrug.data.tokenizer.modulartokenizer.multi_tokenizer import TypedInput
+from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import TypedInput
 
 
 def seed(seed_value: int) -> int:
@@ -16,25 +14,25 @@ def seed(seed_value: int) -> int:
     return seed_value
 
 
-def tokenizer(
-    tokenizer_path: str, encoder_inputs_max_seq_len: int, labels_inputs_max_seq_len: int
-) -> Tuple[FastTokenizer, FastTokenizer]:
-    """
-    Create tokenizer instances. One for encoder input  with encoder_inputs_max_seq_len and one for labels with labels_inputs_max_seq_len
-    """
-    tokenizer_path = os.path.join(pretrained_tokenizers.get_dir_path(), tokenizer_path)
-    encoder_inputs_tokenizer_op = FastTokenizer(
-        tokenizer_path=tokenizer_path,
-        max_size=encoder_inputs_max_seq_len,
-        pad_token="<PAD>",
-    )
-    labels_tokenizer_op = FastTokenizer(
-        tokenizer_path=tokenizer_path,
-        max_size=labels_inputs_max_seq_len,
-        pad_token="<PAD>",
-    )
+# def tokenizer(
+#     tokenizer_path: str, encoder_inputs_max_seq_len: int, labels_inputs_max_seq_len: int
+# ) -> Tuple[FastTokenizer, FastTokenizer]:
+#     """
+#     Create tokenizer instances. One for encoder input  with encoder_inputs_max_seq_len and one for labels with labels_inputs_max_seq_len
+#     """
+#     tokenizer_path = os.path.join(pretrained_tokenizers.get_dir_path(), tokenizer_path)
+#     encoder_inputs_tokenizer_op = FastTokenizer(
+#         tokenizer_path=tokenizer_path,
+#         max_size=encoder_inputs_max_seq_len,
+#         pad_token="<PAD>",
+#     )
+#     labels_tokenizer_op = FastTokenizer(
+#         tokenizer_path=tokenizer_path,
+#         max_size=labels_inputs_max_seq_len,
+#         pad_token="<PAD>",
+#     )
 
-    return encoder_inputs_tokenizer_op, labels_tokenizer_op
+#     return encoder_inputs_tokenizer_op, labels_tokenizer_op
 
 
 def test_tokenizer_op(tokenizer_op_inst: FastTokenizer, max_len: int = None, mode: Optional[str] = "") -> None:
@@ -99,9 +97,6 @@ def test_tokenizer_op(tokenizer_op_inst: FastTokenizer, max_len: int = None, mod
     version_base=None,
 )
 def main(cfg: DictConfig) -> None:
-    print(str(cfg))
-
-    cfg = hydra.utils.instantiate(cfg)
     tmp = OmegaConf.to_object(cfg)
     cfg_raw: Dict[str, Any] = tmp
 

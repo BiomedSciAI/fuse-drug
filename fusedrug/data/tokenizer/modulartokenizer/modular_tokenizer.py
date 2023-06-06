@@ -436,12 +436,15 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
 
     @staticmethod
     def update_id2token_mapping(
-        id2token: Dict[int, str], add_vocab: Dict, is_special: Optional[bool] = False
-    ) -> Dict[int, str]:
+        id2token: Dict[int, Dict], add_vocab: Dict, is_special: Optional[bool] = False
+    ) -> Dict[int, Dict]:
         """Updates id2token mapping with tokens from add_vocab. Returns the updated id2token
 
         Args:
-            id2token (Dict):
+            id2token (Dict): A dictionary of int:{
+                "token":int,
+                "is_special":bool
+                }
             add_vocab (Dict): vocabulary as returned
             is_special (Optional[bool], optional): whether or not add_vocab holds special tokens. Defaults to False.
 
@@ -671,13 +674,20 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             os.makedirs(os.path.dirname(path))
         for t_type in self.tokenizers_info:
             tokenizer_inst = self.tokenizers_info[t_type]["tokenizer_inst"]
+            if self.tokenizers_info[t_type]["json_path"] is not None:
+                input_json_path = self.tokenizers_info[t_type]["json_path"]
+            elif self.tokenizers_info[t_type]["modular_json_path"] is not None:
+                input_json_path = self.tokenizers_info[t_type]["modular_json_path"]
+            else:
+                raise Exception(f"Couldn't find json path for subtokenizer {t_type}")
             write_out_path = get_out_path(
-                input_json_path=self.tokenizers_info[t_type]["json_path"],
+                input_json_path=input_json_path,
                 base_path=path,
             )
-            # json paths in the save config are meaningless, since the saves may pass between machines, and the base directory for the save may change.
+            # json paths in the save config are meaningless, since the saves may pass between machines, and the base directory for the save may change,
+            # therefore the json path in config is set to ./json_filename.json
             config_out_path = get_out_path(
-                input_json_path=self.tokenizers_info[t_type]["json_path"],
+                input_json_path=input_json_path,
                 base_path=None,
             )
             tokenizers_info_cfg = set_field(
@@ -687,12 +697,12 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 val=config_out_path,
             )
             # Original json path (for the json of the tokenizer used to create the original instance of this ModularTokenizer) is no longer relevant,
-            # since it may be located on another machine. None is used instead.
+            # since it may be located on another machine. config_out_path is used instead.
             tokenizers_info_cfg = set_field(
                 tokenizers_info_cfg=tokenizers_info_cfg,
                 name=t_type,
                 key="json_path",
-                val=None,
+                val=config_out_path,
             )
             tokenizer_inst.save(write_out_path)
         tokenizer_config_overall = {
@@ -1023,13 +1033,16 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 f"Trying to add to the tokenizer tokens that are currently regular tokens in the tokenizer. Choose other token names. Conflicting tokens are {tokens_regular}"
             )
 
+        if len(tokens) == 0:
+            return 0
+
         if self._max_special_token_id is not None:
             if len(tokens_regular) > 0:
                 raise Exception(
                     f"Trying to add to the tokenizer tokens that are currently regular tokens in the tokenizer. Since _max_special_token_id is set, there is no way to uphold it without remapping existing IDs. Conflicting tokens are {tokens_regular}"
                 )
             max_id = self._max_special_token_id
-            next_id: Union[int, None] = max(special_vocab.values()) + 1
+            next_id: int = max(special_vocab.values()) + 1
             if max_id - next_id < len(tokens):
                 raise Exception("Not enough free special token space left")
         elif self._max_possible_token_id is not None:
@@ -1176,9 +1189,11 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 raise Exception(f"pad_token {pad_token} does not correspond to pad_id {pad_id}")
         # at this point either padding token or id (or both) must be not None:
         if pad_id is None:
-            pad_id = self.token_to_id(pad_token)
+            if pad_token is not None:
+                pad_id = self.token_to_id(pad_token)
         if pad_token is None:
-            pad_token = self.id_to_token(pad_id)
+            if pad_id is not None:
+                pad_token = self.id_to_token(pad_id)
 
         self._pad_token_type_id = pad_type_id
         self._pad_token = pad_token
@@ -1577,7 +1592,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         """
         raise Exception("Not implemented")
 
-    def token_to_id(self, token: str, t_type: Optional[str] = None) -> int:
+    def token_to_id(self, token: str, t_type: Optional[str] = None) -> Union[int, None]:
         """
         Convert the given token to its corresponding id if it exists
         In general, token_to_id is undefined for MultiTokenizer because the same
@@ -1712,7 +1727,7 @@ class ModularMultiTokenizerOp(OpBase):
         self.mtokenizer = tokenizer_gen_inst
         self._verbose = verbose
 
-    def token_to_id(self, token_str: str) -> int:
+    def token_to_id(self, token_str: str) -> Union[int, None]:
         """returns the id the token maps to
 
         Args:

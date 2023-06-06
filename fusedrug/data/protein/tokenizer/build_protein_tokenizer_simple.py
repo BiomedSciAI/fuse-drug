@@ -111,8 +111,8 @@ def main(vocab_name: str, output_tokenizer_json_file: str, unknown_token: str):
 
     build_simple_vocab_protein_tokenizer(
         vocab=vocab_name,
-        unknown_token=unknown_token,  #'<UNK>',
-        save_to_json_file=output_tokenizer_json_file,
+        unknown_token=unknown_token,
+        save_to_json_file=output_tokenizer_json_file,  #'<UNK>',
     )
 
 

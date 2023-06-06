@@ -1,13 +1,13 @@
 tokenizers_info:
 - name: AA
   tokenizer_id: 0
-  json_path: null
+  json_path: ./t5_tokenizer_AA_special.json
   modular_json_path: ./t5_tokenizer_AA_special.json
   start_delimiter: <start_AA>
   end_delimiter: <end_AA>
 - name: SMILES
   tokenizer_id: 1
-  json_path: null
+  json_path: ./bpe_tokenizer_trained_on_chembl_zinc_with_aug_4272372_samples_balanced_1_1.json
   modular_json_path: ./bpe_tokenizer_trained_on_chembl_zinc_with_aug_4272372_samples_balanced_1_1.json
   start_delimiter: <start_SMILES>
   end_delimiter: <end_SMILES>
