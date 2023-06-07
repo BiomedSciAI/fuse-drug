@@ -779,7 +779,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         # set_sequence_id does not always work.
         # Instead of changing the sequence IDS, it sometimes does nothing (probably due to nonunique seq. ids, if we use the same tokenizer for several sequences)
         # In order for this to work, IDs must start with 0 and continue as a sequence of integers.
-        encoded.set_sequence_id(sequence_id)
+        for ind_id in range(1, sequence_id + 1):
+            encoded.set_sequence_id(ind_id)
 
         return encoded
 
@@ -810,7 +811,11 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             Encoding: _description_
         """
         encoded_list = []
-        curr_sequence_id = 0
+        # sequence_ids and sequence_names are an initial implementation of a currently broken huggingface
+        # tokenizer functionality (Encoding.merge() does not preserve all sequence IDs).
+        sequence_ids = []  # sequence id for each token (starting with 1)
+        sequence_types = []  # encoder name used for each token
+        curr_sequence_id = 1
         for inpt in typed_input_list:
             input_type = inpt.input_type
             data_str = inpt.input_string
@@ -823,7 +828,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             if sub_max_len is not None:
                 sub_encoding.truncate(max_length=sub_max_len)
             encoded_list.append(sub_encoding)
-
+            sequence_ids.extend([curr_sequence_id] * len(sub_encoding))
+            sequence_types.extend([input_type] * len(sub_encoding))
             curr_sequence_id += 1
             # KEEP THIS AS DOC FOR NOW
             # encoded has attributes [ids, type_ids, tokens, offsets, attention_mask, special_tokens_mask, overflowing]
