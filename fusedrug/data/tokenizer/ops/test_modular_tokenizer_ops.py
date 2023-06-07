@@ -14,27 +14,6 @@ def seed(seed_value: int) -> int:
     return seed_value
 
 
-# def tokenizer(
-#     tokenizer_path: str, encoder_inputs_max_seq_len: int, labels_inputs_max_seq_len: int
-# ) -> Tuple[FastTokenizer, FastTokenizer]:
-#     """
-#     Create tokenizer instances. One for encoder input  with encoder_inputs_max_seq_len and one for labels with labels_inputs_max_seq_len
-#     """
-#     tokenizer_path = os.path.join(pretrained_tokenizers.get_dir_path(), tokenizer_path)
-#     encoder_inputs_tokenizer_op = FastTokenizer(
-#         tokenizer_path=tokenizer_path,
-#         max_size=encoder_inputs_max_seq_len,
-#         pad_token="<PAD>",
-#     )
-#     labels_tokenizer_op = FastTokenizer(
-#         tokenizer_path=tokenizer_path,
-#         max_size=labels_inputs_max_seq_len,
-#         pad_token="<PAD>",
-#     )
-
-#     return encoder_inputs_tokenizer_op, labels_tokenizer_op
-
-
 def test_tokenizer_op(tokenizer_op_inst: FastTokenizer, max_len: int = None, mode: Optional[str] = "") -> None:
     print("Testing limited-in-length sub-tokenizer inputs")
     input_list = [
