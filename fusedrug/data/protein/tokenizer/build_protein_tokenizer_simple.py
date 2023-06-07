@@ -93,7 +93,11 @@ def _get_raw_vocab_dict(name: str) -> Union[IUPAC_VOCAB, UNIREP_VOCAB]:
 @click.command()
 @click.argument("vocab_name")
 @click.argument("output_tokenizer_json_file")
-@click.option("--unknown-token", default="<UNK>", help="allows to override the default unknown token")
+@click.option(
+    "--unknown-token",
+    default="<UNK>",
+    help="allows to override the default unknown token",
+)
 def main(vocab_name: str, output_tokenizer_json_file: str, unknown_token: str) -> None:
     """
     Builds a simple (not learned) vocabulary based tokenizer.
