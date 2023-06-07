@@ -4,7 +4,7 @@ from collections import Counter
 
 
 class TestFastBalancedSampler(unittest.TestCase):
-    def test_fast_balanced_sampler(self):
+    def test_fast_balanced_sampler(self) -> None:
         sampler = FastBalancedSampler(
             datasets_lengths=[10, 20, 30],
             minibatch_pattern=[3, 2, 1],

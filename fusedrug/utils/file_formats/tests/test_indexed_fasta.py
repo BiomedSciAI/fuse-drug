@@ -5,7 +5,7 @@ import os
 
 
 class TestIndexedFasta(unittest.TestCase):
-    def test_indexed_fasta(self):
+    def test_indexed_fasta(self) -> None:
         file_path = os.path.join(get_tests_data_dir(), "example_viral_proteins.fasta")
         ifasta = IndexedFasta(file_path)
 

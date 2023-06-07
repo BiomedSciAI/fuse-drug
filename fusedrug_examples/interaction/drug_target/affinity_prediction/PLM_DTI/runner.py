@@ -17,7 +17,7 @@ SELECTED_CONFIG = "train_config.yaml"
 def main(cfg: DictConfig) -> None:
 
     if len(cfg) == 0:
-        raise Exception(f"You should provide --config-dir and --config-name.")
+        raise Exception("You should provide --config-dir and --config-name.")
 
     print("Hydra config:")
     print(OmegaConf.to_yaml(cfg))

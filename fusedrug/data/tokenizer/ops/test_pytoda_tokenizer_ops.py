@@ -13,7 +13,7 @@ class TestPytodaTokenizers(unittest.TestCase):
     Basic tests and runnable example of pytoda's molecules (smiles) and protein sequences tokenizers as ops
     """
 
-    def test_pytoda_smiles_tokenizer(self):
+    def test_pytoda_smiles_tokenizer(self) -> None:
 
         # set sample
         sample = NDict()
@@ -33,7 +33,7 @@ class TestPytodaTokenizers(unittest.TestCase):
         tokenized_smiles = sample["data.ligand.tokenized_smiles"]
         self.assertTrue(len(tokenized_smiles))
 
-    def test_pytoda_protein_tokenizer(self):
+    def test_pytoda_protein_tokenizer(self) -> None:
 
         # set sample
         sample = NDict()

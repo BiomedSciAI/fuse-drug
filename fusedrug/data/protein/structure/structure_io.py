@@ -1,4 +1,4 @@
-from typing import Optional, Dict, Union, List, Tuple, Any
+from typing import Optional, Dict, Union, List, Tuple
 import gzip
 import io
 import os
@@ -6,13 +6,11 @@ import torch
 from copy import deepcopy
 import pathlib
 
-import torch
-
 import numpy as np
-from Bio.PDB import *
+from Bio.PDB import *  # noqa: F401, F403
 from Bio.PDB import StructureBuilder
 from Bio.PDB import PDBParser
-from Bio.PDB import MMCIFParser, Select, MMCIF2Dict
+from Bio.PDB import MMCIFParser, Select
 from Bio.PDB.mmcifio import MMCIFIO
 from Bio.PDB.Model import Model
 from Bio.PDB.Structure import Structure
@@ -169,7 +167,7 @@ def get_chain_native_features(
     pdb_id: str,
     chain_id_type: str = "author_assigned",
     device: str = "cpu",
-) -> dict:
+) -> Union[Tuple[str, dict], None]:
     """
     Extracts ground truth features from a given filename. Note - only mmCIF is tested
     (using pdb will trigger an exception)
@@ -568,7 +566,7 @@ def get_chain_data(
     )
 
 
-def load_mmcif_features(filename: str, pdb_id: str, chain_id: str) -> dict:
+def load_mmcif_features(filename: str, pdb_id: str, chain_id: str) -> Tuple[dict, str]:
     """
     Features in the style that *Fold use
     """
@@ -666,7 +664,7 @@ def create_biopython_structure(
     # pred_structure = Structure(pdb_id)
     pred_model = Model(id="prediction@" + pdb_id, serial_num="0")  # 999')
 
-    restypes = rc.restypes + ["X"]
+    # restypes = rc.restypes + ["X"]
     # res_1to3 = lambda r: rc.restype_1to3.get(restypes[r], "UNK")
     # atom_types = openfold_rc.atom_types
 
@@ -724,7 +722,7 @@ def create_biopython_structure(
                     " ",  # ref_atom.altloc,
                     pred_atom_name,  # ref_atom.fullname,
                     atom_idx,  # ref_atom.serial_number,
-                    element=pred_atom_name[0],  ##element = ref_atom.element,
+                    element=pred_atom_name[0],  # element = ref_atom.element,
                     # pqr_charge = ref_atom.pqr_charge,
                     # radius = ref_atom.radius,
                 )
@@ -779,7 +777,7 @@ class ChainsSelector(Select):
     #     """Overload this to reject models for output."""
     #     return 1
 
-    def accept_chain(self, chain: Any) -> bool:
+    def accept_chain(self, chain: Chain) -> bool:
         """Overload this to reject chains for output."""
         return chain.id in self._keep_chains
         # return 1

@@ -2,7 +2,7 @@
 import os
 from fuse.utils.file_io import read_simple_int_file, save_text_file
 from os.path import abspath
-
+from typing import Tuple, List
 from pathlib import PurePath
 import shutil
 import re
@@ -15,9 +15,9 @@ def create(
     orig_code_path: str,
     sessions_base_dir: str,
     import_name: str,
-    session_group_name="main",
+    session_group_name: str = "main",
     require_git_repo_base: bool = False,
-):
+) -> Tuple[str, int]:
     """
     Copies all files inside a project directory (including code, configuration, etc.) into a new directory,
     (the ID is running integer )
@@ -67,7 +67,7 @@ def create(
     return new_session_dir, session_num
 
 
-def acquire_available_session_number(path):
+def acquire_available_session_number(path: str) -> int:
     # TODO: make this multi thread/process safe
 
     available_session_num_fn = os.path.join(path, "next_available_session_num")
@@ -79,7 +79,9 @@ def acquire_available_session_number(path):
     return available_session_num
 
 
-def copy_dir_recursively_and_fix_imports(root_src_dir, root_target_dir, import_name: str, exclude_dirs=None):
+def copy_dir_recursively_and_fix_imports(
+    root_src_dir: str, root_target_dir: str, import_name: str, exclude_dirs: List[str] = None
+) -> None:
     if exclude_dirs is None:
         exclude_dirs = []
 
@@ -112,7 +114,7 @@ def copy_dir_recursively_and_fix_imports(root_src_dir, root_target_dir, import_n
                 shutil.copy(src_file, dst_dir)
 
 
-def copy_and_fix_imports_python_file(src_file, out_file, from_module_name, to_module_name):
+def copy_and_fix_imports_python_file(src_file: str, out_file: str, from_module_name: str, to_module_name: str) -> None:
     """
     reads src_file, changes each line according to regext_list and saves into out_file
     :param src_file:
@@ -155,7 +157,7 @@ def main(
     project_dir: str,
     sessions_base_dir: str,
     requiregit: bool = False,
-):
+) -> None:
     create(project_dir, sessions_base_dir, require_git_repo=requiregit)
 
 

@@ -1,12 +1,9 @@
 from typing import Union, Optional
-from tokenizers.models import WordLevel, BPE, Model, WordPiece
-from tokenizers import pre_tokenizers
-from tokenizers import normalizers
-from tokenizers import processors
+from tokenizers.models import WordPiece
+from tokenizers import pre_tokenizers, normalizers, processors, Tokenizer
 import json
-from warnings import warn
 from fusedrug.data.tokenizer.fast_tokenizer_learn import build_tokenizer
-
+from pytoda.proteins.processing import IUPAC_VOCAB, UNIREP_VOCAB
 
 import click
 
@@ -21,7 +18,7 @@ def build_molecule_tokenizer_with_predefined_vocab(
     override_normalizer: Optional[normalizers.Normalizer] = None,
     override_pre_tokenizer: Optional[pre_tokenizers.PreTokenizer] = None,
     override_post_processor: Optional[processors.PostProcessor] = None,
-):
+) -> Tokenizer:
     """
     Builds a simple tokenizer, without any learning aspect (so it doesn't require any iterations on a dataset)
 
@@ -58,8 +55,8 @@ def build_molecule_tokenizer_with_predefined_vocab(
 
 # Split(pattern='.', behavior='isolated').pre_tokenize_str('blah')
 
-
-def _get_raw_vocab_dict(name):
+# TODO delete function? located at: ./fusedrug/data/protein/tokenizer/build_protein_tokenizer_pair_encoding.py
+def _get_raw_vocab_dict(name: str) -> Union[IUPAC_VOCAB, UNIREP_VOCAB]:
     if "iupac" == name:
         return IUPAC_VOCAB
     elif "unirep" == name:
@@ -87,7 +84,7 @@ def _get_raw_vocab_dict(name):
 @click.argument("input_vocab_json_file")
 @click.argument("output_tokenizer_json_file")
 @click.option("--unknown-token", default="<UNK>", help="allows to override the default unknown token")
-def main(input_vocab_json_file: str, output_tokenizer_json_file: str, unknown_token: str):
+def main(input_vocab_json_file: str, output_tokenizer_json_file: str, unknown_token: str) -> None:
     """
     Builds a simple (not learned) vocabulary based tokenizer.
     Args:
@@ -100,7 +97,7 @@ def main(input_vocab_json_file: str, output_tokenizer_json_file: str, unknown_to
 
     build_molecule_tokenizer_with_predefined_vocab(
         vocab=input_vocab_json_file,
-        unknown_token=unknown_token,  #'<UNK>',
+        unknown_token=unknown_token,  # '<UNK>',
         save_to_json_file=output_tokenizer_json_file,
     )
 
