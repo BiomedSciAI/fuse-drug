@@ -24,6 +24,7 @@ task_tokens = [  # pairwise tasks
     "MOLECULAR_ENTITY",  # the token following this marks which specific type of molecular entity comes next
     "GLOBAL_INTERACTION_ATTRIBUTES",  # the token following this marks which global attribute type is encoded next
     "MOLECULAR_ENTITY_ANTIGEN",
+    "MOLECULAR_ENTITY_EPITOPE",
     "MOLECULAR_ENTITY_ANTIBODY_HEAVY_CHAIN",
     "MOLECULAR_ENTITY_ANTIBODY_LIGHT_CHAIN",
     "MOLECULAR_ENTITY_TCR_ALPHA_CHAIN",  # TCR "light" chain - only V, J and C segments
