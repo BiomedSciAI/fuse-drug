@@ -1,7 +1,5 @@
 from typing import Dict
 from collections.abc import Iterable
-from fuse.utils import NDict
-from fuse.data import OpBase, get_sample_id
 from tokenizers import Tokenizer, Encoding
 import tokenizers
 from warnings import warn
@@ -719,6 +717,13 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         tokenizer_info: Dict,
     ) -> None:
         raise Exception("Not implemented")
+
+        # 1. Load the tokenizer
+        # 2. Create a list of its special tokens
+        # 3. Call self.add_special_tokens with the new list
+        # 4. Add a new entry to self.tokenizers_info
+        # 5. Call remap_vocab on the new tokenizer json, with the updated special tokens of self (similar to lines 131..142)
+
         # self.build_inner_decoder()
         # if self._max_possible_token_id is not None:
         #     if self._get_max_mapped_id() > self._max_possible_token_id:
@@ -772,7 +777,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         # set_sequence_id does not always work.
         # Instead of changing the sequence IDS, it sometimes does nothing (probably due to nonunique seq. ids, if we use the same tokenizer for several sequences)
         # In order for this to work, IDs must start with 0 and continue as a sequence of integers.
-        encoded.set_sequence_id(sequence_id)
+        for ind_id in range(1, sequence_id + 1):
+            encoded.set_sequence_id(ind_id)
 
         return encoded
 
@@ -803,7 +809,11 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             Encoding: _description_
         """
         encoded_list = []
-        curr_sequence_id = 0
+        # sequence_ids and sequence_names are an initial implementation of a currently broken huggingface
+        # tokenizer functionality (Encoding.merge() does not preserve all sequence IDs).
+        sequence_ids = []  # sequence id for each token (starting with 1)
+        sequence_types = []  # encoder name used for each token
+        curr_sequence_id = 1
         for inpt in typed_input_list:
             input_type = inpt.input_type
             data_str = inpt.input_string
@@ -816,7 +826,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             if sub_max_len is not None:
                 sub_encoding.truncate(max_length=sub_max_len)
             encoded_list.append(sub_encoding)
-
+            sequence_ids.extend([curr_sequence_id] * len(sub_encoding))
+            sequence_types.extend([input_type] * len(sub_encoding))
             curr_sequence_id += 1
             # KEEP THIS AS DOC FOR NOW
             # encoded has attributes [ids, type_ids, tokens, offsets, attention_mask, special_tokens_mask, overflowing]
@@ -980,6 +991,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
 
         Returns:
             :obj:`int`: The number of tokens that were created in the vocabulary
+
+        TODO: If we try to add special tokens and reach max_special ID, allow the option to add part of the tokens to the
+        remaining buffer space, and the rest after max taken regular ID
         """
 
         def update_vocab(
@@ -1688,114 +1702,3 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 A dict with the current truncation parameters if truncation is enabled
         """
         raise Exception("Not implemented")
-
-
-class ModularMultiTokenizerOp(OpBase):
-    """
-    Tokenizes multiple types of molecule representations (e.g. AA sequences, SMILES, SELFIES, etc.), by applying a corresponding tokenizer for each type of input
-    applies a tokenizers (https://github.com/huggingface/tokenizers) based tokenizer
-    """
-
-    def __init__(
-        self,
-        tokenizer_gen_inst: ModularTokenizer,
-        verbose: int = 0,
-        **kwargs: Any,
-    ) -> None:
-        """
-
-        Args:
-            tokenizer_gen_inst (ModularTokenizer): an instance of ModularTokenizer.
-            The tokenizers must map to a single ID space, i.e.
-            1. different tokens from each tokenizer must map to different IDs
-            2. All tokenizers have the same special tokens, with the same IDs
-            3. Same tokens from different tokenizers may map to different IDs
-            Every value is a dict containing the following:
-                                "tokenizer_inst": tokenizer instance
-                                "max_size": max number of output tokens
-
-            pad_type_id (_type_, optional): _description_. Defaults to None.
-            verbose (int): _description_. Defaults to 0.
-        """
-        super().__init__(**kwargs)
-
-        if verbose > 0:
-            print(
-                f"DEBUG:ModularMultiTokenizer __init__ called for input types {list(tokenizer_gen_inst.get_tokenizer_types())}"
-            )
-
-        self.mtokenizer = tokenizer_gen_inst
-        self._verbose = verbose
-
-    def token_to_id(self, token_str: str) -> Union[int, None]:
-        """returns the id the token maps to
-
-        Args:
-            token_str (str): _description_
-
-
-        Returns:
-            int: ID of the input token if it exists, None otherwise
-        """
-        return self.mtokenizer.token_to_id(token_str)
-
-    def __call__(
-        self,
-        sample_dict: NDict,
-        key_in: str,
-        key_out_tokenized_object: str = None,
-        key_out_tokens_ids: str = None,
-        key_out_attention_mask: str = None,
-        convert_attention_mask_to_bool: bool = True,
-    ) -> NDict:
-        """_summary_
-
-        Args:
-            sample_dict (NDict): _description_
-            key_in (str): a key to a list of tuples (type, input_str, max_len) that is the ModularTokenizer.encode input.
-                    #TODO: The input should be either a list, or a string. In the latter case, we should call encode and not endoce_list
-            key_out_tokenized_object (str, optional): _description_. Defaults to None.
-            key_out_tokens_ids (str, optional): _description_. Defaults to None.
-            key_out_attention_mask (str, optional): _description_. Defaults to None.
-            convert_attention_mask_to_bool (bool, optional): _description_. Defaults to True.
-
-        Raises:
-            Exception: if key_in points to an unexpected input type
-
-        Returns:
-            NDict: _description_
-        """
-        token_input = sample_dict[key_in]
-
-        if isinstance(token_input, list):
-            encoded = self.mtokenizer.encode_list(typed_input_list=token_input)
-        elif isinstance(token_input, str):
-            encoded = self.mtokenizer.encode(token_input)
-        else:
-            raise Exception(
-                f"Expected key_in={key_in} to point to a list or a string, and instead got a {type(token_input)}. value={token_input}"
-            )
-
-        if len(encoded.overflowing) > 0:
-            print(
-                f"Warning: FastTokenizer had to truncate sequence. Truncated {encoded.overflowing[0].tokens} for sample_id {get_sample_id(sample_dict)}"
-            )
-
-        if key_out_tokenized_object is not None:
-            # if requested, store the entire tokenizer.Encoding object (which provides access to attributes such as  [ids, type_ids, tokens, offsets, attention_mask, special_tokens_mask, overflowing])
-            sample_dict[key_out_tokenized_object] = encoded
-
-        if key_out_tokens_ids is not None:
-            sample_dict[key_out_tokens_ids] = encoded.ids
-
-        if key_out_attention_mask is not None:
-            sample_dict[key_out_attention_mask] = encoded.attention_mask
-            if convert_attention_mask_to_bool:
-                sample_dict[key_out_attention_mask] = [bool(x) for x in sample_dict[key_out_attention_mask]]
-
-        if (key_out_tokens_ids is None) and (key_out_tokenized_object is None):
-            warn(
-                "FastTokenizer Op got key_out_tokens_ids=None and key_out_tokenized_object=None, which means it will not modify anything in the sample. Is this intended?"
-            )
-
-        return sample_dict

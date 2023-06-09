@@ -1,4 +1,4 @@
-from copy import deepcopy
+from typing import Optional
 from fuse.utils import NDict
 from fuse.data import OpBase, get_sample_id
 from fusedrug.utils.file_formats import IndexedTextTable
@@ -11,11 +11,11 @@ class SmiLoader(OpBase):
 
     def __init__(
         self,
-        smi_file_loc=None,
+        smi_file_loc: Optional[str] = None,
         molecule_id_column_idx: int = 0,
         seperator: str = "\t",
-        allow_access_by_id=True,
-        **kwargs
+        allow_access_by_id: bool = True,
+        **kwargs: dict
     ):
         """
         :param smi_file_loc: location of .smi file
@@ -34,7 +34,9 @@ class SmiLoader(OpBase):
             columns_num_expectation=2,
         )
 
-    def __call__(self, sample_dict: NDict, key_out_seq="data.gt.seq", key_out_mol_id=None):
+    def __call__(
+        self, sample_dict: NDict, key_out_seq: str = "data.gt.seq", key_out_mol_id: Optional[str] = None
+    ) -> NDict:
         sid = get_sample_id(sample_dict)
         assert isinstance(sid, (int, str))
 

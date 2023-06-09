@@ -33,7 +33,6 @@ from fuse.data.utils.samplers import BatchSamplerDefault
 from fuse.dl.models.model_wrapper import ModelWrapSeqToDict
 from fuse.dl.lightning.pl_module import LightningModuleDefault
 from fuse.dl.models.heads import Head1D
-from fuse.eval.metrics.metrics_common import Filter
 from fuse.eval.metrics.classification.metrics_classification_common import MetricAUCROC
 from fuse.dl.losses import LossDefault
 from fuse.utils import NDict
@@ -119,7 +118,7 @@ def model(
     classifier_recon_head: dict,
     z_dim: int,
     max_seq_len: int,
-):
+) -> Tuple[torch.nn.Module, Tokenizer]:
     """
     :param seqs: list of all train sequences - used to create a tokenizer
     :param encoder_type: either "transformer" or "gru"
@@ -220,7 +219,7 @@ def train(
     infill: bool,
     lr_scheduler: callable = None,
     track_clearml: Optional[dict] = None,
-):
+) -> None:
     """
     train code for the task
     :param model: the model to train
@@ -305,7 +304,7 @@ def train(
 
 
 @hydra.main(config_path=".", config_name="config")
-def main(cfg: DictConfig):
+def main(cfg: DictConfig) -> None:
     cfg = hydra.utils.instantiate(cfg)
     print(NDict(cfg).print_tree(True))
 

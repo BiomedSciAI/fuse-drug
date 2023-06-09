@@ -1,4 +1,4 @@
-from typing import List, Callable, Optional, Union
+from typing import List, Optional, Union, Tuple
 from fuse.utils import NDict
 from fuse.data import OpBase, get_sample_id
 from fusedrug.data.interaction.drug_target.datasets.pytoda_style_target_affinity_dataset import (
@@ -25,7 +25,7 @@ class DrugTargetAffinityLoader(OpBase):
         #
         ligands_indexed_text_table_kwargs: Optional[dict] = None,
         proteins_indexed_text_table_kwargs: Optional[dict] = None,
-        **kwargs,
+        **kwargs: dict,
     ):
         super().__init__(**kwargs)
         self.drug_target_affinity_dataset = PytodaStyleDrugTargetAffinityDataset(
@@ -46,10 +46,10 @@ class DrugTargetAffinityLoader(OpBase):
     def __call__(
         self,
         sample_dict: NDict,
-        key_out_ligand="data.input.ligand",
-        key_out_protein="data.input.protein",
-        key_out_ground_truth_affinity="data.gt.affinity_val",
-    ):
+        key_out_ligand: str = "data.input.ligand",
+        key_out_protein: str = "data.input.protein",
+        key_out_ground_truth_affinity: str = "data.gt.affinity_val",
+    ) -> NDict:
         """ """
         sid = get_sample_id(sample_dict)
         if isinstance(sid, str) or not np.isscalar(sid):
@@ -67,7 +67,7 @@ if __name__ == "__main__":
     from fuse.data import create_initial_sample
     from fuse.data.pipelines.pipeline_default import PipelineDefault
     from fuse.data import OpKeepKeypaths
-    from fusedrug.data.molecule.ops import SmilesRandomizeAtomOrder, SmilesToRDKitMol, RDKitMolToSmiles, SanitizeMol
+    from fusedrug.data.molecule.ops import SmilesRandomizeAtomOrder, SmilesToRDKitMol, RDKitMolToSmiles
     from fusedrug.data.protein.ops import ProteinRandomFlipOrder
     from fusedrug.data.tokenizer.ops import FastTokenizer
     from fusedrug.data.molecule.tokenizer.pretrained import get_path as get_molecule_pretrained_tokenizer_path
@@ -155,7 +155,7 @@ if __name__ == "__main__":
 
     pipeline = PipelineDefault("test_drug_target_affinity_pipeline", pipeline_desc)
 
-    def get_sample(sid):
+    def get_sample(sid: int) -> NDict:
         sample = create_initial_sample(sid)
         processed_sample = pipeline(sample, "")
         return processed_sample
@@ -165,7 +165,7 @@ if __name__ == "__main__":
     s3 = get_sample(300)
     s4 = get_sample(400)
 
-    def _split_sample(sample: NDict, default_collate_keys: Optional[List[str]] = None):
+    def _split_sample(sample: NDict, default_collate_keys: Optional[List[str]] = None) -> Tuple[NDict, NDict]:
         assert isinstance(sample, NDict)
         if default_collate_keys is None:
             return sample, []
@@ -181,7 +181,7 @@ if __name__ == "__main__":
 
         return to_default_collate, append_in_list
 
-    def my_collate(samples, default_collate_keys: Optional[List[str]] = None):
+    def my_collate(samples: List[NDict], default_collate_keys: Optional[List[str]] = None) -> Union[list, dict]:
         for_default_collate_minibatch = []
         # for_just_list_minibatch = []
 

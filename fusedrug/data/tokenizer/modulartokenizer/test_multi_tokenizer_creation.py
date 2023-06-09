@@ -247,13 +247,7 @@ def main(cfg: DictConfig) -> None:
     # )  # uncomment if a new AA tokenizer is needed. Note - be really careful about it as this will override any existing tokenizer
     special_tokens_dict = get_special_tokens_dict()
     added_tokens_list = get_additional_tokens(["task"])
-    added_tokens_list = get_additional_tokens(["task"])
     cfg_tokenizer: Dict[str, Any] = cfg_raw["data"]["tokenizer"]
-    t_mult = ModularTokenizer(
-        **cfg_tokenizer,
-        special_tokens_dict=special_tokens_dict,
-        additional_tokens_list=added_tokens_list,
-    )
     t_mult = ModularTokenizer(
         **cfg_tokenizer,
         special_tokens_dict=special_tokens_dict,

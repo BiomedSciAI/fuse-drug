@@ -29,7 +29,8 @@ Note: If a token has the same meaning across all input types (e.g. special token
                 beginning of the range.
 
 ### add_special_tokens():
-Adds a list of special tokens to the modular tokenizer
+Adds a list of special tokens to the modular tokenizer. This does not change the existing tokenizer IDs, just adds new ones. If the modular tokenizer was created
+with max_special_token_id, the special tokens will be mapped to IDs between max current special token ID and max_special_token_id.
 ### decode():
 Decodes a list of tokens
 ### diagnose():
@@ -67,25 +68,33 @@ Saves the underlying adjusted tokenizers as jsons.
 Returns the input token's corresponding ID.
 ## Use example
 ### Creation:
-An example of creation of a new modular tokenizer from a word-level AA sequence tokenizer and a BPE SMILES tokenizer is found here: [ModularTokenizer creation](https://github.com/BiomedSciAI/fuse-drug/blob/a1b9564eb54b9fe39890645fb5378c13aedde6fb/fusedrug/data/tokenizer/modulartokenizer/test_multi_tokenizer_creation.py#L107)
+An example of creation of a new modular tokenizer from a word-level AA sequence tokenizer and a BPE SMILES tokenizer is found here: [ModularTokenizer creation](test_multi_tokenizer_creation.py#L238)
 
-It uses this config: [tokenizer_config.py](https://github.com/BiomedSciAI/fuse-drug/blob/main/fusedrug/data/tokenizer/modulartokenizer/configs/tokenizer_config.yaml). Note: this line [path definition](https://github.com/BiomedSciAI/fuse-drug/blob/a1b9564eb54b9fe39890645fb5378c13aedde6fb/fusedrug/data/tokenizer/modulartokenizer/configs/tokenizer_config.yaml#L3) needs to be changed so that _your_path_ points to cloned fuse-drug parent directory.
+It uses this config: [tokenizer_config.py](configs/tokenizer_config.yaml). Note: this line [path definition](configs/tokenizer_config.yaml#L3) needs to be changed so that _your_path_ points to cloned fuse-drug parent directory.
 
-Additional tokens that are added to the newly created tokenizer are defined in [special_tokens.py](https://github.com/BiomedSciAI/fuse-drug/blob/a1b9564eb54b9fe39890645fb5378c13aedde6fb/fusedrug/data/tokenizer/modulartokenizer/special_tokens.py) in special_tokens and task_tokens. Any additional tokens related to task definitions and queries need to be added to task_tokens. special_tokens and task_tokens are loaded in [ModularTokenizer creation](https://github.com/BiomedSciAI/fuse-drug/blob/a1b9564eb54b9fe39890645fb5378c13aedde6fb/fusedrug/data/tokenizer/modulartokenizer/test_multi_tokenizer_creation.py) by calling get_special_tokens_dict() and get_additional_tokens(["task"]), respectively.
+Additional tokens that are added to the newly created tokenizer are defined in [special_tokens.py](special_tokens.py) in special_tokens and task_tokens. Any additional tokens related to task definitions and queries need to be added to task_tokens. special_tokens and task_tokens are loaded in [ModularTokenizer creation](test_multi_tokenizer_creation.py#L248) by calling get_special_tokens_dict() and get_additional_tokens(["task"]), respectively.
 
 #### General creation steps:
-* Add all neeted tokens to [special_tokens.py](https://github.com/BiomedSciAI/fuse-drug/blob/a1b9564eb54b9fe39890645fb5378c13aedde6fb/fusedrug/data/tokenizer/modulartokenizer/special_tokens.py)
-* Collect all sub-tokenizer jsons, and add them to a config, similarly to [tokenizer_config.py](https://github.com/BiomedSciAI/fuse-drug/blob/main/fusedrug/data/tokenizer/modulartokenizer/configs/tokenizer_config.yaml)
-* Run [ModularTokenizer creation](https://github.com/BiomedSciAI/fuse-drug/blob/a1b9564eb54b9fe39890645fb5378c13aedde6fb/fusedrug/data/tokenizer/modulartokenizer/test_multi_tokenizer_creation.py). The script will a. create a new tokenizer that contains all required added tokens and all the sub-tokenizers; and b. Test the resulting tokenizer for consistency.
+* Add all needed tokens to [special_tokens.py](special_tokens.py#L23)
+* Collect all sub-tokenizer jsons, and add them to a config, similarly to [tokenizer_config.py](configs/tokenizer_config.yaml)
+* Run [ModularTokenizer creation](test_multi_tokenizer_creation.py). The script will a. create a new tokenizer that contains all required added tokens and all the sub-tokenizers; and b. Test the resulting tokenizer for consistency.
     
 
 ### Usage:
-An example of usage of the modular tokenizer is found here: [ModularTokenizer use](https://github.com/BiomedSciAI/fuse-drug/blob/a1b9564eb54b9fe39890645fb5378c13aedde6fb/fusedrug/data/tokenizer/modulartokenizer/test_multi_tokenizer_use.py#L16). It uses the same config as the creation example, and loads the jsons that were saved by the creation code.
+An example of usage of the modular tokenizer is found here: [ModularTokenizer use](test_multi_tokenizer_use.py#L16). It uses the same config as the creation example, and loads the jsons that were saved by the creation code.
 
-The example loads a ready ModularTokenizer stored here: [Word AA + BPE SMILES, path load](https://github.com/BiomedSciAI/fuse-drug/tree/main/fusedrug/data/tokenizer/modulartokenizer/pretrained_tokenizers/modular_AA_SMILES_single_path) using load(), i.e. no specific json paths need to be specified, and the load config is automatically generated by save().
+The example loads a ready ModularTokenizer stored here: [Word AA + BPE SMILES, path load](pretrained_tokenizers/modular_AA_SMILES_single_path) using load(), i.e. no specific json paths need to be specified, and the load config is automatically generated by save().
 
-### Adding special tokens:
-An example of adding special tokens to an existing tokenizer is found here: [ModularTokenizer update]()
+### Adding special tokens steps:
+An example of adding special tokens to an existing tokenizer is found here: [ModularTokenizer update](test_multi_tokenizer_use.py#L35). The steps are as follows:
+Short version:
+* Update task_tokens in [special_tokens.py](special_tokens.py) with the required tokens in 
+* Run [ModularTokenizer use](test_multi_tokenizer_use.py)
+Long version:
+* Load an existing modular tokenizer, like [here](test_multi_tokenizer_use.py#L30)
+* Create a list of the required tokens, similarly to [here](test_multi_tokenizer_use.py#L35)
+* Call ModularTokenizer.add_special_tokens() with the list: [add_tokens](test_multi_tokenizer_use.py#L10)
+* Save the new tokenizer, usually over the original modular tokenizer.
 
 ## Config structure:
 The init and load_from_jsons functiona both receive a list of dictionaries, each defining a single type of tokenizer. The dictionaries have the following fields:

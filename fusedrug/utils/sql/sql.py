@@ -1,11 +1,12 @@
 from sqlalchemy import create_engine
 import pandas as pd
-from typing import Optional, Union
+from typing import Optional
 import os
 from fuse.utils.file_io import save_text_file_safe
 from fuse.utils.file_io.path import change_extension
 from fuse.utils.cpu_profiling import Timer
 from .sql_db_from_csv import SQLfromCSV
+
 
 # NOTE: NOT multi process/threading safe!
 class SQL:
@@ -34,10 +35,10 @@ class SQL:
         else:
             self._engine = create_engine(connection_url)
 
-    def __del__(self):
+    def __del__(self) -> None:
         self._engine.dispose()
 
-    def query(self, query: str, chunksize: Optional[int] = None):
+    def query(self, query: str, chunksize: Optional[int] = None) -> pd.DataFrame:
         return pd.read_sql_query(query, con=self._engine, chunksize=chunksize)
 
 

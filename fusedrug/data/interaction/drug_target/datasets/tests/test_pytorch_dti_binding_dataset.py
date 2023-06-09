@@ -10,7 +10,7 @@ class TestDTIBindingDataset(unittest.TestCase):
     Unit test for DTIBindingDataset object
     """
 
-    def test_small_dti_binding_dataset(self):
+    def test_small_dti_binding_dataset(self) -> None:
         """
         Test DTIBindingDataset using small portion of the data.
 
@@ -26,7 +26,7 @@ class TestDTIBindingDataset(unittest.TestCase):
         # test logic
         self.ds_tester(pairs_tsv=small_pairs_tsv, ligands_tsv=small_ligands_tsv, targets_tsv=small_targets_tsv)
 
-    def test_full_dti_binding_dataset(self):
+    def test_full_dti_binding_dataset(self) -> None:
         """
         Test DTIBindingDataset with full tsv data.
 
@@ -48,7 +48,7 @@ class TestDTIBindingDataset(unittest.TestCase):
         # test logic
         self.ds_tester(pairs_tsv=full_pairs_tsv, ligands_tsv=full_ligands_tsv, targets_tsv=full_targets_tsv)
 
-    def ds_tester(self, pairs_tsv: str, ligands_tsv: str, targets_tsv: str):
+    def ds_tester(self, pairs_tsv: str, ligands_tsv: str, targets_tsv: str) -> None:
         """
         helper function that operates all the test logic (since the two tests differ only by their data paths).
         """

@@ -1,4 +1,4 @@
-from typing import Tuple, Optional, Union
+from typing import Optional, Union
 from torch.utils.data import Dataset
 from fusedrug.utils.file_formats import IndexedTextTable
 import pandas as pd
@@ -81,14 +81,14 @@ class PytodaStyleDrugTargetAffinityDataset(Dataset):
             affinity_pairs_csv_protein_id_column_name
         ].str.rstrip()
 
-    def __len__(self):
+    def __len__(self) -> int:
         return self._affinity_df.shape[0]
 
-    def __iter__(self):
+    def __iter__(self) -> dict:
         for i in range(len(self)):
             yield self[i]
 
-    def __getitem__(self, index):
+    def __getitem__(self, index: int) -> dict:
         row = self._affinity_df.iloc[index]
 
         ligand_id = row[self._affinity_pairs_csv_ligand_id_column_name]

@@ -1,8 +1,7 @@
-from typing import List, Callable, Optional, Union, Dict
+from typing import List, Optional, Union
 from fuse.utils import NDict
 from fuse.data import OpBase, get_sample_id
 import fusedrug.data.interaction.drug_target.datasets.dti_binding_dataset as dbd
-from fuse.utils.cpu_profiling import Timer
 
 
 class DTIBindingDatasetLoader(OpBase):
@@ -17,7 +16,7 @@ class DTIBindingDatasetLoader(OpBase):
         cache_dir: Optional[str] = None,
         force_dummy_constant_ligand_for_debugging: bool = False,
         force_dummy_constant_target_for_debugging: bool = False,
-        **kwargs,
+        **kwargs: dict,
     ):
         """
         See DTIBindingDataset Doc
@@ -49,7 +48,7 @@ class DTIBindingDatasetLoader(OpBase):
         key_out_target: str = "data.input.target",
         key_out_ground_truth_activity_value: str = "data.gt.activity_value",
         key_out_ground_truth_activity_label: str = "data.gt.activity_label",
-    ):
+    ) -> NDict:
 
         """ """
         sid = get_sample_id(sample_dict)

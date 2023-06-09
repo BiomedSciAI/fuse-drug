@@ -1,10 +1,9 @@
 import pytorch_lightning as pl
-from typing import Optional, List, Any
+from typing import Optional, List
 from fusedrug.data.molecule.ops import SmilesRandomizeAtomOrder, SmilesToRDKitMol, RDKitMolToSmiles
 import os
 from fuse.data import OpBase
-from fuse.utils import NDict
-from fusedrug.data.protein.ops import ProteinRandomFlipOrder, OpToUpperCase, OpKeepOnlyUpperCase
+from fusedrug.data.protein.ops import ProteinRandomFlipOrder, OpToUpperCase
 from fusedrug.data.molecule.tokenizer.pretrained import get_path as get_molecule_pretrained_tokenizer_path
 from fusedrug.data.protein.tokenizer.pretrained import get_path as get_protein_pretrained_tokenizer_path
 from fusedrug.data.tokenizer.ops import FastTokenizer, Op_pytoda_SMILESTokenizer, Op_pytoda_ProteinTokenizer
@@ -138,10 +137,10 @@ class AffinityDataModule(pl.LightningDataModule):
 
         self._shared_affinity_dataset_loader_kwargs = dict(
             ligand_sequence_column_name="molecule_sequence",
-            affinity_pairs_csv_ligand_id_column_name=self.pairs_table_ligand_column,  #'ligand_name',
+            affinity_pairs_csv_ligand_id_column_name=self.pairs_table_ligand_column,  # 'ligand_name',
             protein_sequence_column_name="protein_sequence",
-            affinity_pairs_csv_protein_id_column_name=self.pairs_table_sequence_column,  #'uniprot_accession',
-            affinity_pairs_csv_affinity_value_column_name=self.pairs_table_affinity_column,  #'pIC50',
+            affinity_pairs_csv_protein_id_column_name=self.pairs_table_sequence_column,  # 'uniprot_accession',
+            affinity_pairs_csv_affinity_value_column_name=self.pairs_table_affinity_column,  # 'pIC50',
         )
 
     def _create_pipeline_desc(

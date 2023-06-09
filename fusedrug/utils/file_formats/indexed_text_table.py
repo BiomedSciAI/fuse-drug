@@ -1,31 +1,29 @@
-from typing import Tuple, Optional, List
+from typing import Tuple, Optional, List, Union, Callable, Any
 from torch.utils.data import Dataset
 from warnings import warn
 from fusedrug.utils.file_formats import IndexedTextFile
 import numbers
-from warnings import warn
 import pandas as pd
 from fuse.utils.multiprocessing import run_multiprocessed, get_from_global_storage, get_chunks_ranges
 import os
-from copy import deepcopy
 
 
 class IndexedTextTable(Dataset):
     def __init__(
         self,
         filename: str,
-        seperator="\t",
-        first_row_is_columns_names=True,
+        seperator: str = "\t",
+        first_row_is_columns_names: bool = True,
         columns_names: Optional[List[str]] = None,
         id_column_idx: Optional[int] = None,
         id_column_name: Optional[str] = None,
         columns_num_expectation: Optional[int] = None,
-        allow_access_by_id=True,
-        index_filename=None,
-        process_funcs_pipeline=None,
-        force_recreate_index=False,
-        limit_lines=None,  # useful for debugging
-        num_workers="auto",  # will be used when building the in-memory key-search map
+        allow_access_by_id: bool = True,
+        index_filename: Optional[str] = None,
+        process_funcs_pipeline: Optional[List[Callable]] = None,
+        force_recreate_index: bool = False,
+        limit_lines: Optional[int] = None,  # useful for debugging
+        num_workers: Union[str, int] = "auto",  # will be used when building the in-memory key-search map
     ):
         """
         Args:
@@ -86,7 +84,7 @@ class IndexedTextTable(Dataset):
         # read columns names
         if self._first_row_is_columns_names:
             first_line = self._indexed_text_file[0]
-            print(f"")
+            print("")
             first_line_splitted = self._split_line_basic(first_line)
             if 1 == len(first_line_splitted):
                 warn(f"columns line only contains a single column! maybe a separator issue? first line = {first_line}")
@@ -149,7 +147,7 @@ class IndexedTextTable(Dataset):
             for m in all_offsets_maps:
                 self._offsets_map.update(m)
 
-    def _split_line_basic(self, line_str) -> Tuple:
+    def _split_line_basic(self, line_str: str) -> Tuple:
         splitted = line_str.split(self._seperator)
 
         if self._columns_num_expectation is not None:
@@ -161,7 +159,7 @@ class IndexedTextTable(Dataset):
         splitted[-1] = splitted[-1].rstrip()  # remove trailing endline etc.
         return splitted
 
-    def _process_line(self, line_str) -> Tuple[str, Tuple]:
+    def _process_line(self, line_str: str) -> Tuple[str, Tuple]:
         """
         returns (id, tuple of the other elements in the parsed text row)
         """
@@ -170,7 +168,7 @@ class IndexedTextTable(Dataset):
         ans_id = ser[self._id_column_idx]
         return ans_id, ser
 
-    def __len__(self):
+    def __len__(self) -> int:
         # since the first line might be columns description, we must consider it
         valid_text_file_lines = len(self._indexed_text_file)
         if self._first_row_is_columns_names:
@@ -180,14 +178,14 @@ class IndexedTextTable(Dataset):
             return min(self._limit_lines, valid_text_file_lines)
         return valid_text_file_lines
 
-    def __iter__(self):
+    def __iter__(self) -> Union[Tuple[str, Tuple], Any]:
         for i in range(len(self)):
             if self._limit_lines is not None:
                 if i >= self._limit_lines:
                     break
             yield self.__getitem__(i)
 
-    def __getitem__(self, index):
+    def __getitem__(self, index: int) -> Union[Tuple[str, Tuple], Any]:
         if isinstance(index, numbers.Number):
             index = int(index)
 
@@ -217,7 +215,7 @@ class IndexedTextTable(Dataset):
         return ans
 
 
-def _key_map_build_worker(args):
+def _key_map_build_worker(args: Tuple[int, int]) -> dict:
     start_index, end_index = args
     itf = get_from_global_storage("itf")
     ans = {}

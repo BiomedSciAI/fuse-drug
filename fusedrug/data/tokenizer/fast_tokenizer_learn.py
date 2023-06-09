@@ -2,6 +2,9 @@ from typing import Union, Optional
 from tokenizers import Tokenizer
 from tokenizers.models import Model
 from tokenizers.trainers import Trainer
+from tokenizers.pre_tokenizers import PreTokenizer
+from tokenizers.processors import PostProcessor
+from tokenizers.normalizers import Normalizer
 from torch.utils.data import Dataset, Sampler, DataLoader
 from time import time
 import os
@@ -13,16 +16,16 @@ def build_tokenizer(
     trainer: Optional[Trainer] = None,
     train_dataset: Optional[Dataset] = None,
     train_batch_sampler: Optional[Sampler] = None,
-    num_workers=0,
+    num_workers: int = 0,
     save_to_json_file: Optional[str] = None,
-    override_normalizer=None,
-    override_pre_tokenizer=None,
-    override_post_processor=None,
-    full_cycles_num=None,
-    iterations_num=None,
-    time_limit_minutes=None,
-    stop_filename=None,
-):
+    override_normalizer: Optional[Normalizer] = None,
+    override_pre_tokenizer: Optional[PreTokenizer] = None,
+    override_post_processor: Optional[PostProcessor] = None,
+    full_cycles_num: Optional[int] = None,
+    iterations_num: Optional[int] = None,
+    time_limit_minutes: Optional[int] = None,
+    stop_filename: Optional[str] = None,
+) -> Tokenizer:
     """
     Helper function to create tokenizers, used for both protein and small-molecules tokenization
     Args:
@@ -90,16 +93,18 @@ def build_tokenizer(
     if save_to_json_file is not None:
         tokenizer.save(save_to_json_file)
 
+    return tokenizer
+
 
 def iterator_func(
-    train_dataset,
-    train_batch_sampler,
-    full_cycles_num,
-    iterations_num,
-    time_limit_minutes,
-    stop_filename,
-    num_workers=0,
-):
+    train_dataset: Dataset,
+    train_batch_sampler: Sampler,
+    full_cycles_num: int,
+    iterations_num: int,
+    time_limit_minutes: int,
+    stop_filename: str,
+    num_workers: int = 0,
+) -> None:
     # TODO: allow multiprocessing (but consider collate and pickles/copies...)
     dataloader = DataLoader(
         dataset=train_dataset,
@@ -199,7 +204,7 @@ class IsWorkDone:
         self._last_printed_hour = -1
         self._last_printed_epoch = -1
 
-    def update(self, epoch_num, iteration_num) -> bool:
+    def update(self, epoch_num: int, iteration_num: int) -> bool:
         """
         if returns True it means we need to stop
         """
