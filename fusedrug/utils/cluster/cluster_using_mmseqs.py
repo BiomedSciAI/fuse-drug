@@ -37,6 +37,7 @@ def cached_cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict)
                 NOTE: I've compared cluster and linclust results for the deduplication phase, and results aren't identical, which means it probably misses few identical cases.
         deduplicate: if False, deduplication step will be skipped and clustering will be done directly on the input
         kmer_per_seq: Sets the number of k-mers selected per sequence in a "linclust" cluster_method. More k-mers per sequences results in a higher sensitivity.
+        split_memory_limit: (optional), limit the memory usage. should be max 70% of system's available RAM
 
     For more information visit here -> https://mmseqs.com/latest/userguide.pdf
     Note - this function wraps cluster_impl() to allow caching
