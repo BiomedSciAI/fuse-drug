@@ -39,7 +39,7 @@ params:
     num_epochs: 100
     accelerator: gpu
     num_devices: 1
-    strategy: null #"auto" for pl 2.0.0
+    strategy: "auto" # null for Lightning<2.0.0
     data:
       drug_fixed_size: 60
       target_fixed_size: 842

@@ -46,8 +46,6 @@ def main(cfg: DictConfig) -> None:
     trainer = pl.Trainer(
         callbacks=[checkpoint_callback],
         default_root_dir=cfg.experiment.dir,
-        gpus=1,
-        auto_select_gpus=True,
         check_val_every_n_epoch=cfg.trainer.every_n_val,
         max_epochs=cfg.trainer.epochs,
         benchmark=True,
