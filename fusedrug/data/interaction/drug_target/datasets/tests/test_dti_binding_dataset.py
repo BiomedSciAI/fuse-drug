@@ -10,7 +10,7 @@ class TestDTIBindingDatasetFuseWrapper(unittest.TestCase):
     Unit test for dti_binding_dataset
     """
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.pairs_columns_to_extract = ["ligand_id", "target_id", "activity_value", "activity_label"]
         self.pairs_rename_columns = {
             "activity_value": "ground_truth_activity_value",
@@ -21,7 +21,7 @@ class TestDTIBindingDatasetFuseWrapper(unittest.TestCase):
         self.targets_columns_to_extract = ["canonical_aa_sequence"]
         self.targets_rename_columns = {"canonical_aa_sequence": "target_str"}
 
-    def test_small_dti_binding_dataset(self):
+    def test_small_dti_binding_dataset(self) -> None:
         """
         Test using small portion of the data.
 
@@ -47,7 +47,7 @@ class TestDTIBindingDatasetFuseWrapper(unittest.TestCase):
             targets_rename_columns=self.targets_rename_columns,
         )
 
-    def test_full_dti_binding_dataset(self):
+    def test_full_dti_binding_dataset(self) -> None:
         """
         Test DTIBindingDataset with full tsv data.
 
@@ -79,7 +79,7 @@ class TestDTIBindingDatasetFuseWrapper(unittest.TestCase):
             targets_rename_columns=self.targets_rename_columns,
         )
 
-    def ds_tester(self, pairs_tsv: str, ligands_tsv: str, targets_tsv: str, **kwargs):
+    def ds_tester(self, pairs_tsv: str, ligands_tsv: str, targets_tsv: str, **kwargs: dict) -> None:
         """
         helper function that operates all the test logic (since the two tests differ only by their data paths).
         """

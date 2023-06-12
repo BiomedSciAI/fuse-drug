@@ -1,20 +1,18 @@
-from typing import Union, Optional
+from typing import Union, Optional, Any
 from tokenizers.models import WordLevel, BPE
 from tokenizers import Regex
 from tokenizers import pre_tokenizers
 from tokenizers.pre_tokenizers import Split
 from tokenizers import normalizers
 from pytoda.proteins.processing import IUPAC_VOCAB, UNIREP_VOCAB
-from tokenizers import processors
+from tokenizers import processors, Tokenizer
 from tokenizers.processors import TemplateProcessing
 from torch.utils.data import RandomSampler, BatchSampler
 import numpy as np
 from fusedrug.data.tokenizer.fast_tokenizer_learn import build_tokenizer
 from fusedrug.utils.file_formats import IndexedFasta
 from fuse.utils.file_io import change_extension
-from tokenizers.models import BPE
 from tokenizers.trainers import BpeTrainer
-from pytoda.proteins.processing import IUPAC_VOCAB
 import click
 
 # https://github.com/huggingface/tokenizers/issues/547
@@ -28,7 +26,7 @@ def build_simple_vocab_protein_tokenizer(
     override_normalizer: Optional[normalizers.Normalizer] = None,
     override_pre_tokenizer: Optional[Union[pre_tokenizers.PreTokenizer, str]] = "per_char_split",
     override_post_processor: Optional[processors.PostProcessor] = None,
-):
+) -> Tokenizer:
     """
     Builds a simple tokenizer, without any learning aspect (so it doesn't require any iterations on a dataset)
 
@@ -57,7 +55,7 @@ def build_simple_vocab_protein_tokenizer(
         assert "per_char_split" == override_pre_tokenizer
         per_char_regex_split = Split(
             pattern=Regex("\S"), behavior="removed", invert=True
-        )  ##.pre_tokenize_str('b  an\nana  \t\r\n')
+        )  # .pre_tokenize_str('b  an\nana  \t\r\n')
         override_pre_tokenizer = pre_tokenizers.Sequence([per_char_regex_split])
 
     tokenizer = build_tokenizer(
@@ -74,7 +72,7 @@ def build_simple_vocab_protein_tokenizer(
 # Split(pattern='.', behavior='isolated').pre_tokenize_str('blah')
 
 
-def _get_raw_vocab_dict(name):
+def _get_raw_vocab_dict(name: str) -> Union[IUPAC_VOCAB, UNIREP_VOCAB]:
     if "iupac" == name:
         return IUPAC_VOCAB
     elif "unirep" == name:
@@ -113,14 +111,14 @@ def _get_raw_vocab_dict(name):
 )
 def main(
     train_on_fasta_file: str,
-    output_tokenizer_json_file: Optional[str],
+    output_tokenizer_json_file: str,
     vocab_size: int,
     augment: bool,
     shuffle: bool,
     full_cycles_num: int,
     iterations_num: int,
     time_limit_minutes: int,
-):
+) -> None:
     """
     builds a pair-encoding based tokenizer, which is trained on the provided fasta file
     """
@@ -157,10 +155,9 @@ def main(
 
     special_tokens_tuples = list(zip(special_tokens, special_tokens_ids))
 
-    if (
-        False
-    ):  ###keeping this for future reference. There's no need to retrain for a new post-processor, so no need for this now
-        override_post_processor = TemplateProcessing(
+    if False:
+        # keeping this for future reference. There's no need to retrain for a new post-processor, so no need for this now
+        override_post_processor = TemplateProcessing(  # noqa: F841
             single="<CLS> $0 <SEP>",
             pair="<CLS> $A <SEP> $B:1 <SEP>:1",
             ###NOTE!!!! IMPORTANT!!!!! it needs to match the token ids in the trainer special_tokens!!
@@ -169,13 +166,13 @@ def main(
             special_tokens=special_tokens_tuples,
         )
 
-    def to_string(x):
+    def to_string(x: Any) -> str:
         return str(x)
 
-    def to_upper_case(x):
+    def to_upper_case(x: str) -> str:
         return x.upper()
 
-    def random_flip_order(x):
+    def random_flip_order(x: list) -> list:
         if 0 == np.random.choice(2):
             return x
         return x[::-1]
@@ -189,7 +186,7 @@ def main(
     else:
         train_batch_sampler = None
 
-    tokenizer = build_tokenizer(
+    tokenizer = build_tokenizer(  # noqa: F841
         model,
         trainer=trainer,
         train_dataset=indexed_fasta,

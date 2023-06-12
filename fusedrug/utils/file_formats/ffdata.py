@@ -10,14 +10,15 @@ import numpy as np
 from tqdm import tqdm
 from fuse.utils.cpu_profiling import Timer
 import mmap
+from typing import Optional, List
 
 
 class FFData:
     def __init__(
         self,
         filename: str,
-        ffindex_filename=None,
-        force_recreate_binary_index=False,
+        ffindex_filename: Optional[str] = None,
+        force_recreate_binary_index: bool = False,
     ):
         """
         args:
@@ -63,13 +64,13 @@ class FFData:
         self.mmap_data = mmap.mmap(data_filehandle.fileno(), 0, prot=mmap.PROT_READ)
         data_filehandle.close()
 
-    def __getitem__(self, index):
+    def __getitem__(self, index: int) -> List[str]:
         info = self.index_data[index]
-        name, offset, length = info[0], info[1], info[2]
+        name, offset, length = info[0], info[1], info[2]  # noqa: F841
         lines = self.mmap_data[offset : offset + length - 1].decode("utf-8").split("\n")
         return lines
 
-    def __del__(self):
+    def __del__(self) -> None:
         self.mmap_data.close()
 
 

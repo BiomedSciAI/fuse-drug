@@ -1,4 +1,5 @@
 import numpy as np
+from typing import Tuple
 
 from fuse.utils import NDict
 from fuse.data import OpBase
@@ -9,10 +10,12 @@ class ProteinRandomFlipOrder(OpBase):
     Randomizes the order of a protein (amino acids) sequence
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: dict):
         super().__init__(**kwargs)
 
-    def __call__(self, sample_dict: NDict, key_in="data.input.protein_str", key_out="data.input.protein_str"):
+    def __call__(
+        self, sample_dict: NDict, key_in: str = "data.input.protein_str", key_out: str = "data.input.protein_str"
+    ) -> NDict:
         data = sample_dict[key_in]
         assert isinstance(data, str)
         if 1 == np.random.choice(2):
@@ -25,17 +28,18 @@ class ProteinIntroduceNoise(OpBase):
     Introduces noise with possibly different magnitude inside active site amino acids and outside
 
     expects key_in_aligned_sequence to be the entire amino acids sequence with lowercase representing non-active site and high case representing active site
-
     """
 
-    def __init__(self, p=0.1, **kwargs):
+    def __init__(self, p: float = 0.1, **kwargs: dict):
         super().__init__(**kwargs)
         if not isinstance(p, float):
             raise TypeError(f"Please provide float, not {type(p)}.")
 
         self.p = np.clip(p, 0.0, 1.0)
 
-    def __call__(self, sample_dict: NDict, key_in="data.input.protein_str", key_out="data.input.protein_str"):
+    def __call__(
+        self, sample_dict: NDict, key_in: str = "data.input.protein_str", key_out: str = "data.input.protein_str"
+    ) -> NDict:
         data = sample_dict[key_in]
         assert isinstance(data, str)
 
@@ -53,7 +57,7 @@ class ProteinIntroduceNoise(OpBase):
         return sample_dict
 
 
-def extract_active_sites_info(aligned_seq: str):
+def extract_active_sites_info(aligned_seq: str) -> Tuple[str, list, list, list]:
     """
     processes and extracts useful information from an aligned active site sequence,
     expects low case amino acids to be outside of the active site and high case amino acids to be inside it
@@ -105,15 +109,18 @@ class ProteinFlipIndividualActiveSiteSubSequences(OpBase):
 
     """
 
-    def __init__(self, p=0.5, **kwargs):
+    def __init__(self, p: float = 0.5, **kwargs: dict):
         super().__init__(**kwargs)
         if not isinstance(p, float):
             raise TypeError(f"Please pass float, not {type(p)}.")
         self.p = np.clip(p, 0.0, 1.0)
 
     def __call__(
-        self, sample_dict: NDict, key_in_aligned_sequence="data.input.protein_str", key_out="data.input.protein_str"
-    ):
+        self,
+        sample_dict: NDict,
+        key_in_aligned_sequence: str = "data.input.protein_str",
+        key_out: str = "data.input.protein_str",
+    ) -> NDict:
         data = sample_dict[key_in_aligned_sequence]
         assert isinstance(data, str)
 
@@ -144,7 +151,9 @@ class ProteinIntroduceActiveSiteBasedNoise(OpBase):
 
     """
 
-    def __init__(self, mutate_prob_in_active_site=0.01, mutate_prob_outside_active_site=0.1, **kwargs):
+    def __init__(
+        self, mutate_prob_in_active_site: float = 0.01, mutate_prob_outside_active_site: float = 0.1, **kwargs: dict
+    ):
         super().__init__(**kwargs)
         if not isinstance(mutate_prob_in_active_site, float):
             raise TypeError(f"Please provide float, not {type(mutate_prob_in_active_site)}.")
@@ -156,8 +165,11 @@ class ProteinIntroduceActiveSiteBasedNoise(OpBase):
         self.mutate_prob_outside_active_site = np.clip(mutate_prob_outside_active_site, 0.0, 1.0)
 
     def __call__(
-        self, sample_dict: NDict, key_in_aligned_sequence="data.input.protein_str", key_out="data.input.protein_str"
-    ):
+        self,
+        sample_dict: NDict,
+        key_in_aligned_sequence: str = "data.input.protein_str",
+        key_out: str = "data.input.protein_str",
+    ) -> NDict:
         data = sample_dict[key_in_aligned_sequence]
         assert isinstance(data, str)
 

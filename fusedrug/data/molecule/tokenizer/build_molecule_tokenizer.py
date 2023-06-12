@@ -1,20 +1,14 @@
-from typing import Union, Optional, List
-from tokenizers.models import WordLevel, BPE, Model
-from tokenizers.processors import TemplateProcessing
-from torch.utils.data import Dataset
-from fusedrug.data.tokenizer.fast_tokenizer_learn import build_tokenizer
-from fusedrug.utils.file_formats import IndexedTextTable
-from fuse.utils.file_io import change_extension
+from typing import Union, Optional
 from tokenizers.models import BPE
+from tokenizers.processors import TemplateProcessing
+from fusedrug.data.tokenizer.fast_tokenizer_learn import build_tokenizer
 from tokenizers.trainers import BpeTrainer
-from functools import partial
-from fusedrug.data.molecule.ops.augment import randomize_smiles_atom_order
-from torch.utils.data import Dataset, IterableDataset, Sampler, DataLoader
+from tokenizers import Tokenizer
+from torch.utils.data import Dataset, IterableDataset, Sampler
 import click
 
 # https://github.com/huggingface/tokenizers/issues/547
 # custom components: https://github.com/huggingface/tokenizers/blob/master/bindings/python/examples/custom_components.py
-
 # TODO: since we introduced dataset usage, this function can be made a generic BPE trainer, not specific to molecules
 
 
@@ -23,11 +17,11 @@ def build_molecule_tokenizer(
     output_tokenizer_json: str,
     batch_sampler: Optional[Sampler],
     num_workers: int = 0,
-    full_cycles_num=None,
-    iterations_num=None,
-    time_limit_minutes=None,
-    stop_filename=None,
-):
+    full_cycles_num: Optional[int] = None,
+    iterations_num: Optional[int] = None,
+    time_limit_minutes: Optional[int] = None,
+    stop_filename: Optional[str] = None,
+) -> Tokenizer:
     """
     Trains a byte-pair encoding (BPE) based tokenizer on the provided SMI file.
 
@@ -67,8 +61,8 @@ def build_molecule_tokenizer(
 
     special_tokens_tuples = list(zip(special_tokens, special_tokens_ids))
 
-    if False:  ###keeping this for future reference. There's no need to retrain for a new post-processor, so no need
-        override_post_processor = TemplateProcessing(
+    if False:  # keeping this for future reference. There's no need to retrain for a new post-processor, so no need
+        override_post_processor = TemplateProcessing(  # noqa: F841
             single="<CLS> $0 <SEP>",
             pair="<CLS> $A <SEP> $B:1 <SEP>:1",
             ###NOTE!!!! IMPORTANT!!!!! it needs to match the token ids in the trainer special_tokens!!
@@ -130,10 +124,10 @@ def main(
     output_tokenizer_json: Optional[str],
     augment: bool,
     shuffle: bool,
-    full_cycles_num,
-    iterations_num,
-    time_limit_minutes,
-):
+    full_cycles_num: int,
+    iterations_num: int,
+    time_limit_minutes: int,
+) -> None:
     """
     Trains a pair-encoding based tokenizer on the provided SMI file.
     NOTE: expects the SMI file to already be (rdkit) sanitized!

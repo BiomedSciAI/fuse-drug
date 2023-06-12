@@ -48,7 +48,7 @@ class SQLfromCSV:
             self.db_filepath = db_filepath
         elif db_type.lower() in ("postgres", "postgresql"):
             self.conn = psycopg2.connect("user=postgress password=password")
-            curs = self.conn.cursor()
+            # curs = self.conn.cursor()
             # TODO: implement it
 
         else:
@@ -58,12 +58,12 @@ class SQLfromCSV:
         self,
         input_filepath: str,
         table_name: str,
-        separator="\t",
-        chunk_size=100000,
-        first_row_is_columns_names=True,
+        separator: str = "\t",
+        chunk_size: int = 100000,
+        first_row_is_columns_names: bool = True,
         columns_names: Optional[List[str]] = None,
-        force_override=True,
-    ):
+        force_override: bool = True,
+    ) -> None:
         """
         :param input_filepath: path to input CSV/TSV file
         :param table_name: a name for the table to be created for the data in the file
@@ -142,7 +142,7 @@ class SQLfromCSV:
         self.conn.commit()
         self.conn.close()
 
-    def query_to_dataframe(self, query):
+    def query_to_dataframe(self, query: str) -> pd.DataFrame:
         """
         Run a query on the database and obtain result in a Pandas DataFrame
         :params query: SQL query string
@@ -150,7 +150,7 @@ class SQLfromCSV:
         self.conn = sqlite3.connect(self.db_filepath)
         return pd.read_sql(query, self.conn)
 
-    def run_query(self, query):
+    def run_query(self, query: str) -> None:
         """
         Run a query on the database
         :params query: SQL query string

@@ -3,7 +3,7 @@ from typing import Optional
 import pandas as pd
 
 
-def load_sabdab_dataframe(path: Optional[str] = None):
+def load_sabdab_dataframe(path: Optional[str] = None) -> pd.DataFrame:
     """
     loads a dataframe containing sabdab data
 

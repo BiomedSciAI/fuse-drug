@@ -7,9 +7,10 @@ import os
 from typing import Dict, Optional
 from os.path import join
 import yaml
+import pandas as pd
 
 
-def cached_cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict) -> Dict:
+def cached_cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict) -> Dict[str, str]:
     """
     Uses mmseqs to:
 
@@ -96,9 +97,9 @@ def cluster(
     override: bool = False,
     kmer_per_seq: Optional[int] = None,
     split_memory_limit: Optional[str] = None,  # should be max 70% of system's available RAM
-) -> None:
+) -> Dict[str, str]::
     """
-    see cached_cluster()
+    see cached_cluster() doc
     """
     which_mmseqs = shutil.which("mmseqs")
 
@@ -173,7 +174,7 @@ def cluster(
     _run_system_cmd(cmd)
 
     print(
-        "B.2 - cluster the remaining unique representatives into different clusters based on the requested sequence identity threshold"
+        "B.2 - cluster the remaining (unique representatives if deduplication was used) into different clusters based on the requested sequence identity threshold"
     )
     mmseqs_tmp_2_for_clustering = join(output_dir, "mmseqs_workspace", "mmseqs_DB_tmp_2")
     clustered_db = join(output_dir, "mmseqs_workspace", "mmseqs_DB_clustered")
@@ -193,6 +194,13 @@ def cluster(
     clustered_tsv = join(output_dir, "clustered.tsv")
     cmd = f"mmseqs createtsv {step_B_initial_db} {step_B_initial_db} {clustered_db} {clustered_tsv}"
     _run_system_cmd(cmd)
+
+    # sort it to avoid issues with people assuming it's sorted
+
+    clustered_tsv_df = pd.read_csv(filepath_or_buffer=clustered_tsv, sep="\t", header=None, names=["center", "id"])
+    clustered_tsv_df.sort_values(by="id", inplace=True)
+    clustered_tsv_df.set_index("id", inplace=True)
+    clustered_tsv_df.to_csv(clustered_tsv, sep="\t")
 
     ####
     final_clusters_mmseqs_only_representatives = join(

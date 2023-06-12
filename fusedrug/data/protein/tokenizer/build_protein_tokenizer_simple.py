@@ -1,16 +1,12 @@
 from typing import Union, Optional
 from tokenizers.models import WordLevel
-from tokenizers import Regex
-from tokenizers import pre_tokenizers
+from tokenizers import Regex, Tokenizer, pre_tokenizers, normalizers, processors
 from tokenizers.pre_tokenizers import Split
-from tokenizers import normalizers
 from pytoda.proteins.processing import IUPAC_VOCAB, UNIREP_VOCAB
-from tokenizers import processors
 from fusedrug.data.tokenizer.fast_tokenizer_learn import build_tokenizer
 
 # TODO: make this import and related code below optional
 # TODO: consider removing the dependency altogether
-from pytoda.proteins.processing import IUPAC_VOCAB
 import click
 
 # https://github.com/huggingface/tokenizers/issues/547
@@ -24,7 +20,7 @@ def build_simple_vocab_protein_tokenizer(
     override_normalizer: Optional[normalizers.Normalizer] = None,
     override_pre_tokenizer: Optional[Union[pre_tokenizers.PreTokenizer, str]] = "per_char_split",
     override_post_processor: Optional[processors.PostProcessor] = None,
-):
+) -> Tokenizer:
     """
     Builds a simple tokenizer, without any learning aspect (so it doesn't require any iterations on a dataset)
 
@@ -53,7 +49,7 @@ def build_simple_vocab_protein_tokenizer(
         assert "per_char_split" == override_pre_tokenizer
         per_char_regex_split = Split(
             pattern=Regex("\S"), behavior="removed", invert=True
-        )  ##.pre_tokenize_str('b  an\nana  \t\r\n')
+        )  # .pre_tokenize_str('b  an\nana  \t\r\n')
         override_pre_tokenizer = pre_tokenizers.Sequence([per_char_regex_split])
 
     tokenizer = build_tokenizer(
@@ -70,7 +66,7 @@ def build_simple_vocab_protein_tokenizer(
 # Split(pattern='.', behavior='isolated').pre_tokenize_str('blah')
 
 
-def _get_raw_vocab_dict(name):
+def _get_raw_vocab_dict(name: str) -> Union[IUPAC_VOCAB, UNIREP_VOCAB]:
     if "iupac" == name:
         return IUPAC_VOCAB
     elif "unirep" == name:
@@ -97,8 +93,12 @@ def _get_raw_vocab_dict(name):
 @click.command()
 @click.argument("vocab_name")
 @click.argument("output_tokenizer_json_file")
-@click.option("--unknown-token", default="<UNK>", help="allows to override the default unknown token")
-def main(vocab_name: str, output_tokenizer_json_file: str, unknown_token: str):
+@click.option(
+    "--unknown-token",
+    default="<UNK>",
+    help="allows to override the default unknown token",
+)
+def main(vocab_name: str, output_tokenizer_json_file: str, unknown_token: str) -> None:
     """
     Builds a simple (not learned) vocabulary based tokenizer.
     Args:
@@ -111,7 +111,7 @@ def main(vocab_name: str, output_tokenizer_json_file: str, unknown_token: str):
 
     build_simple_vocab_protein_tokenizer(
         vocab=vocab_name,
-        unknown_token=unknown_token,  #'<UNK>',
+        unknown_token=unknown_token,  # '<UNK>',
         save_to_json_file=output_tokenizer_json_file,
     )
 

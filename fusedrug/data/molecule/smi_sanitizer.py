@@ -1,10 +1,10 @@
 from fusedrug.utils.file_formats import IndexedTextFile
 from rdkit import Chem
+from rdkit.Chem.rdmolops import SanitizeFlags
 from fuse.utils.multiprocessing import run_multiprocessed, get_from_global_storage
-from typing import Union
+from typing import Union, Any
 import numpy as np
 import os
-from tqdm import tqdm
 import click
 
 # def sanitize_smi_file(input_smi_path,
@@ -35,7 +35,7 @@ import click
 #         print(f'done writing sanitized smi file {output_smi_path}')
 
 
-def _sanitize_smiles_default(smiles, verbose=1):
+def _sanitize_smiles_default(smiles: str, verbose: int = 1) -> str:
     try:
         mol = Chem.MolFromSmiles(smiles, sanitize=True)
         # sanitized_mol = Chem.SanitizeMol(mol) #https://www.rdkit.org/docs/Cookbook.html
@@ -48,7 +48,9 @@ def _sanitize_smiles_default(smiles, verbose=1):
     return sanitized_smiles
 
 
-def _sanitize_smiles_choose_flags(smiles, sanitize_flags=Chem.rdmolops.SANITIZE_NONE, verbose=1):
+def _sanitize_smiles_choose_flags(
+    smiles: str, sanitize_flags: SanitizeFlags = Chem.rdmolops.SANITIZE_NONE, verbose: int = 1
+) -> str:
     try:
         mol = Chem.MolFromSmiles(smiles, sanitize=False)
         # note - it modifies the mol inplace
@@ -63,7 +65,7 @@ def _sanitize_smiles_choose_flags(smiles, sanitize_flags=Chem.rdmolops.SANITIZE_
     return sanitized_smiles
 
 
-def worker_func(arg):
+def worker_func(arg: Any) -> list:
     input_smi_path, start_index, chunk_size, read_delim, read_molecule_sequence_column_idx, verbose = arg
     # itf = IndexedTextFile(input_smi_path, process_line_func = lambda x:x)
     itf = get_from_global_storage("indexed_text_file")
@@ -82,14 +84,14 @@ def worker_func(arg):
 
 
 def sanitize_smi_file_multiprocessed(
-    input_smi_path,
+    input_smi_path: str,
     output_smi_path: str,
     read_delim: str = "\t",
-    read_molecule_sequence_column_idx=0,
+    read_molecule_sequence_column_idx: int = 0,
     chunk_size: int = 1000,
     num_workers: Union[int, str] = "auto",  # either int or 'auto'
     verbose: int = 1,
-):
+) -> None:
 
     try:
         num_workers_int = int(num_workers)
@@ -140,9 +142,11 @@ def sanitize_smi_file_multiprocessed(
 @click.option(
     "--workers",
     default="auto",
-    help='number of multliprocessing workers. Pass "auto" to decide based on available cpu cores, pass an integer to specificy a specific number, pass 0 to disable multiprocessing',
+    help='number of multliprocessing workers. Pass "auto" to decide based on available cpu cores, pass an integer to specify a specific number, pass 0 to disable multiprocessing',
 )
-def main(input_smi, output_sanitized_smi, read_molecule_sequence_column_idx, chunk, workers):
+def main(
+    input_smi: str, output_sanitized_smi: str, read_molecule_sequence_column_idx: int, chunk: int, workers: int
+) -> None:
     """
     Outputs a rdkit sanitized version of an smi file (usually containing molecules)
 

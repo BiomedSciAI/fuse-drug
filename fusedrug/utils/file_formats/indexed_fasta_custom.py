@@ -1,10 +1,9 @@
 import os
 from fuse.utils.cpu_profiling import Timer
-from fuse.utils.file_io import save_hdf5_safe, load_hdf5, change_extension
+from fuse.utils.file_io import save_hdf5_safe, load_hdf5
 import numpy as np
 
 from contextlib import nullcontext
-import click
 from torch.utils.data import Dataset
 from copy import deepcopy
 from fuse.utils.multiprocessing import run_multiprocessed, get_from_global_storage, get_chunks_ranges

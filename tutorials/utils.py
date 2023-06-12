@@ -1,7 +1,6 @@
 import wget
 import os
 from zipfile import ZipFile
-import pickle
 import pandas as pd
 from fuse.utils.file_io.file_io import create_dir
 
