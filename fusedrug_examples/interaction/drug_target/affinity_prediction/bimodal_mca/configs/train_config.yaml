@@ -13,7 +13,6 @@ hydra:
 
 trainer:
   max_epochs: 1000
-  auto_lr_find: false
 
 model:
   ligand_attention_size: 16
