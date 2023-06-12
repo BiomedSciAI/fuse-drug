@@ -100,7 +100,6 @@ def cluster(
     """
     see cached_cluster()
     """
-    output_dir = os.path.abspath(output_dir)
     which_mmseqs = shutil.which("mmseqs")
 
     if which_mmseqs is None:
@@ -119,16 +118,9 @@ def cluster(
     # Create workspace (supports override)
     workspace_dir = join(output_dir, "mmseqs_workspace")
     if override and os.path.exists(workspace_dir):
-        # TODO doesn't suit for non-interactive jobs
-        # ans = input("You are about to override mmseqs' workspace! Are you sure? (y/n):")
-        # if ans in ["y", "yes"]:
-        #     shutil.rmtree(workspace_dir)
-        # else:
-        #     raise Exception("ABORTING")
-
         shutil.rmtree(workspace_dir)
 
-    os.makedirs(join(workspace_dir))
+    os.makedirs(workspace_dir)
     mmseqs_db_path = join(output_dir, "mmseqs_workspace", "mmseqs_DB")
 
     print("cluster_method=", cluster_method)
@@ -149,12 +141,11 @@ def cluster(
         print(
             r"A.2 - clustering with 100% identity to remove duplicates. The generated DB does not contain (directly) the sequences data, it only maps clusters centers to members."
         )
-        cmd = f"mmseqs {cluster_method} {mmseqs_db_path} {mmseqs_cluster_full_identity} {mmseqs_tmp_for_clustering} -c 1.0 --min-seq-id 1.0"
-        cmd = f"{cmd} --threads {threads}" if threads else cmd
-        cmd = f"{cmd} --split-memory-limit {split_memory_limit}" if split_memory_limit else cmd
+        cmd = f"mmseqs {cluster_method} {mmseqs_db_path} {mmseqs_cluster_full_identity} {mmseqs_tmp_for_clustering} -c 1.0"
+        cmd = _handle_cli_arguments(cmd, threads=threads, split_memory_limit=split_memory_limit, min_seq_id=1.0)
         _run_system_cmd(cmd)
 
-        mmseqs_only_representatives = join(output_dir, "mmseqs_workspace", "mmseqs_DB_full_identity_representitives")
+        mmseqs_only_representatives = join(output_dir, "mmseqs_workspace", "mmseqs_DB_full_identity_representatives")
         print(r"A.3 - keeping only cluster centers")
         cmd = f"mmseqs createsubdb {mmseqs_cluster_full_identity} {mmseqs_db_path}  {mmseqs_only_representatives}"
         _run_system_cmd(cmd)
@@ -186,10 +177,14 @@ def cluster(
     )
     mmseqs_tmp_2_for_clustering = join(output_dir, "mmseqs_workspace", "mmseqs_DB_tmp_2")
     clustered_db = join(output_dir, "mmseqs_workspace", "mmseqs_DB_clustered")
-    cmd = f"mmseqs {cluster_method} {step_B_initial_db} {clustered_db} {mmseqs_tmp_2_for_clustering} -c 1.0 --min-seq-id {cluster_min_sequence_identity}"
-    cmd = f"{cmd} --threads {threads}" if threads else cmd
-    cmd = f"{cmd} --kmer-per-seq {kmer_per_seq}" if kmer_per_seq else cmd
-    cmd = f"{cmd} --split-memory-limit {split_memory_limit}" if split_memory_limit else cmd
+    cmd = f"mmseqs {cluster_method} {step_B_initial_db} {clustered_db} {mmseqs_tmp_2_for_clustering} -c 1.0"
+    cmd = _handle_cli_arguments(
+        cmd,
+        threads=threads,
+        kmer_per_seq=kmer_per_seq,
+        split_memory_limit=split_memory_limit,
+        min_seq_id=cluster_min_sequence_identity,
+    )
     _run_system_cmd(cmd)
 
     print(
@@ -201,7 +196,7 @@ def cluster(
 
     ####
     final_clusters_mmseqs_only_representatives = join(
-        output_dir, "mmseqs_workspace", "mmseqs_DB_final_clusters_representitives"
+        output_dir, "mmseqs_workspace", "mmseqs_DB_final_clusters_representatives"
     )
     print(r"B.4 - create a sub DB only with the clusters centers (representatives)")
     cmd = f"mmseqs createsubdb {clustered_db} {step_B_initial_db}  {final_clusters_mmseqs_only_representatives}"
@@ -247,3 +242,20 @@ def _run_system_cmd(cmd: str, capture_output: bool = False) -> None:  # TODO exp
         print(res.stderr.decode())
     if res.returncode and res.returncode != 0:
         raise Exception(f"ERROR: failed when trying to run {cmd}, got return val={res.returncode}")
+
+
+def _handle_cli_arguments(
+    cmd: str,
+    threads: Optional[int] = None,
+    kmer_per_seq: Optional[int] = None,
+    split_memory_limit: Optional[str] = None,
+    min_seq_id: Optional[float] = None,
+) -> str:
+    """
+    Handles optional command line arguments mmseqs calls.
+    """
+    cmd = f"{cmd} --threads {threads}" if threads else cmd
+    cmd = f"{cmd} --kmer-per-seq {kmer_per_seq}" if kmer_per_seq else cmd
+    cmd = f"{cmd} --split-memory-limit {split_memory_limit}" if split_memory_limit else cmd
+    cmd = f"{cmd} --min-seq-id {min_seq_id}"
+    return cmd
