@@ -96,7 +96,7 @@ def cluster(
     deduplicate: bool = True,
     override: bool = False,
     kmer_per_seq: Optional[int] = None,
-    split_memory_limit: Optional[str] = None,  # should be max 70% of system's available RAM
+    split_memory_limit: Optional[str] = None,
 ) -> Dict[str, str]:
     """
     see cached_cluster() doc
