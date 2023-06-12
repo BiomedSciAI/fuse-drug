@@ -239,7 +239,7 @@ def cluster(
 cluster_impl = cluster  # for backward compatibility
 
 
-def _run_system_cmd(cmd: str, capture_output: bool = False) -> None:  # TODO expose 'capture_output'
+def _run_system_cmd(cmd: str, capture_output: bool = False) -> None:
     print(f"about to run: {cmd}")
     res = subprocess.run(cmd, shell=True, check=False, capture_output=capture_output)
     if res.stdout and len(res.stdout) > 0:
