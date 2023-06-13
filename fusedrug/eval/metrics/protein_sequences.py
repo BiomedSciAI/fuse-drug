@@ -108,24 +108,40 @@ def _pairwise_aligned_score(preds: List[str], target: List[str]) -> List[float]:
     return scores
 
 
-def compare_strings(from_text: Any, to_text: Any) -> Dict:
+def compare_strings(from_text: Any, to_text: Any, return_score: bool = False) -> Dict:
     matcher = difflib.SequenceMatcher(None, from_text, to_text)
     counts = dict(
         insert=0,
         delete=0,
+        replace=0,
         equal=0,
     )
     for opcode, a0, a1, b0, b1 in matcher.get_opcodes():
         if opcode == "equal":
             counts[opcode] += a1 - a0
         elif opcode == "replace":
-            counts["insert"] += b1 - b0
-            counts["delete"] += a1 - a0
+            b_len = b1 - b0
+            a_len = a1 - a0
+            if a_len == b_len:
+                counts["replace"] += a_len
+            else:
+                counts["replace"] += min(a_len, b_len)
+                if a_len > b_len:
+                    counts["delete"] += a_len - b_len
+                elif b_len > a_len:
+                    counts["insert"] += b_len - a_len
+                else:
+                    assert False, "should not reach here"
         elif opcode == "insert":
             counts[opcode] += b1 - b0
         elif opcode == "delete":
             counts[opcode] += a1 - a0
         else:
             assert False
+
+    if return_score:
+        total = sum([val for (_, val) in counts.items()])
+        ans = counts["equal"] / total
+        return ans
 
     return counts
