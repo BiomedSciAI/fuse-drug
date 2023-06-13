@@ -1,7 +1,7 @@
 from typing import List, Dict
 from fusedrug.data.protein.structure.sabdab import load_sabdab_dataframe
 import pandas as pd
-from collections import namedtuple, defaultdict
+from collections import namedtuple
 import abnumber
 
 Antibody = namedtuple("Antibody", "pdb_id index_within_pdb light_chain_id heavy_chain_id antigen_chain_id")
