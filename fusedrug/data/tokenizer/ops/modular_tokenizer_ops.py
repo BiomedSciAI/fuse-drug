@@ -149,11 +149,11 @@ class FastModularTokenizer(OpBase):
         key_out_tokens_ids: Optional[str] = None,
         key_out_attention_mask: Optional[str] = None,
         convert_attention_mask_to_bool: Optional[bool] = True,
+        max_seq_len: Optional[int] = None,
     ) -> NDict:
-        # if self._verbose:
-        #     print(
-        #         f'PID:{os.getpid()} FastModularTokenizer op sample_id {sample_dict["data.sample_id"]} key_in={key_in} pdb={sample_dict["pdb"]} HeavyChain: {sample_dict["Hchain"]} LightChain: {sample_dict["Lchain"]}'
-        #     )
+        """
+        :param max_seq_len: set maximum sequence len dynamically, used for both padding and truncation.
+        """
 
         data_lst = sample_dict[key_in]
         if not isinstance(data_lst, list):
@@ -168,7 +168,7 @@ class FastModularTokenizer(OpBase):
                     f"self._validate_ends_with_eos was set to {self._validate_ends_with_eos}, but about to encode a string that does not end with it. The str end was: {data_lst[-1].input_string}"
                 )
 
-        encoded = self._tokenizer.encode_list(data_lst)
+        encoded = self._tokenizer.encode_list(data_lst, max_len=max_seq_len)
 
         if self._max_size is not None:  # we tightly couple padding length and max size.
             assert self._max_size == len(encoded.ids)
