@@ -6,7 +6,12 @@ except ImportError:
     )
     raise
 
-from abnumber import Chain  # , ChainParseError, SUPPORTED_CDR_DEFINITIONS, SUPPORTED_SCHEMES
+try:
+    from abnumber import Chain  # , ChainParseError, SUPPORTED_CDR_DEFINITIONS, SUPPORTED_SCHEMES
+
+except ImportError:
+    print("ERROR: had a problem importing abnumber, please install using 'pip install abnumber'")
+    raise
 from typing import Tuple
 
 
@@ -40,10 +45,3 @@ def calculate_sapiens_humanness_mean_score(sequence: str) -> Tuple[float, str]:
     seq_scores = scores_by_pos_and_aa.loc[list(enumerate(seq))]
     mean_score = seq_scores.mean()
     return mean_score, "heavy" if chain.is_heavy_chain() else "light"
-
-
-if __name__ == "__main__":
-    seq = "EVKLEESGGGLVQPGGSMKLSCAASGFIFSDAWMDWVRQSPERGLEWVAEIRSKANGLAPYYAESVKGRFTISRDDSKSSVYLQMNNLRSEDTGIYYCTSTLYYFDYWGQGTTLTVSSAKTTPPSVYPLAPGSAAQTNSMVTLGCLVKGYFPEPVTVTWNSGSLSSGVHTFPAVLQSDLYTLSSSVTVPSSTWPSETVTCNVAHPASSTKVDKKIVPRD"
-    # seq = 'EVKLEESGGGLVQPGGSMKLSCAASGFIFIPYKNECHLEDKMVNLCESHNHPSFLFFKVEQQTWRGHRLVWIMYIRCHFSTIQQYQNDFIPYKNECHLEDKMVNLCESHNHPSFLFFKVEQQTWRGHRLVWIMYIRCHFSTIQQYQNDFIPYKNECHLEDKMVNLCESHNHPSFLFFKVEQQTWRGHRLVWIMYIRCHFSTIVAHPASSTKVDKKIVPRD'
-    score = calculate_sapiens_humanness_mean_score(seq)
-    print(score)
