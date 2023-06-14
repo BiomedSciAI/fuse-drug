@@ -112,7 +112,82 @@ def dti_binding_dataset(
     ]
     dynamic_pipeline = PipelineDefault("DTI dataset", dynamic_pipeline)
 
-    dataset = DatasetDefault(sample_ids=None, dynamic_pipeline=dynamic_pipeline)
+    dataset = DatasetDefault(sample_ids=None, dynamic_pipeline=dynamic_pipeline) #TODO: sample_ids here should be either pairs_df.index, or len(pairs_df)
+    dataset.create()
+
+    return dataset
+
+
+def dti_binding_datase_combined(
+    pairs_tsv: str,
+    ligands_tsv: str,
+    targets_tsv: str,
+    split_tsv: str = None,
+    use_folds: Optional[Union[List, str]] = None,
+    pairs_columns_to_extract: Optional[List[str]] = None,
+    pairs_rename_columns: Optional[Dict[str, str]] = None,
+    ligands_columns_to_extract: Optional[List[str]] = None,
+    ligands_rename_columns: Optional[Dict[str, str]] = None,
+    targets_columns_to_extract: Optional[List[str]] = None,
+    targets_rename_columns: Optional[Dict[str, str]] = None,
+    **kwargs: Any,
+) -> DatasetDefault:
+    """returns a combined dataset, where pairs, targets, ligands and split information is found in a single dataframe
+
+    Args:
+        pairs_tsv (str): path to tab-separated pairs csv (tsv) file
+        ligands_tsv (str): path to tab-separated ligands csv (tsv) file
+        targets_tsv (str): path to tab-separated targets csv (tsv) file
+        split_tsv (str, optional): _description_. Defaults to None.
+        use_folds (Union[List, str], optional): A list of folds (as defined in split_tsv) to use. Defaults to None: use all folds.
+        pairs_columns_to_extract (_type_, optional): _description_. Defaults to None.
+        pairs_rename_columns (_type_, optional): _description_. Defaults to None.
+        ligands_columns_to_extract (_type_, optional): _description_. Defaults to None.
+        ligands_rename_columns (_type_, optional): _description_. Defaults to None.
+        targets_columns_to_extract (_type_, optional): _description_. Defaults to None.
+        targets_rename_columns (_type_, optional): _description_. Defaults to None.
+
+    Returns:
+        DatasetDefault: _description_
+    """
+    ligand_suffix = "_ligands"
+    target_suffix = "_targets"
+    suffixes = [ligand_suffix, target_suffix]
+    # load tsvs with opional caching:
+    _args = [pairs_tsv, ligands_tsv, targets_tsv, split_tsv, use_folds]
+
+    if "cache_dir" in kwargs and kwargs["cache_dir"] is not None:
+        ans_dict = run_cached_func(kwargs["cache_dir"], _load_dataframes, *_args, **kwargs)
+    else:
+        ans_dict = _load_dataframes(*_args, combine=True, suffixes=suffixes, **kwargs)
+
+    pairs_df = ans_dict["pairs"]
+    ligands_df = ans_dict["ligands"]
+    targets_df = ans_dict["targets"]
+
+    # Since _load_dataframes with combine == True may change some (overlapping) column names, we need to correct the following:
+    ligands_columns_to_extract = [c if c in pairs_df.columns else c+ligand_suffix for c in ligands_columns_to_extract]
+    ligands_rename_columns = {(k if k in pairs_df.columns else k+ligand_suffix):v for k,v in ligands_rename_columns.items()}
+    targets_columns_to_extract = [c if c in pairs_df.columns else c+target_suffix for c in targets_columns_to_extract]
+    targets_rename_columns = {(k if k in pairs_df.columns else k+target_suffix):v for k,v in targets_rename_columns.items()}
+    
+    columns_to_extract = pairs_columns_to_extract+ligands_columns_to_extract+targets_columns_to_extract
+    rename_columns = {**pairs_rename_columns, **ligands_rename_columns, **targets_rename_columns}
+
+    dynamic_pipeline = [
+        (
+            OpReadDataframe(
+                pairs_df,
+                columns_to_extract=columns_to_extract,
+                rename_columns=rename_columns,
+                key_column=None,
+            ),
+            dict(prefix="data"),
+        ),        
+    ]
+    dynamic_pipeline = PipelineDefault("DTI dataset", dynamic_pipeline)
+
+    dataset = DatasetDefault(sample_ids=pairs_df.index, dynamic_pipeline=dynamic_pipeline)
     dataset.create()
 
     return dataset
@@ -274,6 +349,8 @@ def _load_dataframes(
     splits_tsv: str = None,
     use_folds: Optional[Union[List, str]] = None,
     keep_activity_labels: List[str] = None,
+    combine: Optional[bool] = False,
+    suffixes: Optional[List[str]] = ['_ligands', '_targets'],
     **kwargs: Any,
 ) -> dict:
     """
@@ -286,6 +363,14 @@ def _load_dataframes(
         splits_tsv:
         use_folds: Optionally provide a list of folds to keep, pass None (default) to keep all
         keep_activity_labels: Optionally provide a list of activity labels to keep, pass None (default) to keep all
+        combine (Optional[bool], optional): If True, all dataframes are combined into return["pairs"]. Defaults to False
+        suffixes (Optional[List[str]], optional): Suffixes to be assigned to overlapping ligand and target columns respectively.
+            Defaults to ['_ligands', '_targets'].
+    returns: The following dictionary:
+        {   
+            "pairs": pairs df,
+            "ligands": ligands df,
+            "targets": targets df
     """
 
     assert isinstance(pairs_tsv, str)
@@ -310,7 +395,7 @@ def _load_dataframes(
         _splits = fix_df_types(_splits)
         set_activity_multiindex(_splits)
         # _splits = concat_full_activity_col(_splits)
-        print(f"it contains {len(_splits)} rows")
+        print(f"split contains {len(_splits)} rows")
 
         if len(_splits) != len(_pairs):
             raise Exception(
@@ -321,7 +406,7 @@ def _load_dataframes(
             _splits,
             how="inner",
             # on='full_activity_id',
-            on=["source_dataset_versioned_name", "source_dataset_activity_id"],
+            on=["source_dataset_versioned_name", "source_dataset_activity_id"], suffixes=[None, '_split_duplicate']
         )
 
         _pairs = _pairs_MERGED
@@ -359,6 +444,13 @@ def _load_dataframes(
     if keep_activity_labels is not None:
         _pairs = _pairs[_pairs.activity_label.isin(keep_activity_labels)]
         print(f"pairs num after keeping only activity_label in {keep_activity_labels}: {len(_pairs)}")
+
+    if combine:
+        ligand_id_key="ligand_id"
+        affinities_with_ligands = _pairs.merge(_ligands, on=ligand_id_key)
+        target_id_key="target_id"
+        _pairs = affinities_with_ligands.merge(_targets, on=target_id_key, suffixes=suffixes)
+        print(f"pairs num after merging with ligands and targets: {len(_pairs)}")
 
     return dict(
         pairs=_pairs,
