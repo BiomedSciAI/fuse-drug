@@ -1,4 +1,3 @@
-from typing import List
 from fuse.utils.ndict import NDict
 import torch
 import pytorch_lightning as pl
@@ -65,7 +64,7 @@ class PLM_DTI_Module(pl.LightningModule):
             met_instance(batch_dict["model.output"], batch_dict["data.label"].type(torch.int))
         self.log("validation_loss", loss)
 
-    def validation_epoch_end(self, validation_step_outputs: List) -> dict:
+    def on_validation_epoch_end(self) -> dict:
         results = {}
         for (k, met_instance) in self.val_metric_dict.items():
             res = met_instance.compute()
@@ -80,7 +79,7 @@ class PLM_DTI_Module(pl.LightningModule):
             met_instance(batch_dict["model.output"], batch_dict["data.label"].type(torch.int))
         self.log("test_loss", loss)
 
-    def test_epoch_end(self, test_step_outputs: List) -> dict:
+    def on_test_epoch_end(self) -> dict:
         results = {}
         for (k, met_instance) in self.test_metric_dict.items():
             res = met_instance.compute()
