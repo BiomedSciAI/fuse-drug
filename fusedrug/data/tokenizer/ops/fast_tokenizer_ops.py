@@ -84,6 +84,8 @@ class FastTokenizer(OpBase):
         if self._verbose:
             self._debug_max_tokenized_len_encountered = defaultdict(int)
 
+        self.split_regex = re.compile("(<[^>]*>|[^<>])")
+
     # note: use normalizer.Sequence to chain multiple normalizers
     def set_normalizer(self, normalizer: Normalizer) -> None:
         self._tokenizer.normalizer = normalizer
@@ -215,8 +217,10 @@ class FastTokenizer(OpBase):
         if (
             len(encoded.overflowing) > 0
         ):  # note, encoded.overflowing may have multiple items, and each item can contain multiple items
+            n_tokens_org = len(list(filter(None, self.split_regex.split(data_str))))
+
             print(
-                f"Warning: FastTokenizer (pid={os.getpid()}) had to truncate sequence. Original Sequence Length = {len(data_str)} max supported = {self._max_size} for tokenizer: {self._tokenizer_json} for sample_id {get_sample_id(sample_dict)}"
+                f"Warning: FastTokenizer (pid={os.getpid()}) had to truncate sequence. Original num tokens = {n_tokens_org} max supported = {self._max_size} for tokenizer: {self._tokenizer_json} for sample_id {get_sample_id(sample_dict)}"
             )
 
         if key_out_tokenized_object is not None:
