@@ -112,7 +112,9 @@ def dti_binding_dataset(
     ]
     dynamic_pipeline = PipelineDefault("DTI dataset", dynamic_pipeline)
 
-    dataset = DatasetDefault(sample_ids=None, dynamic_pipeline=dynamic_pipeline) #TODO: sample_ids here should be either pairs_df.index, or len(pairs_df)
+    dataset = DatasetDefault(
+        sample_ids=None, dynamic_pipeline=dynamic_pipeline
+    )  # TODO: sample_ids here should be either pairs_df.index, or len(pairs_df)
     dataset.create()
 
     return dataset
@@ -162,16 +164,18 @@ def dti_binding_datase_combined(
         ans_dict = _load_dataframes(*_args, combine=True, suffixes=suffixes, **kwargs)
 
     pairs_df = ans_dict["pairs"]
-    ligands_df = ans_dict["ligands"]
-    targets_df = ans_dict["targets"]
 
     # Since _load_dataframes with combine == True may change some (overlapping) column names, we need to correct the following:
-    ligands_columns_to_extract = [c if c in pairs_df.columns else c+ligand_suffix for c in ligands_columns_to_extract]
-    ligands_rename_columns = {(k if k in pairs_df.columns else k+ligand_suffix):v for k,v in ligands_rename_columns.items()}
-    targets_columns_to_extract = [c if c in pairs_df.columns else c+target_suffix for c in targets_columns_to_extract]
-    targets_rename_columns = {(k if k in pairs_df.columns else k+target_suffix):v for k,v in targets_rename_columns.items()}
-    
-    columns_to_extract = pairs_columns_to_extract+ligands_columns_to_extract+targets_columns_to_extract
+    ligands_columns_to_extract = [c if c in pairs_df.columns else c + ligand_suffix for c in ligands_columns_to_extract]
+    ligands_rename_columns = {
+        (k if k in pairs_df.columns else k + ligand_suffix): v for k, v in ligands_rename_columns.items()
+    }
+    targets_columns_to_extract = [c if c in pairs_df.columns else c + target_suffix for c in targets_columns_to_extract]
+    targets_rename_columns = {
+        (k if k in pairs_df.columns else k + target_suffix): v for k, v in targets_rename_columns.items()
+    }
+
+    columns_to_extract = pairs_columns_to_extract + ligands_columns_to_extract + targets_columns_to_extract
     rename_columns = {**pairs_rename_columns, **ligands_rename_columns, **targets_rename_columns}
 
     dynamic_pipeline = [
@@ -183,7 +187,7 @@ def dti_binding_datase_combined(
                 key_column=None,
             ),
             dict(prefix="data"),
-        ),        
+        ),
     ]
     dynamic_pipeline = PipelineDefault("DTI dataset", dynamic_pipeline)
 
@@ -350,7 +354,7 @@ def _load_dataframes(
     use_folds: Optional[Union[List, str]] = None,
     keep_activity_labels: List[str] = None,
     combine: Optional[bool] = False,
-    suffixes: Optional[List[str]] = ['_ligands', '_targets'],
+    suffixes: Optional[List[str]] = ["_ligands", "_targets"],
     **kwargs: Any,
 ) -> dict:
     """
@@ -367,7 +371,7 @@ def _load_dataframes(
         suffixes (Optional[List[str]], optional): Suffixes to be assigned to overlapping ligand and target columns respectively.
             Defaults to ['_ligands', '_targets'].
     returns: The following dictionary:
-        {   
+        {
             "pairs": pairs df,
             "ligands": ligands df,
             "targets": targets df
@@ -406,7 +410,8 @@ def _load_dataframes(
             _splits,
             how="inner",
             # on='full_activity_id',
-            on=["source_dataset_versioned_name", "source_dataset_activity_id"], suffixes=[None, '_split_duplicate']
+            on=["source_dataset_versioned_name", "source_dataset_activity_id"],
+            suffixes=[None, "_split_duplicate"],
         )
 
         _pairs = _pairs_MERGED
@@ -446,9 +451,9 @@ def _load_dataframes(
         print(f"pairs num after keeping only activity_label in {keep_activity_labels}: {len(_pairs)}")
 
     if combine:
-        ligand_id_key="ligand_id"
+        ligand_id_key = "ligand_id"
         affinities_with_ligands = _pairs.merge(_ligands, on=ligand_id_key)
-        target_id_key="target_id"
+        target_id_key = "target_id"
         _pairs = affinities_with_ligands.merge(_targets, on=target_id_key, suffixes=suffixes)
         print(f"pairs num after merging with ligands and targets: {len(_pairs)}")
 
