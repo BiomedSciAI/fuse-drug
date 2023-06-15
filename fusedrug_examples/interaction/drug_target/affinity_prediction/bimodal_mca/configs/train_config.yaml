@@ -7,26 +7,24 @@ hydra:
     dir: ${paths.results}/lenient_split/${now:%Y-%m-%d_%H-%M-%S-%f}
     # Please set the BIMCA_RESULTS environment variable to your desired output location.
     # You can override this value when running train.py - for example: python train.py hydra.run.dir='/some/path/you/want'
-    # this approach is especially useful when you run a daemonized process which has its stdout/err redirected to a log file within this dir. 
+    # this approach is especially useful when you run a daemonized process which has its stdout/err redirected to a log file within this dir.
     # alternatively, you can use multi-run (looks useful for grid searches etc.)  - read: https://hydra.cc/docs/configure_hydra/workdir/#configuration-for-multirun
     # it uses hydra.sweep.dir and hydra.sweep.subdir (which uses ${hydra.job.num})
 
 trainer:
-  gpus: 1
-  max_epochs: 1000 
-  auto_lr_find: false
+  max_epochs: 1000
 
-model:  
+model:
   ligand_attention_size: 16
   receptor_attention_size: 16
   ligand_embedding_size: 32
   receptor_embedding_size: 35
-  ligand_embedding: "learned"   
-  ligand_filters: [256, 256, 256]    
+  ligand_embedding: "learned"
+  ligand_filters: [256, 256, 256]
   ligand_vocabulary_size: 575
   ligand_padding_length: 696
-  receptor_embedding: "learned"  
-  receptor_filters: [256, 256, 256]      
+  receptor_embedding: "learned"
+  receptor_filters: [256, 256, 256]
   receptor_vocabulary_size: 33
   receptor_padding_length: 2536
   dense_hidden_sizes: [256]
@@ -38,7 +36,7 @@ model:
   learning_rate: 0.001
 
 data:
-  lightning_data_module:       
+  lightning_data_module:
     molecules_smi: "${paths.data}/pretraining/bindingdb_ligands.smi"
     proteins_smi: "${paths.data}/pretraining/bindingdb_sequence.smi"
     train_dataset_path: "${paths.data}/pretraining/non_kinase_train.csv"
@@ -50,18 +48,17 @@ data:
     pairs_table_affinity_column: pIC50
     ligand_padding_length: ${model.ligand_padding_length}
     receptor_padding_length: ${model.receptor_padding_length}
-    
+
     # tokenizer related
     pytoda_ligand_tokenizer_json: ${pytoda_ligand_tokenizer_path:}
     pytoda_target_tokenizer_amino_acid_dict: "iupac"
     pytoda_wrapped_tokenizer: true
 
     # sample processing pipeline related
-    train_augment_molecule_shuffle_atoms: false    
+    train_augment_molecule_shuffle_atoms: false
     train_augment_protein_flip: true
-  
+
     train_batch_size: 128
     eval_batch_size: 512
-    num_workers: 20   
+    num_workers: 20
     train_shuffle: true
-

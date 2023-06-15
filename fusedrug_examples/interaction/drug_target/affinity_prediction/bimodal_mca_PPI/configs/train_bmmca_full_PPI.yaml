@@ -5,22 +5,22 @@ seed_everything: null
 only_get_expected_working_dir: false
 
 task_info:
-  class_label_to_idx: 
+  class_label_to_idx:
     Inactive: 0
     Inconclusive: 1
     Active: 2
     Unspecified: 3
     Probe: 4
 
-clearml:  
+clearml:
   active: true
   project_name: PPI_affinity/TITAN
-  task_name: ${current_username:}  
+  task_name: ${current_username:}
   load_from_checkpoint_continues_within_session: true
 
 session_group_name: ${clearml.project_name}@${clearml.task_name}
 
-paths:    
+paths:
   session_dir: ${cwd:}/run_${local_time:Israel}
   #will be used if no session manager is involved. Useful for quick debugging
   #if you modify it be aware that the code may "climb up" 1-2 directory levels up and create files/dirs there.
@@ -30,7 +30,7 @@ hydra:
   run:
     dir: ${paths.session_dir}
     # You can override this value when running run.py - for example: python run.py hydra.run.dir='/some/path/you/want'
-    # this approach is especially useful when you run a daemonized process which has its stdout/err redirected to a log file within this dir. 
+    # this approach is especially useful when you run a daemonized process which has its stdout/err redirected to a log file within this dir.
     # alternatively, you can use multi-run (looks useful for grid searches etc.)  - read: https://hydra.cc/docs/configure_hydra/workdir/#configuration-for-multirun
     # it uses hydra.sweep.dir and hydra.sweep.subdir (which uses ${hydra.job.num})
 
@@ -40,41 +40,40 @@ caching:
 trainer:
   gpus: 1
   max_epochs: 1000 #99999
-  auto_lr_find: false
-  
-load_from_checkpoint: null 
 
-model:  
+load_from_checkpoint: null
+
+model:
 
   ####
-  base_model: "bimodal_mca" 
-  
+  base_model: "bimodal_mca"
+
   ligand_attention_size: 16
   receptor_attention_size: 16
 
   ligand_embedding_size: 35
   receptor_embedding_size: 35
-  
+
   ####
 
-  ligand_embedding: "learned" 
-  
-  ligand_filters: [256, 256, 256]    
-  
+  ligand_embedding: "learned"
+
+  ligand_filters: [256, 256, 256]
+
 
   ligand_vocabulary_size: 28
   #ligand_vocabulary_size: 3000
   ligand_padding_length: 696
-  
-    
+
+
   #receptor
   receptor_embedding: "learned"
-  
-  receptor_filters: [256, 256, 256]      
-  
-  receptor_vocabulary_size: 28  
+
+  receptor_filters: [256, 256, 256]
+
+  receptor_vocabulary_size: 28
   receptor_padding_length: 2536
-  
+
   dense_hidden_sizes: [256]
   activation_fn: "relu"
   final_activation: false
@@ -85,15 +84,15 @@ model:
   learning_rate: 1e-04
   # learning_rate: 0.001
 
-  
+
 
 
 data:
-  
-  lightning_data_module:       
+
+  lightning_data_module:
 
     # ### kinase active-sites
-    # ### AA sequence version 
+    # ### AA sequence version
     peptides_smi: "_YOUR_DATA_PATH_/public/epitopes.csv"
     proteins_smi: "_YOUR_DATA_PATH_/public/tcr.csv"
     train_dataset_path: "_YOUR_DATA_PATH_/public/strict_split/fold0/train.csv"
@@ -118,17 +117,17 @@ data:
     ligand_vocabulary_size: ${model.ligand_vocabulary_size}
     target_vocabulary_size: ${model.receptor_vocabulary_size}
     receptor_vocabulary_size: ${model.receptor_vocabulary_size}
-    
+
     ligand_padding_length: ${model.ligand_padding_length}
     target_padding_length: ${model.receptor_padding_length}
     receptor_padding_length: ${model.receptor_padding_length}
 
     # sample_pipeline_desc:
-    #   - 
+    #   -
     #     _target_: fusedrug.data.molecule.ops.SmilesToRDKitMol
 
 
-    
+
     # tokenizer related
     pytoda_SMILES_tokenizer_json: "_YOUR_PACCMANN_PATH_/paccmann_datasets/pytoda/smiles/metadata/tokenizer/vocab.json"
     pytoda_target_target_tokenizer_amino_acid_dict: "human-kinase-alignment"
@@ -137,15 +136,14 @@ data:
     # sample processing pipeline related
 
     active_site_alignment_info_smi: null #"/gpfs/haifa/projects/m/msieve/MedicalSieve/mol_bio_datasets/paccmann_related/active_sites_alignment_from_Tien_Huynh/joint_alignment_info.smi"
-    train_augment_peptide_shuffle_atoms: false    
+    train_augment_peptide_shuffle_atoms: false
     train_augment_protein_flip: true
 
     protein_augment_full_sequence_noise: true #Whether or not to add noise to protein/peptide representation. TODO: split between proteins and peptides
     protein_augment_full_sequence_noise_p: 0.1 #Noise probability
-    
+
     train_batch_size: 128
     eval_batch_size: 512
-    num_workers: 4    
+    num_workers: 4
     train_shuffle: true
 ckpt_path: "_YOUR_SESSIONS_PATH_/sessions/fuse_based/models/pkbr/pretrain/val_rmse-v3.ckpt"
-
