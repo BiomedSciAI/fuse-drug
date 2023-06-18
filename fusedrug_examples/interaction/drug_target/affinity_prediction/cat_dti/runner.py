@@ -184,7 +184,6 @@ def run_train(paths: Dict[str, str], params: Dict[str, Any]) -> None:
         max_epochs=params["num_epochs"],
         accelerator=params["accelerator"],
         devices=params["num_devices"],
-        strategy=params["strategy"],
         callbacks=[lr_monitor] if params["log_lr"] else None,
     )
 
