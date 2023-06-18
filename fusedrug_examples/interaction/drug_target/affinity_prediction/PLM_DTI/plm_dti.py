@@ -28,9 +28,7 @@ class PLM_DTI_Module(pl.LightningModule):
 
         # wrap model with fuse:
         self.model = ModelWrapSeqToDict(
-            model=model,
-            model_inputs=["data.drug", "data.target"],
-            model_outputs=["model.output"],
+            model=model, model_inputs=["data.drug", "data.target"], model_outputs=["model.output"],
         )
 
         if cfg.experiment.task == "dti_dg":

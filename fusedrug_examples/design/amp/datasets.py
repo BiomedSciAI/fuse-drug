@@ -319,14 +319,8 @@ class Satpdb:
         """
 
         sequence_files = {
-            os.path.join(data_path, "antimicrobial.fasta"): {
-                "amp.label": 1,
-                "toxicity.label": -1,
-            },
-            os.path.join(data_path, "toxic.fasta"): {
-                "amp.label": -1,
-                "toxicity.label": 1,
-            },
+            os.path.join(data_path, "antimicrobial.fasta"): {"amp.label": 1, "toxicity.label": -1,},
+            os.path.join(data_path, "toxic.fasta"): {"amp.label": -1, "toxicity.label": 1,},
         }
 
         peptides = pd.DataFrame(columns=["sequence", "toxicity.label", "amp.label"])
@@ -476,14 +470,8 @@ class PeptidesDatasets:
                     "dbaasp",
                     Dbaasp.load_and_process_df(dbaasp_raw_data_path) if dbaasp_raw_data_path is not None else None,
                 ),
-                (
-                    "axpep",
-                    Axpep.load_and_process_df(axpep_data_path) if axpep_data_path is not None else None,
-                ),
-                (
-                    "satpdb",
-                    Satpdb.load_and_process_df(satpdb_data_path) if satpdb_data_path is not None else None,
-                ),
+                ("axpep", Axpep.load_and_process_df(axpep_data_path) if axpep_data_path is not None else None,),
+                ("satpdb", Satpdb.load_and_process_df(satpdb_data_path) if satpdb_data_path is not None else None,),
                 (
                     "toxin_pred",
                     ToxinPred.load_and_process_df(toxin_pred_data_path) if toxin_pred_data_path is not None else None,
@@ -548,26 +536,14 @@ class PeptidesDatasets:
         )
         dynamic_pipeline = [
             (OpReadDataframe(df, key_column=None), {}),
-            (
-                OpCond(PipelineDefault("uniprot process", Uniprot.process_pipeline())),
-                dict(condition="uniprot"),
-            ),
-            (
-                OpCond(PipelineDefault("dbaasp process", Dbaasp.process_pipeline())),
-                dict(condition="dbaasp"),
-            ),
+            (OpCond(PipelineDefault("uniprot process", Uniprot.process_pipeline())), dict(condition="uniprot"),),
+            (OpCond(PipelineDefault("dbaasp process", Dbaasp.process_pipeline())), dict(condition="dbaasp"),),
             (
                 OpCond(PipelineDefault("toxin_pred process", ToxinPred.process_pipeline())),
                 dict(condition="toxin_pred"),
             ),
-            (
-                OpCond(PipelineDefault("satpdb process", Satpdb.process_pipeline())),
-                dict(condition="satpdb"),
-            ),
-            (
-                OpCond(PipelineDefault("axpep process", Axpep.process_pipeline())),
-                dict(condition="axpep"),
-            ),
+            (OpCond(PipelineDefault("satpdb process", Satpdb.process_pipeline())), dict(condition="satpdb"),),
+            (OpCond(PipelineDefault("axpep process", Axpep.process_pipeline())), dict(condition="axpep"),),
         ]
         dynamic_pipeline = PipelineDefault("peptides dataset", dynamic_pipeline)
 

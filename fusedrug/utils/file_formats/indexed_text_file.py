@@ -86,9 +86,7 @@ class IndexedTextFile(Dataset):
                 timer = Timer("Store") if verbose > 0 else DummyContext()
                 with timer:
                     save_hdf5_safe(
-                        index_filename,
-                        use_blosc=False,
-                        lines_offsets=lines_offsets,
+                        index_filename, use_blosc=False, lines_offsets=lines_offsets,
                     )
                 lines_offsets = None
         loaded_hdf5 = load_hdf5(self.index_filename)  # reloading even in the creation time (intentional)

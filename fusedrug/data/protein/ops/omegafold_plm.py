@@ -35,9 +35,7 @@ class OmegaFoldPLM_AASequenceTokenizer(OpBase):
         assert isinstance(data, str)
 
         p_msa, p_msa_mask = standalone_plm.tokenize_aa_sequence(
-            data,
-            num_pseudo_msa=self._num_pseudo_msa,
-            mask_rate=self._mask_rate,
+            data, num_pseudo_msa=self._num_pseudo_msa, mask_rate=self._mask_rate,
         )
 
         sample_dict[key_out_pmsa] = p_msa

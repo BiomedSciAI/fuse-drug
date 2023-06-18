@@ -48,8 +48,5 @@ setup(
     packages=find_namespace_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
     license="Apache License 2.0",
     install_requires=fusedrug_requirements,
-    extras_require={
-        "examples": fusedrug_examples_requirements,
-        "dev": fuse_requirements_dev,
-    },
+    extras_require={"examples": fusedrug_examples_requirements, "dev": fuse_requirements_dev,},
 )

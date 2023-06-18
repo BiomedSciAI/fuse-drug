@@ -80,12 +80,7 @@ class GRUDecoder(nn.Module):
     """
 
     def __init__(
-        self,
-        emb_dim: int,
-        output_dim: int,
-        h_dim: int,
-        num_tokens: int,
-        p_out_dropout: float = 0.3,
+        self, emb_dim: int, output_dim: int, h_dim: int, num_tokens: int, p_out_dropout: float = 0.3,
     ):
         super().__init__()
         self.rnn = nn.GRU(emb_dim, h_dim, batch_first=True)
@@ -174,12 +169,7 @@ class RandomOverride(nn.Module):
     """randomly override token ids with value from values (also sampled randomly)"""
 
     def __init__(
-        self,
-        p_train: float,
-        key_in: str,
-        key_out: str,
-        values: Sequence[int],
-        p_eval: float = 0.0,
+        self, p_train: float, key_in: str, key_out: str, values: Sequence[int], p_eval: float = 0.0,
     ):
         super().__init__()
         self._p_train = p_train
@@ -215,11 +205,7 @@ class RandomAdjacentSwap(nn.Module):
     """randomly swap token-id with adjacent token id"""
 
     def __init__(
-        self,
-        p_train: float,
-        key_in: str,
-        key_out: str,
-        p_eval: float = 0.0,
+        self, p_train: float, key_in: str, key_out: str, p_eval: float = 0.0,
     ):
         super().__init__()
         self._p_train = p_train
@@ -261,11 +247,7 @@ class RandomShift(nn.Module):
     """roll the sequence - the shift amount selected randomly"""
 
     def __init__(
-        self,
-        max_fraction_train: float,
-        key_in: str,
-        key_out: str,
-        max_fraction_eval: float = 0.0,
+        self, max_fraction_train: float, key_in: str, key_out: str, max_fraction_eval: float = 0.0,
     ):
         super().__init__()
         self._max_fraction_train = max_fraction_train
@@ -439,12 +421,7 @@ class TransformerDecoder(Transformer):
     """Transformer based decoder"""
 
     def __init__(
-        self,
-        num_tokens: int,
-        token_dim: int,
-        output_dim: int,
-        out_dropout: float,
-        **kwargs: dict,
+        self, num_tokens: int, token_dim: int, output_dim: int, out_dropout: float, **kwargs: dict,
     ):
         super().__init__(num_tokens=num_tokens, token_dim=token_dim, **kwargs)
         self.fc = nn.Sequential(nn.Dropout(out_dropout), nn.Linear(token_dim, output_dim))

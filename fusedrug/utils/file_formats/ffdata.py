@@ -15,10 +15,7 @@ from typing import Optional, List
 
 class FFData:
     def __init__(
-        self,
-        filename: str,
-        ffindex_filename: Optional[str] = None,
-        force_recreate_binary_index: bool = False,
+        self, filename: str, ffindex_filename: Optional[str] = None, force_recreate_binary_index: bool = False,
     ):
         """
         args:
@@ -49,9 +46,7 @@ class FFData:
                 index_data = np.array([names, offsets, lengths], dtype=np.int64).transpose()
             with Timer("storing np array"):
                 save_hdf5_safe(
-                    self.index_filename,
-                    use_blosc=True,
-                    index_data=index_data,
+                    self.index_filename, use_blosc=True, index_data=index_data,
                 )
 
         names = offsets = lengths = None

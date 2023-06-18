@@ -210,9 +210,7 @@ def get_chain_native_features(
         gt_sequence = gt_data.aasequence_str
 
         gt_mmcif_feats = dict(
-            aatype=gt_data.aatype,
-            all_atom_positions=gt_data.atom_positions,
-            all_atom_mask=gt_data.atom_mask,
+            aatype=gt_data.aatype, all_atom_positions=gt_data.atom_positions, all_atom_mask=gt_data.atom_mask,
         )
 
         gt_mmcif_feats = {k: torch.tensor(d) for (k, d) in gt_mmcif_feats.items()}
@@ -502,10 +500,7 @@ def save_pdb_file(
 
 
 def parse_mmcif(
-    filename: str,
-    unique_file_id: str,
-    handle_residue_id_duplication: bool = True,
-    quiet_parsing: bool = False,
+    filename: str, unique_file_id: str, handle_residue_id_duplication: bool = True, quiet_parsing: bool = False,
 ) -> MmcifObject:
     """
     filename: path for the mmcif file to load (can be .gz compressed)
@@ -541,10 +536,7 @@ def parse_mmcif(
     return mmcif_object
 
 
-def get_chain_data(
-    mmcif: mmcif_parsing.MmcifObject,
-    chain_id: Union[str, int],
-) -> dict:
+def get_chain_data(mmcif: mmcif_parsing.MmcifObject, chain_id: Union[str, int],) -> dict:
     """
     Assembles features for a specific chain in an mmCIF object.
             if chain_id is str, it is used
@@ -560,10 +552,7 @@ def get_chain_data(
     mmcif_feats = data_pipeline.make_mmcif_features(mmcif, chain_id)
     input_sequence = mmcif.chain_to_seqres[chain_id]
 
-    return dict(
-        mmcif_feats=mmcif_feats,
-        input_sequence=input_sequence,
-    )
+    return dict(mmcif_feats=mmcif_feats, input_sequence=input_sequence,)
 
 
 def load_mmcif_features(filename: str, pdb_id: str, chain_id: str) -> Tuple[dict, str]:
@@ -752,10 +741,7 @@ def create_biopython_structure(
 
 
 def biopython_structure_to_mmcif_file(
-    biopython_structure: Structure,
-    store_chains: List[str],
-    output_mmcif_filename: str,
-    verbose: int = 0,
+    biopython_structure: Structure, store_chains: List[str], output_mmcif_filename: str, verbose: int = 0,
 ) -> None:
     io = MMCIFIO()
     os.makedirs(os.path.dirname(output_mmcif_filename), exist_ok=True)

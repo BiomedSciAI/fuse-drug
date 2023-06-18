@@ -34,17 +34,13 @@ def get_local_timestamp(timezone: str) -> str:
 
 def worker_init_fn(worker_id: Any) -> None:
     # to ensure different seed on each worker
-    worker_seed = (torch.initial_seed() + os.getpid()) % (2**32)
+    worker_seed = (torch.initial_seed() + os.getpid()) % (2 ** 32)
     print(f"worker_init_fn - seed={worker_seed}")
     np.random.seed(worker_seed)
     random.seed(worker_seed)
 
 
-hydra_resolvers = OrderedDict(
-    current_username=lambda: getpass.getuser(),
-    local_time=get_local_timestamp,
-    cwd=get_cwd,
-)
+hydra_resolvers = OrderedDict(current_username=lambda: getpass.getuser(), local_time=get_local_timestamp, cwd=get_cwd,)
 
 
 def get_valid_filename(s: str) -> str:

@@ -90,10 +90,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 t_json = json.load(open(t_info["json_path"]))
                 self.tokenizers_info[t_type]["json_instance"] = t_json
 
-                part_special_tokens = ModularTokenizer.get_subtokenizer_added_tokens(
-                    t_json,
-                    enforce_special=False,
-                )
+                part_special_tokens = ModularTokenizer.get_subtokenizer_added_tokens(t_json, enforce_special=False,)
                 part_special_tokens = [t for t in part_special_tokens if t not in all_special_tokens]
                 all_special_tokens = all_special_tokens + part_special_tokens
 
@@ -147,8 +144,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             if "max_len" in t_info and t_info["max_len"] is not None:
                 max_size = t_info["max_len"]
                 tokenizer_inst.enable_truncation(
-                    max_length=max_size,
-                    direction="right",
+                    max_length=max_size, direction="right",
                 )
             json_str = tokenizer_inst.to_str()
             t_json = json.loads(json_str)
@@ -174,9 +170,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
 
     @staticmethod
     def remap_vocab(
-        vocab: Dict,
-        special_token_structs: Optional[List] = None,
-        starting_index: Optional[int] = None,
+        vocab: Dict, special_token_structs: Optional[List] = None, starting_index: Optional[int] = None,
     ) -> Tuple[Dict, int]:
         """Receives a vocabulary, a list of special token structures and a starting index. Returns a new vocabulary that
         a. contains all the special tokens with their IDs, as were given in special_token_structs.
@@ -287,10 +281,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         return special_tokens
 
     @staticmethod
-    def get_subtokenizer_added_tokens(
-        tokenizer_json_inst: Dict,
-        enforce_special: Optional[bool] = False,
-    ) -> List:
+    def get_subtokenizer_added_tokens(tokenizer_json_inst: Dict, enforce_special: Optional[bool] = False,) -> List:
         """returns the special tokens from a tokenizer defined by json_inst.
             Note: An alternative would be to call tokenizer_inst.get_vocab(with_added_tokens), using with_added_tokens False and True, which
             should've given us just regular and regular+special tokens, but for some reason both these options return the same output,
@@ -387,10 +378,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             object: Loaded ModularTokenizer
         """
 
-        def fix_json_paths(
-            loaded_conf: omegaconf.listconfig.ListConfig,
-            path: str,
-        ) -> omegaconf.listconfig.ListConfig:
+        def fix_json_paths(loaded_conf: omegaconf.listconfig.ListConfig, path: str,) -> omegaconf.listconfig.ListConfig:
             """Since the path passed to ModularTokenizer.load() must contain all of the modular jsons and the config that defines their relations, all json
             paths in the config must point to path. This function replaces any dirname of any json in the loaded config (found in path) with path.
             Args:
@@ -534,8 +522,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                     ModularTokenizer.get_subtokenizer_added_tokens(self.tokenizers_info[t_type]["json_instance"])
                 )
                 special_tokens_vocab_t = ModularTokenizer.get_subtokenizer_vocab(
-                    tokenizer_json_inst=self.tokenizers_info[t_type]["json_instance"],
-                    token_list=special_tokens_t,
+                    tokenizer_json_inst=self.tokenizers_info[t_type]["json_instance"], token_list=special_tokens_t,
                 )
 
                 if special_tokens_vocab != special_tokens_vocab_t:
@@ -548,8 +535,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                     ModularTokenizer.get_subtokenizer_regular_tokens(self.tokenizers_info[t_type]["json_instance"])
                 )
                 regular_tokens_vocab = ModularTokenizer.get_subtokenizer_vocab(
-                    tokenizer_json_inst=self.tokenizers_info[t_type]["json_instance"],
-                    token_list=regular_tokens,
+                    tokenizer_json_inst=self.tokenizers_info[t_type]["json_instance"], token_list=regular_tokens,
                 )
                 regular_tokens_IDs = regular_tokens_vocab.values()
                 regular_tokens_ID_set = set(regular_tokens_IDs)
@@ -678,29 +664,17 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 input_json_path = self.tokenizers_info[t_type]["modular_json_path"]
             else:
                 raise Exception(f"Couldn't find json path for subtokenizer {t_type}")
-            write_out_path = get_out_path(
-                input_json_path=input_json_path,
-                base_path=path,
-            )
+            write_out_path = get_out_path(input_json_path=input_json_path, base_path=path,)
             # json paths in the save config are meaningless, since the saves may pass between machines, and the base directory for the save may change,
             # therefore the json path in config is set to ./json_filename.json
-            config_out_path = get_out_path(
-                input_json_path=input_json_path,
-                base_path=None,
-            )
+            config_out_path = get_out_path(input_json_path=input_json_path, base_path=None,)
             tokenizers_info_cfg = set_field(
-                tokenizers_info_cfg=tokenizers_info_cfg,
-                name=t_type,
-                key="modular_json_path",
-                val=config_out_path,
+                tokenizers_info_cfg=tokenizers_info_cfg, name=t_type, key="modular_json_path", val=config_out_path,
             )
             # Original json path (for the json of the tokenizer used to create the original instance of this ModularTokenizer) is no longer relevant,
             # since it may be located on another machine. config_out_path is used instead.
             tokenizers_info_cfg = set_field(
-                tokenizers_info_cfg=tokenizers_info_cfg,
-                name=t_type,
-                key="json_path",
-                val=config_out_path,
+                tokenizers_info_cfg=tokenizers_info_cfg, name=t_type, key="json_path", val=config_out_path,
             )
             tokenizer_inst.save(write_out_path)
         tokenizer_config_overall = {
@@ -712,10 +686,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         with open(os.path.join(path, "config.yaml"), "w") as f:
             OmegaConf.save(tokenizer_config_overall, f)
 
-    def _add_single_tokenizer(
-        self,
-        tokenizer_info: Dict,
-    ) -> None:
+    def _add_single_tokenizer(self, tokenizer_info: Dict,) -> None:
         raise Exception("Not implemented")
 
         # 1. Load the tokenizer
@@ -731,9 +702,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         #             f"tokenizer remapping resulted in IDs greater (max_id={self._get_max_mapped_id()}) than max_possible_id ({self._max_possible_token_id}). Reinitialize the modular tokenizer with larger max_possible_id"
         #         )
 
-    def add_tokenizers(
-        self,
-    ) -> None:
+    def add_tokenizers(self,) -> None:
         raise Exception("Not implemented")
         # self.build_inner_decoder()
         # if self._max_possible_token_id is not None:
@@ -819,9 +788,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             data_str = inpt.input_string
             sub_max_len = inpt.max_len
             sub_encoding = self._encode_single_type(
-                data_str=data_str,
-                input_type=input_type,
-                sequence_id=curr_sequence_id,
+                data_str=data_str, input_type=input_type, sequence_id=curr_sequence_id,
             )
             if sub_max_len is not None:
                 sub_encoding.truncate(max_length=sub_max_len)
@@ -996,10 +963,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         remaining buffer space, and the rest after max taken regular ID
         """
 
-        def update_vocab(
-            vocab: Dict,
-            special_token_structs: List,
-        ) -> Dict:
+        def update_vocab(vocab: Dict, special_token_structs: List,) -> Dict:
             """Receives a vocabulary and a list of special token structures. Returns a new vocabulary that
             a. contains all the special tokens with their IDs, as were given in special_token_structs.
             b. contains all the tokens in vocab (except special ones), with their original IDs.
@@ -1081,8 +1045,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 t_json["added_tokens"] = all_special_token_structs
 
             t_json["model"]["vocab"] = update_vocab(
-                vocab=t_json["model"]["vocab"],
-                special_token_structs=all_special_token_structs,
+                vocab=t_json["model"]["vocab"], special_token_structs=all_special_token_structs,
             )
             # end operations on json
             # operations on the tokenizer instance (if possible, operations should be done here, using built-in tokenizer methods)
@@ -1099,8 +1062,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             if "max_len" in t_info and t_info["max_len"] is not None:
                 max_size = t_info["max_len"]
                 tokenizer_inst.enable_truncation(
-                    max_length=max_size,
-                    direction="right",
+                    max_length=max_size, direction="right",
                 )
             json_str = tokenizer_inst.to_str()
             t_json = json.loads(json_str)
@@ -1245,10 +1207,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         self.max_len = max_length
 
     def encode_batch(
-        self,
-        input: List,
-        is_pretokenized: Optional[bool] = False,
-        add_special_tokens: Optional[bool] = True,
+        self, input: List, is_pretokenized: Optional[bool] = False, add_special_tokens: Optional[bool] = True,
     ) -> List:
         """
         Encode the given batch of inputs. This method accept both raw text sequences
@@ -1317,11 +1276,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         return ModularTokenizer.load(path)
 
     @staticmethod
-    def from_pretrained(
-        identifier: str,
-        revision: Optional[str] = "main",
-        auth_token: Optional[str] = None,
-    ) -> Any:
+    def from_pretrained(identifier: str, revision: Optional[str] = "main", auth_token: Optional[str] = None,) -> Any:
         """
         Instantiate a new :class:`~tokenizers.Tokenizer` from an existing file on the
         Hugging Face Hub.
@@ -1548,10 +1503,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         raise Exception("Not implemented")
 
     def post_process(
-        self,
-        encoding: Encoding,
-        pair: Optional[Encoding] = None,
-        add_special_tokens: Optional[bool] = True,
+        self, encoding: Encoding, pair: Optional[Encoding] = None, add_special_tokens: Optional[bool] = True,
     ) -> Encoding:
         """
         Apply all the post-processing steps to the given encodings.
@@ -1662,10 +1614,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         raise Exception("Not implemented")
 
     def train_from_iterator(
-        self,
-        iterator: Iterator,
-        trainer: Optional[tokenizers.trainers.Trainer] = None,
-        length: Optional[int] = None,
+        self, iterator: Iterator, trainer: Optional[tokenizers.trainers.Trainer] = None, length: Optional[int] = None,
     ) -> None:
         """
         Train the Tokenizer using the provided iterator.

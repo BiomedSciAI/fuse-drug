@@ -54,11 +54,7 @@ class TestDTIBindingDataset(unittest.TestCase):
         """
 
         # creating ds
-        ds = DTIBindingDataset(
-            pairs_tsv=pairs_tsv,
-            ligands_tsv=ligands_tsv,
-            targets_tsv=targets_tsv,
-        )
+        ds = DTIBindingDataset(pairs_tsv=pairs_tsv, ligands_tsv=ligands_tsv, targets_tsv=targets_tsv,)
 
         rand_idx = random.randint(0, len(ds))
 

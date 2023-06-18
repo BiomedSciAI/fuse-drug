@@ -4,13 +4,7 @@ import openfold.np.protein as protein_utils
 from openfold.np import residue_constants as rc
 
 _default_regions_colors = dict(
-    FR1="yellow",
-    CDR1="red",
-    FR2="yellow",
-    CDR2="green",
-    FR3="yellow",
-    CDR3="blue",
-    FR4="yellow",
+    FR1="yellow", CDR1="red", FR2="yellow", CDR2="green", FR3="yellow", CDR3="blue", FR4="yellow",
 )
 
 

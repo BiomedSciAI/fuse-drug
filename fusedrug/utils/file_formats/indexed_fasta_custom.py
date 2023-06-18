@@ -120,9 +120,7 @@ class IndexedFastaCustom(Dataset):
                 timer = Timer("Store") if verbose > 0 else nullcontext()
                 with timer:
                     save_hdf5_safe(
-                        index_filename,
-                        use_blosc=False,
-                        lines_offsets=lines_offsets,
+                        index_filename, use_blosc=False, lines_offsets=lines_offsets,
                     )
                 lines_offsets = None
 

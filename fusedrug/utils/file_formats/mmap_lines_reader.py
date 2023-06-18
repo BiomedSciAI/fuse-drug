@@ -31,5 +31,5 @@ def mmap_lines_reader(filename: str, decode: bool = False, verbose: int = 0) -> 
             yield line
 
             if verbose > 0 and linenum > 0:
-                if not linenum % 10**5:
+                if not linenum % 10 ** 5:
                     print("line num=", linenum)

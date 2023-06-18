@@ -39,9 +39,7 @@ class MetricPairwiseProteinSequenceAlignmentScore(MetricPerBatchDefault):
 
 
 def _pairwise_protein_sequence_alignment_score(
-    preds: List[str],
-    target: List[str],
-    substitution_matrix: str,
+    preds: List[str], target: List[str], substitution_matrix: str,
 ) -> List[float]:
     """Compute pairwise sequence alignment statistics
     Args:
@@ -72,9 +70,7 @@ def _pairwise_protein_sequence_alignment_score(
     return scores
 
 
-def _pairwise_protein_sequence_alignment_compute(
-    pairwise_alignment_score: List,
-) -> float:
+def _pairwise_protein_sequence_alignment_compute(pairwise_alignment_score: List,) -> float:
     return float(pairwise_alignment_score / len(pairwise_alignment_score))
 
 
@@ -110,12 +106,7 @@ def _pairwise_aligned_score(preds: List[str], target: List[str]) -> List[float]:
 
 def compare_strings(from_text: Any, to_text: Any, return_score: bool = False) -> Dict:
     matcher = difflib.SequenceMatcher(None, from_text, to_text)
-    counts = dict(
-        insert=0,
-        delete=0,
-        replace=0,
-        equal=0,
-    )
+    counts = dict(insert=0, delete=0, replace=0, equal=0,)
     for opcode, a0, a1, b0, b1 in matcher.get_opcodes():
         if opcode == "equal":
             counts[opcode] += a1 - a0

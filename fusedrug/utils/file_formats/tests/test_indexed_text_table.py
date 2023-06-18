@@ -10,10 +10,7 @@ class TestIndexedTextTable(unittest.TestCase):
         itt = IndexedTextTable(
             ligands_smi_path,
             seperator="\t",
-            columns_names=(
-                "smiles_string",
-                "smiles_id",
-            ),
+            columns_names=("smiles_string", "smiles_id",),
             first_row_is_columns_names=False,
             id_column_idx=1,
             allow_access_by_id=True,
@@ -48,10 +45,7 @@ class TestIndexedTextTable(unittest.TestCase):
             ligands_smi_path,
             seperator="\t",
             first_row_is_columns_names=True,
-            columns_names=(
-                "banoni",
-                "banani_id",
-            ),
+            columns_names=("banoni", "banani_id",),
             id_column_idx=1,
             allow_access_by_id=True,
         )

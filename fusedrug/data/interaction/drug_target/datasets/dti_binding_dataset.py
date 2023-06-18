@@ -181,10 +181,7 @@ def dti_binding_dataset_combined(
     dynamic_pipeline = [
         (
             OpReadDataframe(
-                pairs_df,
-                columns_to_extract=columns_to_extract,
-                rename_columns=rename_columns,
-                key_column=None,
+                pairs_df, columns_to_extract=columns_to_extract, rename_columns=rename_columns, key_column=None,
             ),
             dict(prefix="data"),
         ),
@@ -457,11 +454,7 @@ def _load_dataframes(
         _pairs = affinities_with_ligands.merge(_targets, on=target_id_key, suffixes=suffixes)
         print(f"pairs num after merging with ligands and targets: {len(_pairs)}")
 
-    return dict(
-        pairs=_pairs,
-        ligands=_ligands,
-        targets=_targets,
-    )
+    return dict(pairs=_pairs, ligands=_ligands, targets=_targets,)
 
 
 def _fill_in_dummy_sample(sample_dict: NDict) -> NDict:

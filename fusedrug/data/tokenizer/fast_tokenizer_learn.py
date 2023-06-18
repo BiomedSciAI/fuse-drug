@@ -107,10 +107,7 @@ def iterator_func(
 ) -> None:
     # TODO: allow multiprocessing (but consider collate and pickles/copies...)
     dataloader = DataLoader(
-        dataset=train_dataset,
-        shuffle=False,
-        batch_sampler=train_batch_sampler,
-        num_workers=num_workers,
+        dataset=train_dataset, shuffle=False, batch_sampler=train_batch_sampler, num_workers=num_workers,
     )
 
     is_work_done = IsWorkDone(full_cycles_num, iterations_num, time_limit_minutes, stop_filename)

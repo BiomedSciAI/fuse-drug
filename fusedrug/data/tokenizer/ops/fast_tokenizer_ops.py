@@ -75,8 +75,7 @@ class FastTokenizer(OpBase):
             self._tokenizer.enable_padding(direction="right", **padding_kwargs)
 
             self._tokenizer.enable_truncation(
-                max_length=max_size,
-                direction="right",
+                max_length=max_size, direction="right",
             )
 
         self._max_size = max_size

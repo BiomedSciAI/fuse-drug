@@ -71,9 +71,7 @@ def test_tokenizer_op(tokenizer_op_inst: FastTokenizer, max_len: int = None, mod
 
 
 @hydra.main(
-    config_path="../modulartokenizer/configs",
-    config_name="tokenizer_config_personal",
-    version_base=None,
+    config_path="../modulartokenizer/configs", config_name="tokenizer_config_personal", version_base=None,
 )
 def main(cfg: DictConfig) -> None:
     tmp = OmegaConf.to_object(cfg)
@@ -86,9 +84,7 @@ def main(cfg: DictConfig) -> None:
         validate_ends_with_eos="<EOS>",
     )
     test_tokenizer_op(
-        tokenizer_op_inst=mod_tokenizer_op,
-        max_len=15,
-        mode="truncation",
+        tokenizer_op_inst=mod_tokenizer_op, max_len=15, mode="truncation",
     )
 
     mod_tokenizer_op = FastTokenizer(
@@ -98,9 +94,7 @@ def main(cfg: DictConfig) -> None:
         validate_ends_with_eos="<EOS>",
     )
     test_tokenizer_op(
-        tokenizer_op_inst=mod_tokenizer_op,
-        max_len=cfg_raw["data"]["tokenizer"]["overall_max_len"],
-        mode="padding",
+        tokenizer_op_inst=mod_tokenizer_op, max_len=cfg_raw["data"]["tokenizer"]["overall_max_len"], mode="padding",
     )
 
 
