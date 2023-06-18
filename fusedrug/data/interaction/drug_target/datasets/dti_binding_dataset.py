@@ -120,7 +120,7 @@ def dti_binding_dataset(
     return dataset
 
 
-def dti_binding_datase_combined(
+def dti_binding_dataset_combined(
     pairs_tsv: str,
     ligands_tsv: str,
     targets_tsv: str,
