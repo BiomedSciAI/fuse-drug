@@ -94,7 +94,7 @@ def cluster(
     threads: Optional[int] = None,
     cluster_method: str = "cluster",
     deduplicate: bool = True,
-    override: bool = False,
+    override_workspace: bool = False,
     kmer_per_seq: Optional[int] = None,
     split_memory_limit: Optional[str] = None,
 ) -> Dict[str, str]:
@@ -116,9 +116,9 @@ def cluster(
             cmd = f"gunzip {input_fasta_filename}.gz"
             _run_system_cmd(cmd)
 
-    # Create workspace (supports override)
+    # Create workspace (supports overriding)
     workspace_dir = join(output_dir, "mmseqs_workspace")
-    if override and os.path.exists(workspace_dir):
+    if override_workspace and os.path.exists(workspace_dir):
         shutil.rmtree(workspace_dir)
 
     os.makedirs(workspace_dir)
