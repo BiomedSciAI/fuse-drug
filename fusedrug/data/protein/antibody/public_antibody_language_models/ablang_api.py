@@ -36,7 +36,11 @@ class AbLang:
         self.model_heavy = AutoModel.from_pretrained("qilowoq/AbLang_heavy", trust_remote_code=True)
 
     def get_embeddings(
-        self, seq: str, chain_type: str = "auto", remove_cls_token: bool = True, scheme: str = "chothia",
+        self,
+        seq: str,
+        chain_type: str = "auto",
+        remove_cls_token: bool = True,
+        scheme: str = "chothia",
     ) -> Any:
         assert chain_type in ["light", "heavy", "auto"]
         orig_seq_len = len(seq)

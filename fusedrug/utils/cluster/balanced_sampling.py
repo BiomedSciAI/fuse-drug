@@ -5,7 +5,10 @@ from typing import List
 
 
 def create_balanced_sampling_tsv(
-    cluster_tsv: str, output_balanced_tsv: str, cluster_center_column_name: str, columns_names: List[str] = None,
+    cluster_tsv: str,
+    output_balanced_tsv: str,
+    cluster_center_column_name: str,
+    columns_names: List[str] = None,
 ) -> None:
     """
     processes cluster_tsv (see args for expected format) and generates a new tsv with an added column that
@@ -71,7 +74,7 @@ def create_balanced_sampling_tsv(
 
             cluster_sizes[center] += 1
 
-            if not linenum % 10 ** 5:
+            if not linenum % 10**5:
                 print(linenum, line)
 
             linenum += 1
@@ -107,7 +110,7 @@ def create_balanced_sampling_tsv(
 
                 outfh.write("\t".join(parts + [f"{cluster_sizes[center]}"]) + "\n")
 
-                if not linenum % 10 ** 5:
+                if not linenum % 10**5:
                     print(linenum, line)
 
                 linenum += 1

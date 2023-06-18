@@ -71,7 +71,8 @@ class FastModularTokenizer(OpBase):
             self._tokenizer.enable_padding(direction="right", **padding_kwargs)
 
             self._tokenizer.enable_truncation(
-                max_length=max_size, direction="right",
+                max_length=max_size,
+                direction="right",
             )
 
         self._max_size = max_size
@@ -98,7 +99,9 @@ class FastModularTokenizer(OpBase):
         return token_str_of_max_token_id, max_token_id
 
     def get_min_max_sentinels(
-        self, sentinel_prefix: Optional[str] = "<SENTINEL_ID", integer_find_regex: Optional[str] = "\d{1,}",
+        self,
+        sentinel_prefix: Optional[str] = "<SENTINEL_ID",
+        integer_find_regex: Optional[str] = "\d{1,}",
     ) -> Tuple[int, int]:
         """
         returns a Tuple [min encountered sentinel name, max encountered sentinel name]

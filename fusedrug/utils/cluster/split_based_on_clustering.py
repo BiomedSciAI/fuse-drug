@@ -90,7 +90,7 @@ def split(
             out_fh = files_handles[use_set]
             out_fh.write(line)
 
-            if not linenum % 10 ** 5:
+            if not linenum % 10**5:
                 print(linenum, line)
 
             linenum += 1

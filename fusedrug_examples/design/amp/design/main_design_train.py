@@ -168,19 +168,34 @@ def model(
     else:
         raise Exception(f"Error: unsupported decoder {decoder_type}")
     embed = Embed(
-        key_in="model.tokens_encoder", key_out="model.embedding", n_vocab=len(tokenizer._tokenizer.vocab), **embed,
+        key_in="model.tokens_encoder",
+        key_out="model.embedding",
+        n_vocab=len(tokenizer._tokenizer.vocab),
+        **embed,
     )
     model = torch.nn.Sequential(
         tokenizer,
-        RandomAdjacentSwap(key_in="model.tokens", key_out="model.tokens_encoder", **random_adjacent_swap,),
-        WordDropout(key_in="model.tokens_encoder", key_out="model.tokens_encoder", **word_dropout,),
+        RandomAdjacentSwap(
+            key_in="model.tokens",
+            key_out="model.tokens_encoder",
+            **random_adjacent_swap,
+        ),
+        WordDropout(
+            key_in="model.tokens_encoder",
+            key_out="model.tokens_encoder",
+            **word_dropout,
+        ),
         RandomOverride(
             key_in="model.tokens_encoder",
             key_out="model.tokens_encoder",
             values=list(range(len(tokenizer._tokenizer.vocab))),
             **random_override,
         ),
-        RandomShift(key_in="model.tokens_encoder", key_out="model.tokens_encoder", **random_shift,),
+        RandomShift(
+            key_in="model.tokens_encoder",
+            key_out="model.tokens_encoder",
+            **random_shift,
+        ),
         embed,
         RandomMix(
             key_in="model.embedding",
@@ -190,12 +205,26 @@ def model(
             **random_mix,
         ),
         ModelWrapSeqToDict(
-            model=encoder_model, model_inputs=["model.embedding"], model_outputs=["model.mu", "model.logvar"],
+            model=encoder_model,
+            model_inputs=["model.embedding"],
+            model_outputs=["model.mu", "model.logvar"],
         ),
         Sample("model.mu", "model.logvar", key_out="model.z"),
-        ModelWrapSeqToDict(model=decoder_model, model_inputs=["model.z"], model_outputs=["model.logits.gen"],),
-        LogitsToSeq(key_in="model.logits.gen", key_out="model.out", itos=tokenizer._tokenizer.vocab.itos,),
-        ModelWrapSeqToDict(model=torch.detach, model_inputs=["model.z"], model_outputs=["model.z_detached"],),
+        ModelWrapSeqToDict(
+            model=decoder_model,
+            model_inputs=["model.z"],
+            model_outputs=["model.logits.gen"],
+        ),
+        LogitsToSeq(
+            key_in="model.logits.gen",
+            key_out="model.out",
+            itos=tokenizer._tokenizer.vocab.itos,
+        ),
+        ModelWrapSeqToDict(
+            model=torch.detach,
+            model_inputs=["model.z"],
+            model_outputs=["model.z_detached"],
+        ),
         Head1D(
             head_name="amp",
             conv_inputs=[("model.z_detached" if cls_detached else "model.z", z_dim)],
@@ -246,9 +275,15 @@ def train(
 
     losses = {
         "wae": LossWAE("model.z", num_iter),
-        "recon": LossRecon("model.tokens", "model.logits.gen", pad_index=tokenizer._tokenizer.vocab.stoi["<pad>"],),
+        "recon": LossRecon(
+            "model.tokens",
+            "model.logits.gen",
+            pad_index=tokenizer._tokenizer.vocab.stoi["<pad>"],
+        ),
         "kl_shared_mu": LossWrapToDict(
-            loss_module=kl_gaussian_sharedmu, loss_arg_to_batch_key={"logvar": "model.logvar"}, **losses.kl_shared_mu,
+            loss_module=kl_gaussian_sharedmu,
+            loss_arg_to_batch_key={"logvar": "model.logvar"},
+            **losses.kl_shared_mu,
         ),
         "amp_ce": LossDefault(
             pred="model.logits.amp",
@@ -282,7 +317,10 @@ def train(
     }
 
     # either a dict with arguments to pass to ModelCheckpoint or list dicts for multiple ModelCheckpoint callbacks (to monitor and save checkpoints for more then one metric).
-    best_epoch_source = dict(monitor="validation.losses.total_loss", mode="min",)
+    best_epoch_source = dict(
+        monitor="validation.losses.total_loss",
+        mode="min",
+    )
 
     # optimizier and lr sch - see pl.LightningModule.configure_optimizers return value for all options
     optimizer = opt(params=model.parameters())
@@ -322,7 +360,11 @@ def main(cfg: DictConfig) -> None:
 
     # train
     train(
-        model=nn_model, dl_train=dl_train, dl_valid=dl_valid, tokenizer=tokenizer, **cfg.train,
+        model=nn_model,
+        dl_train=dl_train,
+        dl_valid=dl_valid,
+        tokenizer=tokenizer,
+        **cfg.train,
     )
 
 

@@ -36,7 +36,10 @@ class PytodaStyleDrugTargetAffinityDataset(Dataset):
             ligands_indexed_text_table_kwargs = {}
 
         if isinstance(self._ligands_smi, str):
-            self._ligands_smi = IndexedTextTable(ligands_smi, **ligands_indexed_text_table_kwargs,)
+            self._ligands_smi = IndexedTextTable(
+                ligands_smi,
+                **ligands_indexed_text_table_kwargs,
+            )
         elif len(ligands_indexed_text_table_kwargs) > 0:
             raise Exception(
                 "the provided ligands_smi is a table, you cannot provide ligands_indexed_text_table_kwargs for it"
@@ -54,7 +57,10 @@ class PytodaStyleDrugTargetAffinityDataset(Dataset):
             proteins_indexed_text_table_kwargs = {}
 
         if isinstance(self._proteins_smi, str):
-            self._proteins_smi = IndexedTextTable(proteins_smi, **proteins_indexed_text_table_kwargs,)
+            self._proteins_smi = IndexedTextTable(
+                proteins_smi,
+                **proteins_indexed_text_table_kwargs,
+            )
         elif len(proteins_indexed_text_table_kwargs) > 0:
             raise Exception(
                 "the provided proteins_smi is a table, you cannot provide proteins_indexed_text_table_kwargs for it"
@@ -102,4 +108,8 @@ class PytodaStyleDrugTargetAffinityDataset(Dataset):
 
         # row.ligand_name, row.sequence_id, row.pIC50
 
-        return dict(ligand_str=ligand_str, protein_str=protein_str, affinity_val=affinity_val,)
+        return dict(
+            ligand_str=ligand_str,
+            protein_str=protein_str,
+            affinity_val=affinity_val,
+        )

@@ -198,5 +198,9 @@ if __name__ == "__main__":
 
     collated_mb = my_collate(
         [s1, s2, s3, s4],
-        default_collate_keys=["data.input.tokenized_ligand", "data.input.tokenized_protein", "data.gt.affinity_val",],
+        default_collate_keys=[
+            "data.input.tokenized_ligand",
+            "data.input.tokenized_protein",
+            "data.gt.affinity_val",
+        ],
     )

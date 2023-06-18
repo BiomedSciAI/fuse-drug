@@ -13,7 +13,7 @@ def listify(x: Any) -> List:
 
 def worker_init_fn(worker_id: int) -> None:
     # to ensure different seed on each worker
-    worker_seed = (torch.initial_seed() + os.getpid() + worker_id) % (2 ** 32)
+    worker_seed = (torch.initial_seed() + os.getpid() + worker_id) % (2**32)
     print(f"worker_init_fn - seed={worker_seed}")
     set_rng_seed(worker_seed)
     # add torch random seed selection as well?

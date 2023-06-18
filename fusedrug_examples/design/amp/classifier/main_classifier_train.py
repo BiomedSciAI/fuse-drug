@@ -53,7 +53,12 @@ from fusedrug_examples.design.amp.losses import LossRecon
 
 
 def data(
-    peptides_datasets: dict, target_key: str, infill: bool, batch_size: int, num_batches: int, data_loader: dict,
+    peptides_datasets: dict,
+    target_key: str,
+    infill: bool,
+    batch_size: int,
+    num_batches: int,
+    data_loader: dict,
 ) -> Tuple[DatasetDefault, DataLoader, DataLoader]:
     """
     Data preparation
@@ -81,12 +86,18 @@ def data(
         ds_train,
         collate_fn=CollateDefault(keep_keys=["sequence", target_key, "data.sample_id"]),
         batch_sampler=BatchSamplerDefault(
-            ds_train, balanced_class_name=target_key, batch_size=batch_size, mode="approx", num_batches=num_batches,
+            ds_train,
+            balanced_class_name=target_key,
+            batch_size=batch_size,
+            mode="approx",
+            num_batches=num_batches,
         ),
         **data_loader,
     )
     dl_valid = DataLoader(
-        ds_valid, collate_fn=CollateDefault(keep_keys=["sequence", target_key, "data.sample_id"]), **data_loader,
+        ds_valid,
+        collate_fn=CollateDefault(keep_keys=["sequence", target_key, "data.sample_id"]),
+        **data_loader,
     )
 
     return ds_train, dl_train, dl_valid
@@ -134,19 +145,34 @@ def model(
         raise Exception(f"Error: unsupported encoder {encoder_type}")
 
     embed = Embed(
-        key_in="model.tokens_encoder", key_out="model.embedding", n_vocab=len(tokenizer._tokenizer.vocab), **embed,
+        key_in="model.tokens_encoder",
+        key_out="model.embedding",
+        n_vocab=len(tokenizer._tokenizer.vocab),
+        **embed,
     )
     model = torch.nn.Sequential(
         tokenizer,
-        RandomAdjacentSwap(key_in="model.tokens", key_out="model.tokens_encoder", **random_adjacent_swap,),
-        WordDropout(key_in="model.tokens_encoder", key_out="model.tokens_encoder", **word_dropout,),
+        RandomAdjacentSwap(
+            key_in="model.tokens",
+            key_out="model.tokens_encoder",
+            **random_adjacent_swap,
+        ),
+        WordDropout(
+            key_in="model.tokens_encoder",
+            key_out="model.tokens_encoder",
+            **word_dropout,
+        ),
         RandomOverride(
             key_in="model.tokens_encoder",
             key_out="model.tokens_encoder",
             values=list(range(len(tokenizer._tokenizer.vocab))),
             **random_override,
         ),
-        RandomShift(key_in="model.tokens_encoder", key_out="model.tokens_encoder", **random_shift,),
+        RandomShift(
+            key_in="model.tokens_encoder",
+            key_out="model.tokens_encoder",
+            **random_shift,
+        ),
         embed,
         RandomMix(
             key_in="model.embedding",
@@ -156,7 +182,9 @@ def model(
             **random_mix,
         ),
         ModelWrapSeqToDict(
-            model=encoder_model, model_inputs=["model.embedding"], model_outputs=["model.z", "model.z_recon"],
+            model=encoder_model,
+            model_inputs=["model.embedding"],
+            model_outputs=["model.z", "model.z_recon"],
         ),
         Head1D(head_name="cls", conv_inputs=[("model.z", z_dim)], **classifier_head),
         Head1D(
@@ -216,12 +244,16 @@ def train(
     #  Loss
     losses = {
         "ce": LossDefault(
-            pred="model.logits.cls", target=target_key, callable=partial(F.cross_entropy, ignore_index=-1),
+            pred="model.logits.cls",
+            target=target_key,
+            callable=partial(F.cross_entropy, ignore_index=-1),
         ),
     }
     if infill:
         losses["recon"] = LossRecon(
-            "model.tokens", "model.logits.recon", pad_index=tokenizer._tokenizer.vocab.stoi["<pad>"],
+            "model.tokens",
+            "model.logits.recon",
+            pad_index=tokenizer._tokenizer.vocab.stoi["<pad>"],
         )
 
     # Metrics
@@ -235,7 +267,10 @@ def train(
     }
 
     # either a dict with arguments to pass to ModelCheckpoint or list dicts for multiple ModelCheckpoint callbacks (to monitor and save checkpoints for more then one metric).
-    best_epoch_source = dict(monitor="validation.metrics.auc", mode="max",)
+    best_epoch_source = dict(
+        monitor="validation.metrics.auc",
+        mode="max",
+    )
 
     # optimizer and lr sch - see pl.LightningModule.configure_optimizers return value for all options
     optimizer = opt(params=model.parameters())
@@ -243,7 +278,10 @@ def train(
 
     if lr_scheduler is not None:
         optimizers_and_lr_schs["lr_scheduler"] = lr_scheduler(optimizer)
-        if isinstance(optimizers_and_lr_schs["lr_scheduler"], torch.optim.lr_scheduler.ReduceLROnPlateau,):
+        if isinstance(
+            optimizers_and_lr_schs["lr_scheduler"],
+            torch.optim.lr_scheduler.ReduceLROnPlateau,
+        ):
             optimizers_and_lr_schs["monitor"] = "validation.losses.total_loss"
 
     #  Train
@@ -279,7 +317,11 @@ def main(cfg: DictConfig) -> None:
 
     # train
     train(
-        model=nn_model, dl_train=dl_train, dl_valid=dl_valid, tokenizer=tokenizer, **cfg.train,
+        model=nn_model,
+        dl_train=dl_train,
+        dl_valid=dl_valid,
+        tokenizer=tokenizer,
+        **cfg.train,
     )
 
 

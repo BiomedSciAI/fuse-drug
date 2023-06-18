@@ -58,7 +58,9 @@ if __name__ == "__main__":
     lgr = logging.getLogger("Fuse")
     lgr.setLevel(logging.INFO)
 
-    test_results = XMLTestRunner(output=output, verbosity=2, stream=sys.stdout).run(suite,)
+    test_results = XMLTestRunner(output=output, verbosity=2, stream=sys.stdout).run(
+        suite,
+    )
 
     ### A workaround for "An invalid XML character" issue for the examples' unit-tests
     examples_test_files = [f for f in listdir(output) if (isfile(join(output, f)) and f.startswith("TEST-"))]

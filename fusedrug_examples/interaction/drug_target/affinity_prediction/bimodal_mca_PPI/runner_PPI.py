@@ -32,7 +32,8 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 
 print(
-    "CUDA_VISIBLE_DEVICES=", os.environ["CUDA_VISIBLE_DEVICES"] if "CUDA_VISIBLE_DEVICES" in os.environ else None,
+    "CUDA_VISIBLE_DEVICES=",
+    os.environ["CUDA_VISIBLE_DEVICES"] if "CUDA_VISIBLE_DEVICES" in os.environ else None,
 )
 
 
@@ -111,7 +112,9 @@ def session_manager_and_logger_setup(cfg: dict) -> None:
                 + f"for clearml: continuing existing task - project_name={project_name}, task_name={task_name}, continue_last_task=True"
             )
             Task.init(
-                project_name=project_name, task_name=task_name, continue_last_task=True,
+                project_name=project_name,
+                task_name=task_name,
+                continue_last_task=True,
             )
         else:
             print(
@@ -119,7 +122,9 @@ def session_manager_and_logger_setup(cfg: dict) -> None:
                 + f"for clearml: starting a new task - project_name={project_name}, task_name={task_name}, reuse_last_task_id=False"
             )
             Task.init(
-                project_name=project_name, task_name=task_name, reuse_last_task_id=False,
+                project_name=project_name,
+                task_name=task_name,
+                reuse_last_task_id=False,
             )
     return SESSION_FULL_PATH
 
@@ -186,8 +191,12 @@ def main(cfg: DictConfig) -> None:
     print(cfg_raw)
     print("done printing cfg_raw")
 
-    lightning_data = AffinityDataModule(**cfg_raw["data"]["lightning_data_module"],)
-    lightning_model_module = AffinityPredictorModule(**cfg_raw["model"],)
+    lightning_data = AffinityDataModule(
+        **cfg_raw["data"]["lightning_data_module"],
+    )
+    lightning_model_module = AffinityPredictorModule(
+        **cfg_raw["model"],
+    )
 
     exit_on_stopfile_callback = ExitOnStopFileCallback(STOP_FILENAME)
 
@@ -224,7 +233,12 @@ def main(cfg: DictConfig) -> None:
 
     trainer = pl.Trainer(
         **cfg.trainer,
-        callbacks=[val_rmse_callback, val_loss_callback, val_pearson_callback, exit_on_stopfile_callback,],
+        callbacks=[
+            val_rmse_callback,
+            val_loss_callback,
+            val_pearson_callback,
+            exit_on_stopfile_callback,
+        ],
     )
 
     trainer.fit(lightning_model_module, lightning_data)

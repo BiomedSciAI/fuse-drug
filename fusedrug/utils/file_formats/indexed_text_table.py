@@ -67,7 +67,9 @@ class IndexedTextTable(Dataset):
         self._first_row_is_columns_names = first_row_is_columns_names
 
         self._indexed_text_file = IndexedTextFile(
-            filename=filename, index_filename=index_filename, force_recreate_index=force_recreate_index,
+            filename=filename,
+            index_filename=index_filename,
+            force_recreate_index=force_recreate_index,
         )
 
         if limit_lines is not None:

@@ -52,7 +52,10 @@ class Op_pytoda_ProteinTokenizer(OpBase):
             if padding_length is None:
                 padding_length = self.protein_language.max_token_sequence_length
             transforms += [
-                LeftPadding(padding_length=padding_length, padding_index=self.protein_language.token_to_index["<PAD>"],)
+                LeftPadding(
+                    padding_length=padding_length,
+                    padding_index=self.protein_language.token_to_index["<PAD>"],
+                )
             ]
 
         if isinstance(self.protein_language, ProteinLanguage):

@@ -228,7 +228,10 @@ if __name__ == "__main__":
 
     ## DataModule sanity check
     datamodule = DTIDataModule(
-        train_data_path=TRAIN_URL, val_data_path=VAL_URL, test_data_path=TEST_URL, batch_size=42,
+        train_data_path=TRAIN_URL,
+        val_data_path=VAL_URL,
+        test_data_path=TEST_URL,
+        batch_size=42,
     )
 
     print("Done.")

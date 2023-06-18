@@ -7,7 +7,10 @@ from scipy.stats import pearsonr, spearmanr
 
 
 class AffinityPredictorModule(pl.LightningModule):
-    def __init__(self, **model_params: dict,) -> None:  # will be passed to BimodalMCA
+    def __init__(
+        self,
+        **model_params: dict,
+    ) -> None:  # will be passed to BimodalMCA
         """
         Affinity Predictor
         """

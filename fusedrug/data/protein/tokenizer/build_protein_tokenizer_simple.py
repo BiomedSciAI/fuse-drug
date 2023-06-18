@@ -94,7 +94,9 @@ def _get_raw_vocab_dict(name: str) -> Union[IUPAC_VOCAB, UNIREP_VOCAB]:
 @click.argument("vocab_name")
 @click.argument("output_tokenizer_json_file")
 @click.option(
-    "--unknown-token", default="<UNK>", help="allows to override the default unknown token",
+    "--unknown-token",
+    default="<UNK>",
+    help="allows to override the default unknown token",
 )
 def main(vocab_name: str, output_tokenizer_json_file: str, unknown_token: str) -> None:
     """
@@ -108,7 +110,9 @@ def main(vocab_name: str, output_tokenizer_json_file: str, unknown_token: str) -
     print(f"output_tokenizer_json_file set to {output_tokenizer_json_file}")
 
     build_simple_vocab_protein_tokenizer(
-        vocab=vocab_name, unknown_token=unknown_token, save_to_json_file=output_tokenizer_json_file,  # '<UNK>',
+        vocab=vocab_name,
+        unknown_token=unknown_token,
+        save_to_json_file=output_tokenizer_json_file,  # '<UNK>',
     )
 
 

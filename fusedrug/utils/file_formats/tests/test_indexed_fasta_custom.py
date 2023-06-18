@@ -21,7 +21,11 @@ class TestIndexedFastaCustom(unittest.TestCase):
         )
 
         ifc = IndexedFastaCustom(
-            fasta_path, force_recreate_index=False, process_identifier_pipeline=[uniprot_identifier_extractor,],
+            fasta_path,
+            force_recreate_index=False,
+            process_identifier_pipeline=[
+                uniprot_identifier_extractor,
+            ],
         )
 
         identifier, data, full_description = ifc[2]
@@ -41,7 +45,9 @@ class TestIndexedFastaCustom(unittest.TestCase):
         ifc = IndexedFastaCustom(
             fasta_path,
             force_recreate_index=True,
-            process_identifier_pipeline=[uniprot_identifier_extractor,],
+            process_identifier_pipeline=[
+                uniprot_identifier_extractor,
+            ],
             allow_access_by_id=True,
         )
 

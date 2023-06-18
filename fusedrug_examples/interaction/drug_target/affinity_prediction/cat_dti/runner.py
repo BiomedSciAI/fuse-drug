@@ -129,12 +129,26 @@ def run_train(paths: Dict[str, str], params: Dict[str, Any]) -> None:
 
     # instantiate CE loss function using Fuse's wrapper
     losses = {
-        "cls_loss": LossDefault(pred="model.logits.head_0", target="data.label", callable=F.cross_entropy, weight=1.0,),
+        "cls_loss": LossDefault(
+            pred="model.logits.head_0",
+            target="data.label",
+            callable=F.cross_entropy,
+            weight=1.0,
+        ),
     }
 
     # instantiate metric(s) using Fuse Eval package
     train_metrics = OrderedDict(
-        [("auc", MetricAUCROC(pred="model.output.head_0", target="data.label", class_names=["0", "1"],),),]
+        [
+            (
+                "auc",
+                MetricAUCROC(
+                    pred="model.output.head_0",
+                    target="data.label",
+                    class_names=["0", "1"],
+                ),
+            ),
+        ]
     )
     validation_metrics = copy.deepcopy(train_metrics)  # use the same metrics in validation as well
 
@@ -210,7 +224,11 @@ def run_infer(paths: Dict[str, str], params: Dict[str, Any]) -> None:
 
     # load model from checkpoint that was saved in the training phase and was determined by "best_epoch_source"
     pl_module = LightningModuleDefault.load_from_checkpoint(
-        ckpt_file_path, model_dir=paths["model_dir"], model=model, map_location="cpu", strict=True,
+        ckpt_file_path,
+        model_dir=paths["model_dir"],
+        model=model,
+        map_location="cpu",
+        strict=True,
     )
 
     # set the prediction keys to extract (the ones used be the evaluation function).
@@ -255,9 +273,15 @@ def run_eval(paths: Dict[str, str]) -> NDict:
     # instantiate metric(s) using Fuse Eval package
     metrics = OrderedDict(
         [
-            ("op", MetricApplyThresholds(pred="model.output.head_0"),),  # will apply argmax
+            (
+                "op",
+                MetricApplyThresholds(pred="model.output.head_0"),
+            ),  # will apply argmax
             ("auc", MetricAUCROC(pred="model.output.head_0", target="data.label")),
-            ("accuracy", MetricAccuracy(pred="results:metrics.op.cls_pred", target="data.label"),),
+            (
+                "accuracy",
+                MetricAccuracy(pred="results:metrics.op.cls_pred", target="data.label"),
+            ),
             (
                 "roc",
                 MetricROCCurve(
@@ -274,7 +298,11 @@ def run_eval(paths: Dict[str, str]) -> NDict:
 
     # evaluate !
     results = evaluator.eval(
-        ids=None, data=infer_file_path, metrics=metrics, output_dir=paths["eval_dir"], silent=False,
+        ids=None,
+        data=infer_file_path,
+        metrics=metrics,
+        output_dir=paths["eval_dir"],
+        silent=False,
     )
     lgr.info("Fuse Eval: Done", {"attrs": ["bold", "underline"]})
 

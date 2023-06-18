@@ -321,7 +321,10 @@ class AffinityDataModule(pl.LightningDataModule):
                         ProteinFlipIndividualActiveSiteSubSequences(
                             p=self.protein_augment_by_reverting_individual_active_site_sub_sequences_p
                         ),
-                        dict(key_in_aligned_sequence="data.input.protein", key_out="data.input.protein",),
+                        dict(
+                            key_in_aligned_sequence="data.input.protein",
+                            key_out="data.input.protein",
+                        ),
                     ),
                 ]
 
@@ -332,7 +335,10 @@ class AffinityDataModule(pl.LightningDataModule):
                             mutate_prob_in_active_site=self.protein_augment_by_introducing_noise_to_non_active_site_residues_p_inside_active_site,
                             mutate_prob_outside_active_site=self.protein_augment_by_introducing_noise_to_non_active_site_residues_p_outside_active_site,
                         ),
-                        dict(key_in_aligned_sequence="data.input.protein", key_out="data.input.protein",),
+                        dict(
+                            key_in_aligned_sequence="data.input.protein",
+                            key_out="data.input.protein",
+                        ),
                     ),
                 ]
 
@@ -340,8 +346,14 @@ class AffinityDataModule(pl.LightningDataModule):
             is_training and self.train_augment_protein_flip
         ):  # keep this after all active site alignment based operations! otherwise the extraction of aligned kinase info won't work
             pipeline_desc += [
-                (ProteinRandomFlipOrder(), dict(key_in="data.input.protein", key_out="data.input.protein"),),
-                (ProteinRandomFlipOrder(), dict(key_in="data.input.ligand", key_out="data.input.ligand"),),
+                (
+                    ProteinRandomFlipOrder(),
+                    dict(key_in="data.input.protein", key_out="data.input.protein"),
+                ),
+                (
+                    ProteinRandomFlipOrder(),
+                    dict(key_in="data.input.ligand", key_out="data.input.ligand"),
+                ),
             ]
 
         if is_training and self.protein_augment_full_sequence_noise:
@@ -373,7 +385,10 @@ class AffinityDataModule(pl.LightningDataModule):
         if self.protein_final_keep_only_uppercase:
             if self.protein_representation_type == "AA":
                 pipeline_desc += [
-                    (OpKeepOnlyUpperCase(), dict(key_in="data.input.protein", key_out="data.input.protein"),),
+                    (
+                        OpKeepOnlyUpperCase(),
+                        dict(key_in="data.input.protein", key_out="data.input.protein"),
+                    ),
                 ]
             else:
                 raise Exception(
@@ -381,7 +396,10 @@ class AffinityDataModule(pl.LightningDataModule):
                 )
             if self.peptide_representation_type == "AA":
                 pipeline_desc += [
-                    (OpKeepOnlyUpperCase(), dict(key_in="data.input.ligand", key_out="data.input.ligand"),),
+                    (
+                        OpKeepOnlyUpperCase(),
+                        dict(key_in="data.input.ligand", key_out="data.input.ligand"),
+                    ),
                 ]
             else:
                 raise Exception(
@@ -390,11 +408,17 @@ class AffinityDataModule(pl.LightningDataModule):
 
         if self.protein_representation_type == "AA":
             pipeline_desc += [
-                (OpToUpperCase(), dict(key_in="data.input.protein", key_out="data.input.protein"),),
+                (
+                    OpToUpperCase(),
+                    dict(key_in="data.input.protein", key_out="data.input.protein"),
+                ),
             ]
         if self.peptide_representation_type == "AA":
             pipeline_desc += [
-                (OpToUpperCase(), dict(key_in="data.input.ligand", key_out="data.input.ligand"),),
+                (
+                    OpToUpperCase(),
+                    dict(key_in="data.input.ligand", key_out="data.input.ligand"),
+                ),
             ]
 
         # Up to this point we worked only with string representations. From now on we tokenize:
@@ -452,7 +476,9 @@ class AffinityDataModule(pl.LightningDataModule):
                 )
             else:
                 protein_tokenizer_op = FastTokenizer(
-                    _protein_tokenizer_path, pad_length=self.receptor_padding_length, pad_id=protein_pad_id,
+                    _protein_tokenizer_path,
+                    pad_length=self.receptor_padding_length,
+                    pad_id=protein_pad_id,
                 )
         elif self.protein_representation_type == "AA":
             if self.pytoda_wrapped_tokenizer:
@@ -464,7 +490,9 @@ class AffinityDataModule(pl.LightningDataModule):
                 )
             else:
                 protein_tokenizer_op = FastTokenizer(
-                    _protein_tokenizer_path, pad_length=self.receptor_padding_length, pad_id=protein_pad_id,
+                    _protein_tokenizer_path,
+                    pad_length=self.receptor_padding_length,
+                    pad_id=protein_pad_id,
                 )
         else:
             raise NotImplementedError(f"Unexpected representation type: {self.protein_representation_type}")
@@ -491,7 +519,9 @@ class AffinityDataModule(pl.LightningDataModule):
                 )
             else:
                 ligand_tokenizer_op = FastTokenizer(
-                    _peptide_tokenizer_path, pad_length=self.ligand_padding_length, pad_id=peptide_pad_id,
+                    _peptide_tokenizer_path,
+                    pad_length=self.ligand_padding_length,
+                    pad_id=peptide_pad_id,
                 )
         elif self.peptide_representation_type == "AA":
             if self.pytoda_wrapped_tokenizer:
@@ -503,7 +533,9 @@ class AffinityDataModule(pl.LightningDataModule):
                 )
             else:
                 ligand_tokenizer_op = FastTokenizer(
-                    _peptide_tokenizer_path, pad_length=self.ligand_padding_length, pad_id=peptide_pad_id,
+                    _peptide_tokenizer_path,
+                    pad_length=self.ligand_padding_length,
+                    pad_id=peptide_pad_id,
                 )
 
         else:
@@ -511,12 +543,21 @@ class AffinityDataModule(pl.LightningDataModule):
 
         pipeline_desc += [
             # peptide
-            (ligand_tokenizer_op, dict(key_in="data.input.ligand", key_out_tokens_ids="data.input.tokenized_ligand",),),
+            (
+                ligand_tokenizer_op,
+                dict(
+                    key_in="data.input.ligand",
+                    key_out_tokens_ids="data.input.tokenized_ligand",
+                ),
+            ),
             (OpToTensor(), dict(key="data.input.tokenized_ligand")),
             # proteinligand_
             (
                 protein_tokenizer_op,
-                dict(key_in="data.input.protein", key_out_tokens_ids="data.input.tokenized_protein",),
+                dict(
+                    key_in="data.input.protein",
+                    key_out_tokens_ids="data.input.tokenized_protein",
+                ),
             ),
             (OpToTensor(), dict(key="data.input.tokenized_protein")),
             # affinity gt val
@@ -596,7 +637,11 @@ class AffinityDataModule(pl.LightningDataModule):
         val_dataset.create()
 
         dl = DataLoader(
-            val_dataset, batch_size=self.eval_batch_size, shuffle=False, drop_last=False, num_workers=self.num_workers,
+            val_dataset,
+            batch_size=self.eval_batch_size,
+            shuffle=False,
+            drop_last=False,
+            num_workers=self.num_workers,
         )
         return dl
 
@@ -622,6 +667,10 @@ class AffinityDataModule(pl.LightningDataModule):
         test_dataset.create()
 
         dl = DataLoader(
-            test_dataset, batch_size=self.eval_batch_size, shuffle=False, drop_last=False, num_workers=self.num_workers,
+            test_dataset,
+            batch_size=self.eval_batch_size,
+            shuffle=False,
+            drop_last=False,
+            num_workers=self.num_workers,
         )
         return dl

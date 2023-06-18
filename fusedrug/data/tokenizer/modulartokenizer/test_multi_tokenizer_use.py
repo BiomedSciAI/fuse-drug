@@ -34,7 +34,9 @@ def main(cfg: DictConfig) -> None:
     # Update tokenizer with special tokens:
     added_tokens = get_additional_tokens(subset=["special", "task"])
     t_mult_updated = update_special_tokens(
-        tokenizer_inst=t_mult_loaded_path, added_tokens=added_tokens, path_out=cfg_raw["data"]["tokenizer"]["out_path"],
+        tokenizer_inst=t_mult_loaded_path,
+        added_tokens=added_tokens,
+        path_out=cfg_raw["data"]["tokenizer"]["out_path"],
     )
     test_tokenizer(t_mult_updated, cfg_raw=cfg_raw, mode="updated_tokenizer")
 

@@ -153,7 +153,11 @@ def copy_and_fix_imports_python_file(src_file: str, out_file: str, from_module_n
 )  # , help='project directory, does not have to be at the root of the code repo. for example \home\someone\repos\image_classification\vanilla_transformer')
 @click.argument("sessions_base_dir")  # , help='the base directory is where new sessions will be created')
 @click.option("--requiregit", "-r", is_flag=True, help="require that project_dir will be inside a git repo")
-def main(project_dir: str, sessions_base_dir: str, requiregit: bool = False,) -> None:
+def main(
+    project_dir: str,
+    sessions_base_dir: str,
+    requiregit: bool = False,
+) -> None:
     create(project_dir, sessions_base_dir, require_git_repo=requiregit)
 
 
