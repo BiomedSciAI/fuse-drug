@@ -143,7 +143,7 @@ def cluster(
             r"A.2 - clustering with 100% identity to remove duplicates. The generated DB does not contain (directly) the sequences data, it only maps clusters centers to members."
         )
         cmd = f"mmseqs {cluster_method} {mmseqs_db_path} {mmseqs_cluster_full_identity} {mmseqs_tmp_for_clustering} -c 1.0"
-        cmd = _handle_cli_arguments(cmd, threads=threads, split_memory_limit=split_memory_limit, min_seq_id=1.0)
+        cmd = _handle_mmseqs_cli_arguments(cmd, threads=threads, split_memory_limit=split_memory_limit, min_seq_id=1.0)
         _run_system_cmd(cmd)
 
         mmseqs_only_representatives = join(output_dir, "mmseqs_workspace", "mmseqs_DB_full_identity_representatives")
@@ -179,7 +179,7 @@ def cluster(
     mmseqs_tmp_2_for_clustering = join(output_dir, "mmseqs_workspace", "mmseqs_DB_tmp_2")
     clustered_db = join(output_dir, "mmseqs_workspace", "mmseqs_DB_clustered")
     cmd = f"mmseqs {cluster_method} {step_B_initial_db} {clustered_db} {mmseqs_tmp_2_for_clustering} -c 1.0"
-    cmd = _handle_cli_arguments(
+    cmd = _handle_mmseqs_cli_arguments(
         cmd,
         threads=threads,
         kmer_per_seq=kmer_per_seq,
@@ -239,7 +239,7 @@ def cluster(
 cluster_impl = cluster  # for backward compatibility
 
 
-def _run_system_cmd(cmd: str, capture_output: bool = False) -> None:
+def _run_system_cmd(cmd: str, capture_output: bool = True) -> None:
     print(f"about to run: {cmd}")
     res = subprocess.run(cmd, shell=True, check=False, capture_output=capture_output)
     if res.stdout and len(res.stdout) > 0:
@@ -252,7 +252,7 @@ def _run_system_cmd(cmd: str, capture_output: bool = False) -> None:
         raise Exception(f"ERROR: failed when trying to run {cmd}, got return val={res.returncode}")
 
 
-def _handle_cli_arguments(
+def _handle_mmseqs_cli_arguments(
     cmd: str,
     threads: Optional[int] = None,
     kmer_per_seq: Optional[int] = None,
