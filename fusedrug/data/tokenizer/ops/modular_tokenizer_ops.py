@@ -20,7 +20,7 @@ class FastModularTokenizer(OpBase):
         pad_token: Union[str, None] = None,
         pad_type_id: Union[int, None] = None,
         validate_ends_with_eos: Optional[str] = "<EOS>",
-        verbose: Optional[bool] = False,
+        verbose: Optional[bool] = True,
         **kwargs: Any,
     ) -> None:
         """
@@ -77,6 +77,7 @@ class FastModularTokenizer(OpBase):
 
         self._max_size = max_size
 
+        self.split_regex = re.compile("(<[^>]*>|[^<>])")
         if self._verbose:
             self._debug_max_tokenized_len_encountered = defaultdict(int)
 
@@ -202,9 +203,9 @@ class FastModularTokenizer(OpBase):
         if (
             len(encoded.overflowing) > 0
         ):  # note, encoded.overflowing may have multiple items, and each item can contain multiple items
-            overall_char_len = sum([len(x.input_string) for x in data_lst])
+            n_tokens_org = sum([len(list(filter(None, self.split_regex.split(x.input_string)))) for x in data_lst])
             print(
-                f"Warning: FastModularTokenizer (pid={os.getpid()}) had to truncate sequence. Original Sequence Length = {overall_char_len} max supported = {self._max_size} for tokenizer: {self._tokenizer_path} for sample_id {get_sample_id(sample_dict)}"
+                f"Warning: FastModularTokenizer (pid={os.getpid()}) had to truncate sequence. Original Sequence Length = {n_tokens_org} max supported = {self._max_size} for tokenizer: {self._tokenizer_path} for sample_id {get_sample_id(sample_dict)}"
             )
 
         if key_out_tokenized_object is not None:
