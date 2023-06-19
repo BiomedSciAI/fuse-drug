@@ -58,10 +58,10 @@ train: # arguments for train() in classifiers_main_train.py
   #   _partial_: true
 
   #   # _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
-    
+
   #   _target_: torch.optim.lr_scheduler.CosineAnnealingLR
   #   T_max: ${train.trainer_kwargs.max_epochs}
-  #   eta_min: 1e-7 
+  #   eta_min: 1e-7
   #   last_epoch: -1
 
   trainer_kwargs:
@@ -112,16 +112,9 @@ model: # arguments for create_model() in classifiers_main_train.py
     layers_description: [256]
   classifier_recon_head:
     layers_description: [256]
-    
+
 hydra:
   run:
-    dir: ${root}/${name} 
+    dir: ${root}/${name}
   job:
-    chdir: False 
-
-
-  
-  
-  
-
-  
+    chdir: False

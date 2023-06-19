@@ -1,7 +1,10 @@
 """
 PLM-DTI affinity predictor (see https://www.mlsb.io/papers_2021/MLSB2021_Adapting_protein_language_models.pdf)
 """
-from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI import data, plm_dti
+from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI import (
+    data,
+    plm_dti,
+)
 import os
 from omegaconf import DictConfig, OmegaConf
 import hydra
@@ -38,10 +41,15 @@ def main(cfg: DictConfig) -> None:
 
     # Initialize clearml
     if cfg.experiment.clearml:
-        _ = Task.init(project_name=cfg.experiment.project_name, task_name=cfg.experiment.experiment_name)
+        _ = Task.init(
+            project_name=cfg.experiment.project_name,
+            task_name=cfg.experiment.experiment_name,
+        )
 
     # Train model
-    checkpoint_callback = ModelCheckpoint(monitor=cfg.trainer.watch_metric, save_top_k=1, mode="max")
+    checkpoint_callback = ModelCheckpoint(
+        monitor=cfg.trainer.watch_metric, save_top_k=1, mode="max"
+    )
 
     trainer = pl.Trainer(
         callbacks=[checkpoint_callback],

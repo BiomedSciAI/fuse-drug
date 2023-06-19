@@ -4,8 +4,13 @@ import os
 from fuse.utils.ndict import NDict
 from fuse.data.pipelines.pipeline_default import PipelineDefault
 
-from fusedrug.data.tokenizer.ops import Op_pytoda_SMILESTokenizer, Op_pytoda_ProteinTokenizer
-from fusedrug.data.molecule.tokenizer.pretrained import get_path as get_molecule_pretrained_vocab_path
+from fusedrug.data.tokenizer.ops import (
+    Op_pytoda_SMILESTokenizer,
+    Op_pytoda_ProteinTokenizer,
+)
+from fusedrug.data.molecule.tokenizer.pretrained import (
+    get_path as get_molecule_pretrained_vocab_path,
+)
 
 
 class TestPytodaTokenizers(unittest.TestCase):
@@ -20,11 +25,21 @@ class TestPytodaTokenizers(unittest.TestCase):
         sample["data.ligand.smiles"] = "COc1ccc(CNS(=O)(=O)c2ccc(s2)S(N)(=O)=O)cc1"
 
         # initiate tokenizer op and data pipeline
-        vocab_file = os.path.join(get_molecule_pretrained_vocab_path(), "pytoda_molecules_vocab.json")
+        vocab_file = os.path.join(
+            get_molecule_pretrained_vocab_path(), "pytoda_molecules_vocab.json"
+        )
         tokenizer_op = Op_pytoda_SMILESTokenizer(dict(vocab_file=vocab_file))
         pipeline = PipelineDefault(
             "test_pipeline",
-            [(tokenizer_op, dict(key_in="data.ligand.smiles", key_out_tokens_ids="data.ligand.tokenized_smiles"))],
+            [
+                (
+                    tokenizer_op,
+                    dict(
+                        key_in="data.ligand.smiles",
+                        key_out_tokens_ids="data.ligand.tokenized_smiles",
+                    ),
+                )
+            ],
         )
 
         # process the sample
@@ -45,7 +60,15 @@ class TestPytodaTokenizers(unittest.TestCase):
         tokenizer_op = Op_pytoda_ProteinTokenizer(amino_acid_dict="iupac")
         pipeline = PipelineDefault(
             "test_pipeline",
-            [(tokenizer_op, dict(key_in="data.protein.sequence", key_out_tokens_ids="data.protein.tokenized_seq"))],
+            [
+                (
+                    tokenizer_op,
+                    dict(
+                        key_in="data.protein.sequence",
+                        key_out_tokens_ids="data.protein.tokenized_seq",
+                    ),
+                )
+            ],
         )
 
         # process the sample

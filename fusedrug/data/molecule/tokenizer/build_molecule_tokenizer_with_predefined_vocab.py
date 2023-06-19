@@ -62,7 +62,9 @@ def _get_raw_vocab_dict(name: str) -> Union[IUPAC_VOCAB, UNIREP_VOCAB]:
     elif "unirep" == name:
         return UNIREP_VOCAB
 
-    raise Exception(f"unfamiliar vocab name {name} - allowed options are 'iupac' or 'unirep'")
+    raise Exception(
+        f"unfamiliar vocab name {name} - allowed options are 'iupac' or 'unirep'"
+    )
 
 
 # def _process_vocab_dict_def(token_str):
@@ -83,8 +85,14 @@ def _get_raw_vocab_dict(name: str) -> Union[IUPAC_VOCAB, UNIREP_VOCAB]:
 @click.command()
 @click.argument("input_vocab_json_file")
 @click.argument("output_tokenizer_json_file")
-@click.option("--unknown-token", default="<UNK>", help="allows to override the default unknown token")
-def main(input_vocab_json_file: str, output_tokenizer_json_file: str, unknown_token: str) -> None:
+@click.option(
+    "--unknown-token",
+    default="<UNK>",
+    help="allows to override the default unknown token",
+)
+def main(
+    input_vocab_json_file: str, output_tokenizer_json_file: str, unknown_token: str
+) -> None:
     """
     Builds a simple (not learned) vocabulary based tokenizer.
     Args:

@@ -10,7 +10,9 @@ import yaml
 import pandas as pd
 
 
-def cached_cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict) -> Dict[str, str]:
+def cached_cluster(
+    output_dir: str, force_rebuild: bool = False, **kwargs: dict
+) -> Dict[str, str]:
     """
     Uses mmseqs to:
 
@@ -45,7 +47,12 @@ def cached_cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict)
     """
     os.makedirs(output_dir, exist_ok=True)
 
-    str_repr = get_function_call_str(cluster_impl, _ignore_kwargs_names=["num_workers"], _include_code=False, **kwargs)
+    str_repr = get_function_call_str(
+        cluster_impl,
+        _ignore_kwargs_names=["num_workers"],
+        _include_code=False,
+        **kwargs,
+    )
 
     hash_value = hashlib.md5(str_repr.encode()).hexdigest()
     already_created_hash_filename = join(output_dir, "created_hash")
@@ -62,14 +69,18 @@ def cached_cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict)
                 )
                 rebuild_needed = True
         else:
-            raise Exception("hash value on disk is a mismatch! please delete the directory manually and rerun.")
+            raise Exception(
+                "hash value on disk is a mismatch! please delete the directory manually and rerun."
+            )
 
         existing_desc = read_text_file(already_created_description_filename)
     else:
         rebuild_needed = True
 
     if (not force_rebuild) and (not rebuild_needed):
-        print(f"Hash value indicates that it was already built, not rebuilding. See description: {existing_desc}")
+        print(
+            f"Hash value indicates that it was already built, not rebuilding. See description: {existing_desc}"
+        )
         with open(cached_answer_yaml, "rt") as f:
             ans = yaml.safe_load(f)
         return ans
@@ -137,22 +148,34 @@ def cluster(
         _run_system_cmd(cmd)
 
         # mmseqs cluster DB DB_clu tmp --min-seq-id 1.0 --threads 32
-        mmseqs_cluster_full_identity = join(output_dir, "mmseqs_workspace", "mmseqs_DB_cluster_full_identity")
-        mmseqs_tmp_for_clustering = join(output_dir, "mmseqs_workspace", "mmseqs_DB_tmp")
+        mmseqs_cluster_full_identity = join(
+            output_dir, "mmseqs_workspace", "mmseqs_DB_cluster_full_identity"
+        )
+        mmseqs_tmp_for_clustering = join(
+            output_dir, "mmseqs_workspace", "mmseqs_DB_tmp"
+        )
         print(
             r"A.2 - clustering with 100% identity to remove duplicates. The generated DB does not contain (directly) the sequences data, it only maps clusters centers to members."
         )
         cmd = f"mmseqs {cluster_method} {mmseqs_db_path} {mmseqs_cluster_full_identity} {mmseqs_tmp_for_clustering} -c 1.0"
-        cmd = _handle_mmseqs_cli_arguments(cmd, threads=threads, split_memory_limit=split_memory_limit, min_seq_id=1.0)
+        cmd = _handle_mmseqs_cli_arguments(
+            cmd, threads=threads, split_memory_limit=split_memory_limit, min_seq_id=1.0
+        )
         _run_system_cmd(cmd)
 
-        mmseqs_only_representatives = join(output_dir, "mmseqs_workspace", "mmseqs_DB_full_identity_representatives")
+        mmseqs_only_representatives = join(
+            output_dir, "mmseqs_workspace", "mmseqs_DB_full_identity_representatives"
+        )
         print(r"A.3 - keeping only cluster centers")
         cmd = f"mmseqs createsubdb {mmseqs_cluster_full_identity} {mmseqs_db_path}  {mmseqs_only_representatives}"
         _run_system_cmd(cmd)
 
-        mmseqs_only_unique_sequences_representatives_fasta = join(output_dir, "unique_representatives.fasta")
-        print(r"A.4 - creating a fasta file that contains only the representatives, including their sequence data.")
+        mmseqs_only_unique_sequences_representatives_fasta = join(
+            output_dir, "unique_representatives.fasta"
+        )
+        print(
+            r"A.4 - creating a fasta file that contains only the representatives, including their sequence data."
+        )
         cmd = f"mmseqs convert2fasta {mmseqs_only_representatives} {mmseqs_only_unique_sequences_representatives_fasta}"
         _run_system_cmd(cmd)
 
@@ -176,7 +199,9 @@ def cluster(
     print(
         "B.2 - cluster the remaining (unique representatives if deduplication was used) into different clusters based on the requested sequence identity threshold"
     )
-    mmseqs_tmp_2_for_clustering = join(output_dir, "mmseqs_workspace", "mmseqs_DB_tmp_2")
+    mmseqs_tmp_2_for_clustering = join(
+        output_dir, "mmseqs_workspace", "mmseqs_DB_tmp_2"
+    )
     clustered_db = join(output_dir, "mmseqs_workspace", "mmseqs_DB_clustered")
     cmd = f"mmseqs {cluster_method} {step_B_initial_db} {clustered_db} {mmseqs_tmp_2_for_clustering} -c 1.0"
     cmd = _handle_mmseqs_cli_arguments(
@@ -197,7 +222,9 @@ def cluster(
 
     # sort it to avoid issues with people assuming it's sorted
 
-    clustered_tsv_df = pd.read_csv(filepath_or_buffer=clustered_tsv, sep="\t", header=None, names=["center", "id"])
+    clustered_tsv_df = pd.read_csv(
+        filepath_or_buffer=clustered_tsv, sep="\t", header=None, names=["center", "id"]
+    )
     clustered_tsv_df.sort_values(by="id", inplace=True)
     clustered_tsv_df.set_index("id", inplace=True)
     clustered_tsv_df.to_csv(clustered_tsv, sep="\t")
@@ -222,10 +249,14 @@ def cluster(
     print("--------------------------------------")
 
     if deduplicate:
-        print(f"a deduplicated FASTA file: {mmseqs_only_unique_sequences_representatives_fasta}")
+        print(
+            f"a deduplicated FASTA file: {mmseqs_only_unique_sequences_representatives_fasta}"
+        )
         ans["deduplicated_fasta"] = mmseqs_only_unique_sequences_representatives_fasta
 
-    print(f"a TSV file containing the clusters (no sequence information): {clustered_tsv}")
+    print(
+        f"a TSV file containing the clusters (no sequence information): {clustered_tsv}"
+    )
     ans["cluster_tsv"] = clustered_tsv
 
     print(
@@ -249,7 +280,9 @@ def _run_system_cmd(cmd: str, capture_output: bool = True) -> None:
         print("stderr=")
         print(res.stderr.decode())
     if res.returncode and res.returncode != 0:
-        raise Exception(f"ERROR: failed when trying to run {cmd}, got return val={res.returncode}")
+        raise Exception(
+            f"ERROR: failed when trying to run {cmd}, got return val={res.returncode}"
+        )
 
 
 def _handle_mmseqs_cli_arguments(
@@ -264,6 +297,10 @@ def _handle_mmseqs_cli_arguments(
     """
     cmd = f"{cmd} --threads {threads}" if threads else cmd
     cmd = f"{cmd} --kmer-per-seq {kmer_per_seq}" if kmer_per_seq else cmd
-    cmd = f"{cmd} --split-memory-limit {split_memory_limit}" if split_memory_limit else cmd
+    cmd = (
+        f"{cmd} --split-memory-limit {split_memory_limit}"
+        if split_memory_limit
+        else cmd
+    )
     cmd = f"{cmd} --min-seq-id {min_seq_id}"
     return cmd

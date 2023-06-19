@@ -4,7 +4,11 @@ from warnings import warn
 from fusedrug.utils.file_formats import IndexedTextFile
 import numbers
 import pandas as pd
-from fuse.utils.multiprocessing import run_multiprocessed, get_from_global_storage, get_chunks_ranges
+from fuse.utils.multiprocessing import (
+    run_multiprocessed,
+    get_from_global_storage,
+    get_chunks_ranges,
+)
 import os
 
 
@@ -23,7 +27,9 @@ class IndexedTextTable(Dataset):
         process_funcs_pipeline: Optional[List[Callable]] = None,
         force_recreate_index: bool = False,
         limit_lines: Optional[int] = None,  # useful for debugging
-        num_workers: Union[str, int] = "auto",  # will be used when building the in-memory key-search map
+        num_workers: Union[
+            str, int
+        ] = "auto",  # will be used when building the in-memory key-search map
     ):
         """
         Args:
@@ -60,7 +66,9 @@ class IndexedTextTable(Dataset):
         self._allow_access_by_id = allow_access_by_id
 
         if (not first_row_is_columns_names) and (columns_names is None):
-            raise Exception("if you pass first_row_is_columns_names=False you must provide columns_names")
+            raise Exception(
+                "if you pass first_row_is_columns_names=False you must provide columns_names"
+            )
 
         self._columns_names = columns_names
 
@@ -87,9 +95,13 @@ class IndexedTextTable(Dataset):
             print("")
             first_line_splitted = self._split_line_basic(first_line)
             if 1 == len(first_line_splitted):
-                warn(f"columns line only contains a single column! maybe a separator issue? first line = {first_line}")
+                warn(
+                    f"columns line only contains a single column! maybe a separator issue? first line = {first_line}"
+                )
             elif 0 == len(first_line_splitted):
-                raise Exception(f"could not find any columns names in first line - {first_line}")
+                raise Exception(
+                    f"could not find any columns names in first line - {first_line}"
+                )
 
             if self._columns_names is None:
                 self._columns_names = first_line_splitted
@@ -99,7 +111,9 @@ class IndexedTextTable(Dataset):
                 )
 
         if len(self._columns_names) != len(set(self._columns_names)):
-            raise Exception(f"duplicate column names found! columns={self._columns_names}")
+            raise Exception(
+                f"duplicate column names found! columns={self._columns_names}"
+            )
         print(
             f"column names used={self._columns_names} - if it does not look like column names make sure that the following args are properly set: first_row_is_columns_names, columns_names"
         )
@@ -129,7 +143,9 @@ class IndexedTextTable(Dataset):
 
         if self._allow_access_by_id:
             self._offsets_map = dict()  # maps from id to line index
-            print(f"allow_access_by_id is enabled, building in-memory offset map (num_workers={self._num_workers})")
+            print(
+                f"allow_access_by_id is enabled, building in-memory offset map (num_workers={self._num_workers})"
+            )
 
             total = len(self._indexed_text_file)
             chunks_defs = get_chunks_ranges(total, chunk_size=1000)
@@ -200,7 +216,9 @@ class IndexedTextTable(Dataset):
                 )
             line_index = self._offsets_map[index]
         else:
-            raise Exception(f"supported index types are int or str, instead got {type(index)}")
+            raise Exception(
+                f"supported index types are int or str, instead got {type(index)}"
+            )
 
         index = None  # just clearing this var to make sure no one uses it in the func
 

@@ -15,7 +15,9 @@ class TestSDFIterableDataset(unittest.TestCase):
         for mol in iter(it):
             mols_so_far += 1
             try:
-                smiles = Chem.MolToSmiles(mol, canonical=False, isomericSmiles=True, kekuleSmiles=False)  # noqa: F841
+                smiles = Chem.MolToSmiles(  # noqa: F841
+                    mol, canonical=False, isomericSmiles=True, kekuleSmiles=False
+                )
                 mols_ok += 1
             except:
                 pass

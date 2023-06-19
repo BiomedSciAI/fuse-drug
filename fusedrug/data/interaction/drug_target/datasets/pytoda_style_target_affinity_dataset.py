@@ -22,9 +22,15 @@ class PytodaStyleDrugTargetAffinityDataset(Dataset):
         self._ligand_sequence_column_name = ligand_sequence_column_name
         self._protein_sequence_column_name = protein_sequence_column_name
 
-        self._affinity_pairs_csv_ligand_id_column_name = affinity_pairs_csv_ligand_id_column_name
-        self._affinity_pairs_csv_protein_id_column_name = affinity_pairs_csv_protein_id_column_name
-        self._affinity_pairs_csv_affinity_value_column_name = affinity_pairs_csv_affinity_value_column_name
+        self._affinity_pairs_csv_ligand_id_column_name = (
+            affinity_pairs_csv_ligand_id_column_name
+        )
+        self._affinity_pairs_csv_protein_id_column_name = (
+            affinity_pairs_csv_protein_id_column_name
+        )
+        self._affinity_pairs_csv_affinity_value_column_name = (
+            affinity_pairs_csv_affinity_value_column_name
+        )
 
         self._ligands_smi = ligands_smi
         # _indexed_table_table_kwargs = dict(
@@ -77,9 +83,9 @@ class PytodaStyleDrugTargetAffinityDataset(Dataset):
         self._affinity_df[affinity_pairs_csv_ligand_id_column_name] = self._affinity_df[
             affinity_pairs_csv_ligand_id_column_name
         ].str.rstrip()
-        self._affinity_df[affinity_pairs_csv_protein_id_column_name] = self._affinity_df[
+        self._affinity_df[
             affinity_pairs_csv_protein_id_column_name
-        ].str.rstrip()
+        ] = self._affinity_df[affinity_pairs_csv_protein_id_column_name].str.rstrip()
 
     def __len__(self) -> int:
         return self._affinity_df.shape[0]

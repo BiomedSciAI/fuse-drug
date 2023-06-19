@@ -6,7 +6,9 @@ import os
 
 class TestIndexedTextTable(unittest.TestCase):
     def test_no_headline(self) -> None:
-        ligands_smi_path = os.path.join(get_tests_data_dir(), "ligands_1k_no_columns_headline.smi")
+        ligands_smi_path = os.path.join(
+            get_tests_data_dir(), "ligands_1k_no_columns_headline.smi"
+        )
         itt = IndexedTextTable(
             ligands_smi_path,
             seperator="\t",
@@ -27,7 +29,9 @@ class TestIndexedTextTable(unittest.TestCase):
         self.assertTrue(all(mol_data == mol_data_2))
 
     def test_with_headline(self) -> None:
-        ligands_smi_path = os.path.join(get_tests_data_dir(), "ligands_1k_with_columns_headline.smi")
+        ligands_smi_path = os.path.join(
+            get_tests_data_dir(), "ligands_1k_with_columns_headline.smi"
+        )
         itt = IndexedTextTable(
             ligands_smi_path,
             seperator="\t",

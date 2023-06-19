@@ -2,7 +2,9 @@ import os
 import unittest
 import random
 
-from fusedrug.data.interaction.drug_target.datasets.dti_binding_dataset import dti_binding_dataset
+from fusedrug.data.interaction.drug_target.datasets.dti_binding_dataset import (
+    dti_binding_dataset,
+)
 
 
 class TestDTIBindingDatasetFuseWrapper(unittest.TestCase):
@@ -11,7 +13,12 @@ class TestDTIBindingDatasetFuseWrapper(unittest.TestCase):
     """
 
     def setUp(self) -> None:
-        self.pairs_columns_to_extract = ["ligand_id", "target_id", "activity_value", "activity_label"]
+        self.pairs_columns_to_extract = [
+            "ligand_id",
+            "target_id",
+            "activity_value",
+            "activity_label",
+        ]
         self.pairs_rename_columns = {
             "activity_value": "ground_truth_activity_value",
             "activity_label": "ground_truth_activity_label",
@@ -61,10 +68,15 @@ class TestDTIBindingDatasetFuseWrapper(unittest.TestCase):
         base_data_dir = os.environ["BINDING_DATA_PATH"]
 
         full_pairs_tsv = os.path.join(
-            base_data_dir, "pubchem_13-07-2022@native@single_protein_target@affinity_pairs_v0.1.tsv"
+            base_data_dir,
+            "pubchem_13-07-2022@native@single_protein_target@affinity_pairs_v0.1.tsv",
         )
-        full_ligands_tsv = os.path.join(base_data_dir, "pubchem_13-07-2022@native@single_protein_target@ligands.tsv")
-        full_targets_tsv = os.path.join(base_data_dir, "pubchem_13-07-2022@native@single_protein_target@targets.tsv")
+        full_ligands_tsv = os.path.join(
+            base_data_dir, "pubchem_13-07-2022@native@single_protein_target@ligands.tsv"
+        )
+        full_targets_tsv = os.path.join(
+            base_data_dir, "pubchem_13-07-2022@native@single_protein_target@targets.tsv"
+        )
 
         # test logic
         self.ds_tester(
@@ -79,14 +91,21 @@ class TestDTIBindingDatasetFuseWrapper(unittest.TestCase):
             targets_rename_columns=self.targets_rename_columns,
         )
 
-    def ds_tester(self, pairs_tsv: str, ligands_tsv: str, targets_tsv: str, **kwargs: dict) -> None:
+    def ds_tester(
+        self, pairs_tsv: str, ligands_tsv: str, targets_tsv: str, **kwargs: dict
+    ) -> None:
         """
         helper function that operates all the test logic (since the two tests differ only by their data paths).
         """
 
         # creating ds
 
-        ds = dti_binding_dataset(pairs_tsv=pairs_tsv, ligands_tsv=ligands_tsv, targets_tsv=targets_tsv, **kwargs)
+        ds = dti_binding_dataset(
+            pairs_tsv=pairs_tsv,
+            ligands_tsv=ligands_tsv,
+            targets_tsv=targets_tsv,
+            **kwargs
+        )
 
         rand_idx = random.choice(list(ds.dynamic_pipeline.ops[0]._data.keys()))
 

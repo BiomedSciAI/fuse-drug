@@ -14,7 +14,9 @@ class OmegaFoldPLM_AASequenceTokenizer(OpBase):
     Tokenize and create pseudo msa in the way that OmegaFoldPLM (Protein Language Model) expects
     """
 
-    def __init__(self, num_pseudo_msa: int = 0, mask_rate: float = 0.12, **kwargs: dict):  # 15, #they used 15
+    def __init__(
+        self, num_pseudo_msa: int = 0, mask_rate: float = 0.12, **kwargs: dict
+    ):  # 15, #they used 15
         super().__init__(**kwargs)
         self._num_pseudo_msa = num_pseudo_msa
         self._mask_rate = mask_rate

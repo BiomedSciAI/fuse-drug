@@ -7,7 +7,9 @@ import pytorch_lightning as pl
 from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI.Contrastive_PLM_DTI.src import (
     architectures as model_types,
 )
-from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI import metrics
+from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI import (
+    metrics,
+)
 from fuse.dl.models.model_wrapper import ModelWrapSeqToDict
 from fuse.dl.losses.loss_default import LossDefault
 import fuse.dl.lightning.pl_funcs as fuse_pl
@@ -41,7 +43,9 @@ class PLM_DTI_Module(pl.LightningModule):
         # wrap loss with fuse:
         # losses
         self.losses = {
-            "cls_loss": LossDefault(pred="model.output", target="data.label", callable=loss_fct, weight=1.0),
+            "cls_loss": LossDefault(
+                pred="model.output", target="data.label", callable=loss_fct, weight=1.0
+            ),
         }
         self.val_metrics, self.test_metrics = metrics.get_metrics(cfg.experiment.task)
         self.val_metric_dict = metrics.get_metrics_instances(self.val_metrics)
@@ -61,7 +65,9 @@ class PLM_DTI_Module(pl.LightningModule):
         batch_dict = self.model(batch_dict)
         loss = fuse_pl.step_losses(self.losses, batch_dict)
         for _, met_instance in self.val_metric_dict.items():
-            met_instance(batch_dict["model.output"], batch_dict["data.label"].type(torch.int))
+            met_instance(
+                batch_dict["model.output"], batch_dict["data.label"].type(torch.int)
+            )
         self.log("validation_loss", loss)
 
     def on_validation_epoch_end(self) -> dict:
@@ -76,7 +82,9 @@ class PLM_DTI_Module(pl.LightningModule):
         batch_dict = self.model(batch_dict)
         loss = fuse_pl.step_losses(self.losses, batch_dict)
         for _, met_instance in self.test_metric_dict.items():
-            met_instance(batch_dict["model.output"], batch_dict["data.label"].type(torch.int))
+            met_instance(
+                batch_dict["model.output"], batch_dict["data.label"].type(torch.int)
+            )
         self.log("test_loss", loss)
 
     def on_test_epoch_end(self) -> dict:
@@ -89,5 +97,7 @@ class PLM_DTI_Module(pl.LightningModule):
 
     def configure_optimizers(self) -> dict:
         opt = torch.optim.AdamW(self.model.parameters(), lr=self.cfg.trainer.lr)
-        lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(opt, T_0=self.cfg.trainer.lr_t0)
+        lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
+            opt, T_0=self.cfg.trainer.lr_t0
+        )
         return {"optimizer": opt, "lr_scheduler": lr_scheduler}

@@ -13,7 +13,9 @@ import omegaconf
 import copy
 import traceback
 
-TypedInput = collections.namedtuple("TypedInput", ["input_type", "input_string", "max_len"])
+TypedInput = collections.namedtuple(
+    "TypedInput", ["input_type", "input_string", "max_len"]
+)
 
 
 class ModularTokenizer(transformers.PreTrainedTokenizerFast):
@@ -69,7 +71,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         else:
             raise Exception("unexpected tokenizers_info type")
         self.tokenizers_info_raw_cfg = copy.deepcopy(tokenizers_info_list)
-        self.tokenizers_info = ModularTokenizer.cfg_list_2_dict(copy.deepcopy(tokenizers_info_list))
+        self.tokenizers_info = ModularTokenizer.cfg_list_2_dict(
+            copy.deepcopy(tokenizers_info_list)
+        )
         self.special_tokens_dict = special_tokens_dict
         self._max_possible_token_id = max_possible_token_id
         self._max_special_token_id = max_special_token_id
@@ -94,10 +98,14 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                     t_json,
                     enforce_special=False,
                 )
-                part_special_tokens = [t for t in part_special_tokens if t not in all_special_tokens]
+                part_special_tokens = [
+                    t for t in part_special_tokens if t not in all_special_tokens
+                ]
                 all_special_tokens = all_special_tokens + part_special_tokens
 
-            all_special_token_structs = ModularTokenizer.build_special_token_list(all_special_tokens)
+            all_special_token_structs = ModularTokenizer.build_special_token_list(
+                all_special_tokens
+            )
 
             # Set the starting ID for regular token mapping:
             next_index = max([t["id"] for t in all_special_token_structs]) + 1
@@ -139,7 +147,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             tokenizer_inst = Tokenizer.from_str(json_str)
             if self.special_tokens_dict is not None:
                 # At this point, tokens from self.special_tokens_dict are in every tokenizer. This is only to test that all special tokens were added.
-                num_add = tokenizer_inst.add_special_tokens(list(self.special_tokens_dict.values()))
+                num_add = tokenizer_inst.add_special_tokens(
+                    list(self.special_tokens_dict.values())
+                )
                 if num_add > 0:
                     raise Exception(
                         f"All special tokens should have been in the vocabulary at this point. {num_add} were added - need to check why."
@@ -271,7 +281,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             assert len(special_tokens) == len(
                 token_ids
             ), f"Number of tokens {len(special_tokens)} and number of IDs {len(token_ids)} must be the same."
-            assert starting_index is None, "Either starting index, or a list of IDs may be given, not both."
+            assert (
+                starting_index is None
+            ), "Either starting index, or a list of IDs may be given, not both."
             special_tokens = [
                 {
                     "id": i,
@@ -306,14 +318,18 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         """
         special_token_structs = tokenizer_json_inst["added_tokens"]
         if enforce_special:
-            special_tokens = [t["content"] for t in special_token_structs if t["special"]]
+            special_tokens = [
+                t["content"] for t in special_token_structs if t["special"]
+            ]
         else:
             special_tokens = [t["content"] for t in special_token_structs]
 
         return special_tokens
 
     @staticmethod
-    def get_subtokenizer_regular_tokens(tokenizer_json_inst: Dict, enforce_special: Optional[bool] = False) -> Set:
+    def get_subtokenizer_regular_tokens(
+        tokenizer_json_inst: Dict, enforce_special: Optional[bool] = False
+    ) -> Set:
         """returns the regular tokens from tokenizer defined by json_inst.
             Note: An alternative would be to call tokenizer_inst.get_vocab(with_added_tokens), using with_added_tokens False and True, which
             should've given us just regular and regular+special tokens, but for some reason both these options return the same output,
@@ -335,7 +351,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         return all_tokens - set(special_tokens)
 
     @staticmethod
-    def get_subtokenizer_vocab(tokenizer_json_inst: Dict, token_list: Optional[List] = None) -> Dict:
+    def get_subtokenizer_vocab(
+        tokenizer_json_inst: Dict, token_list: Optional[List] = None
+    ) -> Dict:
         """Returns a dictionary of {token:id} of tokenizer tokenizer_json_inst for all tokens in token_list
 
         Args:
@@ -368,7 +386,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         Returns:
             object: _description_
         """
-        return ModularTokenizer(tokenizers_info=tokenizers_info, load_adjusted_jsons=True)
+        return ModularTokenizer(
+            tokenizers_info=tokenizers_info, load_adjusted_jsons=True
+        )
 
     @staticmethod
     def load(path: str) -> Any:
@@ -402,21 +422,27 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             """
             for ind, t_conf in enumerate(loaded_conf):
                 if ("json_path" in t_conf) and (t_conf["json_path"] is not None):
-                    loaded_conf[ind]["json_path"] = os.path.join(path, os.path.basename(t_conf["json_path"]))
+                    loaded_conf[ind]["json_path"] = os.path.join(
+                        path, os.path.basename(t_conf["json_path"])
+                    )
                 loaded_conf[ind]["modular_json_path"] = os.path.join(
                     path, os.path.basename(t_conf["modular_json_path"])
                 )
             return loaded_conf
 
         try:
-            loaded_conf: omegaconf.dictconfig.DictConfig = OmegaConf.load(os.path.join(path, "config.yaml"))
+            loaded_conf: omegaconf.dictconfig.DictConfig = OmegaConf.load(
+                os.path.join(path, "config.yaml")
+            )
         except:
             traceback.print_exc()
             raise Exception(f"couldn't load config.yaml from {path}")
         tokenizers_info_fixed = fix_json_paths(loaded_conf["tokenizers_info"], path)
 
         if "max_possible_token_id" in loaded_conf:
-            max_possible_token_id: Union[int, None] = loaded_conf["max_possible_token_id"]
+            max_possible_token_id: Union[int, None] = loaded_conf[
+                "max_possible_token_id"
+            ]
         else:
             max_possible_token_id = None
 
@@ -452,7 +478,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
 
         for token in add_vocab:
             if add_vocab[token] in id2token:
-                print("Warning: ID collision during update_id2token_mapping for token {token}, id {add_vocab[token]}")
+                print(
+                    "Warning: ID collision during update_id2token_mapping for token {token}, id {add_vocab[token]}"
+                )
             else:
                 tmp_dict = {"token": token, "is_special": is_special}
                 id2token[add_vocab[token]] = tmp_dict
@@ -485,14 +513,18 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 "json_instance" in t_info
             ), f"tokenizer of type {t_type} hasn't been instantiated yet. Call init first."
             if len(self.decoder_dict) == 0:  # Add
-                sp_tokens = ModularTokenizer.get_subtokenizer_added_tokens(t_info["json_instance"])
+                sp_tokens = ModularTokenizer.get_subtokenizer_added_tokens(
+                    t_info["json_instance"]
+                )
                 sp_vocab = ModularTokenizer.get_subtokenizer_vocab(
                     tokenizer_json_inst=t_info["json_instance"], token_list=sp_tokens
                 )
                 self.decoder_dict = ModularTokenizer.update_id2token_mapping(
                     id2token=self.decoder_dict, add_vocab=sp_vocab, is_special=True
                 )
-            reg_tokens = ModularTokenizer.get_subtokenizer_regular_tokens(t_info["json_instance"])
+            reg_tokens = ModularTokenizer.get_subtokenizer_regular_tokens(
+                t_info["json_instance"]
+            )
             reg_vocab = ModularTokenizer.get_subtokenizer_vocab(
                 tokenizer_json_inst=t_info["json_instance"], token_list=list(reg_tokens)
             )
@@ -524,14 +556,18 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 )
             )
             special_tokens_vocab = ModularTokenizer.get_subtokenizer_vocab(
-                tokenizer_json_inst=self.tokenizers_info[tokenizer_types[0]]["json_instance"],
+                tokenizer_json_inst=self.tokenizers_info[tokenizer_types[0]][
+                    "json_instance"
+                ],
                 token_list=special_tokens,
             )
 
             # check if all special tokens are the same across all tokenizers
             for t_type in tokenizer_types:
                 special_tokens_t = list(
-                    ModularTokenizer.get_subtokenizer_added_tokens(self.tokenizers_info[t_type]["json_instance"])
+                    ModularTokenizer.get_subtokenizer_added_tokens(
+                        self.tokenizers_info[t_type]["json_instance"]
+                    )
                 )
                 special_tokens_vocab_t = ModularTokenizer.get_subtokenizer_vocab(
                     tokenizer_json_inst=self.tokenizers_info[t_type]["json_instance"],
@@ -545,7 +581,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             # check if there are no ID collisions within/between vocabs
             for t_type in tokenizer_types:
                 regular_tokens = list(
-                    ModularTokenizer.get_subtokenizer_regular_tokens(self.tokenizers_info[t_type]["json_instance"])
+                    ModularTokenizer.get_subtokenizer_regular_tokens(
+                        self.tokenizers_info[t_type]["json_instance"]
+                    )
                 )
                 regular_tokens_vocab = ModularTokenizer.get_subtokenizer_vocab(
                     tokenizer_json_inst=self.tokenizers_info[t_type]["json_instance"],
@@ -742,7 +780,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         #             f"tokenizer remapping resulted in IDs greater (max_id={self._get_max_mapped_id()}) than max_possible_id ({self._max_possible_token_id}). Reinitialize the modular tokenizer with larger max_possible_id"
         #         )
 
-    def _encode_single_type(self, data_str: str, input_type: str, sequence_id: Optional[int] = None) -> Encoding:
+    def _encode_single_type(
+        self, data_str: str, input_type: str, sequence_id: Optional[int] = None
+    ) -> Encoding:
         """_summary_
 
         Args:
@@ -865,7 +905,11 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 padding_token = self.id_to_token(padding_token_id)
         if pad_type_id is None:
             pad_type_id = self._pad_token_type_id
-        if padding_token_id is not None and padding_token is not None and max_len is not None:
+        if (
+            padding_token_id is not None
+            and padding_token is not None
+            and max_len is not None
+        ):
             merged_encoding.pad(
                 length=max_len,
                 direction="right",
@@ -893,7 +937,11 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         """
 
         if skip_special_tokens:
-            ret_val = [self.decoder_dict[id]["token"] for id in ids if not self.decoder_dict[id]["is_special"]]
+            ret_val = [
+                self.decoder_dict[id]["token"]
+                for id in ids
+                if not self.decoder_dict[id]["is_special"]
+            ]
         else:
             ret_val = [self.decoder_dict[id]["token"] for id in ids]
         return "".join(ret_val)
@@ -1090,7 +1138,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             tokenizer_inst = Tokenizer.from_str(json_str)
             if self.special_tokens_dict is not None:
                 # At this point, tokens from self.special_tokens_dict are in every tokenizer. This takes care that the special tokens are added to the tokenizer instance.
-                num_add = tokenizer_inst.add_special_tokens(list(self.special_tokens_dict.values()))
+                num_add = tokenizer_inst.add_special_tokens(
+                    list(self.special_tokens_dict.values())
+                )
                 if num_add > 0:
                     raise Exception(
                         f"All special tokens should have been in the vocabulary at this point. {num_add} were added - need to check why."
@@ -1134,7 +1184,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         #             f"tokenizer remapping resulted in IDs greater (max_id={self._get_max_mapped_id()}) than max_possible_id ({self._max_possible_token_id}). Reinitialize the modular tokenizer with larger max_possible_id"
         #         )
 
-    def decode_batch(self, sequences: List, skip_special_tokens: Optional[bool] = True) -> List:
+    def decode_batch(
+        self, sequences: List, skip_special_tokens: Optional[bool] = True
+    ) -> List:
         """
         Decode a batch of ids back to their corresponding string
 
@@ -1196,11 +1248,15 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         assert pad_to_multiple_of is None, "pad_multiple_of is not implemented"
 
         if pad_token is None and pad_id is None:
-            raise Exception("enable_padding was called, but neither padding token nor padding id were given")
+            raise Exception(
+                "enable_padding was called, but neither padding token nor padding id were given"
+            )
         if pad_token is not None and pad_id is not None:
             # if both are given, make sure they map to each other
             if self.token_to_id(pad_token) != pad_id:
-                raise Exception(f"pad_token {pad_token} does not correspond to pad_id {pad_id}")
+                raise Exception(
+                    f"pad_token {pad_token} does not correspond to pad_id {pad_id}"
+                )
         # at this point either padding token or id (or both) must be not None:
         if pad_id is None:
             if pad_token is not None:
@@ -1391,7 +1447,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         assert len(t_types) >= 1
         t_type = t_types[0]
         tokenizer_json_inst = self.tokenizers_info[t_type]["json_instance"]
-        special_tokens_list = ModularTokenizer.get_subtokenizer_added_tokens(tokenizer_json_inst=tokenizer_json_inst)
+        special_tokens_list = ModularTokenizer.get_subtokenizer_added_tokens(
+            tokenizer_json_inst=tokenizer_json_inst
+        )
         special_tokens_dict = ModularTokenizer.get_subtokenizer_vocab(
             tokenizer_json_inst=tokenizer_json_inst, token_list=special_tokens_list
         )
@@ -1453,7 +1511,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         else:
             return max(list(self.decoder_dict.keys()))
 
-    def _get_max_mapped_special_id(self, with_added_tokens: Optional[bool] = True) -> int:
+    def _get_max_mapped_special_id(
+        self, with_added_tokens: Optional[bool] = True
+    ) -> int:
         """
         Get value of the highest used ID of the underlying vocabulary (i.e. the highest ID that has a token mapped to it)
 
@@ -1627,7 +1687,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             possible_ids = []
             possible_id_types = []
             for t_type_val in self.tokenizers_info.keys():
-                tok_id = self.tokenizers_info[t_type_val]["tokenizer_inst"].token_to_id(token)
+                tok_id = self.tokenizers_info[t_type_val]["tokenizer_inst"].token_to_id(
+                    token
+                )
                 if tok_id is not None:
                     possible_ids.append(tok_id)
                     possible_id_types.append(t_type_val)
@@ -1644,7 +1706,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             t_type_val = str(t_type)
             return self.tokenizers_info[t_type_val]["tokenizer_inst"].token_to_id(token)
 
-    def train(self, files: List, trainer: Optional[tokenizers.trainers.Trainer] = None) -> None:
+    def train(
+        self, files: List, trainer: Optional[tokenizers.trainers.Trainer] = None
+    ) -> None:
         """
         Train the Tokenizer using the given files.
 

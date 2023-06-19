@@ -16,11 +16,16 @@ class SmilesToRDKitMol(OpBase):
         self._sanitize = sanitize
 
     def __call__(
-        self, sample_dict: NDict, key_in: str = "data.input.ligand_str", key_out: str = "data.input.ligand"
+        self,
+        sample_dict: NDict,
+        key_in: str = "data.input.ligand_str",
+        key_out: str = "data.input.ligand",
     ) -> NDict:
         smiles_seq = sample_dict[key_in]
         if not isinstance(smiles_seq, str):
-            raise Exception(f"Expected key_in={key_in} to point to a string, and instead got a {type(smiles_seq)}")
+            raise Exception(
+                f"Expected key_in={key_in} to point to a string, and instead got a {type(smiles_seq)}"
+            )
 
         try:
             mol = Chem.MolFromSmiles(smiles_seq, sanitize=self._sanitize)
@@ -37,7 +42,12 @@ class SmilesToRDKitMol(OpBase):
 
 
 class RDKitMolToSmiles(OpBase):
-    def __init__(self, verbose: int = 1, kwargs_SmilesFromMol: Optional[dict] = None, **kwargs: dict):
+    def __init__(
+        self,
+        verbose: int = 1,
+        kwargs_SmilesFromMol: Optional[dict] = None,
+        **kwargs: dict,
+    ):
         """
         Creates an Op which converts Chem.rdchem.Mol to smiles string
 
@@ -57,7 +67,10 @@ class RDKitMolToSmiles(OpBase):
             self._kwargs_SmilesFromMol = dict(canonical=False)
 
     def __call__(
-        self, sample_dict: NDict, key_in: str = "data.input.ligand", key_out: str = "data.input.ligand_str"
+        self,
+        sample_dict: NDict,
+        key_in: str = "data.input.ligand",
+        key_out: str = "data.input.ligand_str",
     ) -> NDict:
         mol = sample_dict[key_in]
         if not isinstance(mol, Chem.rdchem.Mol):
@@ -72,7 +85,9 @@ class RDKitMolToSmiles(OpBase):
         except:
             if self._verbose > 0:
                 sid = get_sample_id(sample_dict)
-                print(f"ERROR in sample_id={sid}: RDKitMolToSmiles could not process it - dropping sample.")
+                print(
+                    f"ERROR in sample_id={sid}: RDKitMolToSmiles could not process it - dropping sample."
+                )
             return None
 
         return sample_dict
@@ -83,7 +98,12 @@ class SanitizeMol(OpBase):
     Discards the sample (returns None) if the smiles string representation seems to be invalid
     """
 
-    def __init__(self, sanitize_flags: SanitizeFlags = Chem.rdmolops.SANITIZE_NONE, verbose: int = 1, **kwargs: dict):
+    def __init__(
+        self,
+        sanitize_flags: SanitizeFlags = Chem.rdmolops.SANITIZE_NONE,
+        verbose: int = 1,
+        **kwargs: dict,
+    ):
         """
         Args:
             sanitize_flags: use flags from https://www.rdkit.org/docs/source/rdkit.Chem.rdmolops.html#rdkit.Chem.rdmolops.SanitizeFlags
