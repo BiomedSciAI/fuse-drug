@@ -20,7 +20,7 @@ class FastModularTokenizer(OpBase):
         pad_token: Union[str, None] = None,
         pad_type_id: Union[int, None] = None,
         validate_ends_with_eos: Optional[str] = "<EOS>",
-        verbose: Optional[bool] = True,
+        verbose: Optional[bool] = False,
         **kwargs: Any,
     ) -> None:
         """
