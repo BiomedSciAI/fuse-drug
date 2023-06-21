@@ -166,23 +166,36 @@ class FastModularTokenizer(OpBase):
         max_seq_len: Optional[int] = None,
     ) -> NDict:
         """
+        :param key_in: key to either a:
+            (1) string that contains, in addition to the text that is to be tokenized, special delimiters signifying the type
+        of input within each span of text (e.g. <@TOKENIZER-TYPE=AA> sequence, <@TOKENIZER-TYPE=SMILES>, etc.).
+            (2) list of modular_tokenizer.TypedInput specifying the tokenizer type and the subsequence to tokenize
+
         :param max_seq_len: set maximum sequence len dynamically, used for both padding and truncation.
         """
 
-        data_lst = sample_dict[key_in]
-        if not isinstance(data_lst, list):
-            # data_lst is a list of named tuples of type collections.namedtuple("TypedInput", ["input_type", "input_string", "max_len"])
+        data = sample_dict[key_in]
+        if not isinstance(data, (list, str)):
+            # data is a list of named tuples of type collections.namedtuple("TypedInput", ["input_type", "input_string", "max_len"])
             raise Exception(
-                f"Expected key_in={key_in} to point to a list of inputs, and instead got a {type(data_lst)}. value={data_lst}"
+                f"Expected key_in={key_in} to point to a list of inputs or string with builtin tokenizer hints, and instead got a {type(data)}. value={data}"
             )
 
         if self._validate_ends_with_eos is not None:
-            if not data_lst[-1].input_string.rstrip().endswith(self._validate_ends_with_eos):
+            if isinstance(data, str):
+                last_seq = data
+            else:
+                last_seq = data[-1].input_string
+            if not last_seq.rstrip().endswith(self._validate_ends_with_eos):
                 raise Exception(
-                    f"self._validate_ends_with_eos was set to {self._validate_ends_with_eos}, but about to encode a string that does not end with it. The str end was: {data_lst[-1].input_string}"
+                    f"self._validate_ends_with_eos was set to {self._validate_ends_with_eos}, but about to encode a string that does not end with it. The str end was: {last_seq}"
                 )
 
-        encoded = self._tokenizer.encode_list(data_lst, max_len=max_seq_len)
+        if isinstance(data, str):
+            encoded = self._tokenizer.encode(data, max_len=max_seq_len)
+        else:
+            encoded = self._tokenizer.encode_list(data, max_len=max_seq_len)
+
         expected_max_len = self.get_max_len(override_max_len=max_seq_len)
         if expected_max_len is not None:  # we tightly couple padding length and max size.
             assert expected_max_len == len(encoded.ids)
@@ -216,7 +229,11 @@ class FastModularTokenizer(OpBase):
         if (
             len(encoded.overflowing) > 0
         ):  # note, encoded.overflowing may have multiple items, and each item can contain multiple items
-            overall_char_len = sum([len(x.input_string) for x in data_lst])
+            if isinstance(data, str):
+                overall_char_len = len(data)
+            else:
+                overall_char_len = sum([len(x.input_string) for x in data])
+
             max_len = self.get_max_len(override_max_len=max_seq_len)
             print(
                 f"Warning: FastModularTokenizer (pid={os.getpid()}) had to truncate sequence. Original Sequence Length = {overall_char_len} \
