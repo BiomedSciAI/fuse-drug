@@ -12,6 +12,7 @@ import collections
 import omegaconf
 import copy
 import traceback
+import re
 
 TypedInput = collections.namedtuple("TypedInput", ["input_type", "input_string", "max_len"])
 
@@ -908,7 +909,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
     ) -> Encoding:
         # (self, sequence, pair=None, is_pretokenized=False, add_special_tokens=True)
         """Receives a user-supplied string that contains, in addition to the text that is to be tokenized, special delimiters signifying the type
-        of input within each span of text (e.g. AA sequence, SMILES, task definition, etc.). These determine the type of tokenizer to use on each span,
+        of input within each span of text (e.g. <@TOKENIZER-TYPE=AA> sequence, <@TOKENIZER-TYPE=SMILES>, etc.). These determine the type of tokenizer to use on each span,
         and are not encoded.
 
         Args:
@@ -921,7 +922,26 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         Returns:
             Encoding: _description_
         """
-        raise Exception("Not implemented yet")
+        # split sequence to token hints and the following sequence
+        # For now support only sub tokenizer type
+        hints_and_subseq = re.split("<@TOKENIZER-TYPE=([^>]*)>", sequence)[
+            1:
+        ]  # the first element is blank - removing it
+        assert (
+            len(hints_and_subseq) > 0 and len(hints_and_subseq) % 2 == 0
+        ), f"Error: expecting leading modular tokenizer hints followed by a sequence to tokenize, got {sequence}"
+        # arrange as a list of TypedInput - each one will include the type and the following sequence
+        encode_list_format = [
+            TypedInput(tokenizer_type, subseq, None)
+            for tokenizer_type, subseq in zip(hints_and_subseq[::2], hints_and_subseq[1::2])
+        ]
+        return self.encode_list(
+            typed_input_list=encode_list_format,
+            max_len=max_len,
+            padding_token_id=padding_token_id,
+            padding_token=padding_token,
+            pad_type_id=pad_type_id,
+        )
 
     def get_tokenizer_types(self) -> List:
         return list(self.tokenizers_info.keys())
