@@ -782,6 +782,27 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
 
         return encoded
 
+    def get_expected_max_len(self, override_max_len: Optional[int] = None) -> Optional[int]:
+        """Returns the expected max_len of any encoding. max_len is given by internal state (set during initialization of the tokenizer), or it can be overridden
+        during call to encode_list (applicable only to that specific encoding), or enable_padding/enable_truncation (applicable to all encodings produced
+        following the call).
+
+        Args:
+            override_max_len (Optional[int], optional): Returns the resulting max_len, if the internal max_len were to be overridden by override_max_len
+            during call to encode_list, or enable_padding/enable_truncation. Defaults to None.
+
+        Returns:
+            Optional[int]: _description_
+        """
+        if override_max_len is None:
+            if self.max_len is not None:
+                max_len = self.max_len
+            else:
+                max_len = None
+        else:
+            max_len = override_max_len
+        return max_len
+
     def encode_list(
         self,
         typed_input_list: List,
@@ -846,9 +867,10 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
 
         merged_encoding = Encoding.merge(encoded_list)
 
-        if max_len is None:
-            if self.max_len is not None:
-                max_len = self.max_len
+        max_len = self.get_expected_max_len(override_max_len=max_len)
+        # if max_len is None:
+        #     if self.max_len is not None:
+        #         max_len = self.max_len
 
         if max_len is not None:
             merged_encoding.truncate(max_length=max_len)

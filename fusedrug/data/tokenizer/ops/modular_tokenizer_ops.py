@@ -141,6 +141,20 @@ class FastModularTokenizer(OpBase):
         assert ans is not None, f"could not find token id for token:{token_str}!"
         return ans
 
+    def get_max_len(self, override_max_len: Union[int, None] = None) -> Union[int, None]:
+        """Returns the expected max_len of any encoding. max_len is given by internal state (set during initialization of the tokenizer), or it can be overridden
+        during call to encode_list (applicable only to that specific encoding), or enable_padding/enable_truncation (applicable to all encodings produced
+        following the call).
+
+        Args:
+            override_max_len (Optional[int], optional): Returns the resulting max_len, if the internal max_len were to be overridden by override_max_len
+            during call to encode_list, or enable_padding/enable_truncation. Defaults to None.
+
+        Returns:
+            Optional[int]: _description_
+        """
+        return self._tokenizer.get_expected_max_len(override_max_len=override_max_len)
+
     def __call__(
         self,
         sample_dict: NDict,
@@ -169,9 +183,9 @@ class FastModularTokenizer(OpBase):
                 )
 
         encoded = self._tokenizer.encode_list(data_lst, max_len=max_seq_len)
-
-        if self._max_size is not None:  # we tightly couple padding length and max size.
-            assert self._max_size == len(encoded.ids)
+        expected_max_len = self._tokenizer.get_expected_max_len(override_max_len=max_seq_len)
+        if expected_max_len is not None:  # we tightly couple padding length and max size.
+            assert expected_max_len == len(encoded.ids)
 
         if self._verbose:
             if self._pad_id in encoded.ids:
@@ -203,8 +217,11 @@ class FastModularTokenizer(OpBase):
             len(encoded.overflowing) > 0
         ):  # note, encoded.overflowing may have multiple items, and each item can contain multiple items
             overall_char_len = sum([len(x.input_string) for x in data_lst])
+            max_len = self._tokenizer.get_expected_max_len(override_max_len=max_seq_len)
             print(
-                f"Warning: FastModularTokenizer (pid={os.getpid()}) had to truncate sequence. Original Sequence Length = {overall_char_len} max supported = {self._max_size} for tokenizer: {self._tokenizer_path} for sample_id {get_sample_id(sample_dict)}"
+                f"Warning: FastModularTokenizer (pid={os.getpid()}) had to truncate sequence. Original Sequence Length = {overall_char_len} \
+                    max supported = {max_len} {'possibly due to per-subtokenizer upper limits set in the input list' if max_len is None else ''} \
+                    for tokenizer: {self._tokenizer_path} for sample_id {get_sample_id(sample_dict)}"
             )
 
         if key_out_tokenized_object is not None:
