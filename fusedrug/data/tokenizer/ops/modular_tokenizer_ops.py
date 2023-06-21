@@ -183,7 +183,7 @@ class FastModularTokenizer(OpBase):
                 )
 
         encoded = self._tokenizer.encode_list(data_lst, max_len=max_seq_len)
-        expected_max_len = self._tokenizer.get_expected_max_len(override_max_len=max_seq_len)
+        expected_max_len = self.get_max_len(override_max_len=max_seq_len)
         if expected_max_len is not None:  # we tightly couple padding length and max size.
             assert expected_max_len == len(encoded.ids)
 
@@ -217,7 +217,7 @@ class FastModularTokenizer(OpBase):
             len(encoded.overflowing) > 0
         ):  # note, encoded.overflowing may have multiple items, and each item can contain multiple items
             overall_char_len = sum([len(x.input_string) for x in data_lst])
-            max_len = self._tokenizer.get_expected_max_len(override_max_len=max_seq_len)
+            max_len = self.get_max_len(override_max_len=max_seq_len)
             print(
                 f"Warning: FastModularTokenizer (pid={os.getpid()}) had to truncate sequence. Original Sequence Length = {overall_char_len} \
                     max supported = {max_len} {'possibly due to per-subtokenizer upper limits set in the input list' if max_len is None else ''} \

@@ -794,14 +794,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         Returns:
             Optional[int]: _description_
         """
-        if override_max_len is None:
-            if self.max_len is not None:
-                max_len = self.max_len
-            else:
-                max_len = None
-        else:
-            max_len = override_max_len
-        return max_len
+        if override_max_len is not None:
+            return override_max_len 
+        return self.max_len       
 
     def encode_list(
         self,
