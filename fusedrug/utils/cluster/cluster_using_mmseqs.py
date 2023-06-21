@@ -39,6 +39,7 @@ def cached_cluster(output_dir: str, force_rebuild: bool = False, **kwargs: dict)
         deduplicate: if False, deduplication step will be skipped and clustering will be done directly on the input
         kmer_per_seq: Sets the number of k-mers selected per sequence in a "linclust" cluster_method. More k-mers per sequences results in a higher sensitivity.
         split_memory_limit: (optional), limit the memory usage. should be max 70% of system's available RAM
+        override_workspace: when set to 'True', will automatically override the mmseqs workspace.
 
     For more information visit here -> https://mmseqs.com/latest/userguide.pdf
     Note - this function wraps cluster_impl() to allow caching
@@ -248,7 +249,7 @@ def _run_system_cmd(cmd: str, capture_output: bool = True) -> None:
     if res.stderr and len(res.stderr) > 0:
         print("stderr=")
         print(res.stderr.decode())
-    if res.returncode and res.returncode != 0:
+    if res.returncode != 0:
         raise Exception(f"ERROR: failed when trying to run {cmd}, got return val={res.returncode}")
 
 
