@@ -14,36 +14,40 @@ def cached_cluster(
     output_dir: str, force_rebuild: bool = False, **kwargs: dict
 ) -> Dict[str, str]:
     """
-    Uses mmseqs to:
+        Uses mmseqs to:
 
-    1. Remove 100% sequence identity duplicates
-    2. Cluster the remaining unique sequences into multiple clusters (e.g. with 70% sequence similarity threshold )
-        This is useful for multiple purposes:
-        a. Creating cross validation/test splits that evaluate and demonstrate generalizability
-        b. Balanced sampling during training, sampling with inverse proportion to cluster size. (Similar to Class Balancing)
+        1. Remove 100% sequence identity duplicates
+        2. Cluster the remaining unique sequences into multiple clusters (e.g. with 70% sequence similarity threshold )
+            This is useful for multiple purposes:
+            a. Creating cross validation/test splits that evaluate and demonstrate generalizability
+            b. Balanced sampling during training, sampling with inverse proportion to cluster size. (Similar to Class Balancing)
 
-    Note: depends on availability of mmseqs binary
-        Please install mmseqs2 . See install instructions here: https://github.com/soedinglab/MMseqs2
-        Also note that you can download prebuilt static binaries such as: https://mmseqs.com/latest/mmseqs-linux-sse41.tar.gz - extract and add the binary to your system PATH.
-        The version we used was MMseqs2 Version: 13.45111
-        Note: we've experienced "segmentation fault" when not using -c 1.0 (and keeping it at default value)
+        Note: depends on availability of mmseqs binary
+            Please install mmseqs2 . See install instructions here: https://github.com/soedinglab/MMseqs2
+            Also note that you can download prebuilt static binaries such as: https://mmseqs.com/latest/mmseqs-linux-sse41.tar.gz - extract and add the binary to your system PATH.
+            The version we used was MMseqs2 Version: 13.45111
+            Note: we've experienced "segmentation fault" when not using -c 1.0 (and keeping it at default value)
 
-    Args:
-        force_rebuild: rebuilds the data even if the hash indicates that it was already cached.
-        input_fasta_filename: a fasta with an entry per molecular entity
-        output_dir: where the output will be generated
-        cluster_min_sequence_identity: the minimal sequence identity for member within a cluster
-        threads: number of threads (for multithreading). if None -> by default it will use as many as the system has
-        cluster_method: any of 'cluster', 'linclust':
-            'cluster' is the "vanilla" one
-            'linclust' is faster (claims linear runtime) but less accurate. Might be suitable for massive data.
-                NOTE: I've compared cluster and linclust results for the deduplication phase, and results aren't identical, which means it probably misses few identical cases.
-        deduplicate: if False, deduplication step will be skipped and clustering will be done directly on the input
-        kmer_per_seq: Sets the number of k-mers selected per sequence in a "linclust" cluster_method. More k-mers per sequences results in a higher sensitivity.
-        split_memory_limit: (optional), limit the memory usage. should be max 70% of system's available RAM
+        Args:
+            force_rebuild: rebuilds the data even if the hash indicates that it was already cached.
+            input_fasta_filename: a fasta with an entry per molecular entity
+            output_dir: where the output will be generated
+            cluster_min_sequence_identity: the minimal sequence identity for member within a cluster
+            threads: number of threads (for multithreading). if None -> by default it will use as many as the system has
+            cluster_method: any of 'cluster', 'linclust':
+                'cluster' is the "vanilla" one
+                'linclust' is faster (claims linear runtime) but less accurate. Might be suitable for massive data.
+                    NOTE: I've compared cluster and linclust results for the deduplication phase, and results aren't identical, which means it probably misses few identical cases.
+            deduplicate: if False, deduplication step will be skipped and clustering will be done directly on the input
+            kmer_per_seq: Sets the number of k-mers selected per sequence in a "linclust" cluster_method. More k-mers per sequences results in a higher sensitivity.
+            split_memory_limit: (optional), limit the memory usage. should be max 70% of system's available RAM
+    <<<<<<< HEAD
+    =======
+            override_workspace: when set to 'True', will automatically override the mmseqs workspace.
+    >>>>>>> main
 
-    For more information visit here -> https://mmseqs.com/latest/userguide.pdf
-    Note - this function wraps cluster_impl() to allow caching
+        For more information visit here -> https://mmseqs.com/latest/userguide.pdf
+        Note - this function wraps cluster_impl() to allow caching
     """
     os.makedirs(output_dir, exist_ok=True)
 
@@ -279,7 +283,7 @@ def _run_system_cmd(cmd: str, capture_output: bool = True) -> None:
     if res.stderr and len(res.stderr) > 0:
         print("stderr=")
         print(res.stderr.decode())
-    if res.returncode and res.returncode != 0:
+    if res.returncode != 0:
         raise Exception(
             f"ERROR: failed when trying to run {cmd}, got return val={res.returncode}"
         )
