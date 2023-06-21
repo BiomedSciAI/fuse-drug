@@ -102,7 +102,7 @@ class IndexedFastaCustom(Dataset):
                 if verbose > 0:
                     print("building fasta index ... ")
                 with open(filename, "rb") as read_file:
-                    for line in read_file.readlines():
+                    for line in read_file:
 
                         # note - only decoding the first character to avoid wasting time on decoding the whole line
                         if not line[:1].decode() == ">":  # skip all non-identifier lines
