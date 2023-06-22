@@ -7,7 +7,10 @@ class OpToUpperCase(OpBase):
         super().__init__(**kwargs)
 
     def __call__(
-        self, sample_dict: NDict, key_in: str = "data.input.protein_str", key_out: str = "data.input.protein_str"
+        self,
+        sample_dict: NDict,
+        key_in: str = "data.input.protein_str",
+        key_out: str = "data.input.protein_str",
     ) -> NDict:
         data = sample_dict[key_in]
         assert isinstance(data, str)
@@ -22,7 +25,10 @@ class OpKeepOnlyUpperCase(OpBase):
         super().__init__(**kwargs)
 
     def __call__(
-        self, sample_dict: NDict, key_in: str = "data.input.protein_str", key_out: str = "data.input.protein_str"
+        self,
+        sample_dict: NDict,
+        key_in: str = "data.input.protein_str",
+        key_out: str = "data.input.protein_str",
     ) -> NDict:
         data = sample_dict[key_in]
         assert isinstance(data, str)

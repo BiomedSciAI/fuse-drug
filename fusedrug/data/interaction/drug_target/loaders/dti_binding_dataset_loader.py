@@ -33,13 +33,21 @@ class DTIBindingDatasetLoader(OpBase):
             cache_dir=cache_dir,
         )
 
-        self._force_dummy_constant_ligand_for_debugging = force_dummy_constant_ligand_for_debugging
+        self._force_dummy_constant_ligand_for_debugging = (
+            force_dummy_constant_ligand_for_debugging
+        )
         if self._force_dummy_constant_ligand_for_debugging:
-            print("WARNING: DEBUG MODE ACTIVATED!!!!! force_dummy_constant_ligand_for_debugging")
+            print(
+                "WARNING: DEBUG MODE ACTIVATED!!!!! force_dummy_constant_ligand_for_debugging"
+            )
 
-        self._force_dummy_constant_target_for_debugging = force_dummy_constant_target_for_debugging
+        self._force_dummy_constant_target_for_debugging = (
+            force_dummy_constant_target_for_debugging
+        )
         if self._force_dummy_constant_target_for_debugging:
-            print("WARNING: DEBUG MODE ACTIVATED!!!!! force_dummy_constant_target_for_debugging")
+            print(
+                "WARNING: DEBUG MODE ACTIVATED!!!!! force_dummy_constant_target_for_debugging"
+            )
 
     def __call__(
         self,
@@ -55,13 +63,19 @@ class DTIBindingDatasetLoader(OpBase):
         entry = self.dataset[sid]
 
         ##
-        sample_dict[key_out_ground_truth_activity_value] = entry["ground_truth_activity_value"]
-        sample_dict[key_out_ground_truth_activity_label] = entry["ground_truth_activity_label"]
+        sample_dict[key_out_ground_truth_activity_value] = entry[
+            "ground_truth_activity_value"
+        ]
+        sample_dict[key_out_ground_truth_activity_label] = entry[
+            "ground_truth_activity_label"
+        ]
 
         if not self._force_dummy_constant_ligand_for_debugging:
             sample_dict[key_out_ligand] = entry["ligand_str"]
         else:
-            sample_dict[key_out_ligand] = "c1cc(NNc2cccc(-c3nn[nH]n3)c2)cc(-c2nn[nH]n2)c1"
+            sample_dict[
+                key_out_ligand
+            ] = "c1cc(NNc2cccc(-c3nn[nH]n3)c2)cc(-c2nn[nH]n2)c1"
 
         if not self._force_dummy_constant_target_for_debugging:
             sample_dict[key_out_target] = entry["target_str"]

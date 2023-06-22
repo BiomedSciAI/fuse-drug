@@ -22,10 +22,14 @@ def mehikon(a, b):  # type: ignore
 termcolor.cprint = mehikon  # since junit/jenkins doesn't like text color ...
 
 if __name__ == "__main__":
-    print(f'info:in {__file__} in conda env {os.environ.get("CONDA_PREFIX", "missing???")}')
+    print(
+        f'info:in {__file__} in conda env {os.environ.get("CONDA_PREFIX", "missing???")}'
+    )
     mode = None
     if len(sys.argv) > 1:
-        mode = sys.argv[1]  # options "examples", "core" or None for both "core" and "examples"
+        mode = sys.argv[
+            1
+        ]  # options "examples", "core" or None for both "core" and "examples"
     os.environ["DISPLAY"] = ""  # disable display in unit tests
 
     is_jenkins_job = "WORKSPACE" in os.environ and len(os.environ["WORKSPACE"]) > 2
@@ -48,7 +52,9 @@ if __name__ == "__main__":
 
     suite = None
     for curr_subsection, top_dir in sub_sections:
-        curr_subsuite = TestLoader().discover(f"{search_base}/{curr_subsection}", "test*.py", top_level_dir=top_dir)
+        curr_subsuite = TestLoader().discover(
+            f"{search_base}/{curr_subsection}", "test*.py", top_level_dir=top_dir
+        )
         if suite is None:
             suite = curr_subsuite
         else:
@@ -63,7 +69,11 @@ if __name__ == "__main__":
     )
 
     ### A workaround for "An invalid XML character" issue for the examples' unit-tests
-    examples_test_files = [f for f in listdir(output) if (isfile(join(output, f)) and f.startswith("TEST-"))]
+    examples_test_files = [
+        f
+        for f in listdir(output)
+        if (isfile(join(output, f)) and f.startswith("TEST-"))
+    ]
 
     for file in examples_test_files:
         file_path = join(output, file)

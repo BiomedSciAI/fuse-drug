@@ -1,7 +1,7 @@
 # fusedrug.data
 
-## interaction   
-* PyTorch dataset implementation for data as described in [DrugDiscoveryFoundationBenchmarks](https://github.com/BiomedSciAI/DrugDiscoveryFoundationBenchmarks).  
+## interaction
+* PyTorch dataset implementation for data as described in [DrugDiscoveryFoundationBenchmarks](https://github.com/BiomedSciAI/DrugDiscoveryFoundationBenchmarks).
 * PyTorch dataset implementation for data in the style of [PyToDa](https://github.com/PaccMann/paccmann_datasets).
 
 ## molecule

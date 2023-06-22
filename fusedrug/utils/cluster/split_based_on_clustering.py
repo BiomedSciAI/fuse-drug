@@ -48,21 +48,27 @@ def split(
         set_name: join(dirname(cluster_tsv), f"{set_name}@" + basename(cluster_tsv))
         for (set_name, _) in splits_desc.items()
     }
-    files_handles = {set_name: open(filename, "wb") for (set_name, filename) in files_names.items()}
+    files_handles = {
+        set_name: open(filename, "wb") for (set_name, filename) in files_names.items()
+    }
     members_num = defaultdict(int)
     centers_num = defaultdict(int)
 
     assigned_centers = {}
 
     with open(cluster_tsv, "rt") as f:
-        mm_read = mmap.mmap(f.fileno(), 0, prot=mmap.PROT_READ)  # useful for massive files
+        mm_read = mmap.mmap(
+            f.fileno(), 0, prot=mmap.PROT_READ
+        )  # useful for massive files
         linenum = 0
 
         if columns_names is None:
             columns_names = mm_read.readline().decode().rstrip().split("\t")
 
         if cluster_center_column_name not in columns_names:
-            raise Exception(f"Could not find {cluster_center_column_name} in columns: {columns_names}")
+            raise Exception(
+                f"Could not find {cluster_center_column_name} in columns: {columns_names}"
+            )
         column_index = columns_names.index(cluster_center_column_name)
 
         # write the columns names in all sets outputs

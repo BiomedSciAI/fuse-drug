@@ -35,7 +35,10 @@ class SmiLoader(OpBase):
         )
 
     def __call__(
-        self, sample_dict: NDict, key_out_seq: str = "data.gt.seq", key_out_mol_id: Optional[str] = None
+        self,
+        sample_dict: NDict,
+        key_out_seq: str = "data.gt.seq",
+        key_out_mol_id: Optional[str] = None,
     ) -> NDict:
         sid = get_sample_id(sample_dict)
         assert isinstance(sid, (int, str))

@@ -1,12 +1,24 @@
 import pytorch_lightning as pl
 from typing import Optional, List
-from fusedrug.data.molecule.ops import SmilesRandomizeAtomOrder, SmilesToRDKitMol, RDKitMolToSmiles
+from fusedrug.data.molecule.ops import (
+    SmilesRandomizeAtomOrder,
+    SmilesToRDKitMol,
+    RDKitMolToSmiles,
+)
 import os
 from fuse.data import OpBase
 from fusedrug.data.protein.ops import ProteinRandomFlipOrder, OpToUpperCase
-from fusedrug.data.molecule.tokenizer.pretrained import get_path as get_molecule_pretrained_tokenizer_path
-from fusedrug.data.protein.tokenizer.pretrained import get_path as get_protein_pretrained_tokenizer_path
-from fusedrug.data.tokenizer.ops import FastTokenizer, Op_pytoda_SMILESTokenizer, Op_pytoda_ProteinTokenizer
+from fusedrug.data.molecule.tokenizer.pretrained import (
+    get_path as get_molecule_pretrained_tokenizer_path,
+)
+from fusedrug.data.protein.tokenizer.pretrained import (
+    get_path as get_protein_pretrained_tokenizer_path,
+)
+from fusedrug.data.tokenizer.ops import (
+    FastTokenizer,
+    Op_pytoda_SMILESTokenizer,
+    Op_pytoda_ProteinTokenizer,
+)
 from fuse.data import DatasetDefault, PipelineDefault, OpToTensor, OpKeepKeypaths
 from fusedrug.data.interaction.drug_target.loaders import DrugTargetAffinityLoader
 from torch.utils.data import DataLoader
@@ -85,7 +97,9 @@ class AffinityDataModule(pl.LightningDataModule):
 
         self.pytoda_wrapped_tokenizer = pytoda_wrapped_tokenizer
         self.pytoda_ligand_tokenizer_json = pytoda_ligand_tokenizer_json
-        self.pytoda_target_tokenizer_amino_acid_dict = pytoda_target_tokenizer_amino_acid_dict
+        self.pytoda_target_tokenizer_amino_acid_dict = (
+            pytoda_target_tokenizer_amino_acid_dict
+        )
 
         self.pairs_table_ligand_column = pairs_table_ligand_column
         self.pairs_table_sequence_column = pairs_table_sequence_column
@@ -144,7 +158,9 @@ class AffinityDataModule(pl.LightningDataModule):
         )
 
     def _create_pipeline_desc(
-        self, is_training: bool, drug_target_affinity_loader_op: DrugTargetAffinityLoader
+        self,
+        is_training: bool,
+        drug_target_affinity_loader_op: DrugTargetAffinityLoader,
     ) -> List[OpBase]:
         """
         Note: in the current implementation, augmentation is activated only if is_training==False
@@ -164,18 +180,30 @@ class AffinityDataModule(pl.LightningDataModule):
 
         if is_training and self.train_augment_molecule_shuffle_atoms:
             pipeline_desc += [
-                (SmilesToRDKitMol(), dict(key_in="data.input.ligand", key_out="data.input.ligand")),
+                (
+                    SmilesToRDKitMol(),
+                    dict(key_in="data.input.ligand", key_out="data.input.ligand"),
+                ),
                 (SmilesRandomizeAtomOrder(), dict(key="data.input.ligand")),
-                (RDKitMolToSmiles(), dict(key_in="data.input.ligand", key_out="data.input.ligand")),
+                (
+                    RDKitMolToSmiles(),
+                    dict(key_in="data.input.ligand", key_out="data.input.ligand"),
+                ),
             ]
 
         if is_training and self.train_augment_protein_flip:
             pipeline_desc += [
-                (ProteinRandomFlipOrder(), dict(key_in="data.input.protein", key_out="data.input.protein")),
+                (
+                    ProteinRandomFlipOrder(),
+                    dict(key_in="data.input.protein", key_out="data.input.protein"),
+                ),
             ]
 
         pipeline_desc += [
-            (OpToUpperCase(), dict(key_in="data.input.protein", key_out="data.input.protein")),
+            (
+                OpToUpperCase(),
+                dict(key_in="data.input.protein", key_out="data.input.protein"),
+            ),
         ]
 
         _molecule_tokenizer_path = os.path.join(
@@ -184,7 +212,9 @@ class AffinityDataModule(pl.LightningDataModule):
         )
         molecule_pad_id = 3
 
-        _protein_tokenizer_path = os.path.join(get_protein_pretrained_tokenizer_path(), "simple_protein_tokenizer.json")
+        _protein_tokenizer_path = os.path.join(
+            get_protein_pretrained_tokenizer_path(), "simple_protein_tokenizer.json"
+        )
         protein_pad_id = 0
 
         if self.pytoda_wrapped_tokenizer:
@@ -208,7 +238,9 @@ class AffinityDataModule(pl.LightningDataModule):
             )
         else:
             ligand_tokenizer_op = FastTokenizer(
-                _molecule_tokenizer_path, pad_length=self.ligand_padding_length, pad_id=molecule_pad_id
+                _molecule_tokenizer_path,
+                pad_length=self.ligand_padding_length,
+                pad_id=molecule_pad_id,
             )
 
         if self.pytoda_wrapped_tokenizer:
@@ -220,17 +252,28 @@ class AffinityDataModule(pl.LightningDataModule):
             )
         else:
             protein_tokenizer_op = FastTokenizer(
-                _protein_tokenizer_path, pad_length=self.receptor_padding_length, pad_id=protein_pad_id
+                _protein_tokenizer_path,
+                pad_length=self.receptor_padding_length,
+                pad_id=protein_pad_id,
             )
 
         pipeline_desc += [
             # molecule
-            (ligand_tokenizer_op, dict(key_in="data.input.ligand", key_out_tokens_ids="data.input.tokenized_ligand")),
+            (
+                ligand_tokenizer_op,
+                dict(
+                    key_in="data.input.ligand",
+                    key_out_tokens_ids="data.input.tokenized_ligand",
+                ),
+            ),
             (OpToTensor(), dict(key="data.input.tokenized_ligand")),
             # proteinligand_
             (
                 protein_tokenizer_op,
-                dict(key_in="data.input.protein", key_out_tokens_ids="data.input.tokenized_protein"),
+                dict(
+                    key_in="data.input.protein",
+                    key_out_tokens_ids="data.input.tokenized_protein",
+                ),
             ),
             (OpToTensor(), dict(key="data.input.tokenized_protein")),
             # affinity gt val
@@ -263,14 +306,20 @@ class AffinityDataModule(pl.LightningDataModule):
             **self._shared_affinity_dataset_loader_kwargs,
         )
 
-        pipeline_desc = self._create_pipeline_desc(is_training=True, drug_target_affinity_loader_op=affinity_loader_op)
+        pipeline_desc = self._create_pipeline_desc(
+            is_training=True, drug_target_affinity_loader_op=affinity_loader_op
+        )
 
         all_sample_ids = np.arange(len(affinity_loader_op.drug_target_affinity_dataset))
 
         train_dataset = DatasetDefault(
-            all_sample_ids if self.partial_sample_ids is None else self.partial_sample_ids,
+            all_sample_ids
+            if self.partial_sample_ids is None
+            else self.partial_sample_ids,
             static_pipeline=None,
-            dynamic_pipeline=PipelineDefault(name="train_pipeline_affinity_predictor", ops_and_kwargs=pipeline_desc),
+            dynamic_pipeline=PipelineDefault(
+                name="train_pipeline_affinity_predictor", ops_and_kwargs=pipeline_desc
+            ),
         )
         train_dataset.create()
 
@@ -294,19 +343,29 @@ class AffinityDataModule(pl.LightningDataModule):
             **self._shared_affinity_dataset_loader_kwargs,
         )
 
-        pipeline_desc = self._create_pipeline_desc(is_training=False, drug_target_affinity_loader_op=affinity_loader_op)
+        pipeline_desc = self._create_pipeline_desc(
+            is_training=False, drug_target_affinity_loader_op=affinity_loader_op
+        )
 
         all_sample_ids = np.arange(len(affinity_loader_op.drug_target_affinity_dataset))
 
         val_dataset = DatasetDefault(
-            all_sample_ids if self.partial_sample_ids is None else self.partial_sample_ids,
+            all_sample_ids
+            if self.partial_sample_ids is None
+            else self.partial_sample_ids,
             static_pipeline=None,
-            dynamic_pipeline=PipelineDefault(name="val_pipeline_affinity_predictor", ops_and_kwargs=pipeline_desc),
+            dynamic_pipeline=PipelineDefault(
+                name="val_pipeline_affinity_predictor", ops_and_kwargs=pipeline_desc
+            ),
         )
         val_dataset.create()
 
         dl = DataLoader(
-            val_dataset, batch_size=self.eval_batch_size, shuffle=False, drop_last=False, num_workers=self.num_workers
+            val_dataset,
+            batch_size=self.eval_batch_size,
+            shuffle=False,
+            drop_last=False,
+            num_workers=self.num_workers,
         )
         return dl
 
@@ -320,18 +379,28 @@ class AffinityDataModule(pl.LightningDataModule):
             **self._shared_affinity_dataset_loader_kwargs,
         )
 
-        pipeline_desc = self._create_pipeline_desc(is_training=False, drug_target_affinity_loader_op=affinity_loader_op)
+        pipeline_desc = self._create_pipeline_desc(
+            is_training=False, drug_target_affinity_loader_op=affinity_loader_op
+        )
 
         all_sample_ids = np.arange(len(affinity_loader_op.drug_target_affinity_dataset))
 
         test_dataset = DatasetDefault(
-            all_sample_ids if self.partial_sample_ids is None else self.partial_sample_ids,
+            all_sample_ids
+            if self.partial_sample_ids is None
+            else self.partial_sample_ids,
             static_pipeline=None,
-            dynamic_pipeline=PipelineDefault(name="test_pipeline_affinity_predictor", ops_and_kwargs=pipeline_desc),
+            dynamic_pipeline=PipelineDefault(
+                name="test_pipeline_affinity_predictor", ops_and_kwargs=pipeline_desc
+            ),
         )
         test_dataset.create()
 
         dl = DataLoader(
-            test_dataset, batch_size=self.eval_batch_size, shuffle=False, drop_last=False, num_workers=self.num_workers
+            test_dataset,
+            batch_size=self.eval_batch_size,
+            shuffle=False,
+            drop_last=False,
+            num_workers=self.num_workers,
         )
         return dl

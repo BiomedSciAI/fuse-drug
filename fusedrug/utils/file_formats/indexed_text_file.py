@@ -91,7 +91,9 @@ class IndexedTextFile(Dataset):
                         lines_offsets=lines_offsets,
                     )
                 lines_offsets = None
-        loaded_hdf5 = load_hdf5(self.index_filename)  # reloading even in the creation time (intentional)
+        loaded_hdf5 = load_hdf5(
+            self.index_filename
+        )  # reloading even in the creation time (intentional)
         self.offsets = loaded_hdf5["lines_offsets"]
 
     def __len__(self) -> int:

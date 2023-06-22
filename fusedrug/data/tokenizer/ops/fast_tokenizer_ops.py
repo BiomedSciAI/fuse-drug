@@ -49,7 +49,9 @@ class FastTokenizer(OpBase):
         if pad_token in vocab.keys():
             pad_id = vocab[pad_token]
         else:
-            raise Exception(f"Could not find pad token = {pad_token} in {tokenizer_json}")
+            raise Exception(
+                f"Could not find pad token = {pad_token} in {tokenizer_json}"
+            )
 
         self._validate_ends_with_eos = validate_ends_with_eos
 
@@ -137,7 +139,9 @@ class FastTokenizer(OpBase):
             if sentinel_prefix in k:
                 val = re.findall(integer_find_regex, k)
                 if len(val) != 1:
-                    raise Exception(f"expected exactly one integer number in {k} but found {val}")
+                    raise Exception(
+                        f"expected exactly one integer number in {k} but found {val}"
+                    )
                 val = val[0]
                 val = int(val)
 
@@ -148,7 +152,9 @@ class FastTokenizer(OpBase):
                     max_token = val
 
         if (min_token is None) or (max_token is None):
-            raise Exception(f'Could not find any sentinels with the prefix "{sentinel_prefix}"')
+            raise Exception(
+                f'Could not find any sentinels with the prefix "{sentinel_prefix}"'
+            )
 
         return (min_token, max_token)
 
@@ -195,14 +201,19 @@ class FastTokenizer(OpBase):
                 # no padding, therefore it was fully used (either exactly the size, or most likely it was clipped)
                 _encoded_len_unpadded = len(encoded.ids)
 
-            if _encoded_len_unpadded > self._debug_max_tokenized_len_encountered[self._tokenizer_json]:
+            if (
+                _encoded_len_unpadded
+                > self._debug_max_tokenized_len_encountered[self._tokenizer_json]
+            ):
                 print(
                     "DEBUG: FastTokenizer: encountered new max encoded size:",
                     _encoded_len_unpadded,
                     " for tokenizer: ",
                     self._tokenizer_json,
                 )
-                self._debug_max_tokenized_len_encountered[self._tokenizer_json] = _encoded_len_unpadded
+                self._debug_max_tokenized_len_encountered[
+                    self._tokenizer_json
+                ] = _encoded_len_unpadded
 
         # KEEP THIS AS DOC FOR NOW
         # encoded has attributes [ids, type_ids, tokens, offsets, attention_mask, special_tokens_mask, overflowing]
@@ -233,7 +244,9 @@ class FastTokenizer(OpBase):
         if key_out_attention_mask is not None:
             sample_dict[key_out_attention_mask] = encoded.attention_mask
             if convert_attention_mask_to_bool:
-                sample_dict[key_out_attention_mask] = [bool(x) for x in sample_dict[key_out_attention_mask]]
+                sample_dict[key_out_attention_mask] = [
+                    bool(x) for x in sample_dict[key_out_attention_mask]
+                ]
 
         if (key_out_tokens_ids is None) and (key_out_tokenized_object is None):
             warn(

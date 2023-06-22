@@ -64,7 +64,9 @@ class FastBalancedSampler(Sampler):
 
         """
 
-        self._datasets_lengths = [len(x) if isinstance(x, Dataset) else x for x in datasets_lengths]
+        self._datasets_lengths = [
+            len(x) if isinstance(x, Dataset) else x for x in datasets_lengths
+        ]
         if verbose > 0:
             print("FastBalancedSampler::datasets lengths =", self._datasets_lengths)
         self._datasets_num = len(self._datasets_lengths)
@@ -75,7 +77,9 @@ class FastBalancedSampler(Sampler):
         for x in self._minibatch_pattern:
             assert isinstance(x, int)
         if len(self._datasets_lengths) != len(self._minibatch_pattern):
-            raise Exception("datasets_lengths and minibatch_pattern are expected to be lists with the same length")
+            raise Exception(
+                "datasets_lengths and minibatch_pattern are expected to be lists with the same length"
+            )
         if len(self._datasets_lengths) < 1:
             raise Exception("got an empty datasets_lengths!")
 
@@ -101,7 +105,10 @@ class FastBalancedSampler(Sampler):
         elif isinstance(self._epoch_minibatches_count_mode, tuple):
             if not len(self._epoch_minibatches_count_mode) == 2:
                 raise Exception(_err_msg)
-            if not self._epoch_minibatches_count_mode[0] == "see_all_of_specific_dataset":
+            if (
+                not self._epoch_minibatches_count_mode[0]
+                == "see_all_of_specific_dataset"
+            ):
                 raise Exception(_err_msg)
             if (
                 not self._epoch_minibatches_count_mode[1] >= 0
@@ -112,10 +119,12 @@ class FastBalancedSampler(Sampler):
             # calculate needed minibatches to see all samples from this specific dataset
 
             _required_minibatches_num = (
-                self._datasets_lengths[_focus_on_dataset_index] // self._minibatch_pattern[_focus_on_dataset_index]
+                self._datasets_lengths[_focus_on_dataset_index]
+                // self._minibatch_pattern[_focus_on_dataset_index]
             )
             _required_minibatches_num += (
-                self._datasets_lengths[_focus_on_dataset_index] % self._minibatch_pattern[_focus_on_dataset_index]
+                self._datasets_lengths[_focus_on_dataset_index]
+                % self._minibatch_pattern[_focus_on_dataset_index]
             )
             self._epoch_minibatches_count_mode = _required_minibatches_num
         else:
@@ -127,7 +136,9 @@ class FastBalancedSampler(Sampler):
                 for idx in range(self._datasets_num)
             ]
 
-            self._epoch_minibatches_count_mode = max(required_minibatches_to_see_each_dataset)
+            self._epoch_minibatches_count_mode = max(
+                required_minibatches_to_see_each_dataset
+            )
 
         assert isinstance(self._epoch_minibatches_count_mode, int)
 
@@ -176,5 +187,7 @@ class FastBalancedSampler(Sampler):
         self._per_dataset_pointers[dataset_index] += 1
 
         # now, convert the local position in the dataset into the global position in the concat dataset
-        total_sample_index = sum(self._datasets_lengths[:dataset_index]) + local_sample_index
+        total_sample_index = (
+            sum(self._datasets_lengths[:dataset_index]) + local_sample_index
+        )
         return int(total_sample_index)

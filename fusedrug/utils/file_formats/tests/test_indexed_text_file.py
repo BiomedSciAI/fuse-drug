@@ -6,7 +6,9 @@ import os
 
 class TestIndexedTextFile(unittest.TestCase):
     def test_no_headline(self) -> None:
-        ligands_smi_path = os.path.join(get_tests_data_dir(), "ligands_1k_no_columns_headline.smi")
+        ligands_smi_path = os.path.join(
+            get_tests_data_dir(), "ligands_1k_no_columns_headline.smi"
+        )
         itf = IndexedTextFile(ligands_smi_path, force_recreate_index=True)
 
         self.assertEqual(
@@ -15,7 +17,9 @@ class TestIndexedTextFile(unittest.TestCase):
         )
 
     def test_with_headline(self) -> None:
-        ligands_smi_path = os.path.join(get_tests_data_dir(), "ligands_1k_with_columns_headline.smi")
+        ligands_smi_path = os.path.join(
+            get_tests_data_dir(), "ligands_1k_with_columns_headline.smi"
+        )
         itf = IndexedTextFile(ligands_smi_path, force_recreate_index=True)
 
         self.assertEqual(itf[0], "smiles_string\tsmiles_id\n")
