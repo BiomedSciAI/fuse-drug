@@ -13,7 +13,9 @@ from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI.Contr
 )
 import torch
 from omegaconf import open_dict  # to be able to add new keys to hydra dictconfig
-from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI.utils import get_task_dir
+from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI.utils import (
+    get_task_dir,
+)
 from fuse.data.datasets.dataset_wrap_seq_to_dict import DatasetWrapSeqToDict
 from torch.utils.data import DataLoader
 from fuse.data.utils.collates import CollateDefault
@@ -27,11 +29,15 @@ def get_dataloaders(
     if cfg.experiment.task.lower() == "ours":
         task_dir = cfg.benchmark_data.path
     else:
-        task_dir = get_task_dir(cfg.experiment.task, orig_repo_name="Contrastive_PLM_DTI")
+        task_dir = get_task_dir(
+            cfg.experiment.task, orig_repo_name="Contrastive_PLM_DTI"
+        )
 
     if not contrastive:
         drug_featurizer = get_featurizer(cfg.model.drug_featurizer, save_dir=task_dir)
-        target_featurizer = get_featurizer(cfg.model.target_featurizer, save_dir=task_dir)
+        target_featurizer = get_featurizer(
+            cfg.model.target_featurizer, save_dir=task_dir
+        )
         if cfg.experiment.task == "dti_dg":
             with open_dict(cfg):
                 cfg.model.classify = False
@@ -82,7 +88,9 @@ def get_dataloaders(
     else:
         task_dir = get_task_dir("DUDe", orig_repo_name="Contrastive_PLM_DTI")
         drug_featurizer = get_featurizer(cfg.model.drug_featurizer, save_dir=task_dir)
-        target_featurizer = get_featurizer(cfg.model.target_featurizer, save_dir=task_dir)
+        target_featurizer = get_featurizer(
+            cfg.model.target_featurizer, save_dir=task_dir
+        )
         datamodule = DUDEDataModule(
             cfg.trainer.contrastive_split,
             drug_featurizer,
@@ -95,14 +103,18 @@ def get_dataloaders(
         datamodule.prepare_data()
         datamodule.setup(stage="fit")
 
-    pipeline_desc = [(OpToTensor(), {"dtype": torch.float32, "key": "data.label"})]  # convert labels to float
+    pipeline_desc = [
+        (OpToTensor(), {"dtype": torch.float32, "key": "data.label"})
+    ]  # convert labels to float
 
     # FuseMedML wrapper
     datamodule.data_train = DatasetWrapSeqToDict(
         name="PLM_DTI_train",
         dataset=datamodule.data_train,
         sample_keys=("data.drug", "data.target", "data.label"),
-        dynamic_pipeline=PipelineDefault(name="data_pipeline", ops_and_kwargs=pipeline_desc),
+        dynamic_pipeline=PipelineDefault(
+            name="data_pipeline", ops_and_kwargs=pipeline_desc
+        ),
     )
     datamodule.data_train.create()
 
@@ -110,7 +122,9 @@ def get_dataloaders(
         name="PLM_DTI_val",
         dataset=datamodule.data_val,
         sample_keys=("data.drug", "data.target", "data.label"),
-        dynamic_pipeline=PipelineDefault(name="data_pipeline", ops_and_kwargs=pipeline_desc),
+        dynamic_pipeline=PipelineDefault(
+            name="data_pipeline", ops_and_kwargs=pipeline_desc
+        ),
     )
     datamodule.data_val.create()
 
@@ -118,16 +132,24 @@ def get_dataloaders(
         name="PLM_DTI_test",
         dataset=datamodule.data_test,
         sample_keys=("data.drug", "data.target", "data.label"),
-        dynamic_pipeline=PipelineDefault(name="data_pipeline", ops_and_kwargs=pipeline_desc),
+        dynamic_pipeline=PipelineDefault(
+            name="data_pipeline", ops_and_kwargs=pipeline_desc
+        ),
     )
     datamodule.data_test.create()
 
     # dataloader with batch dict collator:
     datamodule._loader_kwargs["collate_fn"] = CollateDefault()
-    train_dataloader = DataLoader(dataset=datamodule.data_train, **datamodule._loader_kwargs)
+    train_dataloader = DataLoader(
+        dataset=datamodule.data_train, **datamodule._loader_kwargs
+    )
 
-    valid_dataloader = DataLoader(dataset=datamodule.data_val, **datamodule._loader_kwargs)
+    valid_dataloader = DataLoader(
+        dataset=datamodule.data_val, **datamodule._loader_kwargs
+    )
 
-    test_dataloader = DataLoader(dataset=datamodule.data_test, **datamodule._loader_kwargs)
+    test_dataloader = DataLoader(
+        dataset=datamodule.data_test, **datamodule._loader_kwargs
+    )
 
     return train_dataloader, valid_dataloader, test_dataloader, cfg

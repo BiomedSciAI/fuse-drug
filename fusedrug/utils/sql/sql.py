@@ -27,7 +27,9 @@ class SQL:
         """
 
         self._connection_url = connection_url
-        if not connection_url.lower().startswith("postgresql") and connection_url.lower().endswith(".sqlite3"):
+        if not connection_url.lower().startswith(
+            "postgresql"
+        ) and connection_url.lower().endswith(".sqlite3"):
             db_dir = os.path.dirname(connection_url)
             db_name = os.path.splitext(os.path.basename(connection_url))[0]
             self.sqlite_obj = SQLfromCSV(db_dir=db_dir, db_name=db_name)
@@ -94,7 +96,9 @@ def download_dataframe(
     # original_ext = get_extension(output_tsv)
     parts_num = 0
     for i, df_chunk in enumerate(it):
-        current_chunk_output_tsv = change_extension(output_tsv, f"@_chunk_{i:04d}@{original_ext}")
+        current_chunk_output_tsv = change_extension(
+            output_tsv, f"@_chunk_{i:04d}@{original_ext}"
+        )
         print(f"writing {current_chunk_output_tsv}")
         df_chunk.to_csv(current_chunk_output_tsv, index=False, sep="\t")
         parts_num += 1
@@ -104,7 +108,9 @@ def download_dataframe(
         with Timer("Merging chunks:"):
             with open(output_tsv, "w") as f_write:
                 for i in range(parts_num):
-                    current_chunk_output_tsv = change_extension(output_tsv, f"@_chunk_{i:04d}@{original_ext}")
+                    current_chunk_output_tsv = change_extension(
+                        output_tsv, f"@_chunk_{i:04d}@{original_ext}"
+                    )
                     line_num = -1
                     with open(current_chunk_output_tsv, "r") as f_read:
                         while True:

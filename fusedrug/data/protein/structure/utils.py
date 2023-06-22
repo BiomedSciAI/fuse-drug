@@ -13,7 +13,11 @@ def aa_sequence_from_aa_integers(aatype: List[int]) -> str:
 
 
 def get_structure_file_type(filename: str) -> str:
-    if filename.endswith(".pdb") or filename.endswith(".pdb.gz") or filename.endswith(".ent.gz"):
+    if (
+        filename.endswith(".pdb")
+        or filename.endswith(".pdb.gz")
+        or filename.endswith(".ent.gz")
+    ):
         return "pdb"
     if filename.endswith(".cif") or filename.endswith(".cif.gz"):
         return "cif"

@@ -24,7 +24,9 @@ class TestAAOps(unittest.TestCase):
 
         # mask_token_id = tokenizer.tokens_to_ids['[MASK]']
 
-        fasta_file_loc = os.path.join(get_tests_data_dir(), "example_viral_proteins.fasta")
+        fasta_file_loc = os.path.join(
+            get_tests_data_dir(), "example_viral_proteins.fasta"
+        )
 
         # on_both = dict(inputs={'data.gt.seq':'seq'}
 
@@ -34,7 +36,13 @@ class TestAAOps(unittest.TestCase):
         # dict(tokenizer=tokenizer, inputs={'data.input.seq':'seq'}, outputs='data.input.seq'),
 
         pipeline_desc = [
-            (OpRepeat(fasta_loader, [dict(key_out="data.gt.seq"), dict(key_out="data.input.seq")]), {}),
+            (
+                OpRepeat(
+                    fasta_loader,
+                    [dict(key_out="data.gt.seq"), dict(key_out="data.input.seq")],
+                ),
+                {},
+            ),
             # (OpRepeat(OpCropRandom, [dict(key_out='data.gt.seq'), dict(key_out='data.input.seq')]), {} ),
             # (OpRepeat(OpAddSeperator, [
             #     dict(inputs={'data.gt.seq':'seq'}, outputs='data.gt.seq'),

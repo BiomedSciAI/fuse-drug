@@ -67,11 +67,19 @@ if __name__ == "__main__":
     from fuse.data import create_initial_sample
     from fuse.data.pipelines.pipeline_default import PipelineDefault
     from fuse.data import OpKeepKeypaths
-    from fusedrug.data.molecule.ops import SmilesRandomizeAtomOrder, SmilesToRDKitMol, RDKitMolToSmiles
+    from fusedrug.data.molecule.ops import (
+        SmilesRandomizeAtomOrder,
+        SmilesToRDKitMol,
+        RDKitMolToSmiles,
+    )
     from fusedrug.data.protein.ops import ProteinRandomFlipOrder
     from fusedrug.data.tokenizer.ops import FastTokenizer
-    from fusedrug.data.molecule.tokenizer.pretrained import get_path as get_molecule_pretrained_tokenizer_path
-    from fusedrug.data.protein.tokenizer.pretrained import get_path as get_protein_pretrained_tokenizer_path
+    from fusedrug.data.molecule.tokenizer.pretrained import (
+        get_path as get_molecule_pretrained_tokenizer_path,
+    )
+    from fusedrug.data.protein.tokenizer.pretrained import (
+        get_path as get_protein_pretrained_tokenizer_path,
+    )
     from torch.utils.data import default_collate
     from fuse.data.ops.ops_cast import OpToTensor
 
@@ -115,7 +123,9 @@ if __name__ == "__main__":
     )
     molecule_pad_id = 3
 
-    _protein_tokenizer_path = os.path.join(get_protein_pretrained_tokenizer_path(), "simple_protein_tokenizer.json")
+    _protein_tokenizer_path = os.path.join(
+        get_protein_pretrained_tokenizer_path(), "simple_protein_tokenizer.json"
+    )
     protein_pad_id = 0
 
     pipeline_desc = [
@@ -129,19 +139,38 @@ if __name__ == "__main__":
             ),
         ),
         # ligand related ops
-        (SmilesToRDKitMol(), dict(key_in="data.input.ligand", key_out="data.input.ligand")),
-        (SmilesRandomizeAtomOrder(), dict(key="data.input.ligand")),
-        (RDKitMolToSmiles(), dict(key_in="data.input.ligand", key_out="data.input.ligand")),
         (
-            FastTokenizer(_molecule_tokenizer_path, pad_length=256, pad_id=molecule_pad_id),
-            dict(key_in="data.input.ligand", key_out_tokens_ids="data.input.tokenized_ligand"),
+            SmilesToRDKitMol(),
+            dict(key_in="data.input.ligand", key_out="data.input.ligand"),
+        ),
+        (SmilesRandomizeAtomOrder(), dict(key="data.input.ligand")),
+        (
+            RDKitMolToSmiles(),
+            dict(key_in="data.input.ligand", key_out="data.input.ligand"),
+        ),
+        (
+            FastTokenizer(
+                _molecule_tokenizer_path, pad_length=256, pad_id=molecule_pad_id
+            ),
+            dict(
+                key_in="data.input.ligand",
+                key_out_tokens_ids="data.input.tokenized_ligand",
+            ),
         ),
         (OpToTensor(), dict(key="data.input.tokenized_ligand")),
         # protein related ops
-        (ProteinRandomFlipOrder(), dict(key_in="data.input.protein", key_out="data.input.protein")),
         (
-            FastTokenizer(_protein_tokenizer_path, pad_length=3000, pad_id=molecule_pad_id),
-            dict(key_in="data.input.protein", key_out_tokens_ids="data.input.tokenized_protein"),
+            ProteinRandomFlipOrder(),
+            dict(key_in="data.input.protein", key_out="data.input.protein"),
+        ),
+        (
+            FastTokenizer(
+                _protein_tokenizer_path, pad_length=3000, pad_id=molecule_pad_id
+            ),
+            dict(
+                key_in="data.input.protein",
+                key_out_tokens_ids="data.input.tokenized_protein",
+            ),
         ),
         (OpToTensor(), dict(key="data.input.tokenized_protein")),
         # affinity val (pIC50)
@@ -149,7 +178,13 @@ if __name__ == "__main__":
         # keep only the keys we want, to make sure that multiprocessing doesn't need to transfer anything else
         (
             OpKeepKeypaths(),
-            dict(keep_keypaths=["data.input.tokenized_ligand", "data.input.tokenized_protein", "data.gt.affinity_val"]),
+            dict(
+                keep_keypaths=[
+                    "data.input.tokenized_ligand",
+                    "data.input.tokenized_protein",
+                    "data.gt.affinity_val",
+                ]
+            ),
         ),
     ]
 
@@ -165,7 +200,9 @@ if __name__ == "__main__":
     s3 = get_sample(300)
     s4 = get_sample(400)
 
-    def _split_sample(sample: NDict, default_collate_keys: Optional[List[str]] = None) -> Tuple[NDict, NDict]:
+    def _split_sample(
+        sample: NDict, default_collate_keys: Optional[List[str]] = None
+    ) -> Tuple[NDict, NDict]:
         assert isinstance(sample, NDict)
         if default_collate_keys is None:
             return sample, []
@@ -181,7 +218,9 @@ if __name__ == "__main__":
 
         return to_default_collate, append_in_list
 
-    def my_collate(samples: List[NDict], default_collate_keys: Optional[List[str]] = None) -> Union[list, dict]:
+    def my_collate(
+        samples: List[NDict], default_collate_keys: Optional[List[str]] = None
+    ) -> Union[list, dict]:
         for_default_collate_minibatch = []
         # for_just_list_minibatch = []
 

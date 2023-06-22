@@ -34,11 +34,17 @@ def build_tokenizer(
         save_to_json_file: optional. If provided, a str is expected with a path to the output json file which can be used to load the tokenizer.
 
     """
-    if full_cycles_num is None and iterations_num is None and time_limit_minutes is None:
+    if (
+        full_cycles_num is None
+        and iterations_num is None
+        and time_limit_minutes is None
+    ):
         full_cycles_num = 1
 
     if (trainer is not None) ^ (train_dataset is not None):
-        raise Exception('You provided only "trainer" or "train_on_data", you must provide neither or both!')
+        raise Exception(
+            'You provided only "trainer" or "train_on_data", you must provide neither or both!'
+        )
 
     assert isinstance(model, Model)
     tokenizer = Tokenizer(model=model)
@@ -113,7 +119,9 @@ def iterator_func(
         num_workers=num_workers,
     )
 
-    is_work_done = IsWorkDone(full_cycles_num, iterations_num, time_limit_minutes, stop_filename)
+    is_work_done = IsWorkDone(
+        full_cycles_num, iterations_num, time_limit_minutes, stop_filename
+    )
     curr_cycle = -1
     curr_iter = -1
     should_stop = False
@@ -135,7 +143,9 @@ def iterator_func(
                     if not isinstance(curr_str, str):
                         raise Exception("unexpected type!")
                     if 0 == curr_iter:
-                        print(f"printing sample information because it is the first iter minibatch: {curr_str}")
+                        print(
+                            f"printing sample information because it is the first iter minibatch: {curr_str}"
+                        )
                     yield curr_str
             else:
                 raise Exception("expected minibatch to be a list")
@@ -164,9 +174,7 @@ class IsWorkDone:
             time_limit_minutes = float(time_limit_minutes)
 
         self.mode_selected = None
-        error_msg = (
-            "only one of full_cycles_num, iterations_num, time_limit_minutes is allowed. And you must choose one."
-        )
+        error_msg = "only one of full_cycles_num, iterations_num, time_limit_minutes is allowed. And you must choose one."
         self.start_time = time()
         if iterations_num is not None:
             if self.mode_selected is not None:
@@ -179,7 +187,9 @@ class IsWorkDone:
             if self.mode_selected is not None:
                 raise Exception(error_msg)
             self.mode_selected = "time_limit"
-            print(f"iterator_func: selected mode: {time_limit_minutes} minutes time_limit")
+            print(
+                f"iterator_func: selected mode: {time_limit_minutes} minutes time_limit"
+            )
             self.time_limit_minutes = time_limit_minutes
 
         elif full_cycles_num is not None:
@@ -223,7 +233,9 @@ class IsWorkDone:
 
         if self.mode_selected == "full_cycles":
             if epoch_num >= self.full_cycles_num:
-                print(f"reached end of {epoch_num} full cycles, after {iteration_num} iterations")
+                print(
+                    f"reached end of {epoch_num} full cycles, after {iteration_num} iterations"
+                )
                 return True
         elif self.mode_selected == "iterations":
             if iteration_num >= self.iterations_num:
@@ -231,7 +243,9 @@ class IsWorkDone:
                 return True
         elif self.mode_selected == "time_limit":
             if minutes_passed >= self.time_limit_minutes:
-                print(f"reached end of {self.time_limit_minutes} minutes, after {iteration_num} iterations")
+                print(
+                    f"reached end of {self.time_limit_minutes} minutes, after {iteration_num} iterations"
+                )
                 return True
         if (self.stop_filename is not None) and (not iteration_num % 1000):
             if os.path.isfile(self.stop_filename):

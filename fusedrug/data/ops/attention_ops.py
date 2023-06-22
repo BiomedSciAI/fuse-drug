@@ -7,7 +7,9 @@ class OpAddAttentionMask(OpBase):
     def __init__(self, **kwargs: dict):
         super().__init__(**kwargs)
 
-    def __call__(self, sample_dict: NDict, based_on_key: str, key_out: str, value: int = 1) -> NDict:
+    def __call__(
+        self, sample_dict: NDict, based_on_key: str, key_out: str, value: int = 1
+    ) -> NDict:
         """
         Will add an attention mask at the same shape as 'based_on_key', with value 'value'
         :param based_on_key: shape and type will be taken from the sample in this key

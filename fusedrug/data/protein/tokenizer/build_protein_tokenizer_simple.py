@@ -18,7 +18,9 @@ def build_simple_vocab_protein_tokenizer(
     unknown_token: str,
     save_to_json_file: Optional[str] = None,
     override_normalizer: Optional[normalizers.Normalizer] = None,
-    override_pre_tokenizer: Optional[Union[pre_tokenizers.PreTokenizer, str]] = "per_char_split",
+    override_pre_tokenizer: Optional[
+        Union[pre_tokenizers.PreTokenizer, str]
+    ] = "per_char_split",
     override_post_processor: Optional[processors.PostProcessor] = None,
 ) -> Tokenizer:
     """
@@ -72,7 +74,9 @@ def _get_raw_vocab_dict(name: str) -> Union[IUPAC_VOCAB, UNIREP_VOCAB]:
     elif "unirep" == name:
         return UNIREP_VOCAB
 
-    raise Exception(f"unfamiliar vocab name {name} - allowed options are 'iupac' or 'unirep'")
+    raise Exception(
+        f"unfamiliar vocab name {name} - allowed options are 'iupac' or 'unirep'"
+    )
 
 
 # def _process_vocab_dict_def(token_str):
