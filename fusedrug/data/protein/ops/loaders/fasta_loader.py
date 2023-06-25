@@ -23,11 +23,18 @@ class FastaLoaderCustom(OpBase):
         super().__init__()
         self._fasta = IndexedFastaCustom(fasta_filename, **indexed_fasta_custom_kwargs)
 
-    def __call__(self, sample_dict: NDict, key_out: str = "data.seq") -> NDict:
+    def __call__(
+        self,
+        sample_dict: NDict,
+        key_out: str = "data.seq",
+        key_out_metadata: Optional[str] = None,
+    ) -> NDict:
         """ """
         sid = get_sample_id(sample_dict)
         entry = self._fasta[sid]
         sample_dict[key_out] = entry[1]
+        if key_out_metadata is not None:
+            sample_dict[key_out_metadata] = entry[0]
 
         return sample_dict
 

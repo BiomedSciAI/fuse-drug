@@ -960,10 +960,15 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             ret_val = [
                 self.decoder_dict[id]["token"]
                 for id in ids
-                if not self.decoder_dict[id]["is_special"]
+                if id in self.decoder_dict and not self.decoder_dict[id]["is_special"]
             ]
         else:
-            ret_val = [self.decoder_dict[id]["token"] for id in ids]
+            ret_val = [
+                self.decoder_dict[id]["token"]
+                if id in self.decoder_dict
+                else f"<@TOKEN_MISSING-{id}>"
+                for id in ids
+            ]
         return "".join(ret_val)
 
     def encode(
