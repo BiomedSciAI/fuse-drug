@@ -22,7 +22,9 @@ def fix_df_types(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def set_activity_multiindex(df: pd.DataFrame) -> pd.DataFrame:
-    df.set_index(["source_dataset_versioned_name", "source_dataset_activity_id"], inplace=True)
+    df.set_index(
+        ["source_dataset_versioned_name", "source_dataset_activity_id"], inplace=True
+    )
     return df
 
 
@@ -71,7 +73,9 @@ def dti_binding_dataset(
     _args = [pairs_tsv, ligands_tsv, targets_tsv, split_tsv, use_folds]
 
     if "cache_dir" in kwargs and kwargs["cache_dir"] is not None:
-        ans_dict = run_cached_func(kwargs["cache_dir"], _load_dataframes, *_args, **kwargs)
+        ans_dict = run_cached_func(
+            kwargs["cache_dir"], _load_dataframes, *_args, **kwargs
+        )
     else:
         ans_dict = _load_dataframes(*_args, **kwargs)
 
@@ -159,24 +163,42 @@ def dti_binding_dataset_combined(
     _args = [pairs_tsv, ligands_tsv, targets_tsv, split_tsv, use_folds]
 
     if "cache_dir" in kwargs and kwargs["cache_dir"] is not None:
-        ans_dict = run_cached_func(kwargs["cache_dir"], _load_dataframes, *_args, **kwargs)
+        ans_dict = run_cached_func(
+            kwargs["cache_dir"], _load_dataframes, *_args, **kwargs
+        )
     else:
         ans_dict = _load_dataframes(*_args, combine=True, suffixes=suffixes, **kwargs)
 
     pairs_df = ans_dict["pairs"]
 
     # Since _load_dataframes with combine == True may change some (overlapping) column names, we need to correct the following:
-    ligands_columns_to_extract = [c if c in pairs_df.columns else c + ligand_suffix for c in ligands_columns_to_extract]
+    ligands_columns_to_extract = [
+        c if c in pairs_df.columns else c + ligand_suffix
+        for c in ligands_columns_to_extract
+    ]
     ligands_rename_columns = {
-        (k if k in pairs_df.columns else k + ligand_suffix): v for k, v in ligands_rename_columns.items()
+        (k if k in pairs_df.columns else k + ligand_suffix): v
+        for k, v in ligands_rename_columns.items()
     }
-    targets_columns_to_extract = [c if c in pairs_df.columns else c + target_suffix for c in targets_columns_to_extract]
+    targets_columns_to_extract = [
+        c if c in pairs_df.columns else c + target_suffix
+        for c in targets_columns_to_extract
+    ]
     targets_rename_columns = {
-        (k if k in pairs_df.columns else k + target_suffix): v for k, v in targets_rename_columns.items()
+        (k if k in pairs_df.columns else k + target_suffix): v
+        for k, v in targets_rename_columns.items()
     }
 
-    columns_to_extract = pairs_columns_to_extract + ligands_columns_to_extract + targets_columns_to_extract
-    rename_columns = {**pairs_rename_columns, **ligands_rename_columns, **targets_rename_columns}
+    columns_to_extract = (
+        pairs_columns_to_extract
+        + ligands_columns_to_extract
+        + targets_columns_to_extract
+    )
+    rename_columns = {
+        **pairs_rename_columns,
+        **ligands_rename_columns,
+        **targets_rename_columns,
+    }
 
     dynamic_pipeline = [
         (
@@ -191,7 +213,9 @@ def dti_binding_dataset_combined(
     ]
     dynamic_pipeline = PipelineDefault("DTI dataset", dynamic_pipeline)
 
-    dataset = DatasetDefault(sample_ids=pairs_df.index, dynamic_pipeline=dynamic_pipeline)
+    dataset = DatasetDefault(
+        sample_ids=pairs_df.index, dynamic_pipeline=dynamic_pipeline
+    )
     dataset.create()
 
     return dataset
@@ -292,7 +316,9 @@ class DTIBindingDataset(Dataset):
             assert isinstance(index, tuple)
             assert 2 == len(index)
             source_dataset_versioned_name, source_dataset_activity_id = index
-            row = self._pairs.loc[source_dataset_versioned_name, source_dataset_activity_id]
+            row = self._pairs.loc[
+                source_dataset_versioned_name, source_dataset_activity_id
+            ]
 
         ground_truth_activity_value = itemify(row["activity_value"])
         if not np.isscalar(ground_truth_activity_value):
@@ -300,7 +326,9 @@ class DTIBindingDataset(Dataset):
                 ground_truth_activity_value = float(ground_truth_activity_value)
                 print(f"converted from nonscalar: {ground_truth_activity_value}")
             except:
-                raise Exception(f'Could not convert activity value "{ground_truth_activity_value}" to float!')
+                raise Exception(
+                    f'Could not convert activity value "{ground_truth_activity_value}" to float!'
+                )
 
         ground_truth_activity_label = itemify(row["activity_label"])
 
@@ -387,11 +415,15 @@ def _load_dataframes(
 
     if splits_tsv is not None:
         if use_folds is None:
-            raise Exception(f"splits_tsv was provided ({splits_tsv}) but no use_folds provided")
+            raise Exception(
+                f"splits_tsv was provided ({splits_tsv}) but no use_folds provided"
+            )
 
     if use_folds is not None:
         if splits_tsv is None:
-            raise Exception(f"use_folds was provided ({use_folds}) but no splits_tsv provided")
+            raise Exception(
+                f"use_folds was provided ({use_folds}) but no splits_tsv provided"
+            )
 
     if splits_tsv is not None:
         print(f"loading split file {splits_tsv}")
@@ -440,22 +472,32 @@ def _load_dataframes(
     _targets.set_index("target_id", inplace=True)
     print(f"tagets num: {len(_targets)}")
 
-    print(f"pairs num before keeping only pairs with ligands found in the (preprocessed) ligands table: {len(_pairs)}")
+    print(
+        f"pairs num before keeping only pairs with ligands found in the (preprocessed) ligands table: {len(_pairs)}"
+    )
     _pairs = _pairs[_pairs.ligand_id.isin(_ligands.index)]
-    print(f"pairs num after keeping only pairs with ligands found in the (preprocessed) ligands table: {len(_pairs)}")
+    print(
+        f"pairs num after keeping only pairs with ligands found in the (preprocessed) ligands table: {len(_pairs)}"
+    )
 
     _pairs = _pairs[_pairs.target_id.isin(_targets.index)]
-    print(f"pairs num after keeping only pairs with target found in the (preprocessed) targets table: {len(_pairs)}")
+    print(
+        f"pairs num after keeping only pairs with target found in the (preprocessed) targets table: {len(_pairs)}"
+    )
 
     if keep_activity_labels is not None:
         _pairs = _pairs[_pairs.activity_label.isin(keep_activity_labels)]
-        print(f"pairs num after keeping only activity_label in {keep_activity_labels}: {len(_pairs)}")
+        print(
+            f"pairs num after keeping only activity_label in {keep_activity_labels}: {len(_pairs)}"
+        )
 
     if combine:
         ligand_id_key = "ligand_id"
         affinities_with_ligands = _pairs.merge(_ligands, on=ligand_id_key)
         target_id_key = "target_id"
-        _pairs = affinities_with_ligands.merge(_targets, on=target_id_key, suffixes=suffixes)
+        _pairs = affinities_with_ligands.merge(
+            _targets, on=target_id_key, suffixes=suffixes
+        )
         print(f"pairs num after merging with ligands and targets: {len(_pairs)}")
 
     return dict(
@@ -467,11 +509,15 @@ def _load_dataframes(
 
 def _fill_in_dummy_sample(sample_dict: NDict) -> NDict:
     _ligand_size = 696
-    sample_dict["data.input.tokenized_ligand"] = np.random.randint(0, 3000, size=_ligand_size)
+    sample_dict["data.input.tokenized_ligand"] = np.random.randint(
+        0, 3000, size=_ligand_size
+    )
     sample_dict["data.input.tokenized_ligand_attention_mask"] = [True] * _ligand_size
 
     _target_size = 2536
-    sample_dict["data.input.tokenized_target"] = np.random.randint(0, 33, size=_target_size)
+    sample_dict["data.input.tokenized_target"] = np.random.randint(
+        0, 33, size=_target_size
+    )
     sample_dict["data.input.tokenized_target_attention_mask"] = [True] * _target_size
 
     sample_dict["data.gt.activity_value"] = np.random.rand(1).item()

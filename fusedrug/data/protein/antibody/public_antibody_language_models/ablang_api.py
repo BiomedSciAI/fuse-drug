@@ -30,10 +30,14 @@ from typing import Any
 class AbLang:
     def __init__(self) -> None:
         self.tokenizer_light = AutoTokenizer.from_pretrained("qilowoq/AbLang_light")
-        self.model_light = AutoModel.from_pretrained("qilowoq/AbLang_light", trust_remote_code=True)
+        self.model_light = AutoModel.from_pretrained(
+            "qilowoq/AbLang_light", trust_remote_code=True
+        )
 
         self.tokenizer_heavy = AutoTokenizer.from_pretrained("qilowoq/AbLang_heavy")
-        self.model_heavy = AutoModel.from_pretrained("qilowoq/AbLang_heavy", trust_remote_code=True)
+        self.model_heavy = AutoModel.from_pretrained(
+            "qilowoq/AbLang_heavy", trust_remote_code=True
+        )
 
     def get_embeddings(
         self,
@@ -44,7 +48,9 @@ class AbLang:
     ) -> Any:
         assert chain_type in ["light", "heavy", "auto"]
         orig_seq_len = len(seq)
-        assert len(seq.strip()) == len(seq), "expecting high case AA sequence WITHOUT spaces"
+        assert len(seq.strip()) == len(
+            seq
+        ), "expecting high case AA sequence WITHOUT spaces"
 
         seq = " ".join(seq)
 
@@ -75,7 +81,9 @@ class AbLang:
 def alternative_ablang_usage_approach() -> None:
     import ablang
 
-    heavy_ablang = ablang.pretrained("heavy")  # Use "light" if you are working with light chains
+    heavy_ablang = ablang.pretrained(
+        "heavy"
+    )  # Use "light" if you are working with light chains
     heavy_ablang.freeze()
 
     seqs = [

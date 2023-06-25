@@ -24,7 +24,9 @@ def build_simple_vocab_protein_tokenizer(
     unknown_token: str,
     save_to_json_file: Optional[str] = None,
     override_normalizer: Optional[normalizers.Normalizer] = None,
-    override_pre_tokenizer: Optional[Union[pre_tokenizers.PreTokenizer, str]] = "per_char_split",
+    override_pre_tokenizer: Optional[
+        Union[pre_tokenizers.PreTokenizer, str]
+    ] = "per_char_split",
     override_post_processor: Optional[processors.PostProcessor] = None,
 ) -> Tokenizer:
     """
@@ -78,7 +80,9 @@ def _get_raw_vocab_dict(name: str) -> Union[IUPAC_VOCAB, UNIREP_VOCAB]:
     elif "unirep" == name:
         return UNIREP_VOCAB
 
-    raise Exception(f"unfamiliar vocab name {name} - allowed options are 'iupac' or 'unirep'")
+    raise Exception(
+        f"unfamiliar vocab name {name} - allowed options are 'iupac' or 'unirep'"
+    )
 
 
 # TODO: add support for providing multiple fasta files
@@ -89,7 +93,11 @@ def _get_raw_vocab_dict(name: str) -> Union[IUPAC_VOCAB, UNIREP_VOCAB]:
     default=None,
     help='output json file that can be loaded with tokenizers.Tokenizer.from_file(). If not provided defaults to output into the same path as INPUT_FASTA_FILE but with modified extension to ".bpe_vocab.json" ',
 )
-@click.option("--vocab-size", default=3000, help="choose one of full-cycles-num, iterations-num or time-limit-minutes")
+@click.option(
+    "--vocab-size",
+    default=3000,
+    help="choose one of full-cycles-num, iterations-num or time-limit-minutes",
+)
 @click.option(
     "--augment/--no-augment",
     default=True,
@@ -101,13 +109,19 @@ def _get_raw_vocab_dict(name: str) -> Union[IUPAC_VOCAB, UNIREP_VOCAB]:
     help="When enabled activates shuffle of the dataset. This is useful especially in cases that a dataset is sorted, to avoid biased estimation of pairs during the beginning of the training.",
 )
 @click.option(
-    "--full-cycles-num", default=None, help="choose one of full-cycles-num, iterations-num or time-limit-minutes"
+    "--full-cycles-num",
+    default=None,
+    help="choose one of full-cycles-num, iterations-num or time-limit-minutes",
 )
 @click.option(
-    "--iterations-num", default=None, help="choose one of full-cycles-num, iterations-num or time-limit-minutes"
+    "--iterations-num",
+    default=None,
+    help="choose one of full-cycles-num, iterations-num or time-limit-minutes",
 )
 @click.option(
-    "--time-limit-minutes", default=None, help="choose one of full-cycles-num, iterations-num or time-limit-minutes"
+    "--time-limit-minutes",
+    default=None,
+    help="choose one of full-cycles-num, iterations-num or time-limit-minutes",
 )
 def main(
     train_on_fasta_file: str,
@@ -131,11 +145,17 @@ def main(
     print(f"iterations_num set to {iterations_num}")
     print(f"time_limit_minutes set to {time_limit_minutes}")
 
-    if 1 != sum([x is not None for x in [full_cycles_num, iterations_num, time_limit_minutes]]):
-        raise Exception("You must provide exactly one of full_cycles_num, iterations_num, or time_limit_minutes !")
+    if 1 != sum(
+        [x is not None for x in [full_cycles_num, iterations_num, time_limit_minutes]]
+    ):
+        raise Exception(
+            "You must provide exactly one of full_cycles_num, iterations_num, or time_limit_minutes !"
+        )
 
     if output_tokenizer_json_file is None:
-        output_tokenizer_json_file = change_extension(train_on_fasta_file, ".bpe_vocab.json")
+        output_tokenizer_json_file = change_extension(
+            train_on_fasta_file, ".bpe_vocab.json"
+        )
     print(f"output_tokenizer_json_file set to {output_tokenizer_json_file}")
 
     special_tokens = ["<UNK>", "<CLS>", "<SEP>", "<PAD>", "<MASK>"]
@@ -149,7 +169,9 @@ def main(
         special_tokens=special_tokens,  # NOTE:the order here defined the tokens ids !
         min_frequency=2000,
         show_progress=True,
-        initial_alphabet=[k for k in IUPAC_VOCAB.keys() if 1 == len(k) and k >= "A" and k <= "Z"],
+        initial_alphabet=[
+            k for k in IUPAC_VOCAB.keys() if 1 == len(k) and k >= "A" and k <= "Z"
+        ],
         vocab_size=vocab_size,
     )
 
@@ -178,11 +200,14 @@ def main(
         return x[::-1]
 
     indexed_fasta = IndexedFasta(
-        train_on_fasta_file, process_funcs_pipeline=[to_string, random_flip_order, to_upper_case]
+        train_on_fasta_file,
+        process_funcs_pipeline=[to_string, random_flip_order, to_upper_case],
     )
 
     if shuffle:
-        train_batch_sampler = BatchSampler(RandomSampler(indexed_fasta), batch_size=2, drop_last=False)
+        train_batch_sampler = BatchSampler(
+            RandomSampler(indexed_fasta), batch_size=2, drop_last=False
+        )
     else:
         train_batch_sampler = None
 

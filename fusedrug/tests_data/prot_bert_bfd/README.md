@@ -21,7 +21,7 @@ publicly available data) with an automatic process to generate inputs and labels
 
 One important difference between our Bert model and the original Bert version is the way of dealing with sequences as separate documents
 This means the Next sentence prediction is not used, as each sequence is treated as a complete document.
-The masking follows the original Bert training with randomly masks 15% of the amino acids in the input. 
+The masking follows the original Bert training with randomly masks 15% of the amino acids in the input.
 
 At the end, the feature extracted from this model revealed that the LM-embeddings from unlabeled data (only protein sequences) captured important biophysical properties governing protein
 shape.
@@ -117,7 +117,7 @@ Test results :
 | Task/Dataset | secondary structure (3-states) | secondary structure (8-states)  |  Localization | Membrane  |
 |:-----:|:-----:|:-----:|:-----:|:-----:|
 |   CASP12  | 76 | 65 |    |    |
-|   TS115   | 84 | 73 |    |    | 
+|   TS115   | 84 | 73 |    |    |
 |   CB513   | 83 | 70 |    |    |
 |  DeepLoc  |    |    | 78 | 91 |
 

@@ -2,7 +2,9 @@ import os
 import unittest
 import random
 
-from fusedrug.data.interaction.drug_target.datasets.dti_binding_dataset import DTIBindingDataset
+from fusedrug.data.interaction.drug_target.datasets.dti_binding_dataset import (
+    DTIBindingDataset,
+)
 
 
 class TestDTIBindingDataset(unittest.TestCase):
@@ -24,7 +26,11 @@ class TestDTIBindingDataset(unittest.TestCase):
         small_targets_tsv = os.path.join(test_data_dir, "small_targets.tsv")
 
         # test logic
-        self.ds_tester(pairs_tsv=small_pairs_tsv, ligands_tsv=small_ligands_tsv, targets_tsv=small_targets_tsv)
+        self.ds_tester(
+            pairs_tsv=small_pairs_tsv,
+            ligands_tsv=small_ligands_tsv,
+            targets_tsv=small_targets_tsv,
+        )
 
     def test_full_dti_binding_dataset(self) -> None:
         """
@@ -40,13 +46,22 @@ class TestDTIBindingDataset(unittest.TestCase):
         base_data_dir = os.environ["BINDING_DATA_PATH"]
 
         full_pairs_tsv = os.path.join(
-            base_data_dir, "pubchem_13-07-2022@native@single_protein_target@affinity_pairs_v0.1.tsv"
+            base_data_dir,
+            "pubchem_13-07-2022@native@single_protein_target@affinity_pairs_v0.1.tsv",
         )
-        full_ligands_tsv = os.path.join(base_data_dir, "pubchem_13-07-2022@native@single_protein_target@ligands.tsv")
-        full_targets_tsv = os.path.join(base_data_dir, "pubchem_13-07-2022@native@single_protein_target@targets.tsv")
+        full_ligands_tsv = os.path.join(
+            base_data_dir, "pubchem_13-07-2022@native@single_protein_target@ligands.tsv"
+        )
+        full_targets_tsv = os.path.join(
+            base_data_dir, "pubchem_13-07-2022@native@single_protein_target@targets.tsv"
+        )
 
         # test logic
-        self.ds_tester(pairs_tsv=full_pairs_tsv, ligands_tsv=full_ligands_tsv, targets_tsv=full_targets_tsv)
+        self.ds_tester(
+            pairs_tsv=full_pairs_tsv,
+            ligands_tsv=full_ligands_tsv,
+            targets_tsv=full_targets_tsv,
+        )
 
     def ds_tester(self, pairs_tsv: str, ligands_tsv: str, targets_tsv: str) -> None:
         """

@@ -37,7 +37,9 @@ def randomize_smiles_atom_order(smiles_str: str) -> str:
     mol = randomize_rdkit_mol_atoms_order(mol)
 
     # https://www.rdkit.org/docs/source/rdkit.Chem.rdmolfiles.html#rdkit.Chem.rdmolfiles.MolToSmiles
-    return Chem.MolToSmiles(mol, canonical=False, isomericSmiles=True, kekuleSmiles=False)
+    return Chem.MolToSmiles(
+        mol, canonical=False, isomericSmiles=True, kekuleSmiles=False
+    )
 
 
 def randomize_rdkit_mol_atoms_order(mol: Chem.rdchem.Mol) -> Chem.rdchem.Mol:

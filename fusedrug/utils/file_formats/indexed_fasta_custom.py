@@ -6,7 +6,11 @@ import numpy as np
 from contextlib import nullcontext
 from torch.utils.data import Dataset
 from copy import deepcopy
-from fuse.utils.multiprocessing import run_multiprocessed, get_from_global_storage, get_chunks_ranges
+from fuse.utils.multiprocessing import (
+    run_multiprocessed,
+    get_from_global_storage,
+    get_chunks_ranges,
+)
 from typing import Tuple, Union, Sequence, Callable
 
 # TODO: consider using SQLite for files with too big number of identifiers to fit in memory
@@ -48,7 +52,9 @@ class IndexedFastaCustom(Dataset):
         self,
         filename: str,
         index_filename: str = None,
-        process_identifier_pipeline: Sequence[Callable] = (_default_identifier_extractor,),
+        process_identifier_pipeline: Sequence[Callable] = (
+            _default_identifier_extractor,
+        ),
         force_recreate_index: bool = False,
         allow_access_by_id: bool = False,
         num_workers: Union[int, str] = "auto",
@@ -102,10 +108,12 @@ class IndexedFastaCustom(Dataset):
                 if verbose > 0:
                     print("building fasta index ... ")
                 with open(filename, "rb") as read_file:
-                    for line in read_file.readlines():
+                    for line in read_file:
 
                         # note - only decoding the first character to avoid wasting time on decoding the whole line
-                        if not line[:1].decode() == ">":  # skip all non-identifier lines
+                        if (
+                            not line[:1].decode() == ">"
+                        ):  # skip all non-identifier lines
                             offset += len(line)
                             continue
                         lines_offsets.append(offset)
@@ -128,7 +136,9 @@ class IndexedFastaCustom(Dataset):
 
         timer = Timer("Process") if verbose > 0 else nullcontext()
         with timer:
-            loaded_hdf5 = load_hdf5(self.index_filename)  # reloading even in the creation time (intentional)
+            loaded_hdf5 = load_hdf5(
+                self.index_filename
+            )  # reloading even in the creation time (intentional)
             self.offsets = loaded_hdf5["lines_offsets"]
 
         if isinstance(num_workers, str):
@@ -142,7 +152,9 @@ class IndexedFastaCustom(Dataset):
 
     def _build_offsets_map(self) -> dict:
         self._offsets_map = dict()  # maps from id to line index
-        print(f"allow_access_by_id is enabled, building in-memory offset map (num_workers={self._num_workers})")
+        print(
+            f"allow_access_by_id is enabled, building in-memory offset map (num_workers={self._num_workers})"
+        )
 
         total = len(self)
         chunks_defs = get_chunks_ranges(total, chunk_size=1000)
@@ -169,7 +181,9 @@ class IndexedFastaCustom(Dataset):
         for i in range(len(self)):
             yield self.__getitem__(i)
 
-    def __getitem__(self, index: Union[str, int]) -> Tuple[Union[Tuple[str], Tuple[str, str]], str, str]:
+    def __getitem__(
+        self, index: Union[str, int]
+    ) -> Tuple[Union[Tuple[str], Tuple[str, str]], str, str]:
         """
         returns a single FASTA entry in as a tuple with 3 elements:
             element 0: a tuple with either a. a single element, the identifier of the entry or b. a tuple with 2 elements, the identifier of the entry followed by the comment of the entry

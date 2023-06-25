@@ -14,7 +14,10 @@ class ProteinRandomFlipOrder(OpBase):
         super().__init__(**kwargs)
 
     def __call__(
-        self, sample_dict: NDict, key_in: str = "data.input.protein_str", key_out: str = "data.input.protein_str"
+        self,
+        sample_dict: NDict,
+        key_in: str = "data.input.protein_str",
+        key_out: str = "data.input.protein_str",
     ) -> NDict:
         data = sample_dict[key_in]
         assert isinstance(data, str)
@@ -38,7 +41,10 @@ class ProteinIntroduceNoise(OpBase):
         self.p = np.clip(p, 0.0, 1.0)
 
     def __call__(
-        self, sample_dict: NDict, key_in: str = "data.input.protein_str", key_out: str = "data.input.protein_str"
+        self,
+        sample_dict: NDict,
+        key_in: str = "data.input.protein_str",
+        key_out: str = "data.input.protein_str",
     ) -> NDict:
         data = sample_dict[key_in]
         assert isinstance(data, str)
@@ -124,7 +130,12 @@ class ProteinFlipIndividualActiveSiteSubSequences(OpBase):
         data = sample_dict[key_in_aligned_sequence]
         assert isinstance(data, str)
 
-        aligned_seq, non_active_sites, active_sites, all_seqs = extract_active_sites_info(data)
+        (
+            aligned_seq,
+            non_active_sites,
+            active_sites,
+            all_seqs,
+        ) = extract_active_sites_info(data)
 
         ans = ""
         for substr in all_seqs:
@@ -152,17 +163,26 @@ class ProteinIntroduceActiveSiteBasedNoise(OpBase):
     """
 
     def __init__(
-        self, mutate_prob_in_active_site: float = 0.01, mutate_prob_outside_active_site: float = 0.1, **kwargs: dict
+        self,
+        mutate_prob_in_active_site: float = 0.01,
+        mutate_prob_outside_active_site: float = 0.1,
+        **kwargs: dict,
     ):
         super().__init__(**kwargs)
         if not isinstance(mutate_prob_in_active_site, float):
-            raise TypeError(f"Please provide float, not {type(mutate_prob_in_active_site)}.")
+            raise TypeError(
+                f"Please provide float, not {type(mutate_prob_in_active_site)}."
+            )
 
         if not isinstance(mutate_prob_outside_active_site, float):
-            raise TypeError(f"Please provide float, not {type(mutate_prob_outside_active_site)}.")
+            raise TypeError(
+                f"Please provide float, not {type(mutate_prob_outside_active_site)}."
+            )
 
         self.mutate_prob_in_active_site = np.clip(mutate_prob_in_active_site, 0.0, 1.0)
-        self.mutate_prob_outside_active_site = np.clip(mutate_prob_outside_active_site, 0.0, 1.0)
+        self.mutate_prob_outside_active_site = np.clip(
+            mutate_prob_outside_active_site, 0.0, 1.0
+        )
 
     def __call__(
         self,
@@ -173,14 +193,21 @@ class ProteinIntroduceActiveSiteBasedNoise(OpBase):
         data = sample_dict[key_in_aligned_sequence]
         assert isinstance(data, str)
 
-        aligned_seq, non_active_sites, active_sites, all_seqs = extract_active_sites_info(data)
+        (
+            aligned_seq,
+            non_active_sites,
+            active_sites,
+            all_seqs,
+        ) = extract_active_sites_info(data)
 
         amino_acids_num = len(G_AMINO_ACIDS)
 
         ans = ""
         for curr_sub_seq in all_seqs:
             for c in curr_sub_seq:
-                if curr_sub_seq[0] <= "Z":  # it's uppercase, so it's inside an active site
+                if (
+                    curr_sub_seq[0] <= "Z"
+                ):  # it's uppercase, so it's inside an active site
                     if np.random.rand() < self.mutate_prob_in_active_site:
                         # print('mutate inside active site')
                         ans += G_AMINO_ACIDS[np.random.randint(amino_acids_num)]

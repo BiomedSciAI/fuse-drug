@@ -28,7 +28,9 @@ def main(input_sdf_file: str, output_smi_file: str, id_prefix: Optional[str]) ->
         for mol in tqdm(iter(sdf_ds)):
             mol_index += 1
             try:
-                smiles = Chem.MolToSmiles(mol, canonical=False, isomericSmiles=True, kekuleSmiles=False)
+                smiles = Chem.MolToSmiles(
+                    mol, canonical=False, isomericSmiles=True, kekuleSmiles=False
+                )
             except:
                 print("error when converting mol to smiles")
                 continue

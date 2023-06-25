@@ -103,7 +103,9 @@ class SQLfromCSV:
             columns_names = firstrow.columns.tolist()
 
         # wrap column names that contain spaces with []:
-        columns_names = [c.replace(c, "[" + c + "]") if " " in c else c for c in columns_names]
+        columns_names = [
+            c.replace(c, "[" + c + "]") if " " in c else c for c in columns_names
+        ]
         curs = self.conn.cursor()
         create_table_str = (
             "CREATE TABLE IF NOT EXISTS "
@@ -132,7 +134,9 @@ class SQLfromCSV:
             chunk_count += 1
 
             # insert data in chunks:
-            tab.to_sql(table_name, self.conn, if_exists="append", index=False, method=None)
+            tab.to_sql(
+                table_name, self.conn, if_exists="append", index=False, method=None
+            )
 
             offset += chunk_size
             print(chunk_count)
