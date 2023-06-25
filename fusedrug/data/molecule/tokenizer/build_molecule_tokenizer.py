@@ -40,7 +40,9 @@ def build_molecule_tokenizer(
     """
 
     if not isinstance(dataset, (Dataset, IterableDataset)):
-        raise Exception(f"dataset must be a torch Dataset or IterableDataset. Instead got {type(dataset)}")
+        raise Exception(
+            f"dataset must be a torch Dataset or IterableDataset. Instead got {type(dataset)}"
+        )
 
     assert isinstance(output_tokenizer_json, str)
 
@@ -61,7 +63,9 @@ def build_molecule_tokenizer(
 
     special_tokens_tuples = list(zip(special_tokens, special_tokens_ids))
 
-    if False:  # keeping this for future reference. There's no need to retrain for a new post-processor, so no need
+    if (
+        False
+    ):  # keeping this for future reference. There's no need to retrain for a new post-processor, so no need
         override_post_processor = TemplateProcessing(  # noqa: F841
             single="<CLS> $0 <SEP>",
             pair="<CLS> $A <SEP> $B:1 <SEP>:1",
@@ -96,7 +100,9 @@ def build_molecule_tokenizer(
     help='path for output tokenizer json file which can be quickly loaded and used. If not provided, defaults to same as "INPUT_SMI_FILE" but with the extension modified to ".bpe_vocab.json"',
 )
 @click.option(
-    "--augment/--no-augment", default=True, help="When enabled activates augmentation when training the tokenizer."
+    "--augment/--no-augment",
+    default=True,
+    help="When enabled activates augmentation when training the tokenizer.",
 )
 @click.option(
     "--shuffle/--no-shuffle",

@@ -18,7 +18,9 @@ class Op_pytoda_SMILESTokenizer(OpBase):
         super().__init__(**kwargs)
         self.language = SMILESTokenizer(
             **SMILES_Tokenizer_kwargs,
-            device=torch.device("cpu"),  # this is critical for DataLoader multiprocessing to work well !!!
+            device=torch.device(
+                "cpu"
+            ),  # this is critical for DataLoader multiprocessing to work well !!!
         )
 
     def __call__(
@@ -26,7 +28,9 @@ class Op_pytoda_SMILESTokenizer(OpBase):
     ) -> NDict:  # key_out_tokens_ids=None, key_out_tokenized_object=None,
         data_str = sample[key_in]
         if not isinstance(data_str, str):
-            raise Exception(f"Expected key_in={key_in} to point to a string, and instead got a {type(data_str)}")
+            raise Exception(
+                f"Expected key_in={key_in} to point to a string, and instead got a {type(data_str)}"
+            )
 
         tokenized = self.language.smiles_to_token_indexes(data_str)
         sample[key_out_tokens_ids] = tokenized
@@ -43,7 +47,9 @@ class Op_pytoda_ProteinTokenizer(OpBase):
         **kwargs: dict,
     ):
         super().__init__(**kwargs)
-        self.protein_language = ProteinLanguage(amino_acid_dict=amino_acid_dict, add_start_and_stop=add_start_and_stop)
+        self.protein_language = ProteinLanguage(
+            amino_acid_dict=amino_acid_dict, add_start_and_stop=add_start_and_stop
+        )
 
         transforms = []
 
@@ -63,7 +69,9 @@ class Op_pytoda_ProteinTokenizer(OpBase):
             transforms += [ToTensor(torch.device("cpu"))]
         else:
             # note: ProteinFeatureLanguage supported wasn't transferred here.
-            raise TypeError("Please choose either ProteinLanguage or " "ProteinFeatureLanguage")
+            raise TypeError(
+                "Please choose either ProteinLanguage or " "ProteinFeatureLanguage"
+            )
         self.transform = Compose(transforms)
 
     def __call__(
@@ -71,7 +79,9 @@ class Op_pytoda_ProteinTokenizer(OpBase):
     ) -> NDict:  # key_out_tokens_ids=None, key_out_tokenized_object=None,
         data_str = sample[key_in]
         if not isinstance(data_str, str):
-            raise Exception(f"Expected key_in={key_in} to point to a string, and instead got a {type(data_str)}")
+            raise Exception(
+                f"Expected key_in={key_in} to point to a string, and instead got a {type(data_str)}"
+            )
         tokenized = self.transform(data_str)
         sample[key_out_tokens_ids] = tokenized
 

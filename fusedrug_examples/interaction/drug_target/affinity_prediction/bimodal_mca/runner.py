@@ -9,12 +9,18 @@ from omegaconf import DictConfig, OmegaConf
 
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint
-from fusedrug_examples.interaction.drug_target.affinity_prediction.bimodal_mca import model, data, utils
+from fusedrug_examples.interaction.drug_target.affinity_prediction.bimodal_mca import (
+    model,
+    data,
+    utils,
+)
 
 CONFIGS_DIR = os.path.join(os.path.dirname(__file__), "configs")
 SELECTED_CONFIG = "train_config.yaml"
 
-OmegaConf.register_new_resolver("pytoda_ligand_tokenizer_path", utils.pytoda_ligand_tokenizer_path)
+OmegaConf.register_new_resolver(
+    "pytoda_ligand_tokenizer_path", utils.pytoda_ligand_tokenizer_path
+)
 
 
 @hydra.main(config_path=CONFIGS_DIR, config_name=SELECTED_CONFIG)
@@ -33,7 +39,9 @@ def run_train_and_val(cfg: DictConfig) -> None:
 
     print(f"Running on hostname={socket.gethostname()}")
     STOP_FILENAME = os.path.join(SESSION_FULL_PATH, "STOP")
-    print(f"Will monitor the presence of a stop file to enable stopping a session gracefully: {STOP_FILENAME}")
+    print(
+        f"Will monitor the presence of a stop file to enable stopping a session gracefully: {STOP_FILENAME}"
+    )
     exit_on_stopfile_callback = utils.ExitOnStopFileCallback(STOP_FILENAME)
 
     OmegaConf.resolve(
@@ -75,7 +83,12 @@ def run_train_and_val(cfg: DictConfig) -> None:
 
     trainer = pl.Trainer(
         **cfg.trainer,
-        callbacks=[val_rmse_callback, val_loss_callback, val_pearson_callback, exit_on_stopfile_callback],
+        callbacks=[
+            val_rmse_callback,
+            val_loss_callback,
+            val_pearson_callback,
+            exit_on_stopfile_callback,
+        ],
     )
 
     trainer.fit(lightning_model, lightning_data)

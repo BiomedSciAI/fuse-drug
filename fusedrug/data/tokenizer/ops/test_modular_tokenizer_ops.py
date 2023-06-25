@@ -14,7 +14,9 @@ def seed(seed_value: int) -> int:
     return seed_value
 
 
-def test_tokenizer_op(tokenizer_op_inst: FastTokenizer, mode: Optional[str] = "") -> None:
+def test_tokenizer_op(
+    tokenizer_op_inst: FastTokenizer, mode: Optional[str] = ""
+) -> None:
     """_summary_
 
     Args:
@@ -30,7 +32,9 @@ def test_tokenizer_op(tokenizer_op_inst: FastTokenizer, mode: Optional[str] = ""
         TypedInput("SMILES", "C=H==CC=HCCC<EOS>", None),
     ]
 
-    test_input = NDict(dict_like={"data.query.encoder_input": input_list, "data.sample_id": 1})
+    test_input = NDict(
+        dict_like={"data.query.encoder_input": input_list, "data.sample_id": 1}
+    )
     # TODO: named tuples with specific properties, e.g. max_len for every input, not for input type
     # Test general encoding: (per-tokenizer truncation works)
     print(
@@ -79,7 +83,9 @@ def test_tokenizer_op(tokenizer_op_inst: FastTokenizer, mode: Optional[str] = ""
         TypedInput("SMILES", "C=H==CC=HCCC<EOS>", None),
     ]
 
-    test_input = NDict(dict_like={"data.query.encoder_input": input_list, "data.sample_id": 1})
+    test_input = NDict(
+        dict_like={"data.query.encoder_input": input_list, "data.sample_id": 1}
+    )
     # TODO: named tuples with specific properties, e.g. max_len for every input, not for input type
     # Test general encoding: (per-tokenizer truncation works)
     print(

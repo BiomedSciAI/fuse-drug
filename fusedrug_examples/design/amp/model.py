@@ -98,7 +98,9 @@ class GRUDecoder(nn.Module):
         """
         :param z: latent space. Shape [N, LATENT_SPACE_DIM]
         """
-        init_h = torch.zeros((1, z.shape[0], self.h_dim), device=z.device, dtype=z.dtype)
+        init_h = torch.zeros(
+            (1, z.shape[0], self.h_dim), device=z.device, dtype=z.dtype
+        )
 
         x = z.unsqueeze(1).repeat((1, self._num_tokens, 1))
         # Compute outputs. # mbsize x seq_len x h_dim
@@ -111,7 +113,14 @@ class GRUDecoder(nn.Module):
 class Embed(nn.Module):
     "Convert token ids to learned embedding"
 
-    def __init__(self, n_vocab: int, emb_dim: int, key_in: str, key_out: str, **embedding_kwargs: dict):
+    def __init__(
+        self,
+        n_vocab: int,
+        emb_dim: int,
+        key_in: str,
+        key_out: str,
+        **embedding_kwargs: dict,
+    ):
         super().__init__()
         self._emb_dim = emb_dim
         self._word_emb = nn.Embedding(n_vocab, self._emb_dim, **embedding_kwargs)
@@ -142,7 +151,9 @@ class WordDropout(nn.Module):
     ):
         super().__init__()
         self._p = p_word_dropout
-        self._p_eval = p_word_dropout if p_word_dropout_eval is None else p_word_dropout_eval
+        self._p_eval = (
+            p_word_dropout if p_word_dropout_eval is None else p_word_dropout_eval
+        )
         self._key_in = key_in
         self._key_out = key_out
         self._mask_value = mask_value
@@ -158,9 +169,9 @@ class WordDropout(nn.Module):
         # Sample masks: elems with val 1 will be set to <unk>
         p = self._p if self.training else self._p_eval
 
-        mask = torch.from_numpy(np.random.choice(2, p=(1.0 - p, p), size=tuple(data.size())).astype("uint8")).to(
-            x.device
-        )
+        mask = torch.from_numpy(
+            np.random.choice(2, p=(1.0 - p, p), size=tuple(data.size())).astype("uint8")
+        ).to(x.device)
 
         mask = mask.bool()
         # Set to <unk>
@@ -199,13 +210,15 @@ class RandomOverride(nn.Module):
         # Sample masks: elems with val 1 will be set to <unk>
         p = self._p_train if self.training else self._p_eval
 
-        mask = torch.from_numpy(np.random.choice(2, p=(1.0 - p, p), size=tuple(data.size())).astype("uint8")).to(
-            x.device
-        )
+        mask = torch.from_numpy(
+            np.random.choice(2, p=(1.0 - p, p), size=tuple(data.size())).astype("uint8")
+        ).to(x.device)
 
         mask = mask.bool()
         if mask.sum() > 0:
-            data[mask] = torch.from_numpy(np.random.choice(self._values, int(mask.sum())))
+            data[mask] = torch.from_numpy(
+                np.random.choice(self._values, int(mask.sum()))
+            )
 
         batch_dict[self._key_out] = data
         return batch_dict
@@ -238,9 +251,9 @@ class RandomAdjacentSwap(nn.Module):
         # Sample masks: elems with val 1 will be set to <unk>
         p = self._p_train if self.training else self._p_eval
 
-        mask = torch.from_numpy(np.random.choice(2, p=(1.0 - p, p), size=tuple(data.size())).astype("uint8")).to(
-            x.device
-        )
+        mask = torch.from_numpy(
+            np.random.choice(2, p=(1.0 - p, p), size=tuple(data.size())).astype("uint8")
+        ).to(x.device)
 
         mask = mask.bool()
         mask[:, -1] = False  # don't swap the last element
@@ -281,7 +294,9 @@ class RandomShift(nn.Module):
 
         data = x.clone().detach()
 
-        max_fraction_shift = self._max_fraction_train if self.training else self._max_fraction_eval
+        max_fraction_shift = (
+            self._max_fraction_train if self.training else self._max_fraction_eval
+        )
         if max_fraction_shift > 0.0:
             max_shift = int(x.shape[-1] * max_fraction_shift)
             shift = np.random.randint(0, max_shift, 1)
@@ -324,15 +339,21 @@ class RandomMix(nn.Module):
         # Sample masks: elems with val 1 will be set to <unk>
         p = self._p_train if self.training else self._p_eval
 
-        mask = torch.from_numpy(np.random.choice(2, p=(1.0 - p, p), size=tuple(data.shape[:2])).astype("uint8")).to(
-            x.device
-        )
+        mask = torch.from_numpy(
+            np.random.choice(2, p=(1.0 - p, p), size=tuple(data.shape[:2])).astype(
+                "uint8"
+            )
+        ).to(x.device)
 
         mask = mask.bool()
         if mask.sum() > 0:
             tokens = torch.from_numpy(np.random.choice(self._values, int(mask.sum())))
             tokens = tokens.to(device=x.device)
-            data[mask] = data[mask] + self._weight * self._embed._word_emb(tokens.reshape(1, -1))[0].detach()
+            data[mask] = (
+                data[mask]
+                + self._weight
+                * self._embed._word_emb(tokens.reshape(1, -1))[0].detach()
+            )
 
         batch_dict[self._key_out] = data
         return batch_dict
@@ -365,7 +386,9 @@ class Sample(nn.Module):
 class Tokenizer(torch.nn.Module):
     """simple tokenizer - every char is a token"""
 
-    def __init__(self, seqs: Sequence[str], key_in: str, key_out: str, max_seq_len: int):
+    def __init__(
+        self, seqs: Sequence[str], key_in: str, key_out: str, max_seq_len: int
+    ):
         super().__init__()
         self._tokenizer = torchtext.data.Field(
             init_token="<start>",
@@ -432,7 +455,9 @@ class TransformerEncoder(Transformer):
         if self.num_cls_tokens == 1:
             return out[:, 0], out[:, 1:]
         else:
-            return [out[:, i] for i in range(self.num_cls_tokens)] + [out[:, self.num_cls_tokens :]]
+            return [out[:, i] for i in range(self.num_cls_tokens)] + [
+                out[:, self.num_cls_tokens :]
+            ]
 
 
 class TransformerDecoder(Transformer):
@@ -447,7 +472,9 @@ class TransformerDecoder(Transformer):
         **kwargs: dict,
     ):
         super().__init__(num_tokens=num_tokens, token_dim=token_dim, **kwargs)
-        self.fc = nn.Sequential(nn.Dropout(out_dropout), nn.Linear(token_dim, output_dim))
+        self.fc = nn.Sequential(
+            nn.Dropout(out_dropout), nn.Linear(token_dim, output_dim)
+        )
         self.num_tokens = num_tokens
 
     def forward(self, z: torch.Tensor) -> torch.Tensor:

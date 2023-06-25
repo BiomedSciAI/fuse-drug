@@ -49,7 +49,9 @@ def _sanitize_smiles_default(smiles: str, verbose: int = 1) -> str:
 
 
 def _sanitize_smiles_choose_flags(
-    smiles: str, sanitize_flags: SanitizeFlags = Chem.rdmolops.SANITIZE_NONE, verbose: int = 1
+    smiles: str,
+    sanitize_flags: SanitizeFlags = Chem.rdmolops.SANITIZE_NONE,
+    verbose: int = 1,
 ) -> str:
     try:
         mol = Chem.MolFromSmiles(smiles, sanitize=False)
@@ -66,7 +68,14 @@ def _sanitize_smiles_choose_flags(
 
 
 def worker_func(arg: Any) -> list:
-    input_smi_path, start_index, chunk_size, read_delim, read_molecule_sequence_column_idx, verbose = arg
+    (
+        input_smi_path,
+        start_index,
+        chunk_size,
+        read_delim,
+        read_molecule_sequence_column_idx,
+        verbose,
+    ) = arg
     # itf = IndexedTextFile(input_smi_path, process_line_func = lambda x:x)
     itf = get_from_global_storage("indexed_text_file")
 
@@ -112,7 +121,16 @@ def sanitize_smi_file_multiprocessed(
     for start_pos in np.arange(0, molecules_num, chunk_size):
         end_pos = min(start_pos + chunk_size, molecules_num)
         use_chunk_size = end_pos - start_pos
-        args.append((input_smi_path, start_pos, use_chunk_size, read_delim, read_molecule_sequence_column_idx, True))
+        args.append(
+            (
+                input_smi_path,
+                start_pos,
+                use_chunk_size,
+                read_delim,
+                read_molecule_sequence_column_idx,
+                True,
+            )
+        )
 
     with open(output_smi_path, "wt") as f:
         for processed_ans in run_multiprocessed(
@@ -138,14 +156,22 @@ def sanitize_smi_file_multiprocessed(
     default=0,
     help="the column index in which the sequence (usually SMILES) is found",
 )
-@click.option("--chunk", default=100000, help="amount of molecules for processing by each multiprocessing worker")
+@click.option(
+    "--chunk",
+    default=100000,
+    help="amount of molecules for processing by each multiprocessing worker",
+)
 @click.option(
     "--workers",
     default="auto",
     help='number of multliprocessing workers. Pass "auto" to decide based on available cpu cores, pass an integer to specify a specific number, pass 0 to disable multiprocessing',
 )
 def main(
-    input_smi: str, output_sanitized_smi: str, read_molecule_sequence_column_idx: int, chunk: int, workers: int
+    input_smi: str,
+    output_sanitized_smi: str,
+    read_molecule_sequence_column_idx: int,
+    chunk: int,
+    workers: int,
 ) -> None:
     """
     Outputs a rdkit sanitized version of an smi file (usually containing molecules)

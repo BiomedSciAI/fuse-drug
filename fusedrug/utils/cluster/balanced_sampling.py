@@ -51,14 +51,18 @@ def create_balanced_sampling_tsv(
     first_line_is_title = columns_names is None
 
     with open(cluster_tsv, "rt") as f:
-        mm_read = mmap.mmap(f.fileno(), 0, prot=mmap.PROT_READ)  # useful for massive files
+        mm_read = mmap.mmap(
+            f.fileno(), 0, prot=mmap.PROT_READ
+        )  # useful for massive files
         cluster_sizes = defaultdict(int)
 
         if first_line_is_title:
             columns_names = mm_read.readline().decode().rstrip().split("\t")
 
         if cluster_center_column_name not in columns_names:
-            raise Exception(f"Could not find center column: {cluster_center_column_name} in columns: {columns_names}")
+            raise Exception(
+                f"Could not find center column: {cluster_center_column_name} in columns: {columns_names}"
+            )
         center_index = columns_names.index(cluster_center_column_name)
 
         linenum = 0
@@ -91,14 +95,18 @@ def create_balanced_sampling_tsv(
     cluster_sizes = {k: d / new_total for (k, d) in cluster_sizes.items()}
 
     with open(cluster_tsv, "rt") as f:
-        mm_read = mmap.mmap(f.fileno(), 0, prot=mmap.PROT_READ)  # useful for massive files
+        mm_read = mmap.mmap(
+            f.fileno(), 0, prot=mmap.PROT_READ
+        )  # useful for massive files
         with open(output_balanced_tsv, "wt") as outfh:
             print(f"writing {output_balanced_tsv}")
 
             if first_line_is_title:
                 _ = mm_read.readline()  # skip the title
 
-            outfh.write("\t".join(columns_names + ["inverse_balance_proportion"]) + "\n")
+            outfh.write(
+                "\t".join(columns_names + ["inverse_balance_proportion"]) + "\n"
+            )
             linenum = 0
             while True:
                 line = mm_read.readline()

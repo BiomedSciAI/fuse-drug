@@ -25,12 +25,19 @@ import difflib
 
 
 class MetricPairwiseProteinSequenceAlignmentScore(MetricPerBatchDefault):
-    def __init__(self, preds: str, target: str, substitution_matrix: str = "BLOSUM62", **kwargs: dict) -> None:
+    def __init__(
+        self,
+        preds: str,
+        target: str,
+        substitution_matrix: str = "BLOSUM62",
+        **kwargs: dict,
+    ) -> None:
         super().__init__(
             preds=preds,
             target=target,
             metric_per_batch_func=partial(
-                _pairwise_protein_sequence_alignment_score, substitution_matrix=substitution_matrix
+                _pairwise_protein_sequence_alignment_score,
+                substitution_matrix=substitution_matrix,
             ),
             result_aggregate_func=_pairwise_protein_sequence_alignment_compute,
             post_keys_to_collect=["pairwise_alignment_score"],

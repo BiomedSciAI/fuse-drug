@@ -23,11 +23,18 @@ class FastaLoaderCustom(OpBase):
         super().__init__()
         self._fasta = IndexedFastaCustom(fasta_filename, **indexed_fasta_custom_kwargs)
 
-    def __call__(self, sample_dict: NDict, key_out: str = "data.seq") -> NDict:
+    def __call__(
+        self,
+        sample_dict: NDict,
+        key_out: str = "data.seq",
+        key_out_metadata: Optional[str] = None,
+    ) -> NDict:
         """ """
         sid = get_sample_id(sample_dict)
         entry = self._fasta[sid]
         sample_dict[key_out] = entry[1]
+        if key_out_metadata is not None:
+            sample_dict[key_out_metadata] = entry[0]
 
         return sample_dict
 
@@ -37,14 +44,21 @@ class FastaLoader(OpBase):
     Loads an entry from a fasta file. uses IndexedFasta which uses pyfastx under the hood
     """
 
-    def __init__(self, fasta_file_loc: Optional[str] = None, check_for_duplicate_names: bool = False):
+    def __init__(
+        self,
+        fasta_file_loc: Optional[str] = None,
+        check_for_duplicate_names: bool = False,
+    ):
         """
         :param fasta_file_loc: location of .fasta or .fasta.gz file
         :param check_for_duplicate_names: checks for duplicates (in names, does not check sequences!)
             may take few minutes.
         """
         super().__init__()
-        self._fasta = IndexedFasta(fasta_file_loc=fasta_file_loc, check_for_duplicate_names=check_for_duplicate_names)
+        self._fasta = IndexedFasta(
+            fasta_file_loc=fasta_file_loc,
+            check_for_duplicate_names=check_for_duplicate_names,
+        )
 
     def __call__(self, sample_dict: NDict, key_out: str = "data.seq") -> NDict:
         """ """

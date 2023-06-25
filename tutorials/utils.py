@@ -18,7 +18,9 @@ class BindingDB:
         if not os.path.isfile(zip_path):
             # Download zip
             print("Downloading zip file:")
-            url = "https://www.bindingdb.org/bind/downloads/BindingDB_All_2022m4.tsv.zip"
+            url = (
+                "https://www.bindingdb.org/bind/downloads/BindingDB_All_2022m4.tsv.zip"
+            )
             wget.download(url, zip_path)
             print("Downloading zip file: DONE")
 

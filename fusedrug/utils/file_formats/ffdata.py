@@ -30,7 +30,9 @@ class FFData:
 
         self.filename = filename
         self.ffindex_filename = ffindex_filename
-        self.index_filename = change_extension(ffindex_filename, ".multiline_index.hdf5")
+        self.index_filename = change_extension(
+            ffindex_filename, ".multiline_index.hdf5"
+        )
 
         if force_recreate_binary_index or (not os.path.isfile(self.index_filename)):
             with Timer("creating hdf5 index"):
@@ -46,7 +48,9 @@ class FFData:
                         lengths.append(int(length))
 
             with Timer("creating np array"):
-                index_data = np.array([names, offsets, lengths], dtype=np.int64).transpose()
+                index_data = np.array(
+                    [names, offsets, lengths], dtype=np.int64
+                ).transpose()
             with Timer("storing np array"):
                 save_hdf5_safe(
                     self.index_filename,
@@ -56,7 +60,9 @@ class FFData:
 
         names = offsets = lengths = None
         with Timer("loading hdf5 index"):
-            loaded_hdf5 = load_hdf5(self.index_filename)  # reloading even in the creation time (intentional)
+            loaded_hdf5 = load_hdf5(
+                self.index_filename
+            )  # reloading even in the creation time (intentional)
         self.index_data = loaded_hdf5["index_data"]
 
         # load the index file
