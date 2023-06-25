@@ -461,9 +461,11 @@ def _load_dataframes(
     _ligands = fix_df_types(_ligands)
     _ligands.set_index("ligand_id", inplace=True)
     print(f"ligands num: {len(_ligands)}")
-    if 'canonical_smiles' in _ligands.columns:
+    if "canonical_smiles" in _ligands.columns:
         _ligands = _ligands[~_ligands.canonical_smiles.isnull()]
-        print(f"ligands num after keeping only ligands with non-NaN canonical_smiles: {len(_ligands)}")
+        print(
+            f"ligands num after keeping only ligands with non-NaN canonical_smiles: {len(_ligands)}"
+        )
 
     assert isinstance(targets_tsv, str)
     print(f"loading {targets_tsv}")
