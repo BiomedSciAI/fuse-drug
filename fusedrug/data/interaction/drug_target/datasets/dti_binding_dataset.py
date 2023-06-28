@@ -383,6 +383,7 @@ def _load_dataframes(
     keep_activity_labels: List[str] = None,
     combine: Optional[bool] = False,
     suffixes: Optional[List[str]] = ["_ligands", "_targets"],
+    require_non_null_ligand_columns: Optional[List[str]] = ["canonical_smiles",],
     **kwargs: Any,
 ) -> dict:
     """
@@ -398,6 +399,7 @@ def _load_dataframes(
         combine (Optional[bool], optional): If True, all dataframes are combined into return["pairs"]. Defaults to False
         suffixes (Optional[List[str]], optional): Suffixes to be assigned to overlapping ligand and target columns respectively.
             Defaults to ['_ligands', '_targets'].
+        require_non_null_ligand_columns (Optional[List[str]]): remove rows from the ligands dataframe for which the values in these columns (if exist) are null 
     returns: The following dictionary:
         {
             "pairs": pairs df,
@@ -461,11 +463,13 @@ def _load_dataframes(
     _ligands = fix_df_types(_ligands)
     _ligands.set_index("ligand_id", inplace=True)
     print(f"ligands num: {len(_ligands)}")
-    if "canonical_smiles" in _ligands.columns:
-        _ligands = _ligands[~_ligands.canonical_smiles.isnull()]
-        print(
-            f"ligands num after keeping only ligands with non-NaN canonical_smiles: {len(_ligands)}"
-        )
+
+    for ligand_col in require_non_null_ligand_columns:
+        if ligand_col in _ligands.columns:
+            _ligands = _ligands[~_ligands[ligand_col].isnull()]
+            print(
+                f"ligands num after keeping only ligands with non-NaN {ligand_col}: {len(_ligands)}"
+            )
 
     assert isinstance(targets_tsv, str)
     print(f"loading {targets_tsv}")
@@ -494,9 +498,13 @@ def _load_dataframes(
         )
 
     if combine:
-        ligand_id_key = "ligand_id"
+        ligand_id_key = _ligands.index.name
+        if len(_ligands.index.unique()) != len(_ligands):
+            raise Exception("ligands dataframe must have unique index values")
         affinities_with_ligands = _pairs.merge(_ligands, on=ligand_id_key)
-        target_id_key = "target_id"
+        target_id_key = _targets.index.name
+        if len(_targets.index.unique()) != len(_targets):
+            raise Exception("targets dataframe must have unique index values")
         _pairs = affinities_with_ligands.merge(
             _targets, on=target_id_key, suffixes=suffixes
         )
