@@ -383,7 +383,9 @@ def _load_dataframes(
     keep_activity_labels: List[str] = None,
     combine: Optional[bool] = False,
     suffixes: Optional[List[str]] = ["_ligands", "_targets"],
-    require_non_null_ligand_columns: Optional[List[str]] = ["canonical_smiles",],
+    require_non_null_ligand_columns: Optional[List[str]] = [
+        "canonical_smiles",
+    ],
     **kwargs: Any,
 ) -> dict:
     """
@@ -399,7 +401,7 @@ def _load_dataframes(
         combine (Optional[bool], optional): If True, all dataframes are combined into return["pairs"]. Defaults to False
         suffixes (Optional[List[str]], optional): Suffixes to be assigned to overlapping ligand and target columns respectively.
             Defaults to ['_ligands', '_targets'].
-        require_non_null_ligand_columns (Optional[List[str]]): remove rows from the ligands dataframe for which the values in these columns (if exist) are null 
+        require_non_null_ligand_columns (Optional[List[str]]): remove rows from the ligands dataframe for which the values in these columns (if exist) are null
     returns: The following dictionary:
         {
             "pairs": pairs df,
