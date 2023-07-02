@@ -138,6 +138,9 @@ dmypy.json
 # VSCode
 .vscode
 
+# hydra
+.hydra
+
 # should not push data
 tutorials/data/*
 

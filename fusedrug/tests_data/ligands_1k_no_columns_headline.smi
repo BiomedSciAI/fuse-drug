@@ -411,7 +411,7 @@ CC[C@H]1CN(C(Cc2ccc(Cl)cc2)CO1)C1CCN(CC1)c1nnc(N)[nH]1	Synthesis of 5-(4-((2S,5S
 C[C@H]1CN(C(Cc2ccc(Cl)cc2)CO1)C1CCN(CC1)c1nnc(N)[nH]1	Synthesis of 5-(4-((2S,5S)-5-(4-chlorobenzyl)-2-methylmorpholino)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10208020, Example 4::US10538508, Example 4::US9944624, Ex. 4
 Nc1nnc([nH]1)N1CCC(CC1)N1CCOCC1Cc1ccc(Br)cc1	Synthesis of (S)-5-(4-(3-(4-bromobenzyl)morpholino)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10208020, Example 3::US10538508, Example 3::US9944624, Ex. 3
 Nc1nnc([nH]1)N1CCC(CC1)N1CCOCC1Cc1ccc(Cl)cc1	(S)-5-(4-(3-(4- chlorobenzyl)morpholino) piperidin-1-yl)-4H-1,2,4- triazol-3-amine::US10208020, Example 1::US10208020, Example 2::US10538508, Example 2::US9944624, Ex. 2
-CCOC(=O)C1CCC(Cc2ccc(Cl)cc2)N(C1)C1CCN(CC1)c1nnc(N)[nH]1	US10208020, Example 16::US10538508, Example 16::US9944624, Ex. 16::ethyl (6R)-1&#8242;-(5-amino-4H-1,2,4-triazol-3-yl)-6-(4-chlorobenzyl)-[1,4&#8242;-bipiperidine]-3-carboxylate 
+CCOC(=O)C1CCC(Cc2ccc(Cl)cc2)N(C1)C1CCN(CC1)c1nnc(N)[nH]1	US10208020, Example 16::US10538508, Example 16::US9944624, Ex. 16::ethyl (6R)-1&#8242;-(5-amino-4H-1,2,4-triazol-3-yl)-6-(4-chlorobenzyl)-[1,4&#8242;-bipiperidine]-3-carboxylate
 CS(=O)(=O)NCCOc1nonc1\C(Nc1ccc(F)c(Br)c1)=N\O	US10538497, Example 214
 CN1CC(Cc2ccc(Cl)cc2)N(C[C@@H]1CO)C1CCN(CC1)c1nnc(N)[nH]1	((2R,5S)-4-(1-(5-amino-4H-1,2,4-triazol-3-yl)piperidin-4-yl)-5-(4-chlorobenzyl)-1-methylpiperazin-2-yl)methanol ::US10538508, Example 30::US9944624, Ex. 30
 CC(C)CN1CCN(C(Cc2ccc(Cl)cc2)C1)C1CCN(CC1)c1nnc(N)[nH]1	(S)-5-(4-(2-(4-chlorobenzyl)-4-isobutylpiperazin-1-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10538508, Example 29::US9944624, Ex. 29
@@ -549,8 +549,8 @@ C[C@@H]1CN(C(Cc2ccc(Cl)cc2)CO1)C1CCN(CC1)c1nnc(N)[nH]1	5-(4-((2R,5S)-5-(4-chloro
 Nc1nnc([nH]1)N1CCC(CC1)N1CCS(=O)(=O)CC1Cc1ccc(Cl)cc1	(S)-4-(1-(5-amino-4H-1,2,4-triazol-3-yl)piperidin-4-yl)-3-(4-chlorobenzyl)thiomorpholine 1,1-dioxide ::US10538508, Example 43::US9944624, Ex. 43
 Nc1nnc([nH]1)N1CCC(CC1)N1CCNC(=O)C1Cc1ccc(Cl)cc1	(S)-4-(1-(5-amino-4H-1,2,4-triazol-3-yl)piperidin-4-yl)-3-(4-chlorobenzyl)piperazin-2-one ::US10538508, Example 42::US9944624, Ex. 42
 C[C@H]1CN(C(Cc2ccc(Cl)cc2)CN1CC(O)=O)C1CCN(CC1)c1nnc(N)[nH]1	2-((2S,5S)-4-(1-(5-amino-4H-1,2,4-triazol-3-yl)piperidin-4-yl)-5-(4-chlorobenzyl)-2-methylpiperazin-1-yl)acetic acid ::US10538508, Example 41::US9944624, Ex. 41
-COC(=O)CN1CC(Cc2ccc(Cl)cc2)N(C[C@@H]1C)C1CCN(CC1)c1nnc(N)[nH]1	US10538508, Example 40::US9944624, Ex. 40::methyl 2-((2S,5S)-4-(1-(5-amino-4H-1,2,4-triazol-3-yl)piperidin-4-yl)-5-(4-chlorobenzyl)-2-methylpiperazin-1-yl)acetate 
-COC(=O)N1CC(Cc2ccc(Cl)cc2)N(C[C@@H]1C)C1CCN(CC1)c1nnc(N)[nH]1	US10538508, Example 39::US9944624, Ex. 39::methyl (2S,5S)-4-(1-(5-amino-4H-1,2,4-triazol-3-yl)piperidin-4-yl)-5-(4-chlorobenzyl)-2-methylpiperazine-1-carboxylate 
+COC(=O)CN1CC(Cc2ccc(Cl)cc2)N(C[C@@H]1C)C1CCN(CC1)c1nnc(N)[nH]1	US10538508, Example 40::US9944624, Ex. 40::methyl 2-((2S,5S)-4-(1-(5-amino-4H-1,2,4-triazol-3-yl)piperidin-4-yl)-5-(4-chlorobenzyl)-2-methylpiperazin-1-yl)acetate
+COC(=O)N1CC(Cc2ccc(Cl)cc2)N(C[C@@H]1C)C1CCN(CC1)c1nnc(N)[nH]1	US10538508, Example 39::US9944624, Ex. 39::methyl (2S,5S)-4-(1-(5-amino-4H-1,2,4-triazol-3-yl)piperidin-4-yl)-5-(4-chlorobenzyl)-2-methylpiperazine-1-carboxylate
 C[C@H]1CN(C(Cc2ccc(Cl)cc2)CN1C(C)=O)C1CCN(CC1)c1nnc(N)[nH]1	1-((2S,5S)-4-(1-(5-amino-4H-1,2,4-triazol-3-yl)piperidin-4-yl)-5-(4-chlorobenzyl)-2-methylpiperazin-1-yl)ethanone ::US10538508, Example 38::US9944624, Ex. 38
 C[C@H]1CN(C(Cc2ccc(Cl)cc2)CN1S(C)(=O)=O)C1CCN(CC1)c1nnc(N)[nH]1	5-(4-((2S,5S)-2-(4-chlorobenzyl)-5-methyl-4-(methylsulfonyl)piperazin-1-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10538508, Example 37::US9944624, Ex. 37
 CS(=O)(=O)N1CC(Cc2ccc(Cl)cc2)N(C[C@@H]1Cc1ccc(Cl)cc1)C1CCN(CC1)c1nnc(N)[nH]1	5-(4-((2S,5S)-2,5-bis(4-chlorobenzyl)-4-(methylsulfonyl)piperazin-1-yl)piperidin-1-yl)-4H-1,2,4-triazol-3-amine ::US10538508, Example 36::US9944624, Ex. 36

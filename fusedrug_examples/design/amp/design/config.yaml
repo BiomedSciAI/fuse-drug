@@ -12,7 +12,7 @@ data: # arguments for data() function in main_design_train.py
     toxin_pred_data_path: ${oc.env:TOXIN_PRED_DATA_PATH}
     satpdb_data_path: ${oc.env:SATPDB_DATA_PATH}
     axpep_data_path: ${oc.env:AXPEP_DATA_PATH}
-    split_filename: ${oc.env:PEPTIDES_DATASETS_SPLIT_FILENAME}
+    split_filename: "${root}/split.pickle"
     num_folds: 5
     train_folds: [0, 1, 2]
     validation_folds: [3]
@@ -35,7 +35,7 @@ train: # arguments for train() function in main_design_train.py
   #   tags: "fusedrug-examples"
   #   reuse_last_task_id: True
   #   continue_last_task: False
-    
+
   num_iter: 1000
 
   losses:
@@ -63,8 +63,7 @@ train: # arguments for train() function in main_design_train.py
     max_epochs: 400
     accelerator: "gpu"
     devices: 1
-    strategy: null
-    auto_select_gpus: True
+    # strategy: "auto"
     gradient_clip_val: 5.0
 
 
@@ -104,7 +103,7 @@ model: # arguments for model() function in main_design_train.py
     out_dropout: 0.3
   gru_decoder:
     num_tokens: ${model.max_seq_len}
-    emb_dim: ${model.z_dim} 
+    emb_dim: ${model.z_dim}
     h_dim: ${model.z_dim}
   word_dropout:
     p_word_dropout: 0.1
@@ -122,15 +121,10 @@ model: # arguments for model() function in main_design_train.py
   classification_toxicity:
     num_outputs: 2
     layers_description: []
-    
+
 
 hydra:
   run:
-    dir: ${root}/${name} 
+    dir: ${root}/${name}
   job:
-    chdir: False 
-
-  
-  
-
-  
+    chdir: False

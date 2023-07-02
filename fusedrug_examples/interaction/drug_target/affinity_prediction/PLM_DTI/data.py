@@ -1,17 +1,25 @@
+from typing import Tuple
 
 # The Contrastive_PLM_DTI submodule is the repository found at https://github.com/samsledje/Contrastive_PLM_DTI
-# and described in the paper "Adapting protein language models for rapid DTI prediction": https://www.mlsb.io/papers_2021/MLSB2021_Adapting_protein_language_models.pdf 
-from Contrastive_PLM_DTI.src.data import (
+# and described in the paper "Adapting protein language models for rapid DTI prediction": https://www.mlsb.io/papers_2021/MLSB2021_Adapting_protein_language_models.pdf
+from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI.Contrastive_PLM_DTI.src.data import (
     DTIDataModule,
     TDCDataModule,
     DUDEDataModule,
     EnzPredDataModule,
 )
+from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI.Contrastive_PLM_DTI.src.utils import (
+    get_featurizer,
+)
+from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI.Contrastive_PLM_DTI.src.featurizers import (
+    Featurizer,
+)
 import torch
 from omegaconf import open_dict # to be able to add new keys to hydra dictconfig
-from Contrastive_PLM_DTI.src.utils import get_featurizer
-from Contrastive_PLM_DTI.src.featurizers import Featurizer
-from utils import get_task_dir
+from omegaconf import open_dict  # to be able to add new keys to hydra dictconfig
+from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI.utils import (
+    get_task_dir,
+)
 from fuse.data.datasets.dataset_wrap_seq_to_dict import DatasetWrapSeqToDict
 from torch.utils.data import DataLoader
 from fuse.data.utils.collates import CollateDefault
@@ -19,19 +27,13 @@ from fuse.data.ops.ops_cast import OpToTensor
 from fuse.data.pipelines.pipeline_default import PipelineDefault
 import pytorch_lightning as pl
 from pathlib import Path
-import pandas as pd
 from typing import Union, List, Dict, Optional
-from fusedrug.data.interaction.drug_target.loaders.dti_binding_dataset_loader import DTIBindingDatasetLoader
 from fuse.utils.cpu_profiling import Timer
 from fuse.data import DatasetDefault, PipelineDefault
-from fuse.data.utils.samplers import BatchSamplerDefault
 from fusedrug.utils.samplers.balanced_df_sampler import BalancedClassDataFrameSampler
-from torch.utils.data import RandomSampler
 from fusedrug.utils.samplers.subset_sampler import SubsetSampler
-from fusedrug.data.molecule.ops.featurizer_ops import FeaturizeDrug
-from fusedrug.data.protein.ops.featurizer_ops import FeaturizeTarget
 from fuse.data.ops.ops_common import OpDeleteKeypaths, OpLookup
-import dti_dataset
+from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI import dti_dataset
 class BenchmarkDTIDataModule(pl.LightningDataModule):
     def __init__(
         self,
@@ -171,13 +173,17 @@ def get_dataloaders(cfg, device=torch.device("cpu"), contrastive=False, test_mod
     if cfg.experiment.task.lower() == "benchmark":
         task_dir = cfg.experiment.dir
     else:
-        task_dir = get_task_dir(cfg.experiment.task, orig_repo_name="Contrastive_PLM_DTI")
+        task_dir = get_task_dir(
+            cfg.experiment.task, orig_repo_name="Contrastive_PLM_DTI"
+        )
 
     if not contrastive:
         drug_featurizer = get_featurizer(cfg.model.drug_featurizer, save_dir=task_dir)
-        target_featurizer = get_featurizer(cfg.model.target_featurizer, save_dir=task_dir)
+        target_featurizer = get_featurizer(
+            cfg.model.target_featurizer, save_dir=task_dir
+        )
         if cfg.experiment.task == "dti_dg":
-            with open_dict(cfg): 
+            with open_dict(cfg):
                 cfg.model.classify = False
                 cfg.trainer.watch_metric = "val/pcc"
             datamodule = TDCDataModule(
@@ -192,7 +198,7 @@ def get_dataloaders(cfg, device=torch.device("cpu"), contrastive=False, test_mod
             )
             datamodule.prepare_data()
         elif cfg.experiment.task in EnzPredDataModule.dataset_list():
-            with open_dict(cfg): 
+            with open_dict(cfg):
                 cfg.model.classify = True
                 cfg.trainer.watch_metric = "validation.metrics.val/aupr"
             datamodule = EnzPredDataModule(
@@ -253,7 +259,9 @@ def get_dataloaders(cfg, device=torch.device("cpu"), contrastive=False, test_mod
     else:
         task_dir = get_task_dir("DUDe", orig_repo_name="Contrastive_PLM_DTI")
         drug_featurizer = get_featurizer(cfg.model.drug_featurizer, save_dir=task_dir)
-        target_featurizer = get_featurizer(cfg.model.target_featurizer, save_dir=task_dir)
+        target_featurizer = get_featurizer(
+            cfg.model.target_featurizer, save_dir=task_dir
+        )
         datamodule = DUDEDataModule(
             cfg.trainer.contrastive_split,
             drug_featurizer,

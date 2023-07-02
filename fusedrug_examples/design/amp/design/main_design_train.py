@@ -14,7 +14,7 @@ limitations under the License.
 
 """
 
-from fuse_examples.design.amp.datasets import PeptidesDatasets
+from fusedrug_examples.design.amp.datasets import PeptidesDatasets
 
 from typing import Any, Optional, List, Tuple
 import hydra
@@ -35,13 +35,12 @@ from fuse.dl.models.model_wrapper import ModelWrapSeqToDict
 from fuse.dl.lightning.pl_module import LightningModuleDefault
 from fuse.dl.losses.loss_wrap_to_dict import LossWrapToDict
 from fuse.dl.models.heads import Head1D
-from fuse.eval.metrics.metrics_common import Filter
 from fuse.eval.metrics.classification.metrics_classification_common import MetricAUCROC
 from fuse.dl.losses import LossDefault
 from fuse.utils import NDict
 
-from fuse_examples.design.amp.losses import kl_gaussian_sharedmu, LossRecon, LossWAE
-from fuse_examples.design.amp.model import (
+from fusedrug_examples.design.amp.losses import kl_gaussian_sharedmu, LossRecon, LossWAE
+from fusedrug_examples.design.amp.model import (
     Embed,
     WordDropout,
     Sample,
@@ -56,10 +55,11 @@ from fuse_examples.design.amp.model import (
     RandomAdjacentSwap,
     RandomShift,
 )
-from fuse_examples.design.amp.metrics import (
+from fusedrug_examples.design.amp.metrics import (
     MetricSeqAccuracy,
     MetricPrintRandomSubsequence,
 )
+
 
 def filter_label_unknown(batch_dict: NDict, label_key: str, out_key: str) -> NDict:
     """ignore samples with label -1"""
@@ -67,10 +67,17 @@ def filter_label_unknown(batch_dict: NDict, label_key: str, out_key: str) -> NDi
 
     keep_indices = batch_dict[label_key] != -1
     # keep_indices = keep_indices.cpu().numpy()
-    return {label_key: batch_dict[label_key][keep_indices], out_key: batch_dict[out_key][keep_indices]}
+    return {
+        label_key: batch_dict[label_key][keep_indices],
+        out_key: batch_dict[out_key][keep_indices],
+    }
+
 
 def data(
-    peptides_datasets: dict, batch_size: int, data_loader: dict
+    peptides_datasets: dict,
+    batch_size: int,
+    num_batches: Optional[int],
+    data_loader: dict,
 ) -> Tuple[DatasetDefault, DataLoader, DataLoader]:
     """
     Data preparation
@@ -93,6 +100,7 @@ def data(
             balanced_class_weights={0: 0.25, 1: 0.25, -1: 0.5},
             batch_size=batch_size,
             mode="approx",
+            num_batches=num_batches,
         ),
         **data_loader,
     )
@@ -133,7 +141,7 @@ def model(
     z_dim: int,
     cls_detached: bool,
     max_seq_len: int,
-):
+) -> Tuple[torch.nn.Module, Tokenizer]:
     """
     :param seqs: list of all train sequences - used to create a tokenizer
     :param encoder_type: either "transformer" or "gru"
@@ -257,7 +265,7 @@ def train(
     trainer_kwargs: dict,
     losses: dict,
     track_clearml: Optional[dict] = None,
-):
+) -> None:
     """
     train code for the task
     :param model: the model to train
@@ -308,15 +316,27 @@ def train(
     # Metrics
     train_metrics = {}
 
-    filter_func_amp = partial(filter_label_unknown, label_key="amp.label", out_key="model.output.amp")
-    filter_func_toxicity = partial(filter_label_unknown, label_key="toxicity.label", out_key="model.output.toxicity")
-    
+    filter_func_amp = partial(
+        filter_label_unknown, label_key="amp.label", out_key="model.output.amp"
+    )
+    filter_func_toxicity = partial(
+        filter_label_unknown,
+        label_key="toxicity.label",
+        out_key="model.output.toxicity",
+    )
+
     validation_metrics = {
         "acc": MetricSeqAccuracy(pred="model.out", target="sequence"),
-        "auc_amp": 
-            MetricAUCROC(pred="model.output.amp", target="amp.label", batch_pre_collect_process_func=filter_func_amp),
-        "auc_toxicity": MetricAUCROC(pred="model.output.toxicity", target="toxicity.label", batch_pre_collect_process_func=filter_func_toxicity),
-
+        "auc_amp": MetricAUCROC(
+            pred="model.output.amp",
+            target="amp.label",
+            batch_pre_collect_process_func=filter_func_amp,
+        ),
+        "auc_toxicity": MetricAUCROC(
+            pred="model.output.toxicity",
+            target="toxicity.label",
+            batch_pre_collect_process_func=filter_func_toxicity,
+        ),
         "dump": MetricPrintRandomSubsequence(
             pred="model.out", target="sequence", num_sample_to_print=1
         ),
@@ -353,10 +373,9 @@ def train(
 
 
 @hydra.main(config_path=".", config_name="config")
-def main(cfg: DictConfig):
-    print(str(cfg))
-
+def main(cfg: DictConfig) -> None:
     cfg = hydra.utils.instantiate(cfg)
+    print(NDict(cfg).print_tree(True))
 
     # data
     ds_train, dl_train, dl_valid = data(**cfg.data)

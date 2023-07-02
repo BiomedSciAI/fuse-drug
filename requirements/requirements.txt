@@ -2,6 +2,7 @@ click
 pyfastx
 torch
 pytorch-lightning
+torchvision
 tokenizers
 hydra-core
 rdkit
@@ -14,12 +15,13 @@ rdflib
 rdflib-sqlalchemy
 pandarallel
 pg8000
-ipykernel  # dev
-jupyter  # dev 
 transformers
-black
-flake8
-mypy
 termcolor
 xmlrunner
 pytoda @ git+https://git@github.com/PaccMann/paccmann_datasets/@0.2.5#egg=pytoda
+openfold @ git+https://github.com/YoelShoshan/openfold
+dm-tree
+ml_collections
+abnumber @ git+https://github.com/prihoda/AbNumber
+biopython
+# conda install -c bioconda abnumber

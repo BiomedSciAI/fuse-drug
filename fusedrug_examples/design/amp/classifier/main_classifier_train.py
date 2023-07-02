@@ -14,7 +14,7 @@ limitations under the License.
 
 """
 
-from fuse_examples.design.amp.datasets import PeptidesDatasets
+from fusedrug_examples.design.amp.datasets import PeptidesDatasets
 
 from typing import Any, Optional, List, Tuple
 import hydra
@@ -33,13 +33,12 @@ from fuse.data.utils.samplers import BatchSamplerDefault
 from fuse.dl.models.model_wrapper import ModelWrapSeqToDict
 from fuse.dl.lightning.pl_module import LightningModuleDefault
 from fuse.dl.models.heads import Head1D
-from fuse.eval.metrics.metrics_common import Filter
 from fuse.eval.metrics.classification.metrics_classification_common import MetricAUCROC
 from fuse.dl.losses import LossDefault
 from fuse.utils import NDict
 from fuse.data import DatasetDefault
 
-from fuse_examples.design.amp.model import (
+from fusedrug_examples.design.amp.model import (
     Embed,
     WordDropout,
     Tokenizer,
@@ -50,7 +49,7 @@ from fuse_examples.design.amp.model import (
     RandomAdjacentSwap,
     RandomShift,
 )
-from fuse_examples.design.amp.losses import LossRecon
+from fusedrug_examples.design.amp.losses import LossRecon
 
 
 def data(
@@ -58,6 +57,7 @@ def data(
     target_key: str,
     infill: bool,
     batch_size: int,
+    num_batches: int,
     data_loader: dict,
 ) -> Tuple[DatasetDefault, DataLoader, DataLoader]:
     """
@@ -66,6 +66,7 @@ def data(
     :param target_key: used to to balance the trainset
     :param infill: if True will keep the unlabeled data. Otherwise it will filter it.
     :param batch_size: batch size - used for both train dataloader and validation dataloader.
+    :param num_batches: number of batches
     :param data_loader: arguments for pytorch dataloader constructor
     :return: train dataset and dataloaders for both train-set and validation-set
     """
@@ -93,7 +94,7 @@ def data(
             balanced_class_name=target_key,
             batch_size=batch_size,
             mode="approx",
-            num_batches=1000
+            num_batches=num_batches,
         ),
         **data_loader,
     )
@@ -121,7 +122,7 @@ def model(
     classifier_recon_head: dict,
     z_dim: int,
     max_seq_len: int,
-):
+) -> Tuple[torch.nn.Module, Tokenizer]:
     """
     :param seqs: list of all train sequences - used to create a tokenizer
     :param encoder_type: either "transformer" or "gru"
@@ -207,7 +208,11 @@ def filter_label_unknown(batch_dict: NDict, label_key: str, out_key: str) -> NDi
 
     keep_indices = batch_dict[label_key] != -1
     # keep_indices = keep_indices.cpu().numpy()
-    return {label_key: batch_dict[label_key][keep_indices], out_key: batch_dict[out_key][keep_indices]}
+    return {
+        label_key: batch_dict[label_key][keep_indices],
+        out_key: batch_dict[out_key][keep_indices],
+    }
+
 
 def train(
     model: torch.nn.Module,
@@ -221,7 +226,7 @@ def train(
     infill: bool,
     lr_scheduler: callable = None,
     track_clearml: Optional[dict] = None,
-):
+) -> None:
     """
     train code for the task
     :param model: the model to train
@@ -259,10 +264,15 @@ def train(
         )
 
     # Metrics
-    filter_func = partial(filter_label_unknown, label_key=target_key, out_key="model.output.cls")
+    filter_func = partial(
+        filter_label_unknown, label_key=target_key, out_key="model.output.cls"
+    )
     train_metrics = {
-        "auc":
-            MetricAUCROC(pred="model.output.cls", target=target_key, batch_pre_collect_process_func=filter_func),
+        "auc": MetricAUCROC(
+            pred="model.output.cls",
+            target=target_key,
+            batch_pre_collect_process_func=filter_func,
+        ),
     }
 
     validation_metrics = {
@@ -307,10 +317,9 @@ def train(
 
 
 @hydra.main(config_path=".", config_name="config")
-def main(cfg: DictConfig):
-    print(str(cfg))
-
+def main(cfg: DictConfig) -> None:
     cfg = hydra.utils.instantiate(cfg)
+    print(NDict(cfg).print_tree(True))
 
     # data
     ds_train, dl_train, dl_valid = data(**cfg.data)

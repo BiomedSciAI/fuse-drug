@@ -1,6 +1,8 @@
+import os
 from pathlib import Path
 
-def get_task_dir(task_name: str, orig_repo_name: str = ""):
+
+def get_task_dir(task_name: str, orig_repo_name: str = "") -> Path:
     """
     Slightly modified function vs. that from the original repo,
     to allow appending the repo name, for when used as a submodule.
@@ -27,4 +29,6 @@ def get_task_dir(task_name: str, orig_repo_name: str = ""):
         "phosphatase": "./dataset/EnzPred/phosphatase_chiral_binary",
     }
 
-    return Path(orig_repo_name, task_paths[task_name.lower()]).resolve()
+    return Path(
+        os.path.dirname(__file__), orig_repo_name, task_paths[task_name.lower()]
+    ).resolve()

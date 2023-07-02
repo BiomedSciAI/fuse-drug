@@ -14,7 +14,7 @@ limitations under the License.
 
 """
 
-from typing import Sequence, List, Optional
+from typing import Sequence, List, Optional, Tuple
 import numpy as np
 import torch
 import torch.nn as nn
@@ -29,7 +29,14 @@ class GRUEncoder(nn.Module):
     """
 
     def __init__(
-        self, emb_dim, h_dim, z_dim, biGRU, layers, p_dropout, single_output=False
+        self,
+        emb_dim: int,
+        h_dim: int,
+        z_dim: int,
+        biGRU: bool,
+        layers: int,
+        p_dropout: float,
+        single_output: bool = False,
     ):
         super().__init__()
         self.rnn = nn.GRU(
@@ -49,7 +56,7 @@ class GRUEncoder(nn.Module):
         if not single_output:
             self.q_logvar = nn.Linear(self.biGRU_factor * h_dim, z_dim)
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
         """
         Inputs is embeddings of: mbsize x seq_len x emb_dim
         """
@@ -74,11 +81,11 @@ class GRUDecoder(nn.Module):
 
     def __init__(
         self,
-        emb_dim,
-        output_dim,
-        h_dim,
+        emb_dim: int,
+        output_dim: int,
+        h_dim: int,
         num_tokens: int,
-        p_out_dropout=0.3,
+        p_out_dropout: float = 0.3,
     ):
         super().__init__()
         self.rnn = nn.GRU(emb_dim, h_dim, batch_first=True)
@@ -87,7 +94,7 @@ class GRUDecoder(nn.Module):
         self.fc = nn.Sequential(nn.Dropout(p_out_dropout), nn.Linear(h_dim, output_dim))
         self._num_tokens = num_tokens
 
-    def forward(self, z):
+    def forward(self, z: torch.Tensor) -> torch.Tensor:
         """
         :param z: latent space. Shape [N, LATENT_SPACE_DIM]
         """
@@ -107,7 +114,12 @@ class Embed(nn.Module):
     "Convert token ids to learned embedding"
 
     def __init__(
-        self, n_vocab: int, emb_dim: int, key_in: str, key_out: str, **embedding_kwargs
+        self,
+        n_vocab: int,
+        emb_dim: int,
+        key_in: str,
+        key_out: str,
+        **embedding_kwargs: dict,
     ):
         super().__init__()
         self._emb_dim = emb_dim
@@ -115,7 +127,7 @@ class Embed(nn.Module):
         self._key_in = key_in
         self._key_out = key_out
 
-    def forward(self, batch_dict: dict):
+    def forward(self, batch_dict: dict) -> dict:
         tokens = batch_dict[self._key_in]
         tokens = tokens.to(device=next(iter(self._word_emb.parameters())).device)
 
@@ -146,7 +158,7 @@ class WordDropout(nn.Module):
         self._key_out = key_out
         self._mask_value = mask_value
 
-    def forward(self, batch_dict: dict):
+    def forward(self, batch_dict: dict) -> dict:
         """
         Do word dropout: with prob `p_word_dropout`, set the word to '<unk>'.
         """
@@ -187,7 +199,7 @@ class RandomOverride(nn.Module):
         self._key_out = key_out
         self._values = values
 
-    def forward(self, batch_dict: dict):
+    def forward(self, batch_dict: dict) -> dict:
         """
         Do word dropout: with prob `p_word_dropout`, set the word to '<unk>'.
         """
@@ -228,7 +240,7 @@ class RandomAdjacentSwap(nn.Module):
         self._key_in = key_in
         self._key_out = key_out
 
-    def forward(self, batch_dict: dict):
+    def forward(self, batch_dict: dict) -> dict:
         """
         Do word dropout: with prob `p_word_dropout`, set the word to '<unk>'.
         """
@@ -274,7 +286,7 @@ class RandomShift(nn.Module):
         self._key_in = key_in
         self._key_out = key_out
 
-    def forward(self, batch_dict: dict):
+    def forward(self, batch_dict: dict) -> dict:
         """
         Do word dropout: with prob `p_word_dropout`, set the word to '<unk>'.
         """
@@ -316,7 +328,7 @@ class RandomMix(nn.Module):
         self._weight = weight
         self._embed = embed
 
-    def forward(self, batch_dict: dict):
+    def forward(self, batch_dict: dict) -> dict:
         """
         Do word dropout: with prob `p_word_dropout`, set the word to '<unk>'.
         """
@@ -350,13 +362,13 @@ class RandomMix(nn.Module):
 class Sample(nn.Module):
     """Sample from a normal distribution"""
 
-    def __init__(self, key_mu: str, key_logvar: str, key_out: int) -> None:
+    def __init__(self, key_mu: str, key_logvar: str, key_out: int):
         super().__init__()
         self._key_mu = key_mu
         self._key_logvar = key_logvar
         self._key_out = key_out
 
-    def forward(self, batch_dict: str):
+    def forward(self, batch_dict: dict) -> dict:
         """
         Reparameterization trick: z = mu + std*eps; eps ~ N(0, I)
         """
@@ -435,7 +447,7 @@ class LogitsToSeq(torch.nn.Module):
 class TransformerEncoder(Transformer):
     """Transformer based encoder"""
 
-    def __init__(self, num_cls_tokens=2, **kwargs):
+    def __init__(self, num_cls_tokens: int = 2, **kwargs: dict):
         super().__init__(num_cls_tokens=num_cls_tokens, **kwargs)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -457,7 +469,7 @@ class TransformerDecoder(Transformer):
         token_dim: int,
         output_dim: int,
         out_dropout: float,
-        **kwargs,
+        **kwargs: dict,
     ):
         super().__init__(num_tokens=num_tokens, token_dim=token_dim, **kwargs)
         self.fc = nn.Sequential(

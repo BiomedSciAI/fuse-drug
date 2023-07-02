@@ -24,7 +24,7 @@ Based on Payel Das et al. Accelerated antimicrobial discovery via deep generativ
 Some parts of the code (mostly the part that infer the AMP and Toxicity labels in DBAASP dataset) are based on repo https://github.com/IBM/controlled-peptide-generation
 """
 
-from typing import Sequence, Any
+from typing import Sequence, Union, List, Tuple, Any
 import re
 import os
 from glob import glob
@@ -37,6 +37,7 @@ from fuse.data import DatasetDefault, PipelineDefault, OpBase
 from fuse.data.ops.ops_read import OpReadDataframe
 from fuse.data.ops.ops_common import OpCond, OpSet
 from fuse.data.utils.split import dataset_balanced_division_to_folds
+from fuse.utils import NDict
 from Bio import SeqIO
 
 
@@ -57,14 +58,14 @@ def _seq_is_valid(seq: str) -> bool:
     return True
 
 
-def _seq_len_less_50(seq: str):
+def _seq_len_less_50(seq: str) -> bool:
     if len(seq) > 50:
         return False
     return True
 
 
 class OpProcessTargetActivities(OpBase):
-    def __call__(self, sample_dict) -> Any:
+    def __call__(self, sample_dict: NDict) -> NDict:
 
         target_activties = sample_dict["targetActivities"]
         seq = sample_dict["sequence"]
@@ -116,7 +117,7 @@ class OpProcessTargetActivities(OpBase):
         return sample_dict
 
     @staticmethod
-    def parse_concentration(concentration) -> float:
+    def parse_concentration(concentration: str) -> float:
         if concentration == "NA":
             return None
 
@@ -139,7 +140,7 @@ class OpProcessTargetActivities(OpBase):
 
 
 class OpProcessHemoliticCytotoxicActivities(OpBase):
-    def __call__(self, sample_dict) -> Any:
+    def __call__(self, sample_dict: NDict) -> NDict:
 
         targets = sample_dict["hemoliticCytotoxicActivities"]
         seq = sample_dict["sequence"]
@@ -191,7 +192,7 @@ class OpProcessHemoliticCytotoxicActivities(OpBase):
         return sample_dict
 
     @staticmethod
-    def parse_concentration(concentration) -> float:
+    def parse_concentration(concentration: str) -> Union[float, None]:
         if concentration == "NA":
             return None
 
@@ -227,7 +228,7 @@ class Dbaasp:
         ],
     ) -> pd.DataFrame:
         """
-        :param raw_data_path: path to peptides-complete.csv as downloaded from: https://dbaasp.org/download-dataset?source=peptides
+        :param raw_data_path: path to peptides-complete.json as downloaded from: https://dbaasp.org/download-dataset?source=peptides
         """
         # load the raw data
         peptides = pd.read_json(raw_data_path)
@@ -251,7 +252,7 @@ class Dbaasp:
         return peptides
 
     @staticmethod
-    def process_pipeline():
+    def process_pipeline() -> List[Tuple]:
         return [
             (OpProcessTargetActivities(), dict()),
             (OpProcessHemoliticCytotoxicActivities(), dict()),
@@ -293,21 +294,21 @@ class ToxinPred:
         return peptides
 
     @staticmethod
-    def process_pipeline():
+    def process_pipeline() -> List[Tuple]:
         return [(OpSet(), dict(key="amp.label", value=-1))]
 
 
 class AsciiHandle:
     """workaround to remove non-ascii characters from file while iterating"""
 
-    def __init__(self, handle):
+    def __init__(self, handle: Sequence):
         self._handle = handle
 
-    def __iter__(self):
+    def __iter__(self) -> str:
         for line in self._handle:
             yield line.encode("ascii", errors="ignore").decode()
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> Any:
         try:
             return super().__getattr__(name)
         except:
@@ -360,7 +361,7 @@ class Satpdb:
         return peptides
 
     @staticmethod
-    def process_pipeline():
+    def process_pipeline() -> list:
         return []
 
 
@@ -406,7 +407,7 @@ class Axpep:
         return peptides
 
     @staticmethod
-    def process_pipeline():
+    def process_pipeline() -> List[Tuple]:
         return [(OpSet(), dict(key="toxicity.label", value=-1))]
 
 
@@ -443,7 +444,7 @@ class Uniprot:
         return peptides
 
     @staticmethod
-    def process_pipeline():
+    def process_pipeline() -> List[Tuple[OpBase, dict]]:
         return [
             (OpSet(), dict(key="amp.label", value=-1)),
             (OpSet(), dict(key="toxicity.label", value=-1)),
@@ -544,9 +545,9 @@ class PeptidesDatasets:
         test_folds: Sequence[int],
     ) -> DatasetDefault:
         """
-        :param dbaasp_raw_data_path: path to peptides-complete.csv as downloaded from: https://dbaasp.org/download-dataset?source=peptides
+        :param dbaasp_raw_data_path: path to peptides-complete.json as downloaded from: https://dbaasp.org/download-dataset?source=peptides
         :param uniprot_raw_data_path_reviewed: only two columns file of reviewed peptides downloaded from uniprot - uncompressed tsv format: https://www.uniprot.org/uniprotkb?facets=reviewed%3Atrue%2Clength%3A%5B1%20TO%20200%5D&query=%2A
-        :param uniprot_raw_data_path_not_reviewed:only two columns file of reviewed peptides downloaded from uniprot - uncompressed tsv format: https://www.uniprot.org/uniprotkb?facets=reviewed%3Afalse%2Clength%3A%5B1%20TO%20200%5D&query=%2A
+        :param uniprot_raw_data_path_not_reviewed:only two columns file of unreviewed peptides downloaded from uniprot - uncompressed tsv format: https://www.uniprot.org/uniprotkb?facets=reviewed%3Afalse%2Clength%3A%5B1%20TO%20200%5D&query=%2A
         :param toxin_pred_data_path:path to a folder that contains multiple files downloaded directly from "https://webs.iiitd.edu.in/raghava/toxinpred/dataset.php"
         :param satpdb_data_path: path to a folder that contains files 'antimicrobial.fasta' and 'toxic.fasta' downloaded from https://webs.iiitd.edu.in/raghava/satpdb/down.php
         :param axpep_data_path:  path to a folder that contains files '*_ne.fasta' and '*_po.fasta' downloaded fromhttps://sourceforge.net/projects/axpep/

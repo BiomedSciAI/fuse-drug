@@ -4,7 +4,11 @@ from rdkit import Chem
 from fuse.utils.ndict import NDict
 from fuse.data.pipelines.pipeline_default import PipelineDefault
 
-from fusedrug.data.molecule.ops import SmilesRandomizeAtomOrder, SmilesToRDKitMol, RDKitMolToSmiles
+from fusedrug.data.molecule.ops import (
+    SmilesRandomizeAtomOrder,
+    SmilesToRDKitMol,
+    RDKitMolToSmiles,
+)
 
 
 class TestMoleculesAugmentations(unittest.TestCase):
@@ -12,7 +16,7 @@ class TestMoleculesAugmentations(unittest.TestCase):
     tests 'SmilesRandomizeAtomOrder' augmentation op
     """
 
-    def test_smiles_random_order(self):
+    def test_smiles_random_order(self) -> None:
         """
         unit-tests SmilesRandomizeAtomOrder op
         """
@@ -26,9 +30,15 @@ class TestMoleculesAugmentations(unittest.TestCase):
         pipeline = PipelineDefault(
             "test_pipeline",
             [
-                (SmilesToRDKitMol(), dict(key_in="data.input.ligand", key_out="data.input.ligand")),
+                (
+                    SmilesToRDKitMol(),
+                    dict(key_in="data.input.ligand", key_out="data.input.ligand"),
+                ),
                 (SmilesRandomizeAtomOrder(), dict(key="data.input.ligand")),  # augment
-                (RDKitMolToSmiles(), dict(key_in="data.input.ligand", key_out="data.input.ligand")),
+                (
+                    RDKitMolToSmiles(),
+                    dict(key_in="data.input.ligand", key_out="data.input.ligand"),
+                ),
             ],
         )
 

@@ -1,4 +1,6 @@
 import os
+from functools import partial
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from typing import OrderedDict, Dict, Any
@@ -11,11 +13,11 @@ import pytorch_lightning as pl
 from pytorch_lightning.callbacks import LearningRateMonitor
 
 from fuse.dl.losses.loss_default import LossDefault
-from fusedrug.data.interaction.drug_target.datasets.fuse_style_dti import (
-    DTIDataModule,
-)
+from fusedrug.data.interaction.drug_target.datasets.fuse_style_dti import DTIDataModule
 from fuse.dl.models.model_wrapper import ModelWrapSeqToDict
-from fuse.dl.models.backbones.backbone_transformer import CrossAttentionTransformerEncoder
+from fuse.dl.models.backbones.backbone_transformer import (
+    CrossAttentionTransformerEncoder,
+)
 from fuse.dl.models.heads.heads_1D import Head1D
 from fuse.dl.lightning.pl_funcs import start_clearml_logger
 from fuse.utils.ndict import NDict
@@ -51,7 +53,9 @@ def main(cfg: DictConfig) -> None:
     infer_params = NDict(cfg["params.infer"])
 
     if cfg["logging.log_clear_ml"]:
-        start_clearml_logger(project_name="DTI", task_name=f"{cfg['logging.task_name']}")
+        start_clearml_logger(
+            project_name="DTI", task_name=f"{cfg['logging.task_name']}"
+        )
 
     run_train(paths, train_params)
     run_infer(paths, infer_params)
@@ -71,19 +75,21 @@ def create_model(model_params: dict) -> nn.Module:
         model=torch_model,
         model_inputs=("data.drug.tokenized", "data.target.tokenized"),
         model_outputs=("model.backbone_features",),
-        post_forward_processing_function=lambda x: x.mean(dim=1),
+        post_forward_processing_function=partial(torch.mean, dim=1),
     )
 
     # classification head
     head = Head1D(
-        mode="classification", num_outputs=2, conv_inputs=(("model.backbone_features", model_params["output_dim"]),)
+        mode="classification",
+        num_outputs=2,
+        conv_inputs=(("model.backbone_features", model_params["output_dim"]),),
     )
 
     model = nn.Sequential(bb_model, head)
     return model
 
 
-def create_datamodule(paths: dict, params: dict):
+def create_datamodule(paths: dict, params: dict) -> DTIDataModule:
     """
     create dti datamodule
 
@@ -112,7 +118,9 @@ def run_train(paths: Dict[str, str], params: Dict[str, Any]) -> None:
     """
 
     # start logger
-    fuse_logger_start(output_path=paths["model_dir"], console_verbose_level=logging.INFO)
+    fuse_logger_start(
+        output_path=paths["model_dir"], console_verbose_level=logging.INFO
+    )
     lgr = logging.getLogger("Fuse")
 
     lgr.info("Fuse Train", {"attrs": ["bold", "underline"]})
@@ -152,13 +160,17 @@ def run_train(paths: Dict[str, str], params: Dict[str, Any]) -> None:
             ),
         ]
     )
-    validation_metrics = copy.deepcopy(train_metrics)  # use the same metrics in validation as well
+    validation_metrics = copy.deepcopy(
+        train_metrics
+    )  # use the same metrics in validation as well
 
     # choose best epoch source - could be based on loss(es)/metric(s)
     best_epoch_source = dict(monitor="validation.metrics.auc.macro_avg", mode="max")
 
     # create optimizer
-    optimizer = optim.Adam(model.parameters(), lr=params["lr"], weight_decay=params["weight_decay"])
+    optimizer = optim.Adam(
+        model.parameters(), lr=params["lr"], weight_decay=params["weight_decay"]
+    )
 
     # create learning rate scheduler
     lr_scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer)
@@ -204,7 +216,9 @@ def run_infer(paths: Dict[str, str], params: Dict[str, Any]) -> None:
 
     # start logger
     create_dir(paths["infer_dir"])
-    fuse_logger_start(output_path=paths["infer_dir"], console_verbose_level=logging.INFO)
+    fuse_logger_start(
+        output_path=paths["infer_dir"], console_verbose_level=logging.INFO
+    )
     lgr = logging.getLogger("Fuse")
 
     infer_file_path = os.path.join(paths["infer_dir"], paths["infer_filename"])
@@ -234,20 +248,23 @@ def run_infer(paths: Dict[str, str], params: Dict[str, Any]) -> None:
     )
 
     # set the prediction keys to extract (the ones used be the evaluation function).
-    pl_module.set_predictions_keys(["model.output.head_0", "data.label"])  # which keys to extract and dump into file
+    pl_module.set_predictions_keys(
+        ["model.output.head_0", "data.label"]
+    )  # which keys to extract and dump into file
 
     # create a trainer instance
     pl_trainer = pl.Trainer(
         default_root_dir=paths["model_dir"],
         accelerator=params["accelerator"],
         devices=params["num_devices"],
-        auto_select_gpus=True,
         max_epochs=0,
     )
 
     # predict !
     lgr.info("Predict:", {"attrs": "bold"})
-    predictions = pl_trainer.predict(pl_module, datamodule=datamodule, return_predictions=True)
+    predictions = pl_trainer.predict(
+        pl_module, datamodule=datamodule, return_predictions=True
+    )
     lgr.info("Predict: Done", {"attrs": "bold"})
 
     # convert list of batch outputs into a dataframe
