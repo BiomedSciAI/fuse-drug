@@ -57,9 +57,9 @@ def build_molecule_tokenizer_with_predefined_vocab(
 
 # TODO delete function? located at: ./fusedrug/data/protein/tokenizer/build_protein_tokenizer_pair_encoding.py
 def _get_raw_vocab_dict(name: str) -> Union[IUPAC_VOCAB, UNIREP_VOCAB]:
-    if "iupac" == name:
+    if name == "iupac":
         return IUPAC_VOCAB
-    elif "unirep" == name:
+    elif name == "unirep":
         return UNIREP_VOCAB
 
     raise Exception(

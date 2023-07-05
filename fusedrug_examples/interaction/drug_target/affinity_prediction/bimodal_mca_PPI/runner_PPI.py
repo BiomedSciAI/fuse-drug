@@ -3,6 +3,7 @@ training BimodalMCA affinity predictor (see https://pubs.acs.org/doi/10.1021/acs
 with focus on multiprocessing to improve GPU utilization
 """
 
+
 import os
 
 # import tensorflow as tf
@@ -31,12 +32,7 @@ colorama.init(autoreset=True)
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 
-print(
-    "CUDA_VISIBLE_DEVICES=",
-    os.environ["CUDA_VISIBLE_DEVICES"]
-    if "CUDA_VISIBLE_DEVICES" in os.environ
-    else None,
-)
+print("CUDA_VISIBLE_DEVICES=", os.environ.get("CUDA_VISIBLE_DEVICES", None))
 
 
 CONFIGS_DIR = os.path.join(os.path.dirname(__file__), "configs")
