@@ -79,7 +79,7 @@ def smi_file_character_histogram_multiprocessed(
         as_iterator=True,
         copy_to_global_storage=dict(indexed_text_file=itf),
     ):
-        total_characters_counter |= curr_counter
+        total_characters_counter.update(curr_counter)
 
     for k, d in total_characters_counter.items():
         print(f"{k} -> {d}")
