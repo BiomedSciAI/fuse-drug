@@ -20,40 +20,6 @@ experiment:
 paths:
   results: '${oc.env:DTI_RESULTS}'
 
-benchmark_data:
-  # parameters specific for our data/benchmark. used if task="benchmark"
-  version: 14-04-2022_30_05-09-2022
-  root_path: ${oc.env:DTI_BENCHMARK_DATA}/${benchmark_data.version}
-  # small subset for debugging
-  featurizer_debug_mode: False # if true, use dummy string in featurizer to speed up debugging
-  pairs_tsv: ${benchmark_data.root_path}/pairs/merged_bindingdb_chembl_pubchem_${benchmark_data.version}@native@single_protein_target@affinity_pairs_v0.1.tsv
-  ligands_tsv: ${benchmark_data.root_path}/ligand/merged_bindingdb_chembl_pubchem_${benchmark_data.version}@native@single_protein_target@ligands.tsv
-  targets_tsv: ${benchmark_data.root_path}/target/merged_bindingdb_chembl_pubchem_${benchmark_data.version}@native@single_protein_target@targets.tsv
-  # lenient split:
-  splits_tsv: ${benchmark_data.root_path}/splits/splits/${benchmark_data.split}/split_lenient_0.14_0.14_0.14_0.14_0.14_0.15_0.15.tsv
-  # cold_ligand split:
-  #splits_tsv: ${benchmark_data.root_path}/splits/splits/${benchmark_data.split}/split_cold_ligand_0.7_0.15_0.15.tsv
-  # cold_target split:
-  #splits_tsv: ${benchmark_data.root_path}/splits/splits/${benchmark_data.split}/split_cold_target_0.7_0.15_0.15.tsv
-  # temporal split:
-  #splits_tsv: ${benchmark_data.root_path}/splits/splits/${benchmark_data.split}/split_temporal_0.7_0.15_0.15.tsv
-  split: lenient # split if using task="benchmark". can be "lenient", "cond-target", "cold-ligand", "temporal".
-  train_folds:
-  - train1
-  - train2
-  - train3
-  - train4
-  - train5
-  val_folds:
-  - val # the '-' is needed so that it's used as a list
-  test_folds:
-  - test
-  class_label_to_idx: 
-    Active: 1
-    Inactive: 0
-  minibatches_per_epoch: 2500 # for debugging you can set a smaller value like 250
-  validation_epochs: 50 # for debugging you can set a smaller value like 5
- 
 data:
   batch_size: 32
   contrastive_batch_size: 256
