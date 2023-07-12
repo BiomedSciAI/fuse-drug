@@ -40,10 +40,3 @@ def get_metrics(task):
     return train_metrics, val_metrics, test_metrics
 
 
-def get_metrics_instances(metrics: Metric) -> dict:
-    metric_dict = {}
-    for k, met_class in metrics.items():
-        met_instance = met_class()
-        met_instance.reset()
-        metric_dict[k] = met_instance
-    return metric_dict

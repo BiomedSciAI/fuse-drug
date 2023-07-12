@@ -5,11 +5,11 @@ hydra:
     chdir: False
 experiment:
   project_name: PLM-DTI
-  experiment_name: benchmark_data_cold_ligand_split_fuse_dataset
+  experiment_name: davis_dataset_DEBUG
   dir: ${paths.results}/${experiment.project_name}/${experiment.experiment_name}
   verbosity: 3
   seed: 0
-  task: benchmark # "dti_dg" for TDCommons domain generalization benchmark,
+  task: davis # "dti_dg" for TDCommons domain generalization benchmark,
             # one of EnzPredDataModule.dataset_list() ("halogenase",
             # "bkace", "gt", "esterase", "kinase", "phosphatase"),
             # "benchmark" for our large DTI benchmark data curation,
@@ -39,7 +39,7 @@ model:
   latent_distance: "Cosine"
 
 trainer:
-  loss: 'focal' # 'bce' (binary cross-entropy), 'focal'
+  loss: 'bce' # 'bce' (binary cross-entropy), 'focal'
   epochs: 100 
   every_n_val: 2
   lr: 1e-4

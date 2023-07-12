@@ -98,13 +98,13 @@ class PLM_DTI_Module(pl.LightningModule):
         self.log("validation_loss", loss)
         return {"losses": batch_dict["losses"]}
 
-    def training_epoch_end(self, train_step_outputs) -> None:
+    def on_train_epoch_end(self, train_step_outputs) -> None:
         # calc average epoch loss and log it
         fuse_pl.epoch_end_compute_and_log_losses(self, "train", [e["losses"] for e in train_step_outputs])
         # evaluate  and log it
         fuse_pl.epoch_end_compute_and_log_metrics(self, "train", self.train_metrics)
 
-    def validation_epoch_end(self, validation_step_outputs) -> None:
+    def on_validation_epoch_end(self, validation_step_outputs) -> None:
         # calc average epoch loss and log it
         fuse_pl.epoch_end_compute_and_log_losses(self, "validation", [e["losses"] for e in validation_step_outputs])
         # evaluate  and log it

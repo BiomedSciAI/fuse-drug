@@ -56,7 +56,7 @@ def main(cfg: DictConfig) -> None:
     )
 
     trainer = pl.Trainer(callbacks=[checkpoint_callback], default_root_dir=cfg.experiment.dir, \
-                         gpus=1, auto_select_gpus=True, check_val_every_n_epoch=cfg.trainer.every_n_val, \
+                         devices=1, accelerator="gpu", check_val_every_n_epoch=cfg.trainer.every_n_val, \
                          max_epochs=cfg.trainer.epochs, benchmark=True)
     ckpt_path = cfg.experiment.checkpoint if "checkpoint" in cfg.experiment and not cfg.experiment.only_load_checkpoint_weights else None
     trainer.fit(model, train_dataloader, valid_dataloader, ckpt_path=ckpt_path)
