@@ -6,7 +6,7 @@ from collections import namedtuple
 try:
     import abnumber
 except ImportError:
-    print("ERROR: had a problem importing abnumber, please install using 'pip install abnumber'")
+    print("ERROR: had a problem importing abnumber, please install using 'conda install -c bioconda abnumber'")
     raise
 
 Antibody = namedtuple("Antibody", "pdb_id index_within_pdb light_chain_id heavy_chain_id antigen_chain_id")

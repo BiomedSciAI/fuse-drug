@@ -8,7 +8,18 @@ except ImportError:
 
 
 def aa_sequence_from_aa_integers(aatype: List[int]) -> str:
+    """
+    converts a list of amino acid integers to string of amino acids
+    """
     ans = "".join(["X" if x == 20 else rc.restypes[x] for x in aatype])
+    return ans
+
+
+def aa_integers_from_aa_sequence(aaseq: str) -> str:
+    """
+    converts a string of amino acids  to list of amino acid integers
+    """
+    ans = [rc.restypes.index(x) for x in aaseq]
     return ans
 
 

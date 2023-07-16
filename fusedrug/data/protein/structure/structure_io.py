@@ -18,6 +18,7 @@ from Bio.PDB.Chain import Chain
 from Bio.PDB.Residue import Residue
 from Bio.PDB.Atom import Atom
 from Bio import PDB
+from warnings import warn
 
 # TODO: temp until openfold will be added to the dependency list
 try:
@@ -129,11 +130,11 @@ def save_structure_file(
                 potentially_fixed_chain_id = chain_id[:1]
                 print(f"WARNING: shortening too long chain_id from {chain_id} to {potentially_fixed_chain_id}")
 
-            save_pdb_file(
-                pos14=pos_atom14,
+            flexible_save_pdb_file(
+                xyz=pos_atom14,
                 b_factors=b_factors[chain_id] if b_factors is not None else torch.tensor([100.0] * pos_atom14.shape[0]),
                 sequence=chain_to_aa_index_seq[chain_id],
-                mask=mask if mask is not None else torch.full((pos_atom14.shape[0],), fill_value=True),
+                residues_mask=mask if mask is not None else torch.full((pos_atom14.shape[0],), fill_value=True),
                 save_path=out_pdb,
                 init_chain=potentially_fixed_chain_id,
                 model=0,
@@ -441,6 +442,100 @@ def read_file_raw_string(filename: str) -> str:
     return loaded
 
 
+def flexible_save_pdb_file(
+    xyz: torch.Tensor,
+    b_factors: torch.Tensor,
+    sequence: torch.Tensor,
+    residues_mask: torch.Tensor,
+    save_path: str,
+    model: int = 0,
+    init_chain: str = "A",
+    only_save_backbone: bool = False,
+) -> None:
+    """
+    saves a PDB file containing the provided coordinates.
+
+    "xyz" coordinates and "mask" should be aligned with openfold.np.residue_constants.restype_name_to_atom14_names
+    you don't have to provide 14 atoms per mask, but the order should be aligned.
+
+    Example 1 - full heavy atoms info - you can provide:
+        xyz of shape [residues_num, 14, 3]
+
+    Example 2 - backbone only - you can provide
+        xyz of shape [residues_num, 4, 3]
+
+        in this case, only "N", "CA", "C", "O" atoms will be saved to the PDB
+        (But it will still output amino acid type into the PDB, based on what you provided as sequence)
+        Note - if you don't know it, you can provide only Lysine for the entire "sequence" argument
+
+        Alternatively, when you want to save only the backbone coordinates, you may provide the full 14 atoms info for both xyz and mask,
+        and supply only_save_backbone=True which is effectively the same as supplying
+            xyz = xyz[:,:4, :]
+            mask = mask[:, :4, :]
+
+
+
+    Support both atom14 and
+
+    To learn more about pdb format see: https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/introduction
+
+
+    Args:
+        pos14: the atom14 representation of the coordinates
+        b_factors: the b_factors of the amino acids - it can represent per residue: 1. Measurement accuracy in ground truth lab experiment or 2. Model prediction certainty
+        sequence: the amino acid of the pos14
+        residues_mask: *residue* level mask (not atoms level!)
+        save_path: the path to save the pdb file
+        model: the model id of the pdb file
+        init_chain: chain id to use when saving to file
+        only_save_backbone: only consider the first 4 atoms
+            (Note - amino acid type name will still be output to the PDB based on the 'sequence' arg!)
+
+    return:
+        None
+
+    """
+
+    if only_save_backbone:
+        print(
+            "flexible_save_pdb_file:: only output backbone requested, will store coordinates only for the first 4 atoms in atom14 convention order."
+        )
+        xyz = xyz[:, :4, ...]
+
+    if xyz.shape[1] != 14:
+        warn(
+            f"flexible_save_pdb_file:: info: note that xyz contains {xyz.shape[1]} max atoms, and not max 14 atoms (all possible heavy atoms). This is ok if intentional, for example, when outputting only backbone."
+        )
+
+    builder = StructureBuilder.StructureBuilder()
+    builder.init_structure(0)
+    builder.init_model(model)
+    builder.init_chain(init_chain)
+    builder.init_seg("    ")
+    for i, (aa_idx, p_res, b, m_res) in enumerate(zip(sequence, xyz, b_factors, residues_mask.bool())):
+        if not m_res:
+            continue
+        aa_idx = aa_idx.item()
+        p_res = p_res.clone().detach().cpu()  # fixme: this looks slow
+        if aa_idx == 21:
+            continue
+        try:
+            three = residx_to_3(aa_idx)
+        except IndexError:
+            continue
+        builder.init_residue(three, " ", int(i), icode=" ")
+        for j, (atom_name,) in enumerate(zip(rc.restype_name_to_atom14_names[three])):  # why is zip used here?
+            if (len(atom_name) > 0) and (len(p_res) > j):
+                builder.init_atom(
+                    atom_name, p_res[j].tolist(), b.item(), 1.0, " ", atom_name.join([" ", " "]), element=atom_name[0]
+                )
+    structure = builder.get_structure()
+    io = PDB.PDBIO()
+    io.set_structure(structure)
+    os.makedirs(pathlib.Path(save_path).parent, exist_ok=True)
+    io.save(save_path)
+
+
 def save_pdb_file(
     pos14: torch.Tensor,
     b_factors: torch.Tensor,
@@ -463,39 +558,27 @@ def save_pdb_file(
         mask: the validity of the atoms
         save_path: the path to save the pdb file
         model: the model id of the pdb file
-        init_chain
+        init_chain: chain id to use when saving to file
 
     return:
-        the structure saved to ~save_path
+        None
 
     """
-    builder = StructureBuilder.StructureBuilder()
-    builder.init_structure(0)
-    builder.init_model(model)
-    builder.init_chain(init_chain)
-    builder.init_seg("    ")
-    for i, (aa_idx, p_res, b, m_res) in enumerate(zip(sequence, pos14, b_factors, mask.bool())):
-        if not m_res:
-            continue
-        aa_idx = aa_idx.item()
-        p_res = p_res.clone().detach().cpu()
-        if aa_idx == 21:
-            continue
-        try:
-            three = residx_to_3(aa_idx)
-        except IndexError:
-            continue
-        builder.init_residue(three, " ", int(i), icode=" ")
-        for j, (atom_name,) in enumerate(zip(rc.restype_name_to_atom14_names[three])):
-            if len(atom_name) > 0:
-                builder.init_atom(
-                    atom_name, p_res[j].tolist(), b.item(), 1.0, " ", atom_name.join([" ", " "]), element=atom_name[0]
-                )
-    structure = builder.get_structure()
-    io = PDB.PDBIO()
-    io.set_structure(structure)
-    os.makedirs(pathlib.Path(save_path).parent, exist_ok=True)
-    io.save(save_path)
+    assert len(pos14.shape) == 3
+    assert pos14.shape[1] == 14
+
+    assert len(mask.shape) == 3
+    assert mask.shape[1] == 14
+
+    flexible_save_pdb_file(
+        xyz=pos14,
+        b_factors=b_factors,
+        sequence=sequence,
+        residues_mask=mask,
+        save_path=save_path,
+        model=model,
+        init_chain=init_chain,
+    )
 
 
 # code heavily inspired on alpha/open fold data_modules.py
@@ -506,15 +589,21 @@ def parse_mmcif(
     unique_file_id: str,
     handle_residue_id_duplication: bool = True,
     quiet_parsing: bool = False,
+    raise_exception_on_error: bool = True,
+    also_return_mmcif_dict: bool = False,
 ) -> MmcifObject:
     """
     filename: path for the mmcif file to load (can be .gz compressed)
+        may also be an open file handle
     unique_file_id: a unique_id for this file
 
     returns an MmcifObject
     """
-    filename = get_mmcif_native_full_name(filename)
-    raw_mmcif_str = read_file_raw_string(filename)
+    if isinstance(filename, str):
+        filename = get_mmcif_native_full_name(filename)
+        raw_mmcif_str = read_file_raw_string(filename)
+    else:
+        raw_mmcif_str = filename.read()
 
     mmcif_object = mmcif_parsing.parse(
         file_id=unique_file_id,
@@ -522,23 +611,34 @@ def parse_mmcif(
         mmcif_string=raw_mmcif_str,
         handle_residue_id_duplication=handle_residue_id_duplication,
         quiet_parsing=quiet_parsing,
+        also_return_mmcif_dict=also_return_mmcif_dict,
     )
+
+    if also_return_mmcif_dict:
+        mmcif_object, _raw_mmcif_dict = mmcif_object
 
     # https://biopython-cn.readthedocs.io/zh_CN/latest/en/chr11.html#reading-an-mmcif-file
 
     # Crash if an error is encountered. Any parsing errors should have
     # been dealt with at the alignment stage.
+
     if mmcif_object.mmcif_object is None:
-        # raise list(mmcif_object.errors.values())[0]
-        err_vals = list(mmcif_object.errors.values())
-        if len(err_vals) == 1:
-            raise Exception(err_vals[0])
+        if raise_exception_on_error:
+            # raise list(mmcif_object.errors.values())[0]
+            err_vals = list(mmcif_object.errors.values())
+            if len(err_vals) == 1:
+                raise Exception(err_vals[0])
+            else:
+                raise Exception([Exception(_) for _ in err_vals])
         else:
-            raise Exception([Exception(_) for _ in err_vals])
+            return None
 
     mmcif_object = mmcif_object.mmcif_object
 
-    return mmcif_object
+    if not also_return_mmcif_dict:
+        return mmcif_object
+    else:
+        return mmcif_object, _raw_mmcif_dict
 
 
 def get_chain_data(

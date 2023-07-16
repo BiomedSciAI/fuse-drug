@@ -10,7 +10,7 @@ try:
     from abnumber import Chain  # , ChainParseError, SUPPORTED_CDR_DEFINITIONS, SUPPORTED_SCHEMES
 
 except ImportError:
-    print("ERROR: had a problem importing abnumber, please install using 'pip install abnumber'")
+    print("ERROR: had a problem importing abnumber, please install using 'conda install -c bioconda abnumber'")
     raise
 from typing import Tuple
 
