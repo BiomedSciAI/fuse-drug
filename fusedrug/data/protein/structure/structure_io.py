@@ -678,7 +678,9 @@ def parse_mmcif(
             else:
                 raise Exception([Exception(_) for _ in err_vals])
         else:
-            return None
+            # this might be slow when iterating on many items
+            raise Exception([Exception(_) for _ in err_vals])
+            return None  # keeping this here in case someone comments out the exception raising.
 
     mmcif_object = mmcif_object.mmcif_object
 
