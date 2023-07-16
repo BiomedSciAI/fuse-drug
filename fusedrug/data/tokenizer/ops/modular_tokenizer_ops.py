@@ -205,7 +205,6 @@ class FastModularTokenizer(OpBase):
                     f"self._validate_ends_with_eos was set to {self._validate_ends_with_eos}, but about to encode a string that does not end with it. The str end was: {last_seq}"
                 )
 
-
         if isinstance(data, str):
             encoded = self._tokenizer.encode(data, max_len=max_seq_len)
         else:
