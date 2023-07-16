@@ -7,7 +7,9 @@ from fuse.data import create_initial_sample
 
 class TestLoaders(unittest.TestCase):
     def test_fasta_loader(self) -> None:
-        fasta_file_loc = os.path.join(get_tests_data_dir(), "example_viral_proteins.fasta")
+        fasta_file_loc = os.path.join(
+            get_tests_data_dir(), "example_viral_proteins.fasta"
+        )
         op = FastaLoader(fasta_file_loc=fasta_file_loc)
 
         sample_1 = create_initial_sample(100)

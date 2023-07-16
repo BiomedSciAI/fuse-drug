@@ -2,7 +2,9 @@ import mmap
 from typing import Union
 
 
-def mmap_lines_reader(filename: str, decode: bool = False, verbose: int = 0) -> Union[str, bytes]:
+def mmap_lines_reader(
+    filename: str, decode: bool = False, verbose: int = 0
+) -> Union[str, bytes]:
     """
     yields line by line, and uses mmap to map the file to memory.
     This is useful when reading big file (and having enough RAM to support it)
@@ -17,7 +19,9 @@ def mmap_lines_reader(filename: str, decode: bool = False, verbose: int = 0) -> 
     """
 
     with open(filename, "rt") as f:
-        mm_read = mmap.mmap(f.fileno(), 0, prot=mmap.PROT_READ)  # useful for massive files
+        mm_read = mmap.mmap(
+            f.fileno(), 0, prot=mmap.PROT_READ
+        )  # useful for massive files
         linenum = 0
         line = None
         while True:

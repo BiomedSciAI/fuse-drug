@@ -43,7 +43,11 @@ except ImportError:
 #     print("Warning: import omegafold failed - some functions might fail")
 
 
-from fusedrug.data.protein.structure.utils import aa_sequence_from_aa_integers, get_structure_file_type, residx_to_3
+from fusedrug.data.protein.structure.utils import (
+    aa_sequence_from_aa_integers,
+    get_structure_file_type,
+    residx_to_3,
+)
 
 # https://bioinformatics.stackexchange.com/questions/14101/extract-residue-sequence-from-pdb-file-in-biopython-but-open-to-recommendation
 
@@ -100,8 +104,12 @@ def save_structure_file(
     if save_cif:
         if len(chain_to_aa_str_seq) > 1:
             if reference_cif_filename is not None:
-                out_multimer_cif_filename = output_filename_extensionless + "_multimer_chain_ids_"
-                out_multimer_cif_filename += "_".join(sorted(list(chain_to_aa_str_seq.keys()))) + ".cif"
+                out_multimer_cif_filename = (
+                    output_filename_extensionless + "_multimer_chain_ids_"
+                )
+                out_multimer_cif_filename += (
+                    "_".join(sorted(list(chain_to_aa_str_seq.keys()))) + ".cif"
+                )
 
                 print(f"saving MULTImer cif file {out_multimer_cif_filename}")
                 save_updated_mmcif_file(
@@ -128,13 +136,19 @@ def save_structure_file(
             potentially_fixed_chain_id = chain_id
             if len(potentially_fixed_chain_id) > 1:
                 potentially_fixed_chain_id = chain_id[:1]
-                print(f"WARNING: shortening too long chain_id from {chain_id} to {potentially_fixed_chain_id}")
+                print(
+                    f"WARNING: shortening too long chain_id from {chain_id} to {potentially_fixed_chain_id}"
+                )
 
             flexible_save_pdb_file(
                 xyz=pos_atom14,
-                b_factors=b_factors[chain_id] if b_factors is not None else torch.tensor([100.0] * pos_atom14.shape[0]),
+                b_factors=b_factors[chain_id]
+                if b_factors is not None
+                else torch.tensor([100.0] * pos_atom14.shape[0]),
                 sequence=chain_to_aa_index_seq[chain_id],
-                residues_mask=mask if mask is not None else torch.full((pos_atom14.shape[0],), fill_value=True),
+                residues_mask=mask
+                if mask is not None
+                else torch.full((pos_atom14.shape[0],), fill_value=True),
                 save_path=out_pdb,
                 init_chain=potentially_fixed_chain_id,
                 model=0,
@@ -191,11 +205,15 @@ def get_chain_native_features(
             chains_names = get_available_chain_ids_in_pdb(native_structure_filename)
         except Exception as e:
             print(e)
-            print(f"Had an issue with a protein, skipping it. Protein file:{native_structure_filename}")
+            print(
+                f"Had an issue with a protein, skipping it. Protein file:{native_structure_filename}"
+            )
             return None
     elif structure_file_format == "cif":
         try:
-            mmcif_object = parse_mmcif(native_structure_filename, unique_file_id=pdb_id, quiet_parsing=True)
+            mmcif_object = parse_mmcif(
+                native_structure_filename, unique_file_id=pdb_id, quiet_parsing=True
+            )
             chains_names = list(mmcif_object.chain_to_seqres.keys())
         except Exception as e:
             print(e)
@@ -206,7 +224,9 @@ def get_chain_native_features(
 
     if structure_file_format == "pdb":
         if chain_id_type == "pdb_assigned":
-            raise Exception("chain_id_type=pdb_assigned  is not supported yet for PDB, only for mmCIF")
+            raise Exception(
+                "chain_id_type=pdb_assigned  is not supported yet for PDB, only for mmCIF"
+            )
         gt_data = pdb_to_openfold_protein(native_structure_filename, chain_id=chain_id)
         gt_sequence = gt_data.aasequence_str
 
@@ -223,7 +243,9 @@ def get_chain_native_features(
         if isinstance(chain_id, int):
             chains_names = sorted(chains_names)
             if (chain_id < 0) or (chain_id >= len(chains_names)):
-                raise Exception(f"chain_id(int)={chain_id} is out of bound for the options: {chains_names}")
+                raise Exception(
+                    f"chain_id(int)={chain_id} is out of bound for the options: {chains_names}"
+                )
             chain_id = chains_names[chain_id]  # taking the i-th chain
 
         if chain_id_type == "pdb_assigned":
@@ -236,7 +258,8 @@ def get_chain_native_features(
         gt_sequence = gt_data["input_sequence"]
         # move to device
         gt_mmcif_feats = {
-            k: gt_all_mmcif_feats[k] for k in ["aatype", "all_atom_positions", "all_atom_mask", "resolution"]
+            k: gt_all_mmcif_feats[k]
+            for k in ["aatype", "all_atom_positions", "all_atom_mask", "resolution"]
         }
 
         to_tensor = lambda t: torch.tensor(np.array(t)).to(device)
@@ -286,7 +309,13 @@ def aa_sequence_from_pdb_structure(structure: Structure) -> dict:
 
     for model in structure:
         for chain in model:
-            seq = "".join([restype_3to1[residue.resname] for residue in chain if residue.resname in restype_3to1])
+            seq = "".join(
+                [
+                    restype_3to1[residue.resname]
+                    for residue in chain
+                    if residue.resname in restype_3to1
+                ]
+            )
             chains[chain.id] = seq
 
     return chains
@@ -318,7 +347,9 @@ def structure_from_pdb(pdb_filename: str) -> Structure:
     return structure
 
 
-def pdb_to_openfold_protein(filename: str, chain_id: Optional[str] = None) -> protein_utils.Protein:
+def pdb_to_openfold_protein(
+    filename: str, chain_id: Optional[str] = None
+) -> protein_utils.Protein:
     """
     Loads data from the pdb file - which includes the atoms positions, atom mask, the AA sequence.
     """
@@ -346,14 +377,18 @@ def get_available_chain_ids_in_pdb(filename: str) -> List[str]:
     structure = parser.get_structure("none", pdb_fh)
     models = list(structure.get_models())
     if len(models) != 1:
-        raise ValueError(f"Only single model PDBs are supported. Found {len(models)} models.")
+        raise ValueError(
+            f"Only single model PDBs are supported. Found {len(models)} models."
+        )
     model = models[0]
 
     ans = [chain.id for chain in model]
     return ans
 
 
-def pdb_to_biopython_structure(pdb_filename: str, unique_name: str = "bananaphone") -> Structure:
+def pdb_to_biopython_structure(
+    pdb_filename: str, unique_name: str = "bananaphone"
+) -> Structure:
     """
     Reads a pdb file and outputs a biopython structure
     """
@@ -386,7 +421,9 @@ def extract_single_chain(full_structure: Structure, chain_id: str) -> Structure:
             break
 
     if selected_chain is None:
-        raise Exception(f"could not find request chain_id={chain_id}  available chains are {seen_chain_ids}")
+        raise Exception(
+            f"could not find request chain_id={chain_id}  available chains are {seen_chain_ids}"
+        )
 
     return create_single_chain_structure(selected_chain)
 
@@ -512,7 +549,9 @@ def flexible_save_pdb_file(
     builder.init_model(model)
     builder.init_chain(init_chain)
     builder.init_seg("    ")
-    for i, (aa_idx, p_res, b, m_res) in enumerate(zip(sequence, xyz, b_factors, residues_mask.bool())):
+    for i, (aa_idx, p_res, b, m_res) in enumerate(
+        zip(sequence, xyz, b_factors, residues_mask.bool())
+    ):
         if not m_res:
             continue
         aa_idx = aa_idx.item()
@@ -524,10 +563,18 @@ def flexible_save_pdb_file(
         except IndexError:
             continue
         builder.init_residue(three, " ", int(i), icode=" ")
-        for j, (atom_name,) in enumerate(zip(rc.restype_name_to_atom14_names[three])):  # why is zip used here?
+        for j, (atom_name,) in enumerate(
+            zip(rc.restype_name_to_atom14_names[three])
+        ):  # why is zip used here?
             if (len(atom_name) > 0) and (len(p_res) > j):
                 builder.init_atom(
-                    atom_name, p_res[j].tolist(), b.item(), 1.0, " ", atom_name.join([" ", " "]), element=atom_name[0]
+                    atom_name,
+                    p_res[j].tolist(),
+                    b.item(),
+                    1.0,
+                    " ",
+                    atom_name.join([" ", " "]),
+                    element=atom_name[0],
                 )
     structure = builder.get_structure()
     io = PDB.PDBIO()
@@ -674,12 +721,17 @@ def load_mmcif_features(filename: str, pdb_id: str, chain_id: str) -> Tuple[dict
     mmcif_data = parse_mmcif(filename, "bananaphone")
     chains_names = list(mmcif_data.chain_to_seqres.keys())
     if chain_id not in chains_names:
-        raise Exception(f"Error requested chain_id={chain_id} not found in available chains {chains_names}")
+        raise Exception(
+            f"Error requested chain_id={chain_id} not found in available chains {chains_names}"
+        )
     gt_data = get_chain_data(mmcif_data, chain_id=chain_id)
     gt_sequence = gt_data["input_sequence"]
     gt_all_mmcif_feats = gt_data["mmcif_feats"]
 
-    gt_mmcif_feats = {k: gt_all_mmcif_feats[k] for k in ["aatype", "all_atom_positions", "all_atom_mask"]}
+    gt_mmcif_feats = {
+        k: gt_all_mmcif_feats[k]
+        for k in ["aatype", "all_atom_positions", "all_atom_mask"]
+    }
 
     to_tensor = lambda t: torch.tensor(np.array(t))  # .cude()
     gt_mmcif_feats = tree_map(to_tensor, gt_mmcif_feats, np.ndarray)
@@ -719,7 +771,9 @@ def save_updated_mmcif_file(
     store_chains = list(chain_to_aa_seq.keys())
 
     biopython_structure_to_mmcif_file(
-        biopython_structure=biopython_structure, store_chains=store_chains, output_mmcif_filename=output_mmcif_filename
+        biopython_structure=biopython_structure,
+        store_chains=store_chains,
+        output_mmcif_filename=output_mmcif_filename,
     )
 
 
@@ -908,7 +962,9 @@ def get_mmcif_native_full_name(pdb_id: str, strict: bool = False) -> str:
     return ans
 
 
-def load_mmcif_biopython(filename: str, structure_name: str = "bananaphone") -> Structure:
+def load_mmcif_biopython(
+    filename: str, structure_name: str = "bananaphone"
+) -> Structure:
     if is_pdb_id(filename):
         filename = get_mmcif_native_full_name(filename)
     print(f"loading: {filename}")

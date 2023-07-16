@@ -29,4 +29,6 @@ def get_task_dir(task_name: str, orig_repo_name: str = "") -> Path:
         "phosphatase": "./dataset/EnzPred/phosphatase_chiral_binary",
     }
 
-    return Path(os.path.dirname(__file__), orig_repo_name, task_paths[task_name.lower()]).resolve()
+    return Path(
+        os.path.dirname(__file__), orig_repo_name, task_paths[task_name.lower()]
+    ).resolve()

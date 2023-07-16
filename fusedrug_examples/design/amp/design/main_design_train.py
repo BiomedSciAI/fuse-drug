@@ -67,11 +67,17 @@ def filter_label_unknown(batch_dict: NDict, label_key: str, out_key: str) -> NDi
 
     keep_indices = batch_dict[label_key] != -1
     # keep_indices = keep_indices.cpu().numpy()
-    return {label_key: batch_dict[label_key][keep_indices], out_key: batch_dict[out_key][keep_indices]}
+    return {
+        label_key: batch_dict[label_key][keep_indices],
+        out_key: batch_dict[out_key][keep_indices],
+    }
 
 
 def data(
-    peptides_datasets: dict, batch_size: int, num_batches: Optional[int], data_loader: dict
+    peptides_datasets: dict,
+    batch_size: int,
+    num_batches: Optional[int],
+    data_loader: dict,
 ) -> Tuple[DatasetDefault, DataLoader, DataLoader]:
     """
     Data preparation
@@ -85,7 +91,9 @@ def data(
 
     dl_train = DataLoader(
         ds_train,
-        collate_fn=CollateDefault(keep_keys=["sequence", "amp.label", "toxicity.label", "data.sample_id"]),
+        collate_fn=CollateDefault(
+            keep_keys=["sequence", "amp.label", "toxicity.label", "data.sample_id"]
+        ),
         batch_sampler=BatchSamplerDefault(
             ds_train,
             balanced_class_name="amp.label",
@@ -98,7 +106,9 @@ def data(
     )
     dl_valid = DataLoader(
         ds_valid,
-        collate_fn=CollateDefault(keep_keys=["sequence", "amp.label", "toxicity.label", "data.sample_id"]),
+        collate_fn=CollateDefault(
+            keep_keys=["sequence", "amp.label", "toxicity.label", "data.sample_id"]
+        ),
         batch_sampler=BatchSamplerDefault(
             ds_valid,
             balanced_class_name="amp.label",
@@ -162,9 +172,13 @@ def model(
         raise Exception(f"Error: unsupported encoder {encoder_type}")
 
     if decoder_type == "transformer":
-        decoder_model = TransformerDecoder(output_dim=len(tokenizer._tokenizer.vocab), **transformer_decoder)
+        decoder_model = TransformerDecoder(
+            output_dim=len(tokenizer._tokenizer.vocab), **transformer_decoder
+        )
     elif decoder_type == "gru":
-        decoder_model = GRUDecoder(output_dim=len(tokenizer._tokenizer.vocab), **gru_decoder)
+        decoder_model = GRUDecoder(
+            output_dim=len(tokenizer._tokenizer.vocab), **gru_decoder
+        )
     else:
         raise Exception(f"Error: unsupported decoder {decoder_type}")
     embed = Embed(
@@ -302,18 +316,30 @@ def train(
     # Metrics
     train_metrics = {}
 
-    filter_func_amp = partial(filter_label_unknown, label_key="amp.label", out_key="model.output.amp")
-    filter_func_toxicity = partial(filter_label_unknown, label_key="toxicity.label", out_key="model.output.toxicity")
+    filter_func_amp = partial(
+        filter_label_unknown, label_key="amp.label", out_key="model.output.amp"
+    )
+    filter_func_toxicity = partial(
+        filter_label_unknown,
+        label_key="toxicity.label",
+        out_key="model.output.toxicity",
+    )
 
     validation_metrics = {
         "acc": MetricSeqAccuracy(pred="model.out", target="sequence"),
         "auc_amp": MetricAUCROC(
-            pred="model.output.amp", target="amp.label", batch_pre_collect_process_func=filter_func_amp
+            pred="model.output.amp",
+            target="amp.label",
+            batch_pre_collect_process_func=filter_func_amp,
         ),
         "auc_toxicity": MetricAUCROC(
-            pred="model.output.toxicity", target="toxicity.label", batch_pre_collect_process_func=filter_func_toxicity
+            pred="model.output.toxicity",
+            target="toxicity.label",
+            batch_pre_collect_process_func=filter_func_toxicity,
         ),
-        "dump": MetricPrintRandomSubsequence(pred="model.out", target="sequence", num_sample_to_print=1),
+        "dump": MetricPrintRandomSubsequence(
+            pred="model.out", target="sequence", num_sample_to_print=1
+        ),
     }
 
     # either a dict with arguments to pass to ModelCheckpoint or list dicts for multiple ModelCheckpoint callbacks (to monitor and save checkpoints for more then one metric).
@@ -355,7 +381,10 @@ def main(cfg: DictConfig) -> None:
     ds_train, dl_train, dl_valid = data(**cfg.data)
 
     # model
-    seqs = [sample["sequence"] for sample in ds_train.get_multi(None, keys=["sequence"], desc="tokenizer")]
+    seqs = [
+        sample["sequence"]
+        for sample in ds_train.get_multi(None, keys=["sequence"], desc="tokenizer")
+    ]
     nn_model, tokenizer = model(seqs=seqs, **cfg.model)
 
     # train

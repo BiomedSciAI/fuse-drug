@@ -3,6 +3,7 @@ training BimodalMCA affinity predictor (see https://pubs.acs.org/doi/10.1021/acs
 with focus on multiprocessing to improve GPU utilization
 """
 
+
 import os
 
 # import tensorflow as tf
@@ -31,10 +32,7 @@ colorama.init(autoreset=True)
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 
-print(
-    "CUDA_VISIBLE_DEVICES=",
-    os.environ["CUDA_VISIBLE_DEVICES"] if "CUDA_VISIBLE_DEVICES" in os.environ else None,
-)
+print("CUDA_VISIBLE_DEVICES=", os.environ.get("CUDA_VISIBLE_DEVICES", None))
 
 
 CONFIGS_DIR = os.path.join(os.path.dirname(__file__), "configs")
@@ -58,10 +56,14 @@ def session_manager_and_logger_setup(cfg: dict) -> None:
     SESSION_FULL_PATH = os.path.realpath(os.getcwd())
     HYDRA_SESSION_NUM = os.path.basename(os.getcwd())
 
-    OmegaConf.save(config=cfg, f=os.path.join(SESSION_FULL_PATH, "resolved_config.yaml"))
+    OmegaConf.save(
+        config=cfg, f=os.path.join(SESSION_FULL_PATH, "resolved_config.yaml")
+    )
 
     session_manager_num = None
-    session_num_file = os.path.realpath(os.path.join(SESSION_FULL_PATH, "../session_created"))
+    session_num_file = os.path.realpath(
+        os.path.join(SESSION_FULL_PATH, "../session_created")
+    )
     if os.path.isfile(session_num_file):
         session_manager_num = read_simple_int_file(session_num_file)
         print(f"found session num {session_manager_num} in {session_num_file}")
@@ -78,13 +80,17 @@ def session_manager_and_logger_setup(cfg: dict) -> None:
         print(
             f'Note: the debug session directory, in which artifacts like logs and checkpoints will be saved, is: {cfg_raw["paths"]["debug_session_dir"]}'
         )
-        print("to choose a different location modify paths.debug_session_dir in configs/train_config.yaml")
+        print(
+            "to choose a different location modify paths.debug_session_dir in configs/train_config.yaml"
+        )
         print("You may need to manually delete this directory.")
 
         SESSION_FULL_PATH = cfg_raw["paths"]["debug_session_dir"]
         os.makedirs(SESSION_FULL_PATH, exist_ok=True)
 
-    default_checkpoints_dir = os.path.realpath(os.path.join(SESSION_FULL_PATH, "../rank_0"))
+    default_checkpoints_dir = os.path.realpath(
+        os.path.join(SESSION_FULL_PATH, "../rank_0")
+    )
     print(f"checkpoints will be written into {default_checkpoints_dir}")
     os.makedirs(default_checkpoints_dir, exist_ok=True)
 
@@ -100,7 +106,9 @@ def session_manager_and_logger_setup(cfg: dict) -> None:
         task_name = f"session_{session_manager_num}@{task_name}"
         # task_name=f"session_{session_manager_num}@{task_name}@{HYDRA_SESSION_NUM}"
 
-    task_name += f'@{cfg_raw["_free_text_description"]}' + cfg_raw["model"]["base_model"]
+    task_name += (
+        f'@{cfg_raw["_free_text_description"]}' + cfg_raw["model"]["base_model"]
+    )
     print("CLEARML - using task_name=", task_name)
 
     if cfg_raw["clearml"]["active"]:
@@ -144,7 +152,9 @@ def main(cfg: DictConfig) -> None:
 
     SESSION_FULL_PATH = session_manager_and_logger_setup(cfg=cfg)
 
-    if ("ONLY_GET_EXPECTED_WORKING_DIR" in os.environ) or cfg.only_get_expected_working_dir:
+    if (
+        "ONLY_GET_EXPECTED_WORKING_DIR" in os.environ
+    ) or cfg.only_get_expected_working_dir:
         QUERY_SEP_TOKEN = "<@@@QUERY_SEP_TOKEN@@@>"
         print(
             f"SESSION_FULL_PATH_QUERY_ANSWER={QUERY_SEP_TOKEN}{SESSION_FULL_PATH}{QUERY_SEP_TOKEN}"
@@ -158,11 +168,15 @@ def main(cfg: DictConfig) -> None:
 
     print(f"Running on hostname={socket.gethostname()}")
     STOP_FILENAME = os.path.join(SESSION_FULL_PATH, "STOP")
-    print(f"created a stop filename - create it to stop a session gracefully. [{STOP_FILENAME}]")
+    print(
+        f"created a stop filename - create it to stop a session gracefully. [{STOP_FILENAME}]"
+    )
 
     def _check_stopfile(stop_filename: str) -> None:
         if os.path.isfile(stop_filename):
-            print(f"detected request stop file: [{STOP_FILENAME}]. Exiting from process.")
+            print(
+                f"detected request stop file: [{STOP_FILENAME}]. Exiting from process."
+            )
             sys.stdout.flush()
             sys.exit()
 

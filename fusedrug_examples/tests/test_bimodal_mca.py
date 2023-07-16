@@ -6,16 +6,23 @@ import tempfile
 import os
 import shutil
 from hydra.core.utils import setup_globals
-from fusedrug_examples.interaction.drug_target.affinity_prediction.bimodal_mca.runner import run_train_and_val
-from fusedrug_examples.interaction.drug_target.affinity_prediction.bimodal_mca.data import AffinityDataModule
-from fusedrug_examples.interaction.drug_target.affinity_prediction.bimodal_mca.model import AffinityPredictorModule
+from fusedrug_examples.interaction.drug_target.affinity_prediction.bimodal_mca.runner import (
+    run_train_and_val,
+)
+from fusedrug_examples.interaction.drug_target.affinity_prediction.bimodal_mca.data import (
+    AffinityDataModule,
+)
+from fusedrug_examples.interaction.drug_target.affinity_prediction.bimodal_mca.model import (
+    AffinityPredictorModule,
+)
 
 
 class BimodalMCATestCase(unittest.TestCase):
     def setUp(self) -> None:
         # load and modify config file
         self.config_path = Path(
-            __file__, "../../interaction/drug_target/affinity_prediction/bimodal_mca/configs/train_config.yaml"
+            __file__,
+            "../../interaction/drug_target/affinity_prediction/bimodal_mca/configs/train_config.yaml",
         )
         self.cfg = OmegaConf.load(self.config_path)
         self.cfg.data.lightning_data_module.num_workers = 10
@@ -58,7 +65,9 @@ class BimodalMCATestCase(unittest.TestCase):
         """
         # config a short run with 1k samples
         self.cfg.trainer.max_epochs = 1
-        self.cfg.data.lightning_data_module.partial_sample_ids = [_ for _ in range(1000)]
+        self.cfg.data.lightning_data_module.partial_sample_ids = [
+            _ for _ in range(1000)
+        ]
         run_train_and_val(self.cfg)
 
     def tearDown(self) -> None:

@@ -41,9 +41,13 @@ def create(
         raise Exception(f"can't find orig_code_path={orig_code_path}")
     if require_git_repo_base:
         _found_git_dir = os.path.isdir(os.path.join(orig_code_path, ".git"))
-        _found_git_file = os.path.isfile(os.path.join(orig_code_path, ".git"))  # happens in git submodules
+        _found_git_file = os.path.isfile(
+            os.path.join(orig_code_path, ".git")
+        )  # happens in git submodules
         if not (_found_git_dir or _found_git_file):
-            raise Exception(f"Expected a git repository but got: orig_code_path={orig_code_path}")
+            raise Exception(
+                f"Expected a git repository but got: orig_code_path={orig_code_path}"
+            )
 
     # module_name = os.path.split(orig_code_path)[1]
 
@@ -51,7 +55,10 @@ def create(
     session_num = acquire_available_session_number(sessions_base_dir)
 
     new_session_dir = os.path.join(
-        sessions_base_dir, session_group_name, f"{session_num}", DEPLOYMENT_PREFIX + import_name.split(".")[-1]
+        sessions_base_dir,
+        session_group_name,
+        f"{session_num}",
+        DEPLOYMENT_PREFIX + import_name.split(".")[-1],
     )
 
     copy_dir_recursively_and_fix_imports(
@@ -80,7 +87,10 @@ def acquire_available_session_number(path: str) -> int:
 
 
 def copy_dir_recursively_and_fix_imports(
-    root_src_dir: str, root_target_dir: str, import_name: str, exclude_dirs: List[str] = None
+    root_src_dir: str,
+    root_target_dir: str,
+    import_name: str,
+    exclude_dirs: List[str] = None,
 ) -> None:
     if exclude_dirs is None:
         exclude_dirs = []
@@ -109,12 +119,16 @@ def copy_dir_recursively_and_fix_imports(
             if os.path.exists(dst_file):
                 assert False
             if file_.endswith(".py") and not file_.startswith("."):
-                copy_and_fix_imports_python_file(src_file, os.path.join(dst_dir, file_), import_name, to_import_name)
+                copy_and_fix_imports_python_file(
+                    src_file, os.path.join(dst_dir, file_), import_name, to_import_name
+                )
             else:
                 shutil.copy(src_file, dst_dir)
 
 
-def copy_and_fix_imports_python_file(src_file: str, out_file: str, from_module_name: str, to_module_name: str) -> None:
+def copy_and_fix_imports_python_file(
+    src_file: str, out_file: str, from_module_name: str, to_module_name: str
+) -> None:
     """
     reads src_file, changes each line according to regext_list and saves into out_file
     :param src_file:
@@ -151,8 +165,15 @@ def copy_and_fix_imports_python_file(src_file: str, out_file: str, from_module_n
 @click.argument(
     "project_dir"
 )  # , help='project directory, does not have to be at the root of the code repo. for example \home\someone\repos\image_classification\vanilla_transformer')
-@click.argument("sessions_base_dir")  # , help='the base directory is where new sessions will be created')
-@click.option("--requiregit", "-r", is_flag=True, help="require that project_dir will be inside a git repo")
+@click.argument(
+    "sessions_base_dir"
+)  # , help='the base directory is where new sessions will be created')
+@click.option(
+    "--requiregit",
+    "-r",
+    is_flag=True,
+    help="require that project_dir will be inside a git repo",
+)
 def main(
     project_dir: str,
     sessions_base_dir: str,
