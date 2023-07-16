@@ -479,6 +479,80 @@ def read_file_raw_string(filename: str) -> str:
     return loaded
 
 
+def save_trajectory_to_pdb_file(
+    traj_xyz: torch.Tensor,
+    sequence: torch.Tensor,
+    residues_mask: torch.Tensor,
+    save_path: str,
+    traj_b_factors: torch.Tensor = None,
+    init_chain: str = "A",
+) -> None:
+    """
+    Stores a trajectory into a single PDB file.
+
+    Args:
+
+    traj_xyz: a torch tensor of shape [trajectory steps, residues num, atoms num, 3]
+    sequence: the amino acid of the pos14, represented by integers (see openfold.np.residue_constants)
+    residues_mask: *residue* level mask (not atoms level!)
+    save_path: the path to save the pdb file
+    traj_b_factors: the b_factors of the amino acids - it can represent per residue: 1. Measurement accuracy in ground truth lab experiment or 2. Model prediction certainty
+        optional - will be set to 100.0 for all elements if not provided.
+    init_chain: chain id to use when saving to file
+
+    Returns:
+        None
+    """
+
+    if traj_b_factors is None:
+        traj_b_factors = torch.full(traj_xyz.shape[:2], fill_value=100.0)
+
+    builder = StructureBuilder.StructureBuilder()
+    builder.init_structure(0)
+
+    for model in range(traj_xyz.shape[0]):
+        builder.init_model(model)
+        builder.init_chain(init_chain)
+        builder.init_seg("    ")
+
+        # extract current frame/step info in the trajectory
+        xyz = traj_xyz[model]
+        b_factors = traj_b_factors[model]
+
+        for i, (aa_idx, p_res, b, m_res) in enumerate(
+            zip(sequence, xyz, b_factors, residues_mask.bool())
+        ):
+            if not m_res:
+                continue
+            aa_idx = aa_idx.item()
+            p_res = p_res.clone().detach().cpu()  # fixme: this looks slow
+            if aa_idx == 21:
+                continue
+            try:
+                three = residx_to_3(aa_idx)
+            except IndexError:
+                continue
+            builder.init_residue(three, " ", int(i), icode=" ")
+            for j, (atom_name,) in enumerate(
+                zip(rc.restype_name_to_atom14_names[three])
+            ):  # why is zip used here?
+                if (len(atom_name) > 0) and (len(p_res) > j):
+                    builder.init_atom(
+                        atom_name,
+                        p_res[j].tolist(),
+                        b.item(),
+                        1.0,
+                        " ",
+                        atom_name.join([" ", " "]),
+                        element=atom_name[0],
+                    )
+    structure = builder.get_structure()
+    io = PDB.PDBIO()
+    io.set_structure(structure)
+    os.makedirs(pathlib.Path(save_path).parent, exist_ok=True)
+    io.save(save_path)
+
+
 def flexible_save_pdb_file(
     xyz: torch.Tensor,
     b_factors: torch.Tensor,
