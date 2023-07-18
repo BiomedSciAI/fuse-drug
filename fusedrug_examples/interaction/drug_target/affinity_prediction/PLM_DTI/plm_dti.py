@@ -75,6 +75,9 @@ class PLM_DTI_Module(pl.LightningModule):
             self.do_save_preds_for_benchmark_eval = True
         else:
             self.do_save_preds_for_benchmark_eval = False
+        self.training_step_outputs = []
+        self.validation_step_outputs = []
+        self.test_step_outputs = []
 
     def forward(self, batch_dict):
         return self.model(batch_dict)
@@ -86,6 +89,7 @@ class PLM_DTI_Module(pl.LightningModule):
         # given the batch_dict and FuseMedML style losses - collect the required values to compute the metrics on epoch_end
         fuse_pl.step_metrics(self.train_metrics, batch_dict)
         self.log("training_loss", loss)
+        self.training_step_outputs.append({"losses": batch_dict["losses"]})
         # return the total_loss, the losses and drop everything else
         return {"loss": loss, "losses": batch_dict["losses"]}
 
@@ -96,19 +100,24 @@ class PLM_DTI_Module(pl.LightningModule):
         # given the batch_dict and FuseMedML style losses - collect the required values to compute the metrics on epoch_end
         fuse_pl.step_metrics(self.val_metrics, batch_dict)
         self.log("validation_loss", loss)
+        self.validation_step_outputs.append({"losses": batch_dict["losses"]})
         return {"losses": batch_dict["losses"]}
 
-    def on_train_epoch_end(self, train_step_outputs) -> None:
+    def on_train_epoch_end(self) -> None:
+        step_outputs = self.training_step_outputs
         # calc average epoch loss and log it
-        fuse_pl.epoch_end_compute_and_log_losses(self, "train", [e["losses"] for e in train_step_outputs])
+        fuse_pl.epoch_end_compute_and_log_losses(self, "train", [e["losses"] for e in step_outputs])
         # evaluate  and log it
         fuse_pl.epoch_end_compute_and_log_metrics(self, "train", self.train_metrics)
+        self.training_step_outputs.clear()
 
-    def on_validation_epoch_end(self, validation_step_outputs) -> None:
+    def on_validation_epoch_end(self) -> None:
+        step_outputs = self.validation_step_outputs
         # calc average epoch loss and log it
-        fuse_pl.epoch_end_compute_and_log_losses(self, "validation", [e["losses"] for e in validation_step_outputs])
+        fuse_pl.epoch_end_compute_and_log_losses(self, "validation", [e["losses"] for e in step_outputs])
         # evaluate  and log it
         fuse_pl.epoch_end_compute_and_log_metrics(self, "validation", self.val_metrics)
+        self.validation_step_outputs.clear()
 
     def test_step(self, batch_dict: NDict, batch_idx: int) -> None:
         batch_dict = self.model(batch_dict)
@@ -117,19 +126,23 @@ class PLM_DTI_Module(pl.LightningModule):
         fuse_pl.step_metrics(self.test_metrics, batch_dict)
         self.log("test_loss", loss)
         sample_ids = batch_dict["data.sample_id"] if self.do_save_preds_for_benchmark_eval else None
+        self.test_step_outputs.append({"losses": batch_dict["losses"]})
         return {"losses": batch_dict["losses"], "preds": batch_dict["model.output"], "ids": sample_ids}
 
-    def test_epoch_end(self, test_step_outputs) -> None:
+    def on_test_epoch_end(self) -> None:
+        step_outputs = self.test_step_outputs
         ### add saving of predictions and labels
         
         # calc average epoch loss and log it
-        fuse_pl.epoch_end_compute_and_log_losses(self, "test", [e["losses"] for e in test_step_outputs])
+        fuse_pl.epoch_end_compute_and_log_losses(self, "test", [e["losses"] for e in step_outputs])
         # evaluate  and log it
         fuse_pl.epoch_end_compute_and_log_metrics(self, "test", self.test_metrics)
 
         # save predictions and labels (for later evaluation)
         if self.do_save_preds_for_benchmark_eval:
-            self.save_preds_for_benchmark_eval(test_step_outputs)
+            self.save_preds_for_benchmark_eval(step_outputs)
+
+        self.test_step_outputs.clear()
 
     def save_preds_for_benchmark_eval(self, test_step_outputs):
         output_filepath = os.path.join(self.output_dir, 'test_results.tsv')
