@@ -108,7 +108,7 @@ class FastModularTokenizer(OpBase):
 
     def get_min_max_sentinels(
         self,
-        sentinel_prefix: Optional[str] = "<SENTINEL_ID",
+        sentinel_prefix: Optional[str] = "<SENTINEL_ID_",
         integer_find_regex: Optional[str] = "\d{1,}",
     ) -> Tuple[int, int]:
         """
@@ -209,7 +209,6 @@ class FastModularTokenizer(OpBase):
             encoded = self._tokenizer.encode(data, max_len=max_seq_len)
         else:
             encoded = self._tokenizer.encode_list(data, max_len=max_seq_len)
-
         expected_max_len = self.get_max_len(override_max_len=max_seq_len)
         if (
             expected_max_len is not None
