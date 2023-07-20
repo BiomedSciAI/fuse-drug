@@ -3,10 +3,11 @@ import torch.nn.functional as F
 
 ## TODO: move to fuse core
 
+
 def focal_loss(
     inputs: torch.Tensor,
     targets: torch.Tensor,
-    is_input_logits: bool=True,
+    is_input_logits: bool = True,
     alpha: float = 0.25,
     gamma: float = 2,
     reduction: str = "none",
@@ -16,14 +17,14 @@ def focal_loss(
     with added option to have the input either before (logits) or after sigmoid
     Original implementation from https://github.com/facebookresearch/fvcore/blob/master/fvcore/nn/focal_loss.py .
     Loss used in RetinaNet for dense detection: https://arxiv.org/abs/1708.02002.
-    
+
     Args:
         inputs: A float tensor of arbitrary shape.
                 The predictions for each example.
         targets: A float tensor with the same shape as inputs. Stores the binary
                 classification label for each element in inputs
                 (0 for the negative class and 1 for the positive class).
-        is_input_logits: Whether the input is "raw"/logits (True), or probabilities 
+        is_input_logits: Whether the input is "raw"/logits (True), or probabilities
                         (after sigmoid was applied) (False)
         alpha: (optional) Weighting factor in range (0,1) to balance
                 positive vs negative examples or -1 for ignore. Default = 0.25

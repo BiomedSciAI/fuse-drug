@@ -52,18 +52,24 @@ class DeepCoembedding(nn.Module):
         self.do_classify = classify
 
         self.drug_projector = nn.Sequential(
-            nn.Linear(self.drug_shape, latent_dimension), latent_activation(),
-            nn.Linear(latent_dimension, latent_dimension), latent_activation(),
-            nn.Linear(latent_dimension, latent_dimension), latent_activation(),
+            nn.Linear(self.drug_shape, latent_dimension),
+            latent_activation(),
+            nn.Linear(latent_dimension, latent_dimension),
+            latent_activation(),
+            nn.Linear(latent_dimension, latent_dimension),
+            latent_activation(),
         )
         nn.init.xavier_normal_(self.drug_projector[0].weight)
         nn.init.xavier_normal_(self.drug_projector[2].weight)
         nn.init.xavier_normal_(self.drug_projector[4].weight)
 
         self.target_projector = nn.Sequential(
-            nn.Linear(self.target_shape, latent_dimension), latent_activation(),
-            nn.Linear(latent_dimension, latent_dimension), latent_activation(),
-            nn.Linear(latent_dimension, latent_dimension), latent_activation(),
+            nn.Linear(self.target_shape, latent_dimension),
+            latent_activation(),
+            nn.Linear(latent_dimension, latent_dimension),
+            latent_activation(),
+            nn.Linear(latent_dimension, latent_dimension),
+            latent_activation(),
         )
         nn.init.xavier_normal_(self.target_projector[0].weight)
         nn.init.xavier_normal_(self.target_projector[2].weight)
@@ -97,6 +103,3 @@ class DeepCoembedding(nn.Module):
         distance = self.activator(drug_projection, target_projection)
         sigmoid_f = torch.nn.Sigmoid()
         return sigmoid_f(distance).squeeze()
-
-
-

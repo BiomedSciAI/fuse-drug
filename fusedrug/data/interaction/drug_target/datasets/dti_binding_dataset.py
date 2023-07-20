@@ -116,8 +116,8 @@ def dti_binding_dataset(
     ]
 
     # append custom pipeline:
-    if 'dynamic_pipeline' in kwargs and kwargs['dynamic_pipeline'] is not None:
-        dynamic_pipeline += kwargs['dynamic_pipeline']
+    if "dynamic_pipeline" in kwargs and kwargs["dynamic_pipeline"] is not None:
+        dynamic_pipeline += kwargs["dynamic_pipeline"]
 
     dynamic_pipeline = PipelineDefault("DTI dataset", dynamic_pipeline)
 
@@ -367,8 +367,10 @@ class DTIBindingDataset(Dataset):
         #     ligand_str='c1cc(NNc2cccc(-c3nn[nH]n3)c2)cc(-c2nn[nH]n2)c1',
         #     target_str='MLLSKINSLAHLRAAPCNDLHATKLAPGKEKEPLESQYQVGPLLGSGGFGSVYSGIRVSDNLPVAIKHVEKDRISDWGELPNGTRVPMEVVLLKKVSSGFSGVIRLLDWFERPDSFVLILERPEPVQDLFDFITERGALQEELARSFFWQVLEAVRHCHNCGVLHRDIKDENILIDLNRGELKLIDFGSGALLKDTVYTDFDGTRVYSPPEWIRYHRYHGRSAAVWSLGILLYDMVCGDIPFEHDEEIIRGQVFFRQRVSSECQHLIRWCLALRPSDRPTFEEIQNHPWMQDVLLPQETAEIHLHSLSPGPSK',
         if not isinstance(ground_truth_activity_label, str):
-            raise Exception(f'ERROR!!! expected a string for ground_truth_activity_label !!! instead got {type(ground_truth_activity_label)} for index {index}')
-        
+            raise Exception(
+                f"ERROR!!! expected a string for ground_truth_activity_label !!! instead got {type(ground_truth_activity_label)} for index {index}"
+            )
+
         return dict(
             df_index=df_index,
             ligand_str=ligand_str,

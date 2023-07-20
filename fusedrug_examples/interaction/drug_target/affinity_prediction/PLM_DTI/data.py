@@ -15,7 +15,7 @@ from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI.Contr
     Featurizer,
 )
 import torch
-from omegaconf import open_dict # to be able to add new keys to hydra dictconfig
+from omegaconf import open_dict  # to be able to add new keys to hydra dictconfig
 from omegaconf import open_dict  # to be able to add new keys to hydra dictconfig
 from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI.utils import (
     get_task_dir,
@@ -33,20 +33,24 @@ from fuse.data import DatasetDefault, PipelineDefault
 from fusedrug.utils.samplers.balanced_df_sampler import BalancedClassDataFrameSampler
 from fusedrug.utils.samplers.subset_sampler import SubsetSampler
 from fuse.data.ops.ops_common import OpDeleteKeypaths, OpLookup
-from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI import dti_dataset
+from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI import (
+    dti_dataset,
+)
+
+
 class BenchmarkDTIDataModule(pl.LightningDataModule):
     def __init__(
         self,
         root_data_dir: str,
         output_dir: str,
-        pairs_tsv: str, 
-        ligands_tsv: str, 
+        pairs_tsv: str,
+        ligands_tsv: str,
         targets_tsv: str,
         splits_tsv: str,
-        train_folds: Union[List[str],str],
-        val_folds: Union[List[str],str],
-        test_folds: Union[List[str],str],
-        class_label_to_idx: Dict[str,int],
+        train_folds: Union[List[str], str],
+        val_folds: Union[List[str], str],
+        test_folds: Union[List[str], str],
+        class_label_to_idx: Dict[str, int],
         minibatches_per_epoch: int,
         validation_epochs: int,
         drug_featurizer: Featurizer,
@@ -77,53 +81,76 @@ class BenchmarkDTIDataModule(pl.LightningDataModule):
         self.num_workers = num_workers
         self.featurizer_debug_mode = featurizer_debug_mode
 
-
-    def _make_dataloader(self,
-        phase:str,
-        use_folds:Union[str,List[str]],
-        pipeline_name:str,
+    def _make_dataloader(
+        self,
+        phase: str,
+        use_folds: Union[str, List[str]],
+        pipeline_name: str,
     ):
-        dataset, pairs_df = dti_dataset.dti_binding_dataset_with_featurizers(pairs_tsv=self.pairs_tsv, ligands_tsv=self.ligands_tsv, 
-                        targets_tsv=self.targets_tsv, \
-                        pairs_columns_to_extract=['ligand_id', 'target_id', 'activity_label'], \
-                        pairs_rename_columns={'activity_label': 'data.label'}, \
-                        ligands_columns_to_extract=['canonical_smiles'], \
-                        ligands_rename_columns={'canonical_smiles': 'data.drug'}, \
-                        targets_columns_to_extract=['canonical_aa_sequence'], \
-                        targets_rename_columns={'canonical_aa_sequence': 'data.target'}, \
-                        drug_featurizer=self.drug_featurizer,
-                        target_featurizer=self.target_featurizer,
-                        featurizer_debug_mode=self.featurizer_debug_mode,
-                        splits_tsv=self.splits_tsv,
-                        use_folds=use_folds,
-                        keep_activity_labels=list(self.class_label_to_idx.keys()),
-                        cache_dir=Path(self.data_dir, 'PLM_DTI_cache'),
-                        dynamic_pipeline=[(OpLookup(map=self.class_label_to_idx), dict(key_in='data.label', key_out='data.label')),
-                                          (OpToTensor(), {'dtype': torch.float32, 'key': 'data.label'})],
-                        )
+        dataset, pairs_df = dti_dataset.dti_binding_dataset_with_featurizers(
+            pairs_tsv=self.pairs_tsv,
+            ligands_tsv=self.ligands_tsv,
+            targets_tsv=self.targets_tsv,
+            pairs_columns_to_extract=["ligand_id", "target_id", "activity_label"],
+            pairs_rename_columns={"activity_label": "data.label"},
+            ligands_columns_to_extract=["canonical_smiles"],
+            ligands_rename_columns={"canonical_smiles": "data.drug"},
+            targets_columns_to_extract=["canonical_aa_sequence"],
+            targets_rename_columns={"canonical_aa_sequence": "data.target"},
+            drug_featurizer=self.drug_featurizer,
+            target_featurizer=self.target_featurizer,
+            featurizer_debug_mode=self.featurizer_debug_mode,
+            splits_tsv=self.splits_tsv,
+            use_folds=use_folds,
+            keep_activity_labels=list(self.class_label_to_idx.keys()),
+            cache_dir=Path(self.data_dir, "PLM_DTI_cache"),
+            dynamic_pipeline=[
+                (
+                    OpLookup(map=self.class_label_to_idx),
+                    dict(key_in="data.label", key_out="data.label"),
+                ),
+                (OpToTensor(), {"dtype": torch.float32, "key": "data.label"}),
+            ],
+        )
 
-        if phase=='train': 
+        if phase == "train":
             with Timer("Initializing training sampler..."):
-                batch_sampler = BalancedClassDataFrameSampler(df=pairs_df, label_column_name="activity_label", classes=list(self.class_label_to_idx.keys()), 
-                                                counts=[self.batch_size//2, self.batch_size//2], shuffle=True, total_minibatches=self.minibatches_per_epoch)
+                batch_sampler = BalancedClassDataFrameSampler(
+                    df=pairs_df,
+                    label_column_name="activity_label",
+                    classes=list(self.class_label_to_idx.keys()),
+                    counts=[self.batch_size // 2, self.batch_size // 2],
+                    shuffle=True,
+                    total_minibatches=self.minibatches_per_epoch,
+                )
             print("Done.")
-            dl = DataLoader(dataset,
-                            batch_sampler = batch_sampler,            
-                            num_workers = self.num_workers,
-                            collate_fn = CollateDefault()
-                            )
+            dl = DataLoader(
+                dataset,
+                batch_sampler=batch_sampler,
+                num_workers=self.num_workers,
+                collate_fn=CollateDefault(),
+            )
         else:
-            num_samples_per_epoch = self.validation_epochs*self.minibatches_per_epoch*self.batch_size if phase=='val' else None
-            sampler = SubsetSampler(dataset=dataset, 
-                                    sample_ids = list(dataset.dynamic_pipeline._ops_and_kwargs[0][0]._data.keys()),
-                                    num_samples_per_epoch=num_samples_per_epoch, 
-                                    shuffle=True)        
-            dl = DataLoader(dataset,
-                            batch_size = self.batch_size,
-                            sampler = sampler,
-                            num_workers = self.num_workers,
-                            collate_fn = CollateDefault()
-                            )
+            num_samples_per_epoch = (
+                self.validation_epochs * self.minibatches_per_epoch * self.batch_size
+                if phase == "val"
+                else None
+            )
+            sampler = SubsetSampler(
+                dataset=dataset,
+                sample_ids=list(
+                    dataset.dynamic_pipeline._ops_and_kwargs[0][0]._data.keys()
+                ),
+                num_samples_per_epoch=num_samples_per_epoch,
+                shuffle=True,
+            )
+            dl = DataLoader(
+                dataset,
+                batch_size=self.batch_size,
+                sampler=sampler,
+                num_workers=self.num_workers,
+                collate_fn=CollateDefault(),
+            )
 
         return dl
 
@@ -143,33 +170,35 @@ class BenchmarkDTIDataModule(pl.LightningDataModule):
 
     def train_dataloader(self):
         dl = self._make_dataloader(
-            phase='train',
+            phase="train",
             use_folds=self.train_folds,
-            pipeline_name='train_pipeline',
+            pipeline_name="train_pipeline",
         )
 
         return dl
-        
+
     def val_dataloader(self):
         dl = self._make_dataloader(
-            phase='val',
+            phase="val",
             use_folds=self.val_folds,
-            pipeline_name='val_pipeline',
+            pipeline_name="val_pipeline",
         )
 
         return dl
 
     def test_dataloader(self):
         dl = self._make_dataloader(
-            phase='test',
+            phase="test",
             use_folds=self.test_folds,
-            pipeline_name='test_pipeline',
+            pipeline_name="test_pipeline",
         )
 
         return dl
 
 
-def get_dataloaders(cfg, device=torch.device("cpu"), contrastive=False, test_mode=False):
+def get_dataloaders(
+    cfg, device=torch.device("cpu"), contrastive=False, test_mode=False
+):
     if cfg.experiment.task.lower() == "benchmark":
         task_dir = cfg.experiment.dir
     else:
@@ -213,8 +242,8 @@ def get_dataloaders(cfg, device=torch.device("cpu"), contrastive=False, test_mod
             )
             datamodule.prepare_data()
         elif cfg.experiment.task == "benchmark":
-            with open_dict(cfg): 
-                cfg.model.classify = True 
+            with open_dict(cfg):
+                cfg.model.classify = True
                 cfg.trainer.watch_metric = "validation.metrics.val/aupr"
             datamodule = BenchmarkDTIDataModule(
                 root_data_dir=cfg.benchmark_data.root_path,
@@ -238,8 +267,8 @@ def get_dataloaders(cfg, device=torch.device("cpu"), contrastive=False, test_mod
             )
             datamodule.prepare_data(test_mode=test_mode)
         else:
-            with open_dict(cfg): 
-                cfg.model.classify = True 
+            with open_dict(cfg):
+                cfg.model.classify = True
                 cfg.trainer.watch_metric = "validation.metrics.val/aupr"
             datamodule = DTIDataModule(
                 task_dir,
@@ -252,7 +281,7 @@ def get_dataloaders(cfg, device=torch.device("cpu"), contrastive=False, test_mod
             )
             datamodule.prepare_data()
         datamodule.setup(stage="test" if test_mode else None)
-        
+
         with open_dict(cfg):
             cfg.model.drug_shape = drug_featurizer.shape
             cfg.model.target_shape = target_featurizer.shape
@@ -274,7 +303,6 @@ def get_dataloaders(cfg, device=torch.device("cpu"), contrastive=False, test_mod
         datamodule.prepare_data()
         datamodule.setup(stage="fit")
 
-
     if cfg.experiment.task == "benchmark":
         if not test_mode:
             train_dataloader = datamodule.train_dl
@@ -284,46 +312,56 @@ def get_dataloaders(cfg, device=torch.device("cpu"), contrastive=False, test_mod
             valid_dataloader = None
         test_dataloader = datamodule.test_dl
     else:
-        pipeline_desc = [(OpToTensor(), {'dtype': torch.float32, 'key': 'data.label'})] # convert labels to float
+        pipeline_desc = [
+            (OpToTensor(), {"dtype": torch.float32, "key": "data.label"})
+        ]  # convert labels to float
         # FuseMedML wrapper
         # dataloader with batch dict collator:
-        datamodule._loader_kwargs['collate_fn'] = CollateDefault()
+        datamodule._loader_kwargs["collate_fn"] = CollateDefault()
         if not test_mode:
             datamodule.data_train = DatasetWrapSeqToDict(
-                    name="PLM_DTI_train",
-                    dataset=datamodule.data_train,
-                    sample_keys=("data.drug", "data.target", "data.label"),
-                    dynamic_pipeline=PipelineDefault(name='data_pipeline', ops_and_kwargs=pipeline_desc),
-                )
+                name="PLM_DTI_train",
+                dataset=datamodule.data_train,
+                sample_keys=("data.drug", "data.target", "data.label"),
+                dynamic_pipeline=PipelineDefault(
+                    name="data_pipeline", ops_and_kwargs=pipeline_desc
+                ),
+            )
             datamodule.data_train.create()
 
             datamodule.data_val = DatasetWrapSeqToDict(
-                    name="PLM_DTI_val",
-                    dataset=datamodule.data_val,
-                    sample_keys=("data.drug", "data.target", "data.label"),
-                    dynamic_pipeline=PipelineDefault(name='data_pipeline', ops_and_kwargs=pipeline_desc),
-                )
+                name="PLM_DTI_val",
+                dataset=datamodule.data_val,
+                sample_keys=("data.drug", "data.target", "data.label"),
+                dynamic_pipeline=PipelineDefault(
+                    name="data_pipeline", ops_and_kwargs=pipeline_desc
+                ),
+            )
             datamodule.data_val.create()
 
-            train_dataloader = DataLoader(dataset=datamodule.data_train, 
-                                    **datamodule._loader_kwargs)
-        
-            valid_dataloader = DataLoader(dataset=datamodule.data_val, 
-                                        **datamodule._loader_kwargs)
+            train_dataloader = DataLoader(
+                dataset=datamodule.data_train, **datamodule._loader_kwargs
+            )
+
+            valid_dataloader = DataLoader(
+                dataset=datamodule.data_val, **datamodule._loader_kwargs
+            )
         else:
             train_dataloader = None
             valid_dataloader = None
 
         datamodule.data_test = DatasetWrapSeqToDict(
-                name="PLM_DTI_test",
-                dataset=datamodule.data_test,
-                sample_keys=("data.drug", "data.target", "data.label"),
-                dynamic_pipeline=PipelineDefault(name='data_pipeline', ops_and_kwargs=pipeline_desc),
-            )
+            name="PLM_DTI_test",
+            dataset=datamodule.data_test,
+            sample_keys=("data.drug", "data.target", "data.label"),
+            dynamic_pipeline=PipelineDefault(
+                name="data_pipeline", ops_and_kwargs=pipeline_desc
+            ),
+        )
         datamodule.data_test.create()
-        
-        test_dataloader = DataLoader(dataset=datamodule.data_test, 
-                                    **datamodule._loader_kwargs)
-        
+
+        test_dataloader = DataLoader(
+            dataset=datamodule.data_test, **datamodule._loader_kwargs
+        )
 
     return train_dataloader, valid_dataloader, test_dataloader, cfg

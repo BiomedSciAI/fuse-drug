@@ -15,21 +15,24 @@ from clearml import Task
 import data
 import plm_dti
 
-CONFIGS_DIR = os.path.join(os.path.dirname(__file__), 'configs')
-SELECTED_CONFIG = 'config.yaml'
+CONFIGS_DIR = os.path.join(os.path.dirname(__file__), "configs")
+SELECTED_CONFIG = "config.yaml"
+
 
 @hydra.main(config_path=CONFIGS_DIR, config_name=SELECTED_CONFIG)
-def main(cfg : DictConfig) -> None:
+def main(cfg: DictConfig) -> None:
 
-    if len(cfg)==0:
-        raise Exception(f'You should provide --config-dir and --config-name.')
-    
-    print('Hydra config:')
+    if len(cfg) == 0:
+        raise Exception(f"You should provide --config-dir and --config-name.")
+
+    print("Hydra config:")
     print(OmegaConf.to_yaml(cfg))
-    print('End of Hydra config.')
+    print("End of Hydra config.")
 
-    OmegaConf.resolve(cfg) #to make sure that all "interpolated" values are resolved ( https://omegaconf.readthedocs.io/_/downloads/en/latest/pdf/ )
-    #cfg_raw = OmegaConf.to_object(cfg)
+    OmegaConf.resolve(
+        cfg
+    )  # to make sure that all "interpolated" values are resolved ( https://omegaconf.readthedocs.io/_/downloads/en/latest/pdf/ )
+    # cfg_raw = OmegaConf.to_object(cfg)
 
     # Set random state
     pl.seed_everything(cfg.experiment.seed)
@@ -38,21 +41,16 @@ def main(cfg : DictConfig) -> None:
     _, _, test_dataloader, cfg = data.get_dataloaders(cfg, test_mode=True)
 
     model = plm_dti.PLM_DTI_Module(cfg)
-     
-    trainer = pl.Trainer(default_root_dir=cfg.experiment.dir, \
-                         devices=1, accelerator="gpu", \
-                         benchmark=True) 
+
+    trainer = pl.Trainer(
+        default_root_dir=cfg.experiment.dir,
+        devices=1,
+        accelerator="gpu",
+        benchmark=True,
+    )
 
     _ = trainer.test(model, test_dataloader, ckpt_path=cfg.test.checkpoint)
-    
-if __name__ == '__main__':
+
+
+if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
