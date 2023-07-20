@@ -21,16 +21,21 @@ paths:
   results: '${oc.env:DTI_RESULTS}'
 
 benchmark_data:
+  ### for debugging ###
+  # to use a small data subset set limit_postfix: _limit_100000_rows
+  # to also avoid pre loading features (use dummy instead) that takes a while set featurizer_debug_mode: True
+  featurizer_debug_mode: False # if true, use dummy string in featurizer to speed up debugging
+  limit_postfix: "" # "" for usual run, _limit_100000_rows for debug run with small files
+  ############################################################################################################
+  
   # parameters specific for our data/benchmark. used if task="benchmark"
   version: 14-04-2022_30_05-09-2022
-  root_path: ${oc.env:DTI_BENCHMARK_DATA}/${benchmark_data.version}
-  # small subset for debugging
-  featurizer_debug_mode: False # if true, use dummy string in featurizer to speed up debugging
-  pairs_tsv: ${benchmark_data.root_path}/pairs/merged_bindingdb_chembl_pubchem_${benchmark_data.version}@native@single_protein_target@affinity_pairs_v0.1.tsv
-  ligands_tsv: ${benchmark_data.root_path}/ligand/merged_bindingdb_chembl_pubchem_${benchmark_data.version}@native@single_protein_target@ligands.tsv
-  targets_tsv: ${benchmark_data.root_path}/target/merged_bindingdb_chembl_pubchem_${benchmark_data.version}@native@single_protein_target@targets.tsv
+  root_path: ${oc.env:DTI_BENCHMARK_DATA}/merged_${benchmark_data.version}
+  pairs_tsv: ${benchmark_data.root_path}/${benchmark_data.version}/pairs/merged_bindingdb_chembl_pubchem_${benchmark_data.version}@native@single_protein_target@affinity_pairs_v0.1${benchmark_data.limit_postfix}.tsv
+  ligands_tsv: ${benchmark_data.root_path}/${benchmark_data.version}/ligand/merged_bindingdb_chembl_pubchem_${benchmark_data.version}@native@single_protein_target@ligands${benchmark_data.limit_postfix}.tsv
+  targets_tsv: ${benchmark_data.root_path}/${benchmark_data.version}/target/merged_bindingdb_chembl_pubchem_${benchmark_data.version}@native@single_protein_target@targets${benchmark_data.limit_postfix}.tsv
   # lenient split:
-  splits_tsv: ${benchmark_data.root_path}/splits/splits/${benchmark_data.split}/split_lenient_0.14_0.14_0.14_0.14_0.14_0.15_0.15.tsv
+  splits_tsv: ${benchmark_data.root_path}/${benchmark_data.version}/splits/splits/${benchmark_data.split}/split_lenient_0.14_0.14_0.14_0.14_0.14_0.15_0.15${benchmark_data.limit_postfix}.tsv
   # cold_ligand split:
   #splits_tsv: ${benchmark_data.root_path}/splits/splits/${benchmark_data.split}/split_cold_ligand_0.7_0.15_0.15.tsv
   # cold_target split:

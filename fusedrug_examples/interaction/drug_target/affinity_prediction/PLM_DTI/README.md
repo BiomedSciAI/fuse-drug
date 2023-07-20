@@ -6,11 +6,18 @@ In addition to the datasets used in the paper, we implement training and evaluat
 In order to use this data:
 1. Download and extract the large zip archive in the Zenodo link above.
 2. Set the environment variable `DTI_BENCHMARK_DATA` to the local path to which you downloaded the file.
-3. Run training using the config file `python runner.py --config_path=configs/config_dti_benchmark.yaml`. Note the namespace "benchmark_data" in the config in which you can select one of 4 different train/validation/test set splits: 
+3. Run training using the config file `python runner.py --config-path=configs --config-name=config_dti_benchmark`. Note the namespace "benchmark_data" in the `config_dti_benchmark.yaml` config file in which you can select one of 4 different train/validation/test set splits: 
     * lenient - an entity unique to a set is a pair of ligand and target.
     * cold ligand - an entity unique to a set is a ligand (more restrictive than lenient)
     * cold target - an entity unique to a set is a target (more restrictive than lenient)
     * temporal - the sets are separated by the date range in which the assay was performed
 
+* Note that since the dataset is very large, the code requires significant CPU memory to work. We used a job with 400GB of RAM. 
+* Also note that it takes a while (up to several hours) for training to start, because of significant overhead in loading and preprocessing data.
+
 To run training followed by test inference, simply run `python runner.py`.
 Unless specified otherwise as an argument, the default parameter file found under `confings/config.yaml` is used. Note that you are expected to set the environment variable `DTI_RESULTS` to a local path of your choice. Results will be saved there.
+
+To run in test only mode, for example using with out DTI benchmark config, run:
+`python runner.py --config-path=configs --config-name=config_dti_benchmark +test.checkpoint=/path/to/trained/model.ckpt`,
+pointing to an already trained model file path.

@@ -16,7 +16,7 @@ import data
 import plm_dti
 
 CONFIGS_DIR = os.path.join(os.path.dirname(__file__), 'configs')
-SELECTED_CONFIG = 'train_config.yaml'
+SELECTED_CONFIG = 'config.yaml'
 
 @hydra.main(config_path=CONFIGS_DIR, config_name=SELECTED_CONFIG)
 def main(cfg : DictConfig) -> None:
@@ -40,7 +40,7 @@ def main(cfg : DictConfig) -> None:
     model = plm_dti.PLM_DTI_Module(cfg)
      
     trainer = pl.Trainer(default_root_dir=cfg.experiment.dir, \
-                         gpus=1, auto_select_gpus=True, \
+                         devices=1, accelerator="gpu", \
                          benchmark=True) 
 
     _ = trainer.test(model, test_dataloader, ckpt_path=cfg.test.checkpoint)
