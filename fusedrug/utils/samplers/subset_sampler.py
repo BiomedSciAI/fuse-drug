@@ -47,7 +47,7 @@ class SubsetSampler(torch.utils.data.Sampler):
         self.shuffle = shuffle
         self.epoch = 0
 
-    def __iter__(self):
+    def __iter__(self) -> None:
         # offset for the current epoch
         offset = self.epoch * self.num_samples_per_epoch
         if offset + self.num_samples_per_epoch >= self.dataset_len:
@@ -64,5 +64,5 @@ class SubsetSampler(torch.utils.data.Sampler):
 
         self.epoch += 1
 
-    def __len__(self):
+    def __len__(self) -> None:
         return self.num_samples_per_epoch

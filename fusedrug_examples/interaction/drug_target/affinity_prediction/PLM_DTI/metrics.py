@@ -1,11 +1,11 @@
-from typing import OrderedDict
+from typing import OrderedDict, Tuple
 from fuse.eval.metrics.classification.metrics_classification_common import (
     MetricAUCPR,
     MetricAUCROC,
 )
 
 
-def get_metrics(task):
+def get_metrics(task: str) -> Tuple[OrderedDict]:
     if task == "dti_dg":
         raise Exception(
             "dti_dg task currently won't work. you need to use fuse.eval metrics"

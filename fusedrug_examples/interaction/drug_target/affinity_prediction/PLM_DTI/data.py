@@ -24,7 +24,7 @@ from fuse.data.ops.ops_cast import OpToTensor
 from fuse.data.pipelines.pipeline_default import PipelineDefault
 import pytorch_lightning as pl
 from pathlib import Path
-from typing import Union, List, Dict, Optional
+from typing import Union, List, Dict, Optional, Tuple
 from fuse.utils.cpu_profiling import Timer
 from fusedrug.utils.samplers.balanced_df_sampler import BalancedClassDataFrameSampler
 from fusedrug.utils.samplers.subset_sampler import SubsetSampler
@@ -82,7 +82,7 @@ class BenchmarkDTIDataModule(pl.LightningDataModule):
         phase: str,
         use_folds: Union[str, List[str]],
         pipeline_name: str,
-    ):
+    ) -> DataLoader:
         dataset, pairs_df = dti_dataset.dti_binding_dataset_with_featurizers(
             pairs_tsv=self.pairs_tsv,
             ligands_tsv=self.ligands_tsv,
@@ -150,13 +150,13 @@ class BenchmarkDTIDataModule(pl.LightningDataModule):
 
         return dl
 
-    def prepare_data(self, test_mode=False):
+    def prepare_data(self, test_mode:bool=False) -> None:
         if not test_mode:
             self.train_dl = self.train_dataloader()
             self.val_dl = self.val_dataloader()
         self.test_dl = self.test_dataloader()
 
-    def setup(self, stage: Optional[str] = None):
+    def setup(self, stage: Optional[str] = None) -> None:
         if stage == "fit" or stage is None:
             self.data_train = self.train_dl.dataset
             self.data_val = self.val_dl.dataset
@@ -164,7 +164,7 @@ class BenchmarkDTIDataModule(pl.LightningDataModule):
         if stage == "test" or stage is None:
             self.data_test = self.test_dl.dataset
 
-    def train_dataloader(self):
+    def train_dataloader(self) -> DataLoader:
         dl = self._make_dataloader(
             phase="train",
             use_folds=self.train_folds,
@@ -173,7 +173,7 @@ class BenchmarkDTIDataModule(pl.LightningDataModule):
 
         return dl
 
-    def val_dataloader(self):
+    def val_dataloader(self) -> DataLoader:
         dl = self._make_dataloader(
             phase="val",
             use_folds=self.val_folds,
@@ -182,7 +182,7 @@ class BenchmarkDTIDataModule(pl.LightningDataModule):
 
         return dl
 
-    def test_dataloader(self):
+    def test_dataloader(self) -> DataLoader:
         dl = self._make_dataloader(
             phase="test",
             use_folds=self.test_folds,
@@ -193,8 +193,8 @@ class BenchmarkDTIDataModule(pl.LightningDataModule):
 
 
 def get_dataloaders(
-    cfg, device=torch.device("cpu"), contrastive=False, test_mode=False
-):
+    cfg: dict, device:torch.device=torch.device("cpu"), contrastive:bool=False, test_mode:bool=False
+) -> Tuple:
     if cfg.experiment.task.lower() == "benchmark":
         task_dir = cfg.experiment.dir
     else:

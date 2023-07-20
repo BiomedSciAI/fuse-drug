@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Union, Any
 from torch.utils.data import Sampler
 import numpy as np
 import pandas as pd
@@ -80,10 +80,10 @@ class BalancedClassDataFrameSampler(Sampler):
                 f"Under the provided epoch size of {total_minibatches} minibatches per epoch, it would take {epochs_to_see_all:.2f} epochs to see at least once every sample."
             )
 
-    def __len__(self):
+    def __len__(self) -> None:
         return self.total_minibatches
 
-    def _get_next_sample(self, class_index):
+    def _get_next_sample(self, class_index: int) -> Any:
         if self.pointers[class_index] >= self.indices_per_class[class_index].shape[0]:
             if self.shuffle:
                 print(f"shuffling for (class name={self.classes[class_index]})")
@@ -99,7 +99,7 @@ class BalancedClassDataFrameSampler(Sampler):
 
         return ans
 
-    def __iter__(self):
+    def __iter__(self) -> Any:
         for _ in range(self.total_minibatches):
             curr_mb = []
             for class_idx, count in enumerate(self.counts):

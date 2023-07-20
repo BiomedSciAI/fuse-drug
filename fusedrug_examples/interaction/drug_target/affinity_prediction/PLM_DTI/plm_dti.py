@@ -92,7 +92,7 @@ class PLM_DTI_Module(pl.LightningModule):
         self.validation_step_outputs = []
         self.test_step_outputs = []
 
-    def forward(self, batch_dict):
+    def forward(self, batch_dict: NDict) -> torch.Tensor:
         return self.model(batch_dict)
 
     def training_step(self, batch_dict: NDict) -> torch.Tensor:
@@ -171,7 +171,7 @@ class PLM_DTI_Module(pl.LightningModule):
 
         self.test_step_outputs.clear()
 
-    def save_preds_for_benchmark_eval(self, test_step_outputs):
+    def save_preds_for_benchmark_eval(self, test_step_outputs:list) -> None:
         output_filepath = os.path.join(self.output_dir, "test_results.tsv")
         preds = (
             torch.cat([item["preds"] for item in test_step_outputs], 0).cpu().numpy()
@@ -193,7 +193,7 @@ class PLM_DTI_Module(pl.LightningModule):
         df["pred"] = preds
         df.to_csv(output_filepath, index=False, sep="\t")
 
-    def configure_optimizers(self):
+    def configure_optimizers(self) -> dict:
         opt = torch.optim.AdamW(self.model.parameters(), lr=self.cfg.trainer.lr)
         lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
             opt, T_0=self.cfg.trainer.lr_t0

@@ -11,7 +11,7 @@ def focal_loss(
     alpha: float = 0.25,
     gamma: float = 2,
     reduction: str = "none",
-):
+) -> torch.Tensor:
     """
     This is based on the torchvision implementation: https://pytorch.org/vision/0.12/_modules/torchvision/ops/focal_loss.html
     with added option to have the input either before (logits) or after sigmoid

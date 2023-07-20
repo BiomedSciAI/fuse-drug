@@ -5,7 +5,7 @@ import numpy as np
 
 
 class TestBalancedClassDataFrameSampler(unittest.TestCase):
-    def test_balanced_df_sampler(self):
+    def test_balanced_df_sampler(self) -> None:
 
         df = pd.DataFrame(
             {

@@ -60,7 +60,7 @@ class FeaturizeDrug(OpBase):
             self.featurizer.preload(all_drugs, write_first=False)
         self.featurizer.cpu()
 
-    def __call__(self, sample_dict: NDict, key_out_ligand: str = "data.input.ligand"):
+    def __call__(self, sample_dict: NDict, key_out_ligand: str = "data.input.ligand") -> NDict:
 
         """ """
         if self.debug:

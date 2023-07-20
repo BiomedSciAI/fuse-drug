@@ -1,4 +1,4 @@
-from typing import Optional, Union, List
+from typing import Optional, Union, List, Dict, Any
 import pandas as pd
 from fuse.data import DatasetDefault
 from fuse.data.ops.caching_tools import run_cached_func
@@ -8,7 +8,7 @@ from fusedrug.data.molecule.ops.featurizer_ops import FeaturizeDrug
 from fusedrug.data.protein.ops.featurizer_ops import FeaturizeTarget
 
 
-def fix_df_types(df):
+def fix_df_types(df: pd.DataFrame) -> pd.DataFrame:
     if "source_dataset_activity_id" in df.columns:
         df.source_dataset_activity_id = df.source_dataset_activity_id.astype("string")
 
@@ -20,14 +20,14 @@ def fix_df_types(df):
     return df
 
 
-def set_activity_multiindex(df):
+def set_activity_multiindex(df: pd.DataFrame) -> pd.DataFrame:
     df.set_index(
         ["source_dataset_versioned_name", "source_dataset_activity_id"], inplace=True
     )
     return df
 
 
-def itemify(x):
+def itemify(x: Any) -> Any:
     try:
         x.item()
     except:
@@ -40,13 +40,13 @@ def dti_binding_dataset_with_featurizers(
     ligands_tsv: str,
     targets_tsv: str,
     split_tsv: str = None,
-    pairs_columns_to_extract=None,
-    pairs_rename_columns=None,
-    ligands_columns_to_extract=None,
-    ligands_rename_columns=None,
-    targets_columns_to_extract=None,
-    targets_rename_columns=None,
-    **kwargs,
+    pairs_columns_to_extract: Optional[List[str]]=None,
+    pairs_rename_columns: Optional[Dict[str, str]]=None,
+    ligands_columns_to_extract: Optional[List[str]]=None,
+    ligands_rename_columns: Optional[Dict[str, str]]=None,
+    targets_columns_to_extract: Optional[List[str]]=None,
+    targets_rename_columns: Optional[Dict[str, str]]=None,
+    **kwargs: Any,
 ) -> DatasetDefault:
 
     # custom imlpementation based on fuse.data.interaction.drug_target.datasets.dti_binding_datasets
@@ -173,8 +173,8 @@ def _load_dataframes(
     splits_tsv: str = None,
     use_folds: Optional[Union[List, str]] = None,
     keep_activity_labels: List[str] = None,
-    **kwargs,
-):
+    **kwargs: dict,
+) -> dict: 
     """
     Loads pairs, ligands and targets, and optionally filters in a subset
 
