@@ -2,7 +2,7 @@ import hydra
 from omegaconf import DictConfig, OmegaConf
 from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import ModularTokenizer
 from typing import Dict, Any, List
-from test_multi_tokenizer_creation import test_tokenizer
+from fusedrug.data.tokenizer.modulartokenizer.test_multi_tokenizer_creation import test_tokenizer
 from fusedrug.data.tokenizer.modulartokenizer.special_tokens import (
     get_additional_tokens,
 )
