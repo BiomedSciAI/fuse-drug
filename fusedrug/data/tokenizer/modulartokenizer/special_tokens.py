@@ -63,7 +63,7 @@ task_tokens = [  # pairwise tasks
     # property modifier tokens:
     "BINARY",  # make property prediction binary - yes/no
     "REGRESSION",  # Predict a numerical value of the property
-    "ATTRIBUTE_ORGANISM",  # Predict the source organism for the protein/antibody
+    "ORGANISM",  # Predict the source organism for the protein/antibody
     "0",
     "1",
     "2",
@@ -280,6 +280,7 @@ task_tokens = [  # pairwise tasks
     "MOLECULAR_ENTITY_TYPE_ANTIGEN",
     "MOLECULAR_ENTITY_TYPE_ANTIBODY_LIGHT_CHAIN",
     "MOLECULAR_ENTITY_TYPE_ANTIBODY_HEAVY_CHAIN",
+    "ATTRIBUTE_ORGANISM",
     "ATTRIBUTE_ORGANISM_HUMAN",
     "ATTRIBUTE_ORGANISM_RABBIT",
     "ATTRIBUTE_ORGANISM_RAT",
