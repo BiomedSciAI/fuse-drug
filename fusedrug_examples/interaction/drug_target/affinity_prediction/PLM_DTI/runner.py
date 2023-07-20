@@ -12,8 +12,6 @@ import torch
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint
 from clearml import Task
-import data
-import plm_dti
 
 CONFIGS_DIR = os.path.join(os.path.dirname(__file__), "configs")
 SELECTED_CONFIG = "config.yaml"

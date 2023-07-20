@@ -1,6 +1,6 @@
 """
 PLM-DTI affinity predictor (see https://www.mlsb.io/papers_2021/MLSB2021_Adapting_protein_language_models.pdf)
-Test-only script using an existing trained model 
+Test-only script using an existing trained model
 To run from the CLI you need to append the test.checkpoint argument if it doesn't exist in the config, i.e:
 python test.py +test.checkpoint=/path/to/model/checkpoint.ckpt
 (If it does exist, note that it will be used in train.py as the initial checkpoint for training)
@@ -10,8 +10,6 @@ import os
 from omegaconf import DictConfig, OmegaConf
 import hydra
 import pytorch_lightning as pl
-from pytorch_lightning.callbacks import ModelCheckpoint
-from clearml import Task
 import data
 import plm_dti
 
@@ -23,7 +21,7 @@ SELECTED_CONFIG = "config.yaml"
 def main(cfg: DictConfig) -> None:
 
     if len(cfg) == 0:
-        raise Exception(f"You should provide --config-dir and --config-name.")
+        raise Exception("You should provide --config-dir and --config-name.")
 
     print("Hydra config:")
     print(OmegaConf.to_yaml(cfg))

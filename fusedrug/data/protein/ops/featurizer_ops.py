@@ -7,7 +7,6 @@ from fusedrug.data.interaction.drug_target.datasets.dti_binding_dataset import (
 from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI.Contrastive_PLM_DTI.src.featurizers import (
     Featurizer,
 )
-import pandas as pd
 import torch
 from torch.utils.data import DataLoader
 from fuse.data.utils.collates import CollateDefault

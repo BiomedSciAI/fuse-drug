@@ -1,5 +1,3 @@
-from typing import Tuple
-
 # The Contrastive_PLM_DTI submodule is the repository found at https://github.com/samsledje/Contrastive_PLM_DTI
 # and described in the paper "Adapting protein language models for rapid DTI prediction": https://www.mlsb.io/papers_2021/MLSB2021_Adapting_protein_language_models.pdf
 from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI.Contrastive_PLM_DTI.src.data import (
@@ -16,7 +14,6 @@ from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI.Contr
 )
 import torch
 from omegaconf import open_dict  # to be able to add new keys to hydra dictconfig
-from omegaconf import open_dict  # to be able to add new keys to hydra dictconfig
 from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI.utils import (
     get_task_dir,
 )
@@ -29,10 +26,9 @@ import pytorch_lightning as pl
 from pathlib import Path
 from typing import Union, List, Dict, Optional
 from fuse.utils.cpu_profiling import Timer
-from fuse.data import DatasetDefault, PipelineDefault
 from fusedrug.utils.samplers.balanced_df_sampler import BalancedClassDataFrameSampler
 from fusedrug.utils.samplers.subset_sampler import SubsetSampler
-from fuse.data.ops.ops_common import OpDeleteKeypaths, OpLookup
+from fuse.data.ops.ops_common import OpLookup
 from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI import (
     dti_dataset,
 )

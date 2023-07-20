@@ -1,4 +1,3 @@
-import torch, torchmetrics
 from typing import OrderedDict
 from fuse.eval.metrics.classification.metrics_classification_common import (
     MetricAUCPR,

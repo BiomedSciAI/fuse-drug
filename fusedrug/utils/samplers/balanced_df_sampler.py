@@ -62,7 +62,7 @@ class BalancedClassDataFrameSampler(Sampler):
             f"To see all {self.indices_per_class[smallest_class_index].shape[0]} samples of the most rare class ({self.classes[smallest_class_index]}) it would take {total_minibatches_to_see_all_samples_at_least_once} minibatches."
         )
         print(
-            f'set total_minibatches to "see_all_smallest_class" to use this number of minibatches.'
+            'set total_minibatches to "see_all_smallest_class" to use this number of minibatches.'
         )
         if isinstance(total_minibatches, str):
             assert total_minibatches == "see_all_smallest_class"

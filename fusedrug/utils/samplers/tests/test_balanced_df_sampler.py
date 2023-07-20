@@ -1,6 +1,5 @@
 import unittest
 from fusedrug.utils.samplers.balanced_df_sampler import BalancedClassDataFrameSampler
-from collections import Counter
 import pandas as pd
 import numpy as np
 

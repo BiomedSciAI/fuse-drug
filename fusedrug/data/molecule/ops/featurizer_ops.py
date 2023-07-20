@@ -1,20 +1,16 @@
-from typing import List, Callable, Optional, Union, Dict
+from typing import Optional
+from fuse.data.ops.op_base import OpBase
 from fuse.utils import NDict
-from fuse.data import OpBase, get_sample_id, set_sample_id
 from fusedrug.data.interaction.drug_target.datasets.dti_binding_dataset import (
     DTIBindingDataset,
 )
 from fuse.utils.cpu_profiling import Timer
-import numpy as np
-import os
 import torch
 from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI.Contrastive_PLM_DTI.src.featurizers import (
     Featurizer,
 )
-import pandas as pd
 from torch.utils.data import DataLoader
 from fuse.data.utils.collates import CollateDefault
-from typing import Optional
 
 
 class FeaturizeDrug(OpBase):

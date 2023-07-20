@@ -28,7 +28,6 @@ class DTIBindingDatasetLoader(OpBase):
             ligands_tsv=ligands_tsv,
             targets_tsv=targets_tsv,
             splits_tsv=splits_tsv,
-            return_index=return_index,
             use_folds=use_folds,
             keep_activity_labels=keep_activity_labels,
             cache_dir=cache_dir,

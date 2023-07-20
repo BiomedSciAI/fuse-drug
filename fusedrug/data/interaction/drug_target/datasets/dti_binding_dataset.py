@@ -372,7 +372,6 @@ class DTIBindingDataset(Dataset):
             )
 
         return dict(
-            df_index=df_index,
             ligand_str=ligand_str,
             # debug - use a constant ligand
             # ligand_str='c1cc(NNc2cccc(-c3nn[nH]n3)c2)cc(-c2nn[nH]n2)c1',
