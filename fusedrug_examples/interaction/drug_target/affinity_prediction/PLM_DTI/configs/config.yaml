@@ -5,31 +5,26 @@ hydra:
     chdir: False
 experiment:
   project_name: PLM-DTI
-  experiment_name: basic
+  experiment_name: davis_dataset
   dir: ${paths.results}/${experiment.project_name}/${experiment.experiment_name}
   verbosity: 3
   seed: 0
   task: davis # "dti_dg" for TDCommons domain generalization benchmark,
             # one of EnzPredDataModule.dataset_list() ("halogenase",
             # "bkace", "gt", "esterase", "kinase", "phosphatase"),
-            # "benchmark" for our benchmark (TBD),
+            # "benchmark" for our large DTI benchmark data curation,
             # others - "davis", "bindingdb", "biosnap", "biosnap_prot" (unseen protein),
             # "biosnap_mol" (unseen drug), "dude" (not implemented)
-  clearml: False
-
+  clearml: false
+  only_load_checkpoint_weights: true # if "checkpoint" is provided, specify whether to only load weights (true) or entire training state (lr schedule etc'.) (false) 
 paths:
-  results: './DTI_RESULTS'
-
-benchmark_data:
-  # parameters specific for our data/benchmark. used if task="benchmark"
-  path: null
-  split: lenient # split if using task="ours". can be "lenient", "cond-target", "cold-ligand", "temporal".
+  results: '${oc.env:DTI_RESULTS}'
 
 data:
   batch_size: 32
   contrastive_batch_size: 256
   shuffle: True
-  num_workers: 0
+  num_workers: 16
 
 model:
   # possible values: MorganFeaturizer, others (not tested): Mol2VecFeaturizer, GNN, MolEFeaturizer, MolRFeaturizer
@@ -44,8 +39,9 @@ model:
   latent_distance: "Cosine"
 
 trainer:
-  epochs: 50
-  every_n_val: 1
+  loss: 'bce' # 'bce' (binary cross-entropy), 'focal'
+  epochs: 50 
+  every_n_val: 2
   lr: 1e-4
   lr_t0: 10
   contrastive: false # Note: currently not implemented. If true, will be used with DUDE dataset
@@ -53,3 +49,10 @@ trainer:
   clr: 1e-5
   clr_t0: 10
   device: 0 # 5
+
+test:
+  save_preds_for_benchmark_eval: false
+# to run test only mode with an already trained model, provide the test.checkpoint argument
+# here or via CLI, i.e: python test.py +test.checkpoint=/path/to/checkpoint.ckpt
+#  checkpoint: /path/to/checkpoint.ckpt 
+
