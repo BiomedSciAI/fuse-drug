@@ -13,11 +13,10 @@ from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI.Contr
 from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI import (
     metrics,
 )
-
+import fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI.losses as losses
 from fuse.dl.models.model_wrapper import ModelWrapSeqToDict
 from fuse.dl.losses.loss_default import LossDefault
 import fuse.dl.lightning.pl_funcs as fuse_pl
-import losses
 from functools import partial
 import os
 import itertools
