@@ -425,17 +425,15 @@ def _load_dataframes(
     set_activity_multiindex(_pairs)
     print(f"pairs num: {len(_pairs)}")
 
-    if splits_tsv is not None:
-        if use_folds is None:
-            raise Exception(
-                f"splits_tsv was provided ({splits_tsv}) but no use_folds provided"
-            )
+    if splits_tsv is not None and use_folds is None:
+        raise Exception(
+            f"splits_tsv was provided ({splits_tsv}) but no use_folds provided"
+        )
 
-    if use_folds is not None:
-        if splits_tsv is None:
-            raise Exception(
-                f"use_folds was provided ({use_folds}) but no splits_tsv provided"
-            )
+    if use_folds is not None and splits_tsv is None:
+        raise Exception(
+            f"use_folds was provided ({use_folds}) but no splits_tsv provided"
+        )
 
     if splits_tsv is not None:
         print(f"loading split file {splits_tsv}")
