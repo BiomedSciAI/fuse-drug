@@ -171,7 +171,7 @@ class PLM_DTI_Module(pl.LightningModule):
 
         self.test_step_outputs.clear()
 
-    def save_preds_for_benchmark_eval(self, test_step_outputs:list) -> None:
+    def save_preds_for_benchmark_eval(self, test_step_outputs: list) -> None:
         output_filepath = os.path.join(self.output_dir, "test_results.tsv")
         preds = (
             torch.cat([item["preds"] for item in test_step_outputs], 0).cpu().numpy()

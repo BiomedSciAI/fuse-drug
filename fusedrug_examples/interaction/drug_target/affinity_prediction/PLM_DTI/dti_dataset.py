@@ -40,12 +40,12 @@ def dti_binding_dataset_with_featurizers(
     ligands_tsv: str,
     targets_tsv: str,
     split_tsv: str = None,
-    pairs_columns_to_extract: Optional[List[str]]=None,
-    pairs_rename_columns: Optional[Dict[str, str]]=None,
-    ligands_columns_to_extract: Optional[List[str]]=None,
-    ligands_rename_columns: Optional[Dict[str, str]]=None,
-    targets_columns_to_extract: Optional[List[str]]=None,
-    targets_rename_columns: Optional[Dict[str, str]]=None,
+    pairs_columns_to_extract: Optional[List[str]] = None,
+    pairs_rename_columns: Optional[Dict[str, str]] = None,
+    ligands_columns_to_extract: Optional[List[str]] = None,
+    ligands_rename_columns: Optional[Dict[str, str]] = None,
+    targets_columns_to_extract: Optional[List[str]] = None,
+    targets_rename_columns: Optional[Dict[str, str]] = None,
     **kwargs: Any,
 ) -> DatasetDefault:
 
@@ -174,7 +174,7 @@ def _load_dataframes(
     use_folds: Optional[Union[List, str]] = None,
     keep_activity_labels: List[str] = None,
     **kwargs: dict,
-) -> dict: 
+) -> dict:
     """
     Loads pairs, ligands and targets, and optionally filters in a subset
 

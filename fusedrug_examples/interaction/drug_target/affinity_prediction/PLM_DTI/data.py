@@ -150,7 +150,7 @@ class BenchmarkDTIDataModule(pl.LightningDataModule):
 
         return dl
 
-    def prepare_data(self, test_mode:bool=False) -> None:
+    def prepare_data(self, test_mode: bool = False) -> None:
         if not test_mode:
             self.train_dl = self.train_dataloader()
             self.val_dl = self.val_dataloader()
@@ -193,7 +193,10 @@ class BenchmarkDTIDataModule(pl.LightningDataModule):
 
 
 def get_dataloaders(
-    cfg: dict, device:torch.device=torch.device("cpu"), contrastive:bool=False, test_mode:bool=False
+    cfg: dict,
+    device: torch.device = torch.device("cpu"),
+    contrastive: bool = False,
+    test_mode: bool = False,
 ) -> Tuple:
     if cfg.experiment.task.lower() == "benchmark":
         task_dir = cfg.experiment.dir

@@ -37,13 +37,13 @@ DISTANCE_METRICS = {
 class DeepCoembedding(nn.Module):
     def __init__(
         self,
-        drug_shape:int=2048,
-        target_shape:int=1024,
-        latent_dimension:int=1024,
-        latent_activation:nn.Module=nn.ReLU,
-        latent_distance:str="Cosine",
-        model_dropout:float=0.2,
-        classify:bool=True,
+        drug_shape: int = 2048,
+        target_shape: int = 1024,
+        latent_dimension: int = 1024,
+        latent_activation: nn.Module = nn.ReLU,
+        latent_distance: str = "Cosine",
+        model_dropout: float = 0.2,
+        classify: bool = True,
     ) -> None:
         super().__init__()
         self.drug_shape = drug_shape
@@ -79,13 +79,13 @@ class DeepCoembedding(nn.Module):
             self.distance_metric = latent_distance
             self.activator = DISTANCE_METRICS[self.distance_metric]()
 
-    def forward(self, drug:torch.Tensor, target:torch.Tensor) -> torch.Tensor:
+    def forward(self, drug: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
         if self.do_classify:
             return self.classify(drug, target)
         else:
             return self.regress(drug, target)
 
-    def regress(self, drug:torch.Tensor, target:torch.Tensor) -> torch.Tensor:
+    def regress(self, drug: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
         drug_projection = self.drug_projector(drug)
         target_projection = self.target_projector(target)
 
@@ -96,7 +96,7 @@ class DeepCoembedding(nn.Module):
         relu_f = torch.nn.ReLU()
         return relu_f(inner_prod).squeeze()
 
-    def classify(self, drug:torch.Tensor, target:torch.Tensor) -> torch.Tensor:
+    def classify(self, drug: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
         drug_projection = self.drug_projector(drug)
         target_projection = self.target_projector(target)
 
