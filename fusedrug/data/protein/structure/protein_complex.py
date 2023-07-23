@@ -6,6 +6,7 @@ from fusedrug.data.protein.structure.structure_io import (
 from itertools import combinations
 import torch
 from collections import defaultdict
+import numpy as np
 
 
 class ProteinComplex:
@@ -69,23 +70,116 @@ class ProteinComplex:
 
             next_start_residue_index += length + inter_chain_index_extra_offset
 
-        flattened_chain_data = {}
-        flattened_chain_data["flattened"] = {}
-        flattened_chain_data["flattened"]["gt_sequence"] = "".join(concat_seq)
+        self.flattened = {}
+        self.flattened["gt_sequence"] = "".join(concat_seq)
         #
-        flattened_chain_data["flattened"]["gt_mmcif_feats"] = {}
+        self.flattened["gt_mmcif_feats"] = {}
         for k, d in concat_feats.items():
             if isinstance(d[0], str):
                 concat_elem = ",".join(d)
             else:
                 concat_elem = torch.concat(d, dim=0)
-            flattened_chain_data["flattened"]["gt_mmcif_feats"][k] = concat_elem
+            self.flattened["gt_mmcif_feats"][k] = concat_elem
 
-        self.chains_data = flattened_chain_data
+        self.chains_descs_for_flatten = chains_descs
+
+    def spatial_crop(
+        self, crop_size: int = 256, distance_threshold: float = 10.0, eps: float = 1e-6
+    ) -> None:
+        """
+        Spatial crop of a pair of chains which favors interacting residues.
+        Note - you must call "flatten" (with only two chain descriptor) prior to calling this method.
+
+        The code is heavily influenced from the spatial crop done in RF2
+        """
+        if not hasattr(self, "chains_descs_for_flatten"):
+            raise Exception("You must call flatten() method first.")
+
+        if len(self.chains_descs_for_flatten) != 2:
+            raise Exception("")
+        chains_lengths = [
+            self.chains_data[chain_desc]["gt_mmcif_feats"]["aatype"].shape[0]
+            for chain_desc in self.chains_descs_for_flatten
+        ]
+
+        xyz = self.flattened["gt_mmcif_feats"]["atom14_gt_positions"]
+        mask = self.flattened["gt_mmcif_feats"]["atom14_gt_exists"]
+
+        carbo_alpha_atom_index = 1
+
+        cond = (
+            torch.cdist(
+                xyz[: chains_lengths[0], carbo_alpha_atom_index],
+                xyz[chains_lengths[0] :, 1],
+                p=2,
+            )
+            < distance_threshold
+        )
+        # only keep residue for which both ground truth masks show it's legit (was actually experimentally determined)
+        cond = torch.logical_and(
+            cond,
+            mask[: chains_lengths[0], None, carbo_alpha_atom_index]
+            * mask[None, chains_lengths[0] :, carbo_alpha_atom_index],
+        )
+        i, j = torch.where(cond)
+        ifaces = torch.cat([i, j + chains_lengths[0]])
+        if len(ifaces) < 1:
+            raise Exception("No interface residues!")
+
+        # pick a random interface residue
+        cnt_idx = ifaces[np.random.randint(len(ifaces))]
+
+        # calculate distance from this residue to all other residues, and add an increasing epsilon
+        # it seems that:
+        # 1. the increasing epsilon would favor the N-terminus
+        # 2. the increasing epsilon would favor the first chain
+        # NOTE: we can modify it to not favor the first chain, while still favoring the N-terminus
+        dist = (
+            torch.cdist(
+                xyz[:, carbo_alpha_atom_index],
+                xyz[cnt_idx, carbo_alpha_atom_index][None],
+                p=2,
+            ).reshape(-1)
+            + torch.arange(len(xyz), device=xyz.device) * eps
+        )
+        # make sure that only residues with actual resolved position participate
+        cond = mask[:, carbo_alpha_atom_index] * mask[cnt_idx, carbo_alpha_atom_index]
+        dist[~cond.bool()] = 999999.9
+        _, idx = torch.topk(dist, crop_size, largest=False)
+
+        # sel, _ = torch.sort(sel[idx]) #this was the original, I wonder why they got "sel" from outside, maybe related to homo-oligomers?
+        sel, _ = torch.sort(idx)
+
+        self.apply_selection(sel)
+
+        print("remember to save a PDB to visualize this!")
+
+    def apply_selection(self, selection: torch.Tensor) -> None:
+        """
+        Applies selection described as indices in 'selection'
+
+        Note - only affects the flattened data!
+        """
+        if not hasattr(self, "chains_descs_for_flatten"):
+            raise Exception("You must call flatten() method first.")
+
+        print(
+            "TODO: stop with the splitted gt_sequence and gt_mmcif_feats!!! and also change it into gt_feats!!!\n"
+            * 10
+        )
+
+        self.flattened["gt_sequence"] = "".join(
+            np.array(list(self.flattened["gt_sequence"]))[selection].tolist()
+        )
+
+        for k, d in self.flattened["gt_mmcif_feats"].items():
+            if k in ["resolution", "pdb_id", "chain_id"]:
+                continue
+            self.flattened["gt_mmcif_feats"][k] = d[selection]
 
     def findInteractingChains(
         self,
-        distance_threshold: float = 7.0,
+        distance_threshold: float = 10.0,
         min_interacting_residues_count: int = 4,
         assume_not_interacting_if_from_different_pdb_ids: bool = True,
         verbose: bool = True,
