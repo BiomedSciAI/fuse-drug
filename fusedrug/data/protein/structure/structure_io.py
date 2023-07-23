@@ -178,8 +178,8 @@ def save_structure_file(
 
 def get_chain_native_features(
     native_structure_filename: str,
-    chain_id: str,
-    pdb_id: str,
+    chain_id: Optional[Union[Union[str, int], List[Union[str, int]]]] = None,
+    pdb_id: str = "dummy",
     chain_id_type: str = "author_assigned",
     device: str = "cpu",
 ) -> Union[Tuple[str, dict], None]:
@@ -190,6 +190,8 @@ def get_chain_native_features(
     chain_id:
         can be a single character (example: 'A')
         or an integer (zero-based) and then the i-th chain in the *sorted* list of available chains will be used
+        It can also be a list of those, and then the answer will be a dictionary mapping from chain_id name to the processed info
+        Pass None to load all chains
 
     chain_id_type: one of the allowed options "author_assigned" or "pdb_assigned"
         "author_assigned" means that the provided chain_id is using the chain id that the original author who uploaded to PDB assigned to it.
@@ -197,6 +199,20 @@ def get_chain_native_features(
     """
 
     assert chain_id_type in ["author_assigned", "pdb_assigned"]
+    assert isinstance(chain_id, (int, str, List)) or (chain_id is None)
+
+    return_dict = True
+    if isinstance(chain_id, list):
+        for curr in chain_id:
+            assert isinstance(curr, (str, int))
+        chain_ids = chain_id
+    elif chain_id is None:
+        chain_ids = None
+    else:
+        return_dict = False
+        chain_ids = [chain_id]  # "listify"
+
+    ans = {}
 
     structure_file_format = get_structure_file_type(native_structure_filename)
     if structure_file_format == "pdb":
@@ -219,6 +235,9 @@ def get_chain_native_features(
             print(e)
             print(f"Had an issue reading {native_structure_filename}")
             return None
+
+        if chain_ids is None:
+            chain_ids = chains_names
     else:
         assert False
 
@@ -240,37 +259,61 @@ def get_chain_native_features(
 
     elif structure_file_format == "cif":
 
-        if isinstance(chain_id, int):
-            chains_names = sorted(chains_names)
-            if (chain_id < 0) or (chain_id >= len(chains_names)):
-                raise Exception(
-                    f"chain_id(int)={chain_id} is out of bound for the options: {chains_names}"
-                )
-            chain_id = chains_names[chain_id]  # taking the i-th chain
+        for chain_id in chain_ids:
 
-        if chain_id_type == "pdb_assigned":
-            chain_id = mmcif_object.pdb_assigned_chain_id_to_author_assigned_chain_id[
-                chain_id
-            ]  # convert from pdb assigned to author assigned chain id
+            if isinstance(chain_id, int):
+                chains_names = sorted(chains_names)
+                if (chain_id < 0) or (chain_id >= len(chains_names)):
+                    raise Exception(
+                        f"chain_id(int)={chain_id} is out of bound for the options: {chains_names}"
+                    )
+                chain_id = chains_names[chain_id]  # taking the i-th chain
 
-        gt_data = get_chain_data(mmcif_object, chain_id=chain_id)
-        gt_all_mmcif_feats = gt_data["mmcif_feats"]
-        gt_sequence = gt_data["input_sequence"]
-        # move to device
-        gt_mmcif_feats = {
-            k: gt_all_mmcif_feats[k]
-            for k in ["aatype", "all_atom_positions", "all_atom_mask", "resolution"]
-        }
+            if chain_id_type == "pdb_assigned":
+                use_chain_id = (
+                    mmcif_object.pdb_assigned_chain_id_to_author_assigned_chain_id[
+                        chain_id
+                    ]
+                )  # convert from pdb assigned to author assigned chain id
+            else:
+                use_chain_id = chain_id
 
-        to_tensor = lambda t: torch.tensor(np.array(t)).to(device)
-        gt_mmcif_feats = tree_map(to_tensor, gt_mmcif_feats, np.ndarray)
+            gt_data = get_chain_data(mmcif_object, chain_id=use_chain_id)
+            gt_all_mmcif_feats = gt_data["mmcif_feats"]
+            gt_sequence = gt_data["input_sequence"]
+            # move to device
+            gt_mmcif_feats = {
+                k: gt_all_mmcif_feats[k]
+                for k in ["aatype", "all_atom_positions", "all_atom_mask", "resolution"]
+            }
 
-        # as make_atom14_masks & make_atom14_positions seems to expect indices and not one-hots !
-        gt_mmcif_feats["aatype"] = gt_mmcif_feats["aatype"].argmax(axis=-1)
+            to_tensor = lambda t: torch.tensor(np.array(t)).to(device)
+            gt_mmcif_feats = tree_map(to_tensor, gt_mmcif_feats, np.ndarray)
 
+            # as make_atom14_masks & make_atom14_positions seems to expect indices and not one-hots !
+            gt_mmcif_feats["aatype"] = gt_mmcif_feats["aatype"].argmax(axis=-1)
+
+            ans[chain_id] = {}
+            ans[chain_id]["gt_sequence"] = gt_sequence
+            ans[chain_id]["gt_mmcif_feats"] = gt_mmcif_feats
     else:
         assert False
 
+    for chain_id, data in ans.items():
+        data["gt_mmcif_feats"] = calculate_additional_features(data["gt_mmcif_feats"])
+        data["gt_mmcif_feats"]["pdb_id"] = pdb_id
+        data["gt_mmcif_feats"]["chain_id"] = chain_id
+
+    if return_dict:
+        return ans
+
+    return (
+        ans[chain_id]["gt_sequence"],
+        ans[chain_id]["gt_mmcif_feats"],
+    )  # for backward compatibility
+
+
+def calculate_additional_features(gt_mmcif_feats: Dict) -> Dict:
     gt_mmcif_feats = data_transforms.atom37_to_frames(gt_mmcif_feats)
     gt_mmcif_feats = data_transforms.get_backbone_frames(gt_mmcif_feats)
 
@@ -285,11 +328,7 @@ def get_chain_native_features(
     gt_mmcif_feats = data_transforms.make_pseudo_beta_no_curry(gt_mmcif_feats)
     # data_transforms.get_backbone_frames
     # data_transforms.get_chi_angles
-
-    gt_mmcif_feats["pdb_id"] = pdb_id
-    gt_mmcif_feats["chain_id"] = chain_id
-
-    return gt_sequence, gt_mmcif_feats
+    return gt_mmcif_feats
 
 
 def aa_sequence_from_pdb(pdb_filename: str) -> Dict[str, str]:
