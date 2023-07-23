@@ -5,6 +5,7 @@ from fusedrug.data.protein.structure.structure_io import (
 )
 from itertools import combinations
 import torch
+from collections import defaultdict
 
 
 class ProteinComplex:
@@ -31,19 +32,56 @@ class ProteinComplex:
         self.filename = get_mmcif_native_full_name(pdb_id)
 
         assert isinstance(chain_ids, list) or (chain_ids is None)
-        loaded_chains = get_chain_native_features(self.filename, chain_id=chain_ids)
+        loaded_chains = get_chain_native_features(
+            self.filename,
+            pdb_id=pdb_id if len(pdb_id) == 4 else None,
+            chain_id=chain_ids,
+        )
 
         for k, d in loaded_chains.items():
             self.chains_data[(pdb_id, k)] = d
 
-    def concatAllChainsToSingleSequence(
-        self, index_offset_between_chains: int = 2
+    def flatten(
+        self,
+        chains_descs: List[Tuple[str, str]],
+        inter_chain_index_extra_offset: int = 1,
     ) -> None:
         """
         concats each feature from multiple chains into a single sequence.
         This is useful, for example, before supplying it to a model, which expects a tensor that contains info on the complex (or complex subset, e.g. pair)
         """
-        raise NotImplementedError()
+
+        concat_seq = []
+        concat_feats = defaultdict(list)
+        next_start_residue_index = 0
+        for i, chain_desc in enumerate(chains_descs):
+            seq = self.chains_data[chain_desc]["gt_sequence"]
+            feats = self.chains_data[chain_desc]["gt_mmcif_feats"]
+            concat_seq.append(seq)
+            for k, d in feats.items():
+                concat_feats[k].append(d)
+
+            length = feats["aatype"].shape[0]
+            concat_feats["residue_index"].append(
+                torch.arange(length) + next_start_residue_index
+            )
+            concat_feats["chain_index"].append(torch.full((length,), fill_value=i))
+
+            next_start_residue_index += length + inter_chain_index_extra_offset
+
+        flattened_chain_data = {}
+        flattened_chain_data["flattened"] = {}
+        flattened_chain_data["flattened"]["gt_sequence"] = "".join(concat_seq)
+        #
+        flattened_chain_data["flattened"]["gt_mmcif_feats"] = {}
+        for k, d in concat_feats.items():
+            if isinstance(d[0], str):
+                concat_elem = ",".join(d)
+            else:
+                concat_elem = torch.concat(d, dim=0)
+            flattened_chain_data["flattened"]["gt_mmcif_feats"][k] = concat_elem
+
+        self.chains_data = flattened_chain_data
 
     def findInteractingChains(
         self,
@@ -57,12 +95,21 @@ class ProteinComplex:
         [(('7vux', 'A'), ('7vux', 'H')),
          (('7vux', 'A'), ('7vux', 'L')),
          (('7vux', 'H'), ('7vux', 'L'))]
+
+        Args:
+            distance_threshold: the maximum distance that 2 residues are considered interacting
+            min_interacting_residues_count: minimal amount of interacting residues to decide that two chains are interacting
+            assume_not_interacting_if_from_different_pdb_ids: if two chains arrive from different PDBs skip check and assume that they are not interacting.
+                the default is True
+                this is because this is likely to be used for (fake) negative pairs
+            verbose:
+                printing amount
+
+        Returns:
+            a list of elements, each element is a tuple with two chains descriptors, describing the interacting chains pair
         """
         ans = []
 
-        # protein["atom14_atom_exists"] = residx_atom14_mask
-        # protein["atom14_gt_exists"] = residx_atom14_gt_mask
-        # protein["atom14_gt_positions"] = residx_atom14_gt_positions
         all_pairs = 0
         interacting_pairs = 0
 
@@ -142,7 +189,7 @@ def check_interacting(
     # calculate distances between all pairs,
     cond = (
         torch.cdist(xyz_1[:, carbon_alpha_index], xyz_2[:, carbon_alpha_index], p_norm)
-        < distance_threshold
+        <= distance_threshold
     )
     # create a mask with True only where both residues have ground truth coordinate info
     cond = torch.logical_and(
