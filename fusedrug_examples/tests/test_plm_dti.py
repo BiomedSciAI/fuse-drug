@@ -16,7 +16,7 @@ class PLMDTITestCase(unittest.TestCase):
     def test_main(self) -> None:
         config_path = Path(
             __file__,
-            "../../interaction/drug_target/affinity_prediction/PLM_DTI/configs/train_config.yaml",
+            "../../interaction/drug_target/affinity_prediction/PLM_DTI/configs/config.yaml",
         )
         cfg = OmegaConf.load(config_path)
         cfg.trainer.epochs = 2

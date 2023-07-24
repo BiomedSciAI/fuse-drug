@@ -2342,6 +2342,69 @@
       "rstrip": false,
       "normalized": false,
       "special": true
+    },
+    {
+      "id": 260,
+      "content": "<ATTRIBUTE_ORGANISM>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 261,
+      "content": "<ATTRIBUTE_ORGANISM_HUMAN>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 262,
+      "content": "<ATTRIBUTE_ORGANISM_RABBIT>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 263,
+      "content": "<ATTRIBUTE_ORGANISM_RAT>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 264,
+      "content": "<ATTRIBUTE_ORGANISM_MOUSE>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 265,
+      "content": "<ATTRIBUTE_ORGANISM_MONKEY>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 266,
+      "content": "<ATTRIBUTE_ORGANISM_CAMEL>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
     }
   ],
   "normalizer": null,
@@ -2355,6 +2418,7 @@
     "continuing_subword_prefix": null,
     "end_of_word_suffix": null,
     "fuse_unk": false,
+    "byte_fallback": false,
     "vocab": {
       "<UNK>": 0,
       "<PAD>": 1,
@@ -2616,6 +2680,13 @@
       "<MOLECULAR_ENTITY_TYPE_ANTIGEN>": 257,
       "<MOLECULAR_ENTITY_TYPE_ANTIBODY_LIGHT_CHAIN>": 258,
       "<MOLECULAR_ENTITY_TYPE_ANTIBODY_HEAVY_CHAIN>": 259,
+      "<ATTRIBUTE_ORGANISM>": 260,
+      "<ATTRIBUTE_ORGANISM_HUMAN>": 261,
+      "<ATTRIBUTE_ORGANISM_RABBIT>": 262,
+      "<ATTRIBUTE_ORGANISM_RAT>": 263,
+      "<ATTRIBUTE_ORGANISM_MOUSE>": 264,
+      "<ATTRIBUTE_ORGANISM_MONKEY>": 265,
+      "<ATTRIBUTE_ORGANISM_CAMEL>": 266,
       "#": 527,
       "%": 528,
       "(": 529,
