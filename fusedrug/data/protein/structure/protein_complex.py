@@ -1,7 +1,6 @@
 from typing import Union, List, Optional, Tuple
 from fusedrug.data.protein.structure.structure_io import (
-    get_mmcif_native_full_name,
-    get_chain_native_features,
+    load_protein_structure_features,
 )
 from itertools import combinations
 import torch
@@ -18,23 +17,23 @@ class ProteinComplex:
     """
 
     def __init__(self) -> None:
-        self.chains_data = {}
+        self.chains_data = {}  # maps from chain description (e.g. ('7vux', 'A')) to
+        self.flattened_data = {}
 
     def add(
         self, pdb_id: str, chain_ids: Optional[List[Union[str, int]]] = None
     ) -> None:
         """
         Args:
+            pdb_id: for example '7vux'
             chain_ids: provide None (default) to load all chains
                 provide a list of chain identifiers to select which are loaded.
                     use str to use chain_id
                     use int to load chain at (zero based) index
         """
-        self.filename = get_mmcif_native_full_name(pdb_id)
-
         assert isinstance(chain_ids, list) or (chain_ids is None)
-        loaded_chains = get_chain_native_features(
-            self.filename,
+        loaded_chains = load_protein_structure_features(
+            pdb_id,
             pdb_id=pdb_id if len(pdb_id) == 4 else None,
             chain_id=chain_ids,
         )
@@ -56,8 +55,8 @@ class ProteinComplex:
         concat_feats = defaultdict(list)
         next_start_residue_index = 0
         for i, chain_desc in enumerate(chains_descs):
-            seq = self.chains_data[chain_desc]["gt_sequence"]
-            feats = self.chains_data[chain_desc]["gt_mmcif_feats"]
+            seq = self.chains_data[chain_desc]["aa_sequence_str"]
+            feats = self.chains_data[chain_desc]
             concat_seq.append(seq)
             for k, d in feats.items():
                 concat_feats[k].append(d)
@@ -70,16 +69,14 @@ class ProteinComplex:
 
             next_start_residue_index += length + inter_chain_index_extra_offset
 
-        self.flattened = {}
-        self.flattened["gt_sequence"] = "".join(concat_seq)
-        #
-        self.flattened["gt_mmcif_feats"] = {}
         for k, d in concat_feats.items():
             if isinstance(d[0], str):
                 concat_elem = ",".join(d)
             else:
                 concat_elem = torch.concat(d, dim=0)
-            self.flattened["gt_mmcif_feats"][k] = concat_elem
+            self.flattened_data[k] = concat_elem
+
+        self.flattened_data["aa_sequence_str"] = "".join(concat_seq)
 
         self.chains_descs_for_flatten = chains_descs
 
@@ -98,12 +95,12 @@ class ProteinComplex:
         if len(self.chains_descs_for_flatten) != 2:
             raise Exception("")
         chains_lengths = [
-            self.chains_data[chain_desc]["gt_mmcif_feats"]["aatype"].shape[0]
+            self.chains_data[chain_desc]["aatype"].shape[0]
             for chain_desc in self.chains_descs_for_flatten
         ]
 
-        xyz = self.flattened["gt_mmcif_feats"]["atom14_gt_positions"]
-        mask = self.flattened["gt_mmcif_feats"]["atom14_gt_exists"]
+        xyz = self.flattened["atom14_gt_positions"]
+        mask = self.flattened["atom14_gt_exists"]
 
         carbo_alpha_atom_index = 1
 
@@ -163,19 +160,14 @@ class ProteinComplex:
         if not hasattr(self, "chains_descs_for_flatten"):
             raise Exception("You must call flatten() method first.")
 
-        print(
-            "TODO: stop with the splitted gt_sequence and gt_mmcif_feats!!! and also change it into gt_feats!!!\n"
-            * 10
+        self.flattened["aa_sequence_str"] = "".join(
+            np.array(list(self.flattened["aa_sequence_str"]))[selection].tolist()
         )
 
-        self.flattened["gt_sequence"] = "".join(
-            np.array(list(self.flattened["gt_sequence"]))[selection].tolist()
-        )
-
-        for k, d in self.flattened["gt_mmcif_feats"].items():
+        for k, d in self.flattened.items():
             if k in ["resolution", "pdb_id", "chain_id"]:
                 continue
-            self.flattened["gt_mmcif_feats"][k] = d[selection]
+            self.flattened[k] = d[selection]
 
     def findInteractingChains(
         self,
@@ -223,19 +215,11 @@ class ProteinComplex:
                     continue
             print(comb)
             if check_interacting(
-                xyz_1=self.chains_data[chain_1_desc]["gt_mmcif_feats"][
-                    "atom14_gt_positions"
-                ],
-                mask_1=self.chains_data[chain_1_desc]["gt_mmcif_feats"][
-                    "atom14_gt_exists"
-                ],
+                xyz_1=self.chains_data[chain_1_desc]["atom14_gt_positions"],
+                mask_1=self.chains_data[chain_1_desc]["atom14_gt_exists"],
                 #
-                xyz_2=self.chains_data[chain_2_desc]["gt_mmcif_feats"][
-                    "atom14_gt_positions"
-                ],
-                mask_2=self.chains_data[chain_2_desc]["gt_mmcif_feats"][
-                    "atom14_gt_exists"
-                ],
+                xyz_2=self.chains_data[chain_2_desc]["atom14_gt_positions"],
+                mask_2=self.chains_data[chain_2_desc]["atom14_gt_exists"],
                 #
                 distance_threshold=distance_threshold,
                 min_interacting_residues_count=min_interacting_residues_count,

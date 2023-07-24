@@ -20,7 +20,7 @@ from Bio.PDB.Atom import Atom
 from Bio import PDB
 from warnings import warn
 
-# TODO: temp until openfold will be added to the dependency list
+# TODO: until openfold will be added to the dependency list
 try:
     from openfold.data import data_transforms
     from openfold.utils.tensor_utils import tree_map
@@ -36,12 +36,7 @@ try:
 except ImportError:
     print("Warning: import openfold failed - some functions might fail")
 
-# TODO: temp until omegafold will be added to the dependency list
-# try:
-#     from omegafold.utils.protein_utils import residue_constants as rc
-# except ImportError:
-#     print("Warning: import omegafold failed - some functions might fail")
-
+# from omegafold.utils.protein_utils import residue_constants as rc
 
 from fusedrug.data.protein.structure.utils import (
     aa_sequence_from_aa_integers,
@@ -176,30 +171,46 @@ def save_structure_file(
     return all_saved_files
 
 
-def get_chain_native_features(
-    native_structure_filename: str,
+def load_protein_structure_features(
+    pdb_id_or_filename: str,
+    pdb_id: Optional[str] = None,
     chain_id: Optional[Union[Union[str, int], List[Union[str, int]]]] = None,
-    pdb_id: str = "dummy",
     chain_id_type: str = "author_assigned",
     device: str = "cpu",
 ) -> Union[Tuple[str, dict], None]:
     """
-    Extracts ground truth features from a given filename. Note - only mmCIF is tested
-    (using pdb will trigger an exception)
+    Extracts ground truth features from a given pdb_id or filename.
+    Note - only mmCIF is tested (using pdb will trigger an exception)
 
-    chain_id:
-        can be a single character (example: 'A')
-        or an integer (zero-based) and then the i-th chain in the *sorted* list of available chains will be used
-        It can also be a list of those, and then the answer will be a dictionary mapping from chain_id name to the processed info
-        Pass None to load all chains
+    pdb_id_or_filename: pdb_id (example: '7vux') or a full put to a file which may be .gz compressed (e.g. /some/path/to/7vux.pdb.gz)
+
+    pdb_id: pdb id - for example '7vux'.  If you already provided pdb_id_or_filename as a pdb id (e.g. '7vux') you don't need to supply it
+
+    chain_id: you have multiple options here:
+        * a single character (example: 'A')
+        * an integer (zero-based) and then the i-th chain in the *sorted* list of available chains will be used
+        * A list of any combination of integers and singel characters, for example: ['A',2,'H']
+            in this case the answer will be a dictionary mapping from chain_id name to the processed info
+        * None - in this case all chains will be loaded, and a dictionary mapping chain_id names to processed info will be returned
 
     chain_id_type: one of the allowed options "author_assigned" or "pdb_assigned"
         "author_assigned" means that the provided chain_id is using the chain id that the original author who uploaded to PDB assigned to it.
         "pdb_assigned" means that the provided chain_d is using the chain id that PDB dataset assigned.
+
+    device:
     """
 
     assert chain_id_type in ["author_assigned", "pdb_assigned"]
     assert isinstance(chain_id, (int, str, List)) or (chain_id is None)
+
+    if is_pdb_id(pdb_id_or_filename):
+        pdb_id = pdb_id_or_filename
+    else:
+        raise Exception(
+            "pdb_id_or_filename was deduced to be a path to a file, in such case you must provide pdb_id as well"
+        )
+
+    native_structure_filename = get_mmcif_native_full_name(pdb_id_or_filename)
 
     return_dict = True
     if isinstance(chain_id, list):
@@ -247,7 +258,6 @@ def get_chain_native_features(
                 "chain_id_type=pdb_assigned  is not supported yet for PDB, only for mmCIF"
             )
         gt_data = pdb_to_openfold_protein(native_structure_filename, chain_id=chain_id)
-        gt_sequence = gt_data.aasequence_str
 
         gt_mmcif_feats = dict(
             aatype=gt_data.aatype,
@@ -278,10 +288,8 @@ def get_chain_native_features(
             else:
                 use_chain_id = chain_id
 
-            gt_data = get_chain_data(mmcif_object, chain_id=use_chain_id)
-            gt_all_mmcif_feats = gt_data["mmcif_feats"]
-            gt_sequence = gt_data["input_sequence"]
-            # move to device
+            gt_all_mmcif_feats = get_chain_data(mmcif_object, chain_id=use_chain_id)
+            # move to device a selected subset
             gt_mmcif_feats = {
                 k: gt_all_mmcif_feats[k]
                 for k in ["aatype", "all_atom_positions", "all_atom_mask", "resolution"]
@@ -293,24 +301,33 @@ def get_chain_native_features(
             # as make_atom14_masks & make_atom14_positions seems to expect indices and not one-hots !
             gt_mmcif_feats["aatype"] = gt_mmcif_feats["aatype"].argmax(axis=-1)
 
-            ans[chain_id] = {}
-            ans[chain_id]["gt_sequence"] = gt_sequence
-            ans[chain_id]["gt_mmcif_feats"] = gt_mmcif_feats
+            gt_mmcif_feats["aa_sequence_str"] = gt_all_mmcif_feats["aa_sequence_str"]
+
+            ans[chain_id] = gt_mmcif_feats
     else:
         assert False
 
     for chain_id, data in ans.items():
-        data["gt_mmcif_feats"] = calculate_additional_features(data["gt_mmcif_feats"])
-        data["gt_mmcif_feats"]["pdb_id"] = pdb_id
-        data["gt_mmcif_feats"]["chain_id"] = chain_id
+        data = calculate_additional_features(data)
+        data["pdb_id"] = pdb_id
+        data["chain_id"] = chain_id
 
     if return_dict:
         return ans
 
-    return (
-        ans[chain_id]["gt_sequence"],
-        ans[chain_id]["gt_mmcif_feats"],
-    )  # for backward compatibility
+    return ans[chain_id]
+
+
+def get_chain_native_features(
+    native_structure_filename: str,
+    chain_id: Optional[Union[Union[str, int], List[Union[str, int]]]] = None,
+    pdb_id: str = "dummy",
+    chain_id_type: str = "author_assigned",
+    device: str = "cpu",
+) -> Union[Tuple[str, dict], None]:
+    raise Exception(
+        '"get_chain_native_features()" is deprecated, please switch to "load_protein_structure_features()"'
+    )
 
 
 def calculate_additional_features(gt_mmcif_feats: Dict) -> Dict:
@@ -820,12 +837,15 @@ def get_chain_data(
     """
 
     mmcif_feats = data_pipeline.make_mmcif_features(mmcif, chain_id)
-    input_sequence = mmcif.chain_to_seqres[chain_id]
+    mmcif_feats["aa_sequence_str"] = mmcif.chain_to_seqres[chain_id]
+    # input_sequence = mmcif.chain_to_seqres[chain_id]
 
-    return dict(
-        mmcif_feats=mmcif_feats,
-        input_sequence=input_sequence,
-    )
+    # return dict(
+    #     mmcif_feats=mmcif_feats,
+    #     input_sequence=input_sequence,
+    # )
+
+    return mmcif_feats
 
 
 def load_mmcif_features(filename: str, pdb_id: str, chain_id: str) -> Tuple[dict, str]:
@@ -839,9 +859,8 @@ def load_mmcif_features(filename: str, pdb_id: str, chain_id: str) -> Tuple[dict
         raise Exception(
             f"Error requested chain_id={chain_id} not found in available chains {chains_names}"
         )
-    gt_data = get_chain_data(mmcif_data, chain_id=chain_id)
-    gt_sequence = gt_data["input_sequence"]
-    gt_all_mmcif_feats = gt_data["mmcif_feats"]
+    gt_all_mmcif_feats = get_chain_data(mmcif_data, chain_id=chain_id)
+    gt_sequence = gt_all_mmcif_feats["aa_sequence_str"]
 
     gt_mmcif_feats = {
         k: gt_all_mmcif_feats[k]
