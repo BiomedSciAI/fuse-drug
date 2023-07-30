@@ -206,9 +206,10 @@ def load_protein_structure_features(
     if is_pdb_id(pdb_id_or_filename):
         pdb_id = pdb_id_or_filename
     else:
-        raise Exception(
-            "pdb_id_or_filename was deduced to be a path to a file, in such case you must provide pdb_id as well"
-        )
+        if not is_pdb_id(pdb_id):
+            raise Exception(
+                "pdb_id_or_filename was deduced to be a path to a file, in such case you must provide pdb_id as well"
+            )
 
     native_structure_filename = get_mmcif_native_full_name(pdb_id_or_filename)
 
