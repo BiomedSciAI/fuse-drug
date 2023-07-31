@@ -20,21 +20,16 @@ from Bio.PDB.Atom import Atom
 from Bio import PDB
 from warnings import warn
 
-# TODO: until openfold will be added to the dependency list
-try:
-    from openfold.data import data_transforms
-    from openfold.utils.tensor_utils import tree_map
-    import openfold.np.protein as protein_utils
-    from openfold.np.residue_constants import restype_3to1
-    from openfold.data import (
-        data_pipeline,
-        mmcif_parsing,
-    )
-    from openfold.np import residue_constants as rc
-    from openfold.data.mmcif_parsing import MmcifObject
-
-except ImportError:
-    print("Warning: import openfold failed - some functions might fail")
+from tiny_openfold.data import data_transforms
+from tiny_openfold.utils.tensor_utils import tree_map
+import tiny_openfold.np.protein as protein_utils
+from tiny_openfold.np.residue_constants import restype_3to1
+from tiny_openfold.data import (
+    data_pipeline,
+    mmcif_parsing,
+)
+from tiny_openfold.np import residue_constants as rc
+from tiny_openfold.data.mmcif_parsing import MmcifObject
 
 # from omegafold.utils.protein_utils import residue_constants as rc
 
@@ -563,7 +558,7 @@ def save_trajectory_to_pdb_file(
     Args:
 
     traj_xyz: a torch tensor of shape [trajectory steps, residues num, atoms num, 3]
-    sequence: the amino acid of the pos14, represented by integers (see openfold.np.residue_constants)
+    sequence: the amino acid of the pos14, represented by integers (see tiny_openfold.np.residue_constants)
     residues_mask: *residue* level mask (not atoms level!)
     save_path: the path to save the pdb file
     traj_b_factors: the b_factors of the amino acids - it can represent per residue: 1. Measurement accuracy in ground truth lab experiment or 2. Model prediction certainty
@@ -636,7 +631,7 @@ def flexible_save_pdb_file(
     """
     saves a PDB file containing the provided coordinates.
 
-    "xyz" coordinates and "mask" should be aligned with openfold.np.residue_constants.restype_name_to_atom14_names
+    "xyz" coordinates and "mask" should be aligned with tiny_openfold.np.residue_constants.restype_name_to_atom14_names
     you don't have to provide 14 atoms per mask, but the order should be aligned.
 
     Example 1 - full heavy atoms info - you can provide:

@@ -1,10 +1,8 @@
 # TODO: temp until openfold will be added to the dependency list
 from typing import List
 
-try:
-    from openfold.np import residue_constants as rc
-except ImportError:
-    print("Warning: import openfold failed - some functions might fail")
+
+from tiny_openfold.np import residue_constants as rc
 
 
 def aa_sequence_from_aa_integers(aatype: List[int]) -> str:

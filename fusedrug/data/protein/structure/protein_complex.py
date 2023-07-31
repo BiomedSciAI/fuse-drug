@@ -26,6 +26,8 @@ class ProteinComplex:
         pdb_id: str,
         chain_ids: Optional[List[Union[str, int]]] = None,
         load_protein_structure_features_overrides: Dict = None,
+        min_chain_residues_count: int = 10,
+        max_residue_type_part: float = 0.5,
     ) -> None:
         """
         Args:
@@ -34,6 +36,12 @@ class ProteinComplex:
                 provide a list of chain identifiers to select which are loaded.
                     use str to use chain_id
                     use int to load chain at (zero based) index
+            load_protein_structure_features_overrides: a dictionary with optional args to override args to send to load_protein_structure_features_overrides
+            min_chain_residues_count: any chain with less than this amount of residues will be dropped. Set to None to keep all
+            max_residue_type_part: any chain that contains a residue type that is at least this part will be dropped.
+                For example, if max_residue_type_part is set to 0.5 (default) then if there exists a residue type that is at least 50% of the total residues,
+                the chain will be dropped. This helps to filter out, for example, cases in which a list of Oxygen residues are defined as a peptide chain, or some "degenerate" cases.
+
         """
         assert isinstance(chain_ids, list) or (chain_ids is None)
 
@@ -52,7 +60,28 @@ class ProteinComplex:
                 print(f"could not find chains for pdb_id={pdb_id}")
             return
 
+        # min_chain_residues_count:int = 10,
+        # max_residue_type_part:float = 0.5,
+
         for k, d in loaded_chains.items():
+            if min_chain_residues_count is not None:
+                if len(d["aa_sequence_str"]) < min_chain_residues_count:
+                    if self.verbose:
+                        print(
+                            f"chain {k} is too small, less than {min_chain_residues_count}"
+                        )
+                    continue
+            if max_residue_type_part is not None:
+                most_frequent_residue_part = d["aatype"].unique(return_counts=True)[
+                    1
+                ].max() / len(d["aatype"])
+                if most_frequent_residue_part > max_residue_type_part:
+                    if self.verbose:
+                        print(
+                            f"chain {k} dropped because it had {most_frequent_residue_part*100:.2f}% same residue id."
+                        )
+                    continue
+
             self.chains_data[(pdb_id, k)] = d
 
     def flatten(
@@ -387,6 +416,8 @@ if __name__ == "__main__":
     # comp.add('2ohi')
     # comp.add('3j3q', chain_ids=['gG','j1'])
     # comp.add("6enu")
-    comp.add("1A2W")  # Homo 2-mer
+    # comp.add("1A2W")  # Homo 2-mer
+    # comp.add("1a0r")  # Homo 2-mer
+    comp.add("1xbp")  # Homo 2-mer
     # comp.remove_duplicates(method="coordinates")
     comp.calculate_chains_interaction_info()
