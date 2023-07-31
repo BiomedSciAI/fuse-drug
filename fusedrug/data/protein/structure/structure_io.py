@@ -177,6 +177,7 @@ def load_protein_structure_features(
     chain_id: Optional[Union[Union[str, int], List[Union[str, int]]]] = None,
     chain_id_type: str = "author_assigned",
     device: str = "cpu",
+    max_allowed_file_size_mbs: float = None,
 ) -> Union[Tuple[str, dict], None]:
     """
     Extracts ground truth features from a given pdb_id or filename.
@@ -204,14 +205,26 @@ def load_protein_structure_features(
     assert isinstance(chain_id, (int, str, List)) or (chain_id is None)
 
     if is_pdb_id(pdb_id_or_filename):
+        pdb_id_or_filename = pdb_id_or_filename.lower()
         pdb_id = pdb_id_or_filename
     else:
         if not is_pdb_id(pdb_id):
             raise Exception(
                 "pdb_id_or_filename was deduced to be a path to a file, in such case you must provide pdb_id as well"
             )
+        pdb_id = pdb_id.lower()
 
     native_structure_filename = get_mmcif_native_full_name(pdb_id_or_filename)
+
+    if max_allowed_file_size_mbs is not None:
+        if (
+            os.path.getsize(native_structure_filename) / (10**6)
+            > max_allowed_file_size_mbs
+        ):
+            print(
+                f"file is too big for requested threshold of {max_allowed_file_size_mbs} mbs! file={native_structure_filename}"
+            )
+            return None
 
     return_dict = True
     if isinstance(chain_id, list):

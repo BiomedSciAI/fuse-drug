@@ -25,6 +25,7 @@ class ProteinComplex:
         self,
         pdb_id: str,
         chain_ids: Optional[List[Union[str, int]]] = None,
+        load_protein_structure_features_overrides: Dict = None,
     ) -> None:
         """
         Args:
@@ -35,11 +36,16 @@ class ProteinComplex:
                     use int to load chain at (zero based) index
         """
         assert isinstance(chain_ids, list) or (chain_ids is None)
+
+        if load_protein_structure_features_overrides is None:
+            load_protein_structure_features_overrides = {}
+
         loaded_chains = load_protein_structure_features(
             pdb_id,
             pdb_id=pdb_id if len(pdb_id) == 4 else None,
             chain_id=chain_ids,
-        )
+            **load_protein_structure_features_overrides,
+        )  # max_allowed_file_size_mbs
 
         if loaded_chains is None:
             if self.verbose:
@@ -177,6 +183,23 @@ class ProteinComplex:
                 continue
             self.flattened[k] = d[selection]
 
+    def has_chains_pair_with_identical_sequence(self, verbose: bool = True) -> bool:
+        for comb in combinations(self.chains_data.keys(), 2):
+            chain_1_desc = comb[0]
+            chain_2_desc = comb[1]
+
+            if (
+                self.chains_data[chain_1_desc]["aa_sequence_str"]
+                == self.chains_data[chain_2_desc]["aa_sequence_str"]
+            ):
+                if verbose:
+                    print(
+                        f"Found chain pair with coordinates info and identical sequences: {comb}"
+                    )
+                return True
+
+        return False
+
     def remove_duplicates(self, method: str = "coordinates") -> None:
         """
         Removes duplicate chains (keeps only one from the duplicates)
@@ -185,18 +208,23 @@ class ProteinComplex:
             method: use 'coordinates' to remove duplicates based on 3d coordinates
                     use 'sequence' to remove duplicates based on 1d amino-acid residues sequence
         """
+        assert False, "not implemented yet"
         assert method in ["coordinates", "sequence"]
 
         for comb in combinations(self.chains_data.keys(), 2):
             print(comb)
             if (
+                self.chains_data[comb[0]]["atom14_gt_positions"].shape
+                != self.chains_data[comb[1]]["atom14_gt_positions"].shape
+            ):
+                continue
+            if (
                 self.chains_data[comb[0]]["atom14_gt_positions"]
                 == self.chains_data[comb[1]]["atom14_gt_positions"]
             ).all():
                 print(f"{comb[0]} and {comb[1]} are the same based on method={method}")
-                assert False, "not implemented yet"
 
-    def find_chains_interaction(
+    def calculate_chains_interaction_info(
         self,
         *,
         distance_threshold: float = 10.0,
@@ -206,10 +234,26 @@ class ProteinComplex:
         verbose: bool = True,
     ) -> Dict[str, List[Tuple[Tuple[str, str], str]]]:
         """
-        returns a list of non-redundant pair tuples, e.g.:
-        [(('7vux', 'A'), ('7vux', 'H')),
-         (('7vux', 'A'), ('7vux', 'L')),
-         (('7vux', 'H'), ('7vux', 'L'))]
+        returns a a dictionary mapping interaction type
+        (one of:
+            'interacting_pairs',
+            'too_few_residues_interacting_pairs',
+            non_interacting_pairs'
+            )
+            into a list of non-redundant pair tuples, e.g.:
+                [(('7vux', 'A'), ('7vux', 'H')),
+                (('7vux', 'A'), ('7vux', 'L')),
+                (('7vux', 'H'), ('7vux', 'L'))]
+
+        It is based on the following heuristics:
+        1. If a chain pair pass some thresholds related to the "amount" of interaction, the pair is added to 'interacting_pairs'
+        2. If a chain pair has at least one residues pair that are in proximity, but not enough residues are interacting, the pair is added to 'too_few_residues_interacting_pairs''
+        3. If there is more than one pair of chains that have known structure and IDENTICAL sequence, no 'non_interacting_pairs' are outputted.
+            The rationale for that is that is symmetry exists, the fact that two chains are not seen interacting in the PDB, it does not mean they do not interact.
+            As an extreme example see this magnificant Homo 1356-mer : https://www.rcsb.org/structure/3j3q
+           ELSE:
+               if 0 residue pairs pass the defined thresholds, then the pair is added to 'non_interacting_pairs'
+
 
         Args:
             distance_threshold: the maximum distance that 2 residues are considered interacting
@@ -227,6 +271,8 @@ class ProteinComplex:
         interacting_pairs = []
         too_few_residues_interacting_pairs = []
         non_interacting_pairs = []
+
+        likely_oligomer = self.has_chains_pair_with_identical_sequence()
 
         for comb in combinations(self.chains_data.keys(), 2):
             chain_1_desc = comb[0]
@@ -266,19 +312,21 @@ class ProteinComplex:
             )
 
             if interacting_residues_count == 0:
-                if verbose:
-                    print(f"chains {comb[0]} and {comb[1]} are NOT interacting")
-                non_interacting_pairs.append(comb)
+                if not likely_oligomer:
+                    if verbose:
+                        print(f"chains {comb[0]} and {comb[1]} are NOT interacting")
+                    non_interacting_pairs.append(comb)
+            elif interacting_residues_count < min_interacting_residues_count:
+                if not likely_oligomer:
+                    if verbose:
+                        print(
+                            f"chains {chain_1_desc} and {chain_2_desc} have some interaction, but it's below the defined min_interacting_residues_count={min_interacting_residues_count} threshold"
+                        )
+                    too_few_residues_interacting_pairs.append(comb)
             elif interacting_residues_count >= min_interacting_residues_count:
                 if verbose:
                     print(f"chains {chain_1_desc} and {chain_2_desc} are interacting")
                 interacting_pairs.append(comb)
-            else:
-                if verbose:
-                    print(
-                        f"chains {chain_1_desc} and {chain_2_desc} have some interaction, but it's below the defined min_interacting_residues_count={min_interacting_residues_count} threshold"
-                    )
-                too_few_residues_interacting_pairs.append(comb)
 
         if verbose:
             print(
@@ -338,6 +386,7 @@ if __name__ == "__main__":
     # comp.add('1fvm')
     # comp.add('2ohi')
     # comp.add('3j3q', chain_ids=['gG','j1'])
-    comp.add("6enu")
-    comp.remove_duplicates(method="coordinates")
-    # comp.find_chains_interaction()
+    # comp.add("6enu")
+    comp.add("1A2W")  # Homo 2-mer
+    # comp.remove_duplicates(method="coordinates")
+    comp.calculate_chains_interaction_info()
