@@ -1,4 +1,4 @@
-from typing import Union, List, Optional, Tuple
+from typing import Union, List, Optional, Tuple, Dict
 from fusedrug.data.protein.structure.structure_io import (
     load_protein_structure_features,
 )
@@ -16,12 +16,15 @@ class ProteinComplex:
     call `add(...)` to accumulate more chains into it
     """
 
-    def __init__(self) -> None:
+    def __init__(self, verbose: bool = True) -> None:
+        self.verbose = verbose
         self.chains_data = {}  # maps from chain description (e.g. ('7vux', 'A')) to
         self.flattened_data = {}
 
     def add(
-        self, pdb_id: str, chain_ids: Optional[List[Union[str, int]]] = None
+        self,
+        pdb_id: str,
+        chain_ids: Optional[List[Union[str, int]]] = None,
     ) -> None:
         """
         Args:
@@ -37,6 +40,11 @@ class ProteinComplex:
             pdb_id=pdb_id if len(pdb_id) == 4 else None,
             chain_id=chain_ids,
         )
+
+        if loaded_chains is None:
+            if self.verbose:
+                print(f"could not find chains for pdb_id={pdb_id}")
+            return
 
         for k, d in loaded_chains.items():
             self.chains_data[(pdb_id, k)] = d
@@ -169,13 +177,34 @@ class ProteinComplex:
                 continue
             self.flattened[k] = d[selection]
 
-    def findInteractingChains(
+    def remove_duplicates(self, method: str = "coordinates") -> None:
+        """
+        Removes duplicate chains (keeps only one from the duplicates)
+
+        Args:
+            method: use 'coordinates' to remove duplicates based on 3d coordinates
+                    use 'sequence' to remove duplicates based on 1d amino-acid residues sequence
+        """
+        assert method in ["coordinates", "sequence"]
+
+        for comb in combinations(self.chains_data.keys(), 2):
+            print(comb)
+            if (
+                self.chains_data[comb[0]]["atom14_gt_positions"]
+                == self.chains_data[comb[1]]["atom14_gt_positions"]
+            ).all():
+                print(f"{comb[0]} and {comb[1]} are the same based on method={method}")
+                assert False, "not implemented yet"
+
+    def find_chains_interaction(
         self,
+        *,
         distance_threshold: float = 10.0,
         min_interacting_residues_count: int = 4,
+        minimal_chain_length: int = 10,
         assume_not_interacting_if_from_different_pdb_ids: bool = True,
         verbose: bool = True,
-    ) -> List[Tuple[Tuple[str, str], str]]:
+    ) -> Dict[str, List[Tuple[Tuple[str, str], str]]]:
         """
         returns a list of non-redundant pair tuples, e.g.:
         [(('7vux', 'A'), ('7vux', 'H')),
@@ -192,12 +221,12 @@ class ProteinComplex:
                 printing amount
 
         Returns:
-            a list of elements, each element is a tuple with two chains descriptors, describing the interacting chains pair
+            a dictionary containing both 'interacting_pairs' and 'non_interacting_pairs' entries, each containing
+                a list of elements, each element is a tuple with two chains descriptors, describing the interacting chains pair
         """
-        ans = []
-
-        all_pairs = 0
-        interacting_pairs = 0
+        interacting_pairs = []
+        too_few_residues_interacting_pairs = []
+        non_interacting_pairs = []
 
         for comb in combinations(self.chains_data.keys(), 2):
             chain_1_desc = comb[0]
@@ -210,11 +239,23 @@ class ProteinComplex:
                 if chain_1_pdb_id != chain_2_pdb_id:
                     if verbose:
                         print(
-                            "Not same pdb_id and assume_not_interacting_if_from_different_pdb_ids=True, skipping"
+                            "Not same pdb_id so assuming a non-interacting chain pair"
                         )
+                    non_interacting_pairs.append(comb)
                     continue
             print(comb)
-            if check_interacting(
+            if (
+                self.chains_data[chain_1_desc]["atom14_gt_positions"].shape[0]
+                < minimal_chain_length
+            ):
+                continue  # one of the elements is too small, skipping
+            if (
+                self.chains_data[chain_2_desc]["atom14_gt_positions"].shape[0]
+                < minimal_chain_length
+            ):
+                continue  # one of the elements is too small, skipping
+
+            interacting_residues_count = calculate_number_of_interacting_residues(
                 xyz_1=self.chains_data[chain_1_desc]["atom14_gt_positions"],
                 mask_1=self.chains_data[chain_1_desc]["atom14_gt_exists"],
                 #
@@ -222,24 +263,33 @@ class ProteinComplex:
                 mask_2=self.chains_data[chain_2_desc]["atom14_gt_exists"],
                 #
                 distance_threshold=distance_threshold,
-                min_interacting_residues_count=min_interacting_residues_count,
-            ):
+            )
+
+            if interacting_residues_count == 0:
                 if verbose:
-                    print(f"chains {chain_1_desc} and {chain_2_desc} are interacting!")
-                ans.append(comb)
-                interacting_pairs += 1
+                    print(f"chains {comb[0]} and {comb[1]} are NOT interacting")
+                non_interacting_pairs.append(comb)
+            elif interacting_residues_count >= min_interacting_residues_count:
+                if verbose:
+                    print(f"chains {chain_1_desc} and {chain_2_desc} are interacting")
+                interacting_pairs.append(comb)
             else:
                 if verbose:
-                    print(f"chains {comb[0]} and {comb[1]} are NOT interacting!")
-
-            all_pairs += 1
+                    print(
+                        f"chains {chain_1_desc} and {chain_2_desc} have some interaction, but it's below the defined min_interacting_residues_count={min_interacting_residues_count} threshold"
+                    )
+                too_few_residues_interacting_pairs.append(comb)
 
         if verbose:
             print(
-                f"out of total {all_pairs} pairs, {interacting_pairs} were interacting"
+                f"total interacting_pairs={len(interacting_pairs)} too_few_residues_interacting_pairs={len(too_few_residues_interacting_pairs)} non_interacting_pairs={len(non_interacting_pairs)}"
             )
 
-        return ans
+        return dict(
+            interacting_pairs=interacting_pairs,
+            too_few_residues_interacting_pairs=too_few_residues_interacting_pairs,
+            non_interacting_pairs=non_interacting_pairs,
+        )
 
     #    def check_interacting(self, chain_id_1, chain_id)
 
@@ -248,13 +298,13 @@ class ProteinComplex:
         raise NotImplementedError()
 
 
-def check_interacting(
+def calculate_number_of_interacting_residues(
+    *,
     xyz_1: torch.Tensor,
     mask_1: torch.Tensor,
     xyz_2: torch.Tensor,
     mask_2: torch.Tensor,
     distance_threshold: float,
-    min_interacting_residues_count: int,
     p_norm: float = 2.0,
     carbon_alpha_only: bool = True,
     verbose: bool = True,
@@ -275,7 +325,19 @@ def check_interacting(
     )
 
     found_interacting_residues_count = cond.sum()
-    ans = found_interacting_residues_count >= min_interacting_residues_count
-    if verbose:
-        print(f"found {found_interacting_residues_count} interacting residues")
-    return ans
+
+    if (found_interacting_residues_count / cond.numel()) > 0.9:
+        raise Exception(
+            "A suspicious case in which more than 90% of the residues pairs are interacting, possibly the same chain twice in same position?"
+        )
+    return found_interacting_residues_count
+
+
+if __name__ == "__main__":
+    comp = ProteinComplex()
+    # comp.add('1fvm')
+    # comp.add('2ohi')
+    # comp.add('3j3q', chain_ids=['gG','j1'])
+    comp.add("6enu")
+    comp.remove_duplicates(method="coordinates")
+    # comp.find_chains_interaction()
