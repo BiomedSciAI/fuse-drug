@@ -173,6 +173,7 @@ def load_protein_structure_features(
     chain_id_type: str = "author_assigned",
     device: str = "cpu",
     max_allowed_file_size_mbs: float = None,
+    also_return_mmcif_object: bool = False,
 ) -> Union[Tuple[str, dict], None]:
     """
     Extracts ground truth features from a given pdb_id or filename.
@@ -322,9 +323,14 @@ def load_protein_structure_features(
         data["chain_id"] = chain_id
 
     if return_dict:
-        return ans
+        final_ans = ans
+    else:
+        final_ans = ans[chain_id]
 
-    return ans[chain_id]
+    if also_return_mmcif_object:
+        final_ans = (final_ans, mmcif_object)
+
+    return final_ans
 
 
 def get_chain_native_features(

@@ -28,6 +28,7 @@ class ProteinComplex:
         load_protein_structure_features_overrides: Dict = None,
         min_chain_residues_count: int = 10,
         max_residue_type_part: float = 0.5,
+        allow_dna_or_rna_in_complex: bool = False,
     ) -> None:
         """
         Args:
@@ -48,17 +49,28 @@ class ProteinComplex:
         if load_protein_structure_features_overrides is None:
             load_protein_structure_features_overrides = {}
 
-        loaded_chains = load_protein_structure_features(
+        ans = load_protein_structure_features(
             pdb_id,
             pdb_id=pdb_id if len(pdb_id) == 4 else None,
             chain_id=chain_ids,
+            also_return_mmcif_object=True,
             **load_protein_structure_features_overrides,
-        )  # max_allowed_file_size_mbs
+        )
 
-        if loaded_chains is None:
+        if ans is None:
             if self.verbose:
-                print(f"could not find chains for pdb_id={pdb_id}")
+                print(f"ProteinComplex::add could not load pdb_id={pdb_id}")
             return
+
+        loaded_chains, mmcif_object = ans
+
+        if not allow_dna_or_rna_in_complex:
+            if mmcif_object.info["rna_or_dna_only_sequences_count"] > 0:
+                if self.verbose:
+                    print(
+                        f'dna or rna sequences are not allowed, and detected {mmcif_object.info["rna_or_dna_only_sequences_count"]}'
+                    )
+                return
 
         # min_chain_residues_count:int = 10,
         # max_residue_type_part:float = 0.5,
@@ -418,6 +430,6 @@ if __name__ == "__main__":
     # comp.add("6enu")
     # comp.add("1A2W")  # Homo 2-mer
     # comp.add("1a0r")  # Homo 2-mer
-    comp.add("1xbp")  # Homo 2-mer
+    comp.add("1xbp")  # had RNA
     # comp.remove_duplicates(method="coordinates")
     comp.calculate_chains_interaction_info()
