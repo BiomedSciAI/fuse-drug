@@ -165,7 +165,6 @@ class ProteinComplex:
 
         The code is heavily influenced from the spatial crop done in RF2
         """
-        print("TODO: add flag to support choosing only interacting sub-graphs!")
         if chains_descs is None:
             chains_descs = [desc for desc in self.chains_data.keys()]
 
@@ -245,8 +244,6 @@ class ProteinComplex:
         sel, _ = torch.sort(idx)
 
         self.apply_selection(sel)
-
-        print("remember to save a PDB to visualize this!")
 
     def spatial_crop_supporting_only_pair(
         self, crop_size: int = 256, distance_threshold: float = 10.0, eps: float = 1e-6
@@ -344,7 +341,7 @@ class ProteinComplex:
                 "atom14_gt_positions"
             ],  # note - it's "flattened" in the sense of data originating from multiple chains, it still has [residues, 14, 3] shape!
             sequence=self.flattened_data["aatype"],
-            residues_mask=self.flattened_data["atom14_gt_exists"].max(dim=-1)[0].shape,
+            residues_mask=self.flattened_data["atom14_gt_exists"].max(dim=-1)[0],
         )
 
     def has_chains_pair_with_identical_sequence(self, verbose: bool = True) -> bool:
@@ -541,34 +538,41 @@ def calculate_number_of_interacting_residues(
 
 if __name__ == "__main__":
     comp = ProteinComplex()
-    # comp.add('1fvm')
-    # comp.add('2ohi')
-    # comp.add('3j3q', chain_ids=['gG','j1'])
-    # comp.add("6enu")
-    # comp.add("1A2W")  # Homo 2-mer
-    # comp.add("1a0r")  # Homo 2-mer
-    # comp.add("1xbp")  # had RNA
-    # comp.add("4r4f")  # antibody + target + peptide interacting with the target (HIV related)
 
-    # comp.add("7vux") #ananas, for some reason, shows symmetry group C2 - is it because it "knows" that antibodies have double of each chain type? or just wrong?
+    chain_ids = None
 
-    # comp.add("2ZS0") #symmetry is shown on PDB website, but not in what we load or in what pyMOL shows be default - negative-pairs may be wrong!
+    pdb_id = "7vux"
 
-    # comp.add('3idx') #Ab with target - looks like no direct contact between light chain and the target
+    # pdb_id = "1fvm"
+    # pdb_id = "2ohi"
+
+    # pdb_id = "3j3q"
+    # chain_ids = ['gG','j1']
+
+    # pdb_id = "6enu"
+    # pdb_id = "1A2W" # Homo 2-mer
+    # pdb_id = "1a0r" # Homo 2-mer
+    # pdb_id = "1xbp" # had RNA
+    # pdb_id = "4r4f" # antibody + target + peptide interacting with the target (HIV related)
+    # pdb_id = "7vux" #ananas, for some reason, shows symmetry group C2 - is it because it "knows" that antibodies have double of each chain type? or just wrong?
+    # pdb_id = "2ZS0" #symmetry is shown on PDB website, but not in what we load or in what pyMOL shows be default - negative-pairs may be wrong!
+    # pdb_id = "3idx" #Ab with target - looks like no direct contact between light chain and the target
+    # pdb_id = "3vxn" # 3 chains, one is a tiny peptide (10 residues long) - shown by default as just backbone or something like that in pyMOL
+    # pdb_id = "3qt1" # complex with multiple parts - RNA polymerase II variant containing A Chimeric RPB9-C11 subunit
 
     comp.add(
-        "3qt1"
-    )  # complex with multiple parts - RNA polymerase II variant containing A Chimeric RPB9-C11 subunit
-
-    # comp.add(
-    #     "3vxn"
-    # )  # 3 chains, one is a tiny peptide (10 residues long) - shown by default as just backbone or something like that in pyMOL
+        pdb_id,
+        chain_ids=chain_ids,
+    )
 
     # comp.remove_duplicates(method="coordinates")
-    print(
-        "TODO: automate: find interactions, choose random one, choose random participating chain, keep only pairs that contain this chain, flatten relevant chains, and then do spatial crop"
-    )
+
     comp.calculate_chains_interaction_info()
-    comp.flatten()
-    comp.spatial_crop()
-    comp.save_flattened_to_pdb("/tmp/viz.pdb")
+    # comp.flatten()
+
+    for i in range(10):
+        crop_size = 256
+        comp.spatial_crop(crop_size=crop_size)
+        comp.save_flattened_to_pdb(
+            f"./spatial_crop_{pdb_id}_residues_{crop_size}_try_{i}.pdb"
+        )
