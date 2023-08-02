@@ -154,6 +154,7 @@ class ProteinComplex:
 
     def spatial_crop(
         self,
+        *,
         chains_descs: Optional[List[Tuple[str, str]]] = None,
         crop_size: int = 256,
         distance_threshold: float = 10.0,
@@ -541,7 +542,7 @@ if __name__ == "__main__":
 
     chain_ids = None
 
-    pdb_id = "7vux"
+    # pdb_id = "7vux"
 
     # pdb_id = "1fvm"
     # pdb_id = "2ohi"
@@ -559,6 +560,7 @@ if __name__ == "__main__":
     # pdb_id = "3idx" #Ab with target - looks like no direct contact between light chain and the target
     # pdb_id = "3vxn" # 3 chains, one is a tiny peptide (10 residues long) - shown by default as just backbone or something like that in pyMOL
     # pdb_id = "3qt1" # complex with multiple parts - RNA polymerase II variant containing A Chimeric RPB9-C11 subunit
+    pdb_id = "4hna"
 
     comp.add(
         pdb_id,
