@@ -222,7 +222,27 @@ class ProteinComplex:
         i, j = torch.where(cond)
         ifaces = torch.cat([i, j + first_chain_length])
         if len(ifaces) < 1:
-            raise Exception("No interface residues!")
+            print(
+                "warning: spatial_crop: No interface residues! fallbacking to simple crop"
+            )
+            all_available_residues = mask.sum(1) > 0
+            all_available_residues_indices = torch.nonzero(all_available_residues)[
+                ..., 0
+            ]
+            if (
+                len(all_available_residues_indices) <= crop_size
+            ):  # no need to crop beyond that
+                sel = all_available_residues_indices
+            else:
+                start_index = np.random.randint(
+                    len(all_available_residues_indices) - crop_size
+                )
+                sel = all_available_residues_indices[
+                    start_index : start_index + crop_size
+                ]
+
+            self.apply_selection(sel)
+            return
 
         # pick a random interface residue
         cnt_idx = ifaces[np.random.randint(len(ifaces))]
