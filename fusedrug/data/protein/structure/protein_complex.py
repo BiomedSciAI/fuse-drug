@@ -430,6 +430,20 @@ if __name__ == "__main__":
     # comp.add("6enu")
     # comp.add("1A2W")  # Homo 2-mer
     # comp.add("1a0r")  # Homo 2-mer
-    comp.add("1xbp")  # had RNA
+    # comp.add("1xbp")  # had RNA
+    # comp.add("4r4f")  # antibody + target + peptide interacting with the target (HIV related)
+
+    # comp.add("7vux") #ananas, for some reason, shows symmetry group C2 - is it because it "knows" that antibodies have double of each chain type? or just wrong?
+
+    # comp.add("2ZS0") #symmetry is shown on PDB website, but not in what we load or in what pyMOL shows be default - negative-pairs may be wrong!
+
+    # comp.add('3idx') #Ab with target - looks like no direct contact between light chain and the target
+
+    # comp.add('3qt1') # complex with multiple parts - RNA polymerase II variant containing A Chimeric RPB9-C11 subunit
+
+    comp.add(
+        "3vxn"
+    )  # 3 chains, one is a tiny peptide (10 residues long) - shown by default as just backbone or something like that in pyMOL
+
     # comp.remove_duplicates(method="coordinates")
     comp.calculate_chains_interaction_info()
