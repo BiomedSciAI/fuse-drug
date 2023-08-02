@@ -98,7 +98,7 @@ class ProteinComplex:
 
     def flatten(
         self,
-        chains_descs: List[Tuple[str, str]],
+        chains_descs: Optional[List[Tuple[str, str]]] = None,
         inter_chain_index_extra_offset: int = 1,
     ) -> None:
         """
@@ -109,6 +109,11 @@ class ProteinComplex:
         concat_seq = []
         concat_feats = defaultdict(list)
         next_start_residue_index = 0
+        if chains_descs is None:
+            chains_descs = [desc for desc in self.chains_data.keys()]
+
+        self.flattened_chain_parts = []
+
         for i, chain_desc in enumerate(chains_descs):
             seq = self.chains_data[chain_desc]["aa_sequence_str"]
             feats = self.chains_data[chain_desc]
@@ -117,6 +122,7 @@ class ProteinComplex:
                 concat_feats[k].append(d)
 
             length = feats["aatype"].shape[0]
+            # print(f'debug: {i} {chain_desc} length={length} ')
             concat_feats["residue_index"].append(
                 torch.arange(length) + next_start_residue_index
             )
@@ -124,18 +130,119 @@ class ProteinComplex:
 
             next_start_residue_index += length + inter_chain_index_extra_offset
 
+            ###
+            prev_real_end = (
+                self.flattened_chain_parts[-1][1]
+                if len(self.flattened_chain_parts) > 0
+                else 0
+            )
+            self.flattened_chain_parts += [(prev_real_end, prev_real_end + length)]
+
         for k, d in concat_feats.items():
             if isinstance(d[0], str):
                 concat_elem = ",".join(d)
             else:
                 concat_elem = torch.concat(d, dim=0)
+                # print(f'flatten - post concat: {k} shape={concat_elem.shape}')
             self.flattened_data[k] = concat_elem
 
         self.flattened_data["aa_sequence_str"] = "".join(concat_seq)
 
         self.chains_descs_for_flatten = chains_descs
+        # cumsums = np.cumsum([d['aatype'].shape[0] for k,d in self.chains_data.items()])
 
     def spatial_crop(
+        self, crop_size: int = 256, distance_threshold: float = 10.0, eps: float = 1e-6
+    ) -> None:
+        """
+        Spatial crop of a pair of chains which favors interacting residues.
+        Note - you must call "flatten" (with only two chain descriptor) prior to calling this method.
+
+        The code is heavily influenced from the spatial crop done in RF2
+        """
+        if not hasattr(self, "chains_descs_for_flatten"):
+            raise Exception("You must call flatten() method first.")
+
+        # if len(self.chains_descs_for_flatten) != 2:
+        #    raise Exception("")
+
+        chains_lengths = [
+            self.chains_data[chain_desc]["aatype"].shape[0]
+            for chain_desc in self.chains_descs_for_flatten
+        ]
+
+        orig_xyz = self.flattened_data["atom14_gt_positions"]
+        orig_mask = self.flattened_data["atom14_gt_exists"]
+
+        carbo_alpha_atom_index = 1
+
+        # randomize the order of the chains, the FIRST chain will be considered "anchor" and the method will favor
+        # adding residues from itself and interacting residues from other chains as well
+        # so, for example, if it created random chains order [3,1,0,2,4] it will favor adding residues which are part of cross-chain interaction in 3-1, 3-0, 3-2, 3-4
+        # and will NOT favor adding residues pairs that are part of, e.g. 2-4 interaction  ("2-4" means interaction between chain 2 and chain 4)
+        chains_order = np.random.permutation(len(chains_lengths))
+        # print('DEBUG! return to random permutation!')
+        # chains_order = np.arange(len(chains_lengths))
+
+        xyz = []
+        mask = []
+        for chain_index in chains_order:
+            start, end = self.flattened_chain_parts[chain_index]
+            print(chain_index, "->", end - start)
+            xyz += [orig_xyz[start:end]]
+            mask += [orig_mask[start:end]]
+
+        xyz = torch.cat(xyz)
+        mask = torch.cat(mask)
+
+        cond = (
+            torch.cdist(
+                xyz[: chains_lengths[0], carbo_alpha_atom_index],
+                xyz[chains_lengths[0] :, 1],
+                p=2,
+            )
+            < distance_threshold
+        )
+        # only keep residue for which both ground truth masks show it's legit (was actually experimentally determined)
+        cond = torch.logical_and(
+            cond,
+            mask[: chains_lengths[0], None, carbo_alpha_atom_index]
+            * mask[None, chains_lengths[0] :, carbo_alpha_atom_index],
+        )
+        i, j = torch.where(cond)
+        ifaces = torch.cat([i, j + chains_lengths[0]])
+        if len(ifaces) < 1:
+            raise Exception("No interface residues!")
+
+        # pick a random interface residue
+        cnt_idx = ifaces[np.random.randint(len(ifaces))]
+
+        # calculate distance from this residue to all other residues, and add an increasing epsilon
+        # it seems that:
+        # 1. the increasing epsilon would favor the N-terminus
+        # 2. the increasing epsilon would favor the first chain
+        # NOTE: we can modify it to not favor the first chain, while still favoring the N-terminus
+        dist = (
+            torch.cdist(
+                xyz[:, carbo_alpha_atom_index],
+                xyz[cnt_idx, carbo_alpha_atom_index][None],
+                p=2,
+            ).reshape(-1)
+            + torch.arange(len(xyz), device=xyz.device) * eps
+        )
+        # make sure that only residues with actual resolved position participate
+        cond = mask[:, carbo_alpha_atom_index] * mask[cnt_idx, carbo_alpha_atom_index]
+        dist[~cond.bool()] = 999999.9
+        _, idx = torch.topk(dist, crop_size, largest=False)
+
+        # sel, _ = torch.sort(sel[idx]) #this was the original, I wonder why they got "sel" from outside, maybe related to homo-oligomers?
+        sel, _ = torch.sort(idx)
+
+        self.apply_selection(sel)
+
+        print("remember to save a PDB to visualize this!")
+
+    def spatial_crop_supporting_only_pair(
         self, crop_size: int = 256, distance_threshold: float = 10.0, eps: float = 1e-6
     ) -> None:
         """
@@ -154,8 +261,8 @@ class ProteinComplex:
             for chain_desc in self.chains_descs_for_flatten
         ]
 
-        xyz = self.flattened["atom14_gt_positions"]
-        mask = self.flattened["atom14_gt_exists"]
+        xyz = self.flattened_data["atom14_gt_positions"]
+        mask = self.flattened_data["atom14_gt_exists"]
 
         carbo_alpha_atom_index = 1
 
@@ -439,11 +546,15 @@ if __name__ == "__main__":
 
     # comp.add('3idx') #Ab with target - looks like no direct contact between light chain and the target
 
-    # comp.add('3qt1') # complex with multiple parts - RNA polymerase II variant containing A Chimeric RPB9-C11 subunit
-
     comp.add(
-        "3vxn"
-    )  # 3 chains, one is a tiny peptide (10 residues long) - shown by default as just backbone or something like that in pyMOL
+        "3qt1"
+    )  # complex with multiple parts - RNA polymerase II variant containing A Chimeric RPB9-C11 subunit
+
+    # comp.add(
+    #     "3vxn"
+    # )  # 3 chains, one is a tiny peptide (10 residues long) - shown by default as just backbone or something like that in pyMOL
 
     # comp.remove_duplicates(method="coordinates")
     comp.calculate_chains_interaction_info()
+    comp.flatten()
+    comp.spatial_crop()
