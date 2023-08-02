@@ -625,14 +625,15 @@ def save_trajectory_to_pdb_file(
 
 
 def flexible_save_pdb_file(
+    *,
     xyz: torch.Tensor,
-    b_factors: torch.Tensor,
     sequence: torch.Tensor,
     residues_mask: torch.Tensor,
     save_path: str,
     model: int = 0,
     init_chain: str = "A",
     only_save_backbone: bool = False,
+    b_factors: Optional[torch.Tensor] = None,
 ) -> None:
     """
     saves a PDB file containing the provided coordinates.
@@ -688,6 +689,9 @@ def flexible_save_pdb_file(
         warn(
             f"flexible_save_pdb_file:: info: note that xyz contains {xyz.shape[1]} max atoms, and not max 14 atoms (all possible heavy atoms). This is ok if intentional, for example, when outputting only backbone."
         )
+
+    if b_factors is None:
+        b_factors = torch.tensor([100.0] * xyz.shape[0])
 
     builder = StructureBuilder.StructureBuilder()
     builder.init_structure(0)

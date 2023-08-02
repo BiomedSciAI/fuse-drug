@@ -1,6 +1,7 @@
 from typing import Union, List, Optional, Tuple, Dict
 from fusedrug.data.protein.structure.structure_io import (
     load_protein_structure_features,
+    flexible_save_pdb_file,
 )
 from itertools import combinations
 import torch
@@ -152,7 +153,11 @@ class ProteinComplex:
         # cumsums = np.cumsum([d['aatype'].shape[0] for k,d in self.chains_data.items()])
 
     def spatial_crop(
-        self, crop_size: int = 256, distance_threshold: float = 10.0, eps: float = 1e-6
+        self,
+        chains_descs: Optional[List[Tuple[str, str]]] = None,
+        crop_size: int = 256,
+        distance_threshold: float = 10.0,
+        eps: float = 1e-6,
     ) -> None:
         """
         Spatial crop of a pair of chains which favors interacting residues.
@@ -160,19 +165,9 @@ class ProteinComplex:
 
         The code is heavily influenced from the spatial crop done in RF2
         """
-        if not hasattr(self, "chains_descs_for_flatten"):
-            raise Exception("You must call flatten() method first.")
-
-        # if len(self.chains_descs_for_flatten) != 2:
-        #    raise Exception("")
-
-        chains_lengths = [
-            self.chains_data[chain_desc]["aatype"].shape[0]
-            for chain_desc in self.chains_descs_for_flatten
-        ]
-
-        orig_xyz = self.flattened_data["atom14_gt_positions"]
-        orig_mask = self.flattened_data["atom14_gt_exists"]
+        print("TODO: add flag to support choosing only interacting sub-graphs!")
+        if chains_descs is None:
+            chains_descs = [desc for desc in self.chains_data.keys()]
 
         carbo_alpha_atom_index = 1
 
@@ -180,25 +175,36 @@ class ProteinComplex:
         # adding residues from itself and interacting residues from other chains as well
         # so, for example, if it created random chains order [3,1,0,2,4] it will favor adding residues which are part of cross-chain interaction in 3-1, 3-0, 3-2, 3-4
         # and will NOT favor adding residues pairs that are part of, e.g. 2-4 interaction  ("2-4" means interaction between chain 2 and chain 4)
-        chains_order = np.random.permutation(len(chains_lengths))
+        chains_order = np.random.permutation(len(chains_descs))
         # print('DEBUG! return to random permutation!')
         # chains_order = np.arange(len(chains_lengths))
 
-        xyz = []
-        mask = []
-        for chain_index in chains_order:
-            start, end = self.flattened_chain_parts[chain_index]
-            print(chain_index, "->", end - start)
-            xyz += [orig_xyz[start:end]]
-            mask += [orig_mask[start:end]]
+        chains_descs = [chains_descs[i] for i in chains_order]
 
-        xyz = torch.cat(xyz)
-        mask = torch.cat(mask)
+        self.flatten(
+            chains_descs=chains_descs,
+        )
+
+        # xyz = []
+        # mask = []
+        # for chain_index in chains_order:
+        #     start, end = self.flattened_chain_parts[chain_index]
+        #     # print(chain_index, "->", end - start)
+        #     xyz += [orig_xyz[start:end]]
+        #     mask += [orig_mask[start:end]]
+        # xyz = torch.cat(xyz)
+        # mask = torch.cat(mask)
+
+        xyz = self.flattened_data["atom14_gt_positions"]
+        mask = self.flattened_data["atom14_gt_exists"]
+
+        first_chain_part = self.flattened_chain_parts[chains_order[0]]
+        first_chain_length = first_chain_part[1] - first_chain_part[0]
 
         cond = (
             torch.cdist(
-                xyz[: chains_lengths[0], carbo_alpha_atom_index],
-                xyz[chains_lengths[0] :, 1],
+                xyz[:first_chain_length, carbo_alpha_atom_index],
+                xyz[first_chain_length:, 1],
                 p=2,
             )
             < distance_threshold
@@ -206,11 +212,11 @@ class ProteinComplex:
         # only keep residue for which both ground truth masks show it's legit (was actually experimentally determined)
         cond = torch.logical_and(
             cond,
-            mask[: chains_lengths[0], None, carbo_alpha_atom_index]
-            * mask[None, chains_lengths[0] :, carbo_alpha_atom_index],
+            mask[:first_chain_length, None, carbo_alpha_atom_index]
+            * mask[None, first_chain_length:, carbo_alpha_atom_index],
         )
         i, j = torch.where(cond)
-        ifaces = torch.cat([i, j + chains_lengths[0]])
+        ifaces = torch.cat([i, j + first_chain_length])
         if len(ifaces) < 1:
             raise Exception("No interface residues!")
 
@@ -322,14 +328,24 @@ class ProteinComplex:
         if not hasattr(self, "chains_descs_for_flatten"):
             raise Exception("You must call flatten() method first.")
 
-        self.flattened["aa_sequence_str"] = "".join(
-            np.array(list(self.flattened["aa_sequence_str"]))[selection].tolist()
+        self.flattened_data["aa_sequence_str"] = "".join(
+            np.array(list(self.flattened_data["aa_sequence_str"]))[selection].tolist()
         )
 
-        for k, d in self.flattened.items():
-            if k in ["resolution", "pdb_id", "chain_id"]:
+        for k, d in self.flattened_data.items():
+            if k in ["resolution", "pdb_id", "chain_id", "aa_sequence_str"]:
                 continue
-            self.flattened[k] = d[selection]
+            self.flattened_data[k] = d[selection]
+
+    def save_flattened_to_pdb(self, out_pdb_filename: str) -> None:
+        flexible_save_pdb_file(
+            save_path=out_pdb_filename,
+            xyz=self.flattened_data[
+                "atom14_gt_positions"
+            ],  # note - it's "flattened" in the sense of data originating from multiple chains, it still has [residues, 14, 3] shape!
+            sequence=self.flattened_data["aatype"],
+            residues_mask=self.flattened_data["atom14_gt_exists"].max(dim=-1)[0].shape,
+        )
 
     def has_chains_pair_with_identical_sequence(self, verbose: bool = True) -> bool:
         for comb in combinations(self.chains_data.keys(), 2):
@@ -487,12 +503,6 @@ class ProteinComplex:
             non_interacting_pairs=non_interacting_pairs,
         )
 
-    #    def check_interacting(self, chain_id_1, chain_id)
-
-    def spatialCrop(self) -> None:
-
-        raise NotImplementedError()
-
 
 def calculate_number_of_interacting_residues(
     *,
@@ -555,6 +565,10 @@ if __name__ == "__main__":
     # )  # 3 chains, one is a tiny peptide (10 residues long) - shown by default as just backbone or something like that in pyMOL
 
     # comp.remove_duplicates(method="coordinates")
+    print(
+        "TODO: automate: find interactions, choose random one, choose random participating chain, keep only pairs that contain this chain, flatten relevant chains, and then do spatial crop"
+    )
     comp.calculate_chains_interaction_info()
     comp.flatten()
     comp.spatial_crop()
+    comp.save_flattened_to_pdb("/tmp/viz.pdb")
