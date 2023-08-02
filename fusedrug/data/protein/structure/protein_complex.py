@@ -198,6 +198,10 @@ class ProteinComplex:
         xyz = self.flattened_data["atom14_gt_positions"]
         mask = self.flattened_data["atom14_gt_exists"]
 
+        if xyz.shape[0] <= crop_size:
+            print(f"no need for multimer crop, shape is already {xyz.shape[0]}")
+            return
+
         first_chain_part = self.flattened_chain_parts[chains_order[0]]
         first_chain_length = first_chain_part[1] - first_chain_part[0]
 
