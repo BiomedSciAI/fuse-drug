@@ -1,13 +1,11 @@
-"Amino Acid sequence processing utilities."
 from collections import OrderedDict
 from typing import List, Union, Optional, Dict
 
 special_token_marker = [
     "<",
     ">",
-]  # In order to avoid confusion between AA symbols and SMILES symbols (e.g. 'H' is both
-# amino acid Histidine, and a Hydrogen atom in SMILES), and also between special tokens and viable AA/SMILES sequences,
-# we a. define individual AAs as special tokens; and b. mark every special token with special token markers (e.g. 'SEP' -> '<SEP>').
+]  
+# We mark every special token with special token markers (e.g. 'SEP' -> '<SEP>').
 # The markers are configurable, in case we come upon a representation that already uses similar characters (such as '[]' in SMILES).
 # The special tokens defined below are without the markers. The function get_special_tokens() adds the markers and returns all the
 # tokens. The function special_mark(input) takes a sequence, and marks every character in it (e.g. 'ABC' -> '<A><B><C>')
@@ -19,6 +17,8 @@ special_tokens = {
     "mask_token": "MASK",  # Mask token
     "eos_token": "EOS",  # End of Sentence token
 }
+
+# Remember: do not use the below tokens as is. They must be wrapped by token markers ('<', '>') first, using special_wrap_input()
 task_tokens = [  # pairwise tasks
     "MOLECULAR_ENTITY",  # the token following this marks which specific type of molecular entity comes next
     "GLOBAL_INTERACTION_ATTRIBUTES",  # the token following this marks which global attribute type is encoded next
