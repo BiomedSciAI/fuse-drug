@@ -4,7 +4,7 @@ from typing import List, Union, Optional, Dict
 special_token_marker = [
     "<",
     ">",
-]  
+]
 # We mark every special token with special token markers (e.g. 'SEP' -> '<SEP>').
 # The markers are configurable, in case we come upon a representation that already uses similar characters (such as '[]' in SMILES).
 # The special tokens defined below are without the markers. The function get_special_tokens() adds the markers and returns all the
