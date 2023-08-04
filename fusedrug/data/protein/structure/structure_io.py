@@ -299,10 +299,18 @@ def load_protein_structure_features(
                 use_chain_id = chain_id
 
             gt_all_mmcif_feats = get_chain_data(mmcif_object, chain_id=use_chain_id)
+
             # move to device a selected subset
             gt_mmcif_feats = {
                 k: gt_all_mmcif_feats[k]
-                for k in ["aatype", "all_atom_positions", "all_atom_mask", "resolution"]
+                for k in [
+                    "aatype",
+                    "all_atom_positions",
+                    "all_atom_mask",
+                    "resolution",
+                    "residue_index",
+                    "chain_index",
+                ]
             }
 
             to_tensor = lambda t: torch.tensor(np.array(t)).to(device)
