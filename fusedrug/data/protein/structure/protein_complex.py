@@ -118,6 +118,8 @@ class ProteinComplex:
         for i, chain_desc in enumerate(chains_descs):
             seq = self.chains_data[chain_desc]["aa_sequence_str"]
             feats = self.chains_data[chain_desc]
+            feats.pop("residue_index")  # we'll create it ourselves
+            feats.pop("chain_index")  # we'll create it ourselves
             concat_seq.append(seq)
             for k, d in feats.items():
                 concat_feats[k].append(d)
@@ -139,7 +141,20 @@ class ProteinComplex:
             )
             self.flattened_chain_parts += [(prev_real_end, prev_real_end + length)]
 
+        first_items_num = None
+        first_item_key = None
         for k, d in concat_feats.items():
+
+            # sanity checks (we've had scenarios in which residue_index and chain_index were added twice)
+            if first_items_num is None:
+                first_items_num = len(d)
+                first_item_key = k
+            else:
+                if len(d) != first_items_num:
+                    raise Exception(
+                        f"mismatch in concat features elements num! {first_items_num} vs. {len(d)} for keys {first_item_key} vs. {k} respectively. Perhaps you are adding something twice?"
+                    )
+
             if isinstance(d[0], str):
                 concat_elem = ",".join(d)
             else:
@@ -148,6 +163,13 @@ class ProteinComplex:
             self.flattened_data[k] = concat_elem
 
         self.flattened_data["aa_sequence_str"] = "".join(concat_seq)
+
+        if len(self.flattened_data["aa_sequence_str"]) != len(
+            self.flattened_data["residue_index"]
+        ):
+            import ipdb
+
+            ipdb.set_trace()
 
         self.chains_descs_for_flatten = chains_descs
         # cumsums = np.cumsum([d['aatype'].shape[0] for k,d in self.chains_data.items()])
@@ -584,7 +606,8 @@ if __name__ == "__main__":
     # pdb_id = "3idx" #Ab with target - looks like no direct contact between light chain and the target
     # pdb_id = "3vxn" # 3 chains, one is a tiny peptide (10 residues long) - shown by default as just backbone or something like that in pyMOL
     # pdb_id = "3qt1" # complex with multiple parts - RNA polymerase II variant containing A Chimeric RPB9-C11 subunit
-    pdb_id = "4hna"
+    # pdb_id = "4hna"
+    pdb_id = "6ru8"  # the symmetry there isn't clear
 
     comp.add(
         pdb_id,
