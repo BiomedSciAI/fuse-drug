@@ -164,13 +164,6 @@ class ProteinComplex:
 
         self.flattened_data["aa_sequence_str"] = "".join(concat_seq)
 
-        if len(self.flattened_data["aa_sequence_str"]) != len(
-            self.flattened_data["residue_index"]
-        ):
-            import ipdb
-
-            ipdb.set_trace()
-
         self.chains_descs_for_flatten = chains_descs
         # cumsums = np.cumsum([d['aatype'].shape[0] for k,d in self.chains_data.items()])
 
