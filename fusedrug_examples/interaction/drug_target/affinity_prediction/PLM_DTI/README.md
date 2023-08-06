@@ -19,5 +19,5 @@ To run training followed by test inference, simply run `python runner.py`.
 Unless specified otherwise as an argument, the default parameter file found under `confings/config.yaml` is used. Note that you are expected to set the environment variable `DTI_RESULTS` to a local path of your choice. Results will be saved there.
 
 To run in test only mode, for example using with out DTI benchmark config, run:
-`python runner.py --config-path=configs --config-name=config_dti_benchmark +test.checkpoint=/path/to/trained/model.ckpt`,
+`python test.py --config-path=configs --config-name=config_dti_benchmark +test.checkpoint=/path/to/trained/model.ckpt`,
 pointing to an already trained model file path.

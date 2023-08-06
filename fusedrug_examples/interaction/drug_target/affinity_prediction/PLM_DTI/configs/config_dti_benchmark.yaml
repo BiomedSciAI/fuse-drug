@@ -34,15 +34,17 @@ benchmark_data:
   pairs_tsv: ${benchmark_data.root_path}/${benchmark_data.version}/pairs/merged_bindingdb_chembl_pubchem_${benchmark_data.version}@native@single_protein_target@affinity_pairs_v0.1${benchmark_data.limit_postfix}.tsv
   ligands_tsv: ${benchmark_data.root_path}/${benchmark_data.version}/ligand/merged_bindingdb_chembl_pubchem_${benchmark_data.version}@native@single_protein_target@ligands${benchmark_data.limit_postfix}.tsv
   targets_tsv: ${benchmark_data.root_path}/${benchmark_data.version}/target/merged_bindingdb_chembl_pubchem_${benchmark_data.version}@native@single_protein_target@targets${benchmark_data.limit_postfix}.tsv
-  # lenient split:
-  splits_tsv: ${benchmark_data.root_path}/${benchmark_data.version}/splits/splits/${benchmark_data.split}/split_lenient_0.14_0.14_0.14_0.14_0.14_0.15_0.15${benchmark_data.limit_postfix}.tsv
-  # cold_ligand split:
-  #splits_tsv: ${benchmark_data.root_path}/splits/splits/${benchmark_data.split}/split_cold_ligand_0.7_0.15_0.15.tsv
-  # cold_target split:
-  #splits_tsv: ${benchmark_data.root_path}/splits/splits/${benchmark_data.split}/split_cold_target_0.7_0.15_0.15.tsv
-  # temporal split:
-  #splits_tsv: ${benchmark_data.root_path}/splits/splits/${benchmark_data.split}/split_temporal_0.7_0.15_0.15.tsv
-  split: lenient # split if using task="benchmark". can be "lenient", "cond-target", "cold-ligand", "temporal".
+  splits_tsv: ${benchmark_data.root_path}/${benchmark_data.version}/splits/splits/${benchmark_data.split}/${benchmark_data.split_filename}
+  split: lenient # split if using task="benchmark". can be "lenient", "cold_target", "cold_ligand", "temporal".
+  ### Uncomment the appropriate filename from the below: ###
+  ## lenient split filename:
+  split_filename: split_lenient_0.14_0.14_0.14_0.14_0.14_0.15_0.15${benchmark_data.limit_postfix}.tsv
+  ## cold_ligand split filename:
+  #split_filename: split_cold_ligand_0.7_0.15_0.15${benchmark_data.limit_postfix}.tsv
+  ## cold_target split filename:
+  #split_filename: split_cold_target_0.7_0.15_0.15${benchmark_data.limit_postfix}.tsv
+  ## temporal split filename:
+  #split_filename: split_temporal_0.7_0.15_0.15${benchmark_data.limit_postfix}.tsv
   train_folds:
   - train1
   - train2
