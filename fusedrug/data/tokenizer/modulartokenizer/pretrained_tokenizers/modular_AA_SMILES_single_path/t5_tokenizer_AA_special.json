@@ -2405,6 +2405,15 @@
       "rstrip": false,
       "normalized": false,
       "special": true
+    },
+    {
+      "id": 267,
+      "content": "<EPITOPE_PARATOPE_PREDICTION>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
     }
   ],
   "normalizer": null,
@@ -2693,6 +2702,7 @@
       "<ATTRIBUTE_ORGANISM_MOUSE>": 264,
       "<ATTRIBUTE_ORGANISM_MONKEY>": 265,
       "<ATTRIBUTE_ORGANISM_CAMEL>": 266,
+      "<EPITOPE_PARATOPE_PREDICTION>": 267,
       "A": 501,
       "B": 502,
       "C": 503,
