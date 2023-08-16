@@ -287,6 +287,7 @@ task_tokens = [  # pairwise tasks
     "ATTRIBUTE_ORGANISM_MOUSE",
     "ATTRIBUTE_ORGANISM_MONKEY",
     "ATTRIBUTE_ORGANISM_CAMEL",
+    "EPITOPE_PARATOPE_PREDICTION",
 ]
 
 AA_tokens = [
