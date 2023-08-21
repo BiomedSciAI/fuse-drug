@@ -281,3 +281,9 @@ class FastModularTokenizer(OpBase):
             )
 
         return sample_dict
+
+    def get_tokenizer(self) -> Tokenizer:
+        return self._tokenizer
+
+    def add_special_tokens(self, tokens: list[str]) -> int:
+        self._tokenizer.add_special_tokens(tokens)
