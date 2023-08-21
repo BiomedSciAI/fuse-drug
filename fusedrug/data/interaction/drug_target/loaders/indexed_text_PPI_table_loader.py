@@ -14,13 +14,13 @@ class IndexedTextPPITableLoader(OpBase):
         table_file_loc: Optional[str] = None,
         id_column_index: int = 0,
         separator: str = " ",
-        allow_access_by_id: bool = False, # best leave it at False for large files
+        allow_access_by_id: bool = False,  # best leave it at False for large files
         **kwargs: dict,
     ):
         """
         :param table_file_loc: location of .txt file
-            the file format is expected to be a text file in which each line is expected to be ' ' separated, 
-            containing the columns named 
+            the file format is expected to be a text file in which each line is expected to be ' ' separated,
+            containing the columns named
         """
         super().__init__(**kwargs)
         self._table_file_loc = table_file_loc
@@ -29,7 +29,7 @@ class IndexedTextPPITableLoader(OpBase):
         self._allow_access_by_id = allow_access_by_id
         self._indexed_text_table = IndexedTextTable(
             table_file_loc,
-            seperator = self._separator,
+            seperator=self._separator,
             id_column_idx=self._id_column_index,
             allow_access_by_id=self._allow_access_by_id,
         )
@@ -37,7 +37,7 @@ class IndexedTextPPITableLoader(OpBase):
     def __call__(
         self,
         sample_dict: NDict,
-        key_out_seq: str = "data.gt",        
+        key_out_seq: str = "data.gt",
     ) -> NDict:
         sid = get_sample_id(sample_dict)
         assert isinstance(sid, int)
