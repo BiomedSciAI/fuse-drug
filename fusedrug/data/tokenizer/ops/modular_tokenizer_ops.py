@@ -5,7 +5,7 @@ from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import (
 )
 from warnings import warn
 from collections import defaultdict
-from typing import Tuple, Optional, Union, Any
+from typing import Tuple, Optional, Union, Any, List
 import os
 import re
 
@@ -285,5 +285,5 @@ class FastModularTokenizer(OpBase):
     def get_tokenizer(self) -> Tokenizer:
         return self._tokenizer
 
-    def add_special_tokens(self, tokens: list[str]) -> int:
+    def add_special_tokens(self, tokens: List[str]) -> int:
         self._tokenizer.add_special_tokens(tokens)
