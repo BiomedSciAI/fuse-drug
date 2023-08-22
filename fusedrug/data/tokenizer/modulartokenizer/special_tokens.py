@@ -22,10 +22,17 @@ special_tokens = {
 task_tokens = [  # pairwise tasks
     "MOLECULAR_ENTITY",  # the token following this marks which specific type of molecular entity comes next
     "GLOBAL_INTERACTION_ATTRIBUTES",  # the token following this marks which global attribute type is encoded next
+    "MOLECULAR_ENTITY_GENERAL_PROTEIN",
     "MOLECULAR_ENTITY_ANTIGEN",
     "MOLECULAR_ENTITY_EPITOPE",
     "MOLECULAR_ENTITY_ANTIBODY_HEAVY_CHAIN",
     "MOLECULAR_ENTITY_ANTIBODY_LIGHT_CHAIN",
+    "MOLECULAR_ENTITY_ANTIBODY_LIGHT_CHAIN_CDR1",
+    "MOLECULAR_ENTITY_ANTIBODY_LIGHT_CHAIN_CDR2",
+    "MOLECULAR_ENTITY_ANTIBODY_LIGHT_CHAIN_CDR3",
+    "MOLECULAR_ENTITY_ANTIBODY_HEAVY_CHAIN_CDR1",
+    "MOLECULAR_ENTITY_ANTIBODY_HEAVY_CHAIN_CDR2",
+    "MOLECULAR_ENTITY_ANTIBODY_HEAVY_CHAIN_CDR3",
     "MOLECULAR_ENTITY_TCR_ALPHA_CHAIN",  # TCR "light" chain - only V, J and C segments
     "MOLECULAR_ENTITY_TCR_BETA_VDJ",  # TCR "heavy" chain - V(ariable), D(iversity), and J(oining) segments, as well as the C(onstant) segment
     "MOLECULAR_ENTITY_TCR_BETA_CDR3",

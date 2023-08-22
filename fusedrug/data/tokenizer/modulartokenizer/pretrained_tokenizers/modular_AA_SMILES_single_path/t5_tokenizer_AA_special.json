@@ -2414,6 +2414,69 @@
       "rstrip": false,
       "normalized": false,
       "special": true
+    },
+    {
+      "id": 268,
+      "content": "<MOLECULAR_ENTITY_ANTIBODY_HEAVY_CHAIN_CDR1>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 269,
+      "content": "<MOLECULAR_ENTITY_ANTIBODY_LIGHT_CHAIN_CDR3>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 270,
+      "content": "<MOLECULAR_ENTITY_ANTIBODY_HEAVY_CHAIN_CDR3>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 271,
+      "content": "<MOLECULAR_ENTITY_ANTIBODY_LIGHT_CHAIN_CDR2>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 272,
+      "content": "<MOLECULAR_ENTITY_ANTIBODY_HEAVY_CHAIN_CDR2>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 273,
+      "content": "<MOLECULAR_ENTITY_ANTIBODY_LIGHT_CHAIN_CDR1>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 274,
+      "content": "<MOLECULAR_ENTITY_GENERAL_PROTEIN>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
     }
   ],
   "normalizer": null,
@@ -2703,6 +2766,13 @@
       "<ATTRIBUTE_ORGANISM_MONKEY>": 265,
       "<ATTRIBUTE_ORGANISM_CAMEL>": 266,
       "<EPITOPE_PARATOPE_PREDICTION>": 267,
+      "<MOLECULAR_ENTITY_ANTIBODY_HEAVY_CHAIN_CDR1>": 268,
+      "<MOLECULAR_ENTITY_ANTIBODY_LIGHT_CHAIN_CDR3>": 269,
+      "<MOLECULAR_ENTITY_ANTIBODY_HEAVY_CHAIN_CDR3>": 270,
+      "<MOLECULAR_ENTITY_ANTIBODY_LIGHT_CHAIN_CDR2>": 271,
+      "<MOLECULAR_ENTITY_ANTIBODY_HEAVY_CHAIN_CDR2>": 272,
+      "<MOLECULAR_ENTITY_ANTIBODY_LIGHT_CHAIN_CDR1>": 273,
+      "<MOLECULAR_ENTITY_GENERAL_PROTEIN>": 274,
       "A": 501,
       "B": 502,
       "C": 503,
