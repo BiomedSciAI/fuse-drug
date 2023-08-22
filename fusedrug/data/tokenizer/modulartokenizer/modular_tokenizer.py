@@ -1402,7 +1402,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         raise Exception("Not implemented")
 
     @staticmethod
-    def from_file(path: str) -> object:
+    def from_file(path: str) -> "ModularTokenizer":
         """
         Accepts a file or directory, and loads a modular tokenizer stored in that directory
 
