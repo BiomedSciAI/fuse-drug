@@ -42,6 +42,8 @@ task_tokens = [  # pairwise tasks
     "GENESEQ",  # Genetic sequence from AAs (SMILES)
     "INCREASE",  # Given a molecule and a property, generate a new molecule with increased property
     "DECREASE",  # Given a molecule and a property, generate a new molecule with decreased property
+    "DIFFUSION",  # Discrete diffusion task
+    "TIMESTEP",  # Timestep tkn for the discrete diffusion task
     # Structure prediction
     "STRUCTURE",  # predict 3D structure from sequence
     "DISTANCE",  # Given a protein and two groups of AAs in it, predicts the distance between the AA groups within a folded protein.

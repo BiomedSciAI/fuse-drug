@@ -2414,6 +2414,24 @@
       "rstrip": false,
       "normalized": false,
       "special": true
+    },
+    {
+      "id": 268,
+      "content": "<TIMESTEP>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 269,
+      "content": "<DIFFUSION>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
     }
   ],
   "normalizer": null,
@@ -2697,6 +2715,8 @@
       "<ATTRIBUTE_ORGANISM_MONKEY>": 265,
       "<ATTRIBUTE_ORGANISM_CAMEL>": 266,
       "<EPITOPE_PARATOPE_PREDICTION>": 267,
+      "<TIMESTEP>": 268,
+      "<DIFFUSION>": 269,
       "#": 527,
       "%": 528,
       "(": 529,
