@@ -6,7 +6,10 @@ from typing import Dict, Optional, Any, List
 from collections.abc import Generator
 from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import TypedInput
 
-from special_tokens import get_additional_tokens, get_special_tokens_dict
+from fusedrug.data.tokenizer.modulartokenizer.special_tokens import (
+    get_additional_tokens,
+    get_special_tokens_dict,
+)
 from tokenizers import (
     models,
     trainers,

@@ -87,9 +87,11 @@ The example loads a ready ModularTokenizer stored here: [Word AA + BPE SMILES, p
 
 ### Adding special tokens steps:
 An example of adding special tokens to an existing tokenizer is found here: [ModularTokenizer update](test_multi_tokenizer_use.py#L35). The steps are as follows:
+
 Short version:
 * Update task_tokens in [special_tokens.py](special_tokens.py) with the required tokens in
-* Run [ModularTokenizer use](test_multi_tokenizer_use.py)
+* Run [test_multi_tokenizer_use](test_multi_tokenizer_use.py)
+
 Long version:
 * Load an existing modular tokenizer, like [here](test_multi_tokenizer_use.py#L30)
 * Create a list of the required tokens, similarly to [here](test_multi_tokenizer_use.py#L35)
