@@ -2477,6 +2477,24 @@
       "rstrip": false,
       "normalized": false,
       "special": true
+    },
+    {
+      "id": 275,
+      "content": "<TIMESTEP>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 276,
+      "content": "<DIFFUSION>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
     }
   ],
   "normalizer": null,
@@ -2767,6 +2785,8 @@
       "<MOLECULAR_ENTITY_ANTIBODY_HEAVY_CHAIN_CDR2>": 272,
       "<MOLECULAR_ENTITY_ANTIBODY_LIGHT_CHAIN_CDR1>": 273,
       "<MOLECULAR_ENTITY_GENERAL_PROTEIN>": 274,
+      "<TIMESTEP>": 275,
+      "<DIFFUSION>": 276,
       "#": 527,
       "%": 528,
       "(": 529,
