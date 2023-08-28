@@ -19,7 +19,7 @@ transformers
 termcolor
 xmlrunner
 pytoda @ git+https://git@github.com/PaccMann/paccmann_datasets/@0.2.5#egg=pytoda
-tiny_openfold @ git+https://github.ibm.com/YOELS/tiny_openfold
+tiny_openfold @ git+git@github.ibm.com:YOELS/tiny_openfold.git
 dm-tree
 ml_collections
 abnumber @ git+https://github.com/prihoda/AbNumber

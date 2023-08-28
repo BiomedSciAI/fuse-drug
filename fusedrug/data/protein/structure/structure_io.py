@@ -168,6 +168,7 @@ def save_structure_file(
 
 def load_protein_structure_features(
     pdb_id_or_filename: str,
+    *,
     pdb_id: Optional[str] = None,
     chain_id: Optional[Union[Union[str, int], List[Union[str, int]]]] = None,
     chain_id_type: str = "author_assigned",
