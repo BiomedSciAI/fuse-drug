@@ -694,7 +694,7 @@ def flexible_save_pdb_file(
         )
         xyz = xyz[:, :4, ...]
 
-    if xyz.shape[1] != 14:
+    elif xyz.shape[1] != 14:
         warn(
             f"flexible_save_pdb_file:: info: note that xyz contains {xyz.shape[1]} max atoms, and not max 14 atoms (all possible heavy atoms). This is ok if intentional, for example, when outputting only backbone."
         )
