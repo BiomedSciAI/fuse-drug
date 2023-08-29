@@ -17,7 +17,7 @@ try:
 
 except ImportError:
     print(
-        "ERROR: had a problem importing abnumber, please install using 'pip install abnumber'"
+        "ERROR: had a problem importing abnumber, please install using 'conda install -c bioconda abnumber'"
     )
     raise
 from typing import Tuple
