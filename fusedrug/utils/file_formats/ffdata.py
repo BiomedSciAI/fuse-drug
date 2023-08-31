@@ -41,7 +41,7 @@ class FFData:
                 lengths = []
 
                 with open(self.ffindex_filename, "r") as f_index:
-                    for line in tqdm(f_index.readlines()):
+                    for line in tqdm(f_index):
                         name, offset, length = line.split()
                         names.append(int(name))
                         offsets.append(int(offset))
