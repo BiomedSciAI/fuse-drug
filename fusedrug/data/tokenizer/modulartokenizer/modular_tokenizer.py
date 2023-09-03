@@ -806,10 +806,12 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         if input_type not in self.tokenizers_info:
             raise Exception(f"Input type {input_type} not found")
         try:
-            encoded = self.tokenizers_info[input_type]["tokenizer_inst"].encode(data_str)
+            encoded = self.tokenizers_info[input_type]["tokenizer_inst"].encode(
+                data_str
+            )
         except Exception as e:
             raise e
-        
+
         if len(encoded.overflowing) > 0:
             print(
                 f"Warning: FastTokenizer had to truncate sequence. Original Sequence Length = {len(data_str)}, max tokens supported = {self.tokenizers_info[input_type]['max_len']}, exceeded by {len(encoded.overflowing[0].ids)} tokens, for tokenizer: {input_type}"
