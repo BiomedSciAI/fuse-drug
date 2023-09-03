@@ -12,7 +12,7 @@ class IndexedTextPPITableLoader(OpBase):
 
     def __init__(
         self,
-        table_file_loc: str = None,
+        table_file_loc: Optional[str] = None,
         id_column_index: int = 0,
         separator: str = " ",
         allow_access_by_id: bool = False,  # best leave it at False for large files
