@@ -4,7 +4,7 @@ splits to train/val/test/etc. sets based on cluster_using_mmseqs.py output
 
 from frozendict import frozendict
 from typing import Dict, List
-from os.path import join, dirname, basename
+from os.path import join, dirname, basename, isfile
 import mmap
 import numpy as np
 from collections import defaultdict
@@ -15,6 +15,7 @@ def split(
     cluster_center_column_name: str,
     columns_names: List[str] = None,
     splits_desc: Dict = frozendict(train=0.90, val=0.05, test=0.05),
+    force_recreate: bool = True,
 ) -> Dict:
     """
     Gets a cluster tsv file (usually the output of cluster_using_mmseqs.py:cluster() call
@@ -42,12 +43,23 @@ def split(
             6y6x_LW 6y6x_LW
         splits_desc - a dictionary representing the names and proportions of the sets
 
+        force_recreate: would override files if already created. defaults to True to be backward compatible
+            set force_recreate=False to skip if ANY of the output files are already found
+
+
         returns: a dictionary that maps the requested sets names to the generates files paths
     """
     files_names = {
         set_name: join(dirname(cluster_tsv), f"{set_name}@" + basename(cluster_tsv))
         for (set_name, _) in splits_desc.items()
     }
+
+    if not force_recreate:
+        for _, filepath in files_names.items():
+            if isfile(filepath):
+                print(f'spotted an already existing "{filepath}" to not recreating.')
+                return files_names
+
     files_handles = {
         set_name: open(filename, "wb") for (set_name, filename) in files_names.items()
     }

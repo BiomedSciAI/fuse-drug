@@ -119,7 +119,7 @@ def cluster(
     if which_mmseqs is None:
         raise Exception(
             "Please install mmseqs2 . See install instructions here: https://github.com/soedinglab/MMseqs2 "
-            "Also note that you can download prebuilt static binaries such as: https://mmseqs.com/latest/mmseqs-linux-sse41.tar.gz - extract and add the binary to your system PATH."
+            "Also note that you can download prebuilt static binaries such as: https://mmseqs.com/latest/mmseqs-linux-sse41.tar.gz - extract and d the binary to your system PATH."
         )
     else:
         print(f"identified mmseqs binary at: {which_mmseqs}")

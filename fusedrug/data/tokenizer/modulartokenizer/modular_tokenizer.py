@@ -371,7 +371,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         return output
 
     @staticmethod
-    def load_from_jsons(tokenizers_info: List) -> Any:
+    def load_from_jsons(tokenizers_info: List) -> "ModularTokenizer":
         """Reads a list of json paths (from tokenizer_info dictionary, as defined in the config), that were created by ModularTokenizer.save_jsons, and creates a modular tokenizer, keeping the ID mappings
         of the jsons.
 
@@ -392,7 +392,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         )
 
     @staticmethod
-    def load(path: str) -> Any:
+    def load(path: str) -> "ModularTokenizer":
         """Reads all information that was saved by ModularTokenizer.save(), and creates a modular tokenizer based on it.
 
         Args:
@@ -805,8 +805,12 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
 
         if input_type not in self.tokenizers_info:
             raise Exception(f"Input type {input_type} not found")
-
-        encoded = self.tokenizers_info[input_type]["tokenizer_inst"].encode(data_str)
+        try:
+            encoded = self.tokenizers_info[input_type]["tokenizer_inst"].encode(
+                data_str
+            )
+        except Exception as e:
+            raise e
 
         if len(encoded.overflowing) > 0:
             print(
@@ -1402,7 +1406,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         raise Exception("Not implemented")
 
     @staticmethod
-    def from_file(path: str) -> object:
+    def from_file(path: str) -> "ModularTokenizer":
         """
         Accepts a file or directory, and loads a modular tokenizer stored in that directory
 
