@@ -2,11 +2,12 @@ from typing import Optional
 from fuse.utils import NDict
 from fuse.data import OpBase, get_sample_id
 from fusedrug.utils.file_formats import IndexedTextTable
+import numpy
 
 
 class IndexedTextPPITableLoader(OpBase):
     """
-    Loads an entry from an smi file (large files are supported!).
+    Loads an entry from an txt file (large files are supported!).
     """
 
     def __init__(
@@ -37,10 +38,10 @@ class IndexedTextPPITableLoader(OpBase):
     def __call__(
         self,
         sample_dict: NDict,
-        key_out_seq: str = "data.gt",
+        key_out_seq: str = "data",
     ) -> NDict:
         sid = get_sample_id(sample_dict)
-        assert isinstance(sid, int)
+        assert isinstance(sid, (int, numpy.int64))
 
         _, entry_data = self._indexed_text_table[sid]
 
