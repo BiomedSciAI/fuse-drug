@@ -73,7 +73,7 @@ class IndexedTextFile(Dataset):
                 offset = 0
                 # important - using 'rb' will not remove things line '\r' from the line, making the offset ok! (as opposed to using 'r' !!)
                 with open(filename, "rb") as read_file:
-                    for line in read_file.readlines():
+                    for line in read_file:
                         lines_offsets.append(offset)
                         line_num += 1
                         offset += len(line)
