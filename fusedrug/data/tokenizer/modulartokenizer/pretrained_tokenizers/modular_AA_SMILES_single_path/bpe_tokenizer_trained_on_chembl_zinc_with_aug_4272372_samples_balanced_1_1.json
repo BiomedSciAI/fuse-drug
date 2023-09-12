@@ -2495,6 +2495,78 @@
       "rstrip": false,
       "normalized": false,
       "special": true
+    },
+    {
+      "id": 277,
+      "content": "<SEQUENCE_NATURAL_END>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 278,
+      "content": "<SMILES_SEQUENCE>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 279,
+      "content": "<SELFIES_SEQUENCE>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 280,
+      "content": "<AMINO_ACID_SEQUENCE>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 281,
+      "content": "<GENERAL_AFFINITY_CLASS>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 282,
+      "content": "<BACKSPACE>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 283,
+      "content": "<SEQUENCE_NATURAL_START>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 284,
+      "content": "<NOOP>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
     }
   ],
   "normalizer": null,
@@ -2787,6 +2859,14 @@
       "<MOLECULAR_ENTITY_GENERAL_PROTEIN>": 274,
       "<TIMESTEP>": 275,
       "<DIFFUSION>": 276,
+      "<SEQUENCE_NATURAL_END>": 277,
+      "<SMILES_SEQUENCE>": 278,
+      "<SELFIES_SEQUENCE>": 279,
+      "<AMINO_ACID_SEQUENCE>": 280,
+      "<GENERAL_AFFINITY_CLASS>": 281,
+      "<BACKSPACE>": 282,
+      "<SEQUENCE_NATURAL_START>": 283,
+      "<NOOP>": 284,
       "#": 527,
       "%": 528,
       "(": 529,
