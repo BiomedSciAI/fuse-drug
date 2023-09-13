@@ -1,8 +1,13 @@
-import pyfastx  # https://pyfastx.readthedocs.io/en/latest/usage.html
+from pyfastx import Fasta  # https://pyfastx.readthedocs.io/en/latest/usage.html
+
+# from pyfaidx import Fasta # https://pypi.org/project/pyfaidx/
 from torch.utils.data import Dataset
 from typing import Optional, List, Callable, Any
 
-# pyfast - access sequence data: https://pyfastx.readthedocs.io/en/latest/usage.html#get-a-sequence-from-fasta
+# pyfastx - access sequence data: https://pyfastx.readthedocs.io/en/latest/usage.html#get-a-sequence-from-fasta
+# Pros: Really fast. Cons: multiprocess access is bugged - some entries are missing, so we need to reload the file to get them
+# pyfaidx - access sequence data, alternative implementation: https://pypi.org/project/pyfaidx/
+# Pros: Possibly more reliable access (not tested fully). Cons: more than 1000 times slower than pyfastx...
 
 
 class IndexedFasta(Dataset):
@@ -40,7 +45,7 @@ class IndexedFasta(Dataset):
         print(
             "loading fasta file - note, if it's the first time you are loading this file, index building (using pyfastx) may take time ..."
         )
-        self._fasta = pyfastx.Fasta(self._fasta_file_loc)
+        self._fasta = Fasta(self._fasta_file_loc)
         print("Done loading fasta file.")
         self._check_for_duplicate_names = check_for_duplicate_names
 

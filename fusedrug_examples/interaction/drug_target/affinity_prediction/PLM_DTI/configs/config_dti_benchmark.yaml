@@ -16,7 +16,7 @@ experiment:
             # others - "davis", "bindingdb", "biosnap", "biosnap_prot" (unseen protein),
             # "biosnap_mol" (unseen drug), "dude" (not implemented)
   clearml: false
-  only_load_checkpoint_weights: true # if "checkpoint" is provided, specify whether to only load weights (true) or entire training state (lr schedule etc'.) (false) 
+  only_load_checkpoint_weights: true # if "checkpoint" is provided, specify whether to only load weights (true) or entire training state (lr schedule etc'.) (false)
 paths:
   results: '${oc.env:DTI_RESULTS}'
 
@@ -27,7 +27,7 @@ benchmark_data:
   featurizer_debug_mode: False # if true, use dummy string in featurizer to speed up debugging
   limit_postfix: "" # "" for usual run, _limit_100000_rows for debug run with small files
   ############################################################################################################
-  
+
   # parameters specific for our data/benchmark. used if task="benchmark"
   version: 14-04-2022_30_05-09-2022
   root_path: ${oc.env:DTI_BENCHMARK_DATA}/merged_${benchmark_data.version}
@@ -55,12 +55,12 @@ benchmark_data:
   - val # the '-' is needed so that it's used as a list
   test_folds:
   - test
-  class_label_to_idx: 
+  class_label_to_idx:
     Active: 1
     Inactive: 0
   minibatches_per_epoch: 2500 # for debugging you can set a smaller value like 250
   validation_epochs: 50 # for debugging you can set a smaller value like 5
- 
+
 data:
   batch_size: 32
   contrastive_batch_size: 256
@@ -81,7 +81,7 @@ model:
 
 trainer:
   loss: 'focal' # 'bce' (binary cross-entropy), 'focal'
-  epochs: 100 
+  epochs: 100
   every_n_val: 2
   lr: 1e-4
   lr_t0: 10
@@ -95,5 +95,4 @@ test:
   save_preds_for_benchmark_eval: false
 # to run test only mode with an already trained model, provide the test.checkpoint argument
 # here or via CLI, i.e: python test.py +test.checkpoint=/path/to/checkpoint.ckpt
-#  checkpoint: /path/to/checkpoint.ckpt 
-
+#  checkpoint: /path/to/checkpoint.ckpt
