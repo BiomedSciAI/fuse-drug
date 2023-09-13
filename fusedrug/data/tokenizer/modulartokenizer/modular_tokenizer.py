@@ -1003,7 +1003,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             Encoding: _description_
         """
         # split sequence to token hints and the following sequence
-        # For now support only sub tokenizer type
+
         hints_and_subseq = re.split("<@TOKENIZER-TYPE=([^>]*)>", sequence)[
             1:
         ]  # the first element is blank - removing it
