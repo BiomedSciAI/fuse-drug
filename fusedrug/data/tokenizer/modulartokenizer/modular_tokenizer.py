@@ -987,6 +987,10 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         """Receives a user-supplied string that contains, in addition to the text that is to be tokenized, special delimiters signifying the type
         of input within each span of text (e.g. <@TOKENIZER-TYPE=AA> sequence, <@TOKENIZER-TYPE=SMILES>, etc.). These determine the type of tokenizer to use on each span,
         and are not encoded.
+        Optionaly, you may also describe maximum length per section, for example:
+            "<@TOKENIZER-TYPE=AA><BLAH><BLAH2>QKPGQAPRLLIYG<@TOKENIZER-TYPE=AA@MAX-LEN=122><BLAH3>SGSDFSDFSFD"
+            would not have a local limitation of the first AA section, but will have a local maximum length of 122 on the second section.
+            local in this context means that the maximum length will be imposed on the individual section prior to applying any global "entire sequence" maximum size limitations (if any).
 
         Args:
             input_string (str): _description_
@@ -999,7 +1003,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             Encoding: _description_
         """
         # split sequence to token hints and the following sequence
-        # For now support only sub tokenizer type
+
         hints_and_subseq = re.split("<@TOKENIZER-TYPE=([^>]*)>", sequence)[
             1:
         ]  # the first element is blank - removing it
@@ -1007,12 +1011,25 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             len(hints_and_subseq) > 0 and len(hints_and_subseq) % 2 == 0
         ), f"Error: expecting leading modular tokenizer hints followed by a sequence to tokenize, got {sequence}"
         # arrange as a list of TypedInput - each one will include the type and the following sequence
-        encode_list_format = [
-            TypedInput(tokenizer_type, subseq, None)
-            for tokenizer_type, subseq in zip(
-                hints_and_subseq[::2], hints_and_subseq[1::2]
-            )
-        ]
+        encode_list_format = []
+        for tokenizer_type, subseq in zip(
+            hints_and_subseq[::2], hints_and_subseq[1::2]
+        ):
+            max_len_str = "@MAX-LEN="
+            curr_max_len_idx = tokenizer_type.find(max_len_str)
+            if curr_max_len_idx > 0:
+                curr_max_len = tokenizer_type[curr_max_len_idx + len(max_len_str) :]
+                try:
+                    curr_max_len = int(curr_max_len)
+                except:
+                    raise Exception(
+                        f"Had a problem casting curr_max_len={curr_max_len} to int! it was found inside modular tokenizer meta TOKENIZER-TYPE={tokenizer_type}"
+                    )
+                tokenizer_type = tokenizer_type[:curr_max_len_idx]
+            else:
+                curr_max_len = None
+            encode_list_format.append(TypedInput(tokenizer_type, subseq, curr_max_len))
+
         return self.encode_list(
             typed_input_list=encode_list_format,
             max_len=max_len,
