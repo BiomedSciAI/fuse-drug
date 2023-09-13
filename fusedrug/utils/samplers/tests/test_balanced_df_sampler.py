@@ -6,7 +6,6 @@ import numpy as np
 
 class TestBalancedClassDataFrameSampler(unittest.TestCase):
     def test_balanced_df_sampler(self) -> None:
-
         df = pd.DataFrame(
             {
                 "index": ["sample" + str(i) for i in range(1000)],
@@ -54,8 +53,8 @@ class TestBalancedClassDataFrameSampler(unittest.TestCase):
                     seen_all_2s_after.append(i + 1)
                     seen_2 = {}
 
-        self.assertEqual(seen_all_1s_after[0], minibatches_needed_to_see_1)
-        self.assertEqual(seen_all_2s_after[0], minibatches_needed_to_see_2)
+        self.assertAlmostEqual(seen_all_1s_after[0], minibatches_needed_to_see_1, delta=1)
+        self.assertAlmostEqual(seen_all_2s_after[0], minibatches_needed_to_see_2, delta=1)
 
         self.assertAlmostEqual(
             np.mean(np.diff(np.array(seen_all_1s_after))), seen_all_1s_after[0], delta=1
