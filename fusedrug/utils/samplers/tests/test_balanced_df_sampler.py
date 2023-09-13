@@ -53,8 +53,12 @@ class TestBalancedClassDataFrameSampler(unittest.TestCase):
                     seen_all_2s_after.append(i + 1)
                     seen_2 = {}
 
-        self.assertAlmostEqual(seen_all_1s_after[0], minibatches_needed_to_see_1, delta=1)
-        self.assertAlmostEqual(seen_all_2s_after[0], minibatches_needed_to_see_2, delta=1)
+        self.assertAlmostEqual(
+            seen_all_1s_after[0], minibatches_needed_to_see_1, delta=1
+        )
+        self.assertAlmostEqual(
+            seen_all_2s_after[0], minibatches_needed_to_see_2, delta=1
+        )
 
         self.assertAlmostEqual(
             np.mean(np.diff(np.array(seen_all_1s_after))), seen_all_1s_after[0], delta=1
