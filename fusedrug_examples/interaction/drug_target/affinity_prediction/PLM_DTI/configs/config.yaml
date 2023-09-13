@@ -16,7 +16,7 @@ experiment:
             # others - "davis", "bindingdb", "biosnap", "biosnap_prot" (unseen protein),
             # "biosnap_mol" (unseen drug), "dude" (not implemented)
   clearml: false
-  only_load_checkpoint_weights: true # if "checkpoint" is provided, specify whether to only load weights (true) or entire training state (lr schedule etc'.) (false) 
+  only_load_checkpoint_weights: true # if "checkpoint" is provided, specify whether to only load weights (true) or entire training state (lr schedule etc'.) (false)
 paths:
   results: '${oc.env:DTI_RESULTS}'
 
@@ -40,7 +40,7 @@ model:
 
 trainer:
   loss: 'bce' # 'bce' (binary cross-entropy), 'focal'
-  epochs: 50 
+  epochs: 50
   every_n_val: 2
   lr: 1e-4
   lr_t0: 10
@@ -54,5 +54,4 @@ test:
   save_preds_for_benchmark_eval: false
 # to run test only mode with an already trained model, provide the test.checkpoint argument
 # here or via CLI, i.e: python test.py +test.checkpoint=/path/to/checkpoint.ckpt
-#  checkpoint: /path/to/checkpoint.ckpt 
-
+#  checkpoint: /path/to/checkpoint.ckpt

@@ -20,8 +20,11 @@ special_tokens = {
 
 # Remember: do not use the below tokens as is. They must be wrapped by token markers ('<', '>') first, using special_wrap_input()
 task_tokens = [  # pairwise tasks
-    "MOLECULAR_ENTITY",  # the token following this marks which specific type of molecular entity comes next
     "GLOBAL_INTERACTION_ATTRIBUTES",  # the token following this marks which global attribute type is encoded next
+    "BINDING_AFFINITY_CLASS",  # Physical binding of proteins
+    "GENERAL_AFFINITY_CLASS",  # General affinity - proteins participating in the same process, gene co-expression, etc
+    "MOLECULAR_ENTITY",  # the token following this marks which specific type of molecular entity comes next. All tokens
+    # after this (and before the next MOLECULAR_ENTITY token) relate to the same molecule
     "MOLECULAR_ENTITY_GENERAL_PROTEIN",
     "MOLECULAR_ENTITY_ANTIGEN",
     "MOLECULAR_ENTITY_EPITOPE",
@@ -36,8 +39,14 @@ task_tokens = [  # pairwise tasks
     "MOLECULAR_ENTITY_TCR_ALPHA_CHAIN",  # TCR "light" chain - only V, J and C segments
     "MOLECULAR_ENTITY_TCR_BETA_VDJ",  # TCR "heavy" chain - V(ariable), D(iversity), and J(oining) segments, as well as the C(onstant) segment
     "MOLECULAR_ENTITY_TCR_BETA_CDR3",
-    "BINDING_AFFINITY_CLASS",
     "DECODER_START",
+    "AMINO_ACID_SEQUENCE",  # The next tokens depict a sequence of amino acids
+    "SEQUENCE_NATURAL_START",  # To be placed at the beginning of an uncropped sequence, meaning that in nature, the sequence starts with the next token
+    "SEQUENCE_NATURAL_END",  # To be placed at the end of an uncropped sequence, meaning that in nature, the sequence ends with the previous token
+    "SMILES_SEQUENCE",  # The next tokens depict a SMILES molecule representation
+    "SELFIES_SEQUENCE",  # The next tokens depict a SELFIES molecule representation
+    "NOOP",  # An empty token. Unlike "PAD", it is a viable network output, and should not be ignored
+    "BACKSPACE",  # Deleted the previous token
     "BINDING",  # Binding affinity prediction task
     # Masked fill in tasks
     "FILLIN",  # Fill in masked inputs task
