@@ -2,7 +2,7 @@ import os
 from fuse.utils.cpu_profiling import Timer
 from fuse.utils.file_io import save_hdf5_safe, load_hdf5
 import numpy as np
-
+from fuse.utils.multiprocessing.helpers import num_available_cores
 from contextlib import nullcontext
 from torch.utils.data import Dataset
 from copy import deepcopy
@@ -143,7 +143,7 @@ class IndexedFastaCustom(Dataset):
 
         if isinstance(num_workers, str):
             assert num_workers == "auto"
-            num_workers = os.cpu_count()
+            num_workers = num_available_cores(verbose=True)
         self._num_workers = num_workers
 
         self._allow_access_by_id = allow_access_by_id

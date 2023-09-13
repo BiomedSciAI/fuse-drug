@@ -772,8 +772,8 @@ def save_pdb_file(
     assert len(pos14.shape) == 3
     assert pos14.shape[1] == 14
 
-    assert len(mask.shape) == 3
-    assert mask.shape[1] == 14
+    assert len(mask.shape) == 1  # 2
+    # assert mask.shape[1] == 14
 
     flexible_save_pdb_file(
         xyz=pos14,
