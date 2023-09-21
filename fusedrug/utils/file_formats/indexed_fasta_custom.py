@@ -2,7 +2,7 @@ import os
 from fuse.utils.cpu_profiling import Timer
 from fuse.utils.file_io import save_hdf5_safe, load_hdf5
 import numpy as np
-
+from fuse.utils.multiprocessing.helpers import num_available_cores
 from contextlib import nullcontext
 from torch.utils.data import Dataset
 from copy import deepcopy
@@ -143,7 +143,7 @@ class IndexedFastaCustom(Dataset):
 
         if isinstance(num_workers, str):
             assert num_workers == "auto"
-            num_workers = os.cpu_count()
+            num_workers = num_available_cores(verbose=True)
         self._num_workers = num_workers
 
         self._allow_access_by_id = allow_access_by_id
@@ -202,7 +202,7 @@ class IndexedFastaCustom(Dataset):
                 index = self._offsets_map[index]
             else:
                 raise KeyError(f"Could not find identifier {index}")
-        elif not isinstance(index, (int, np.int32, np.int64)):
+        elif not isinstance(index, (int, np.int32, np.int64, np.uint32)):
             raise Exception(
                 f"indexing is supported by integer index, or by string identifier if allow_access_by_id=True was set, got {type(index)}"
             )

@@ -107,6 +107,7 @@ def cluster(
     cluster_method: str = "cluster",
     deduplicate: bool = True,
     override_workspace: bool = False,
+    mimic_cd_hit: bool = False,
     kmer_per_seq: Optional[int] = None,
     split_memory_limit: Optional[str] = None,
 ) -> Dict[str, str]:
@@ -204,7 +205,15 @@ def cluster(
         output_dir, "mmseqs_workspace", "mmseqs_DB_tmp_2"
     )
     clustered_db = join(output_dir, "mmseqs_workspace", "mmseqs_DB_clustered")
-    cmd = f"mmseqs {cluster_method} {step_B_initial_db} {clustered_db} {mmseqs_tmp_2_for_clustering} -c 1.0"
+    if mimic_cd_hit:
+        # see this:
+        # https://github.com/soedinglab/mmseqs2/wiki#how-do-parameters-of-cd-hit-relate-to-mmseqs2
+        # and:
+        # https://github.com/soedinglab/MMseqs2/issues/734
+        coverage_settings = "--cluster-mode 2 --cov-mode 1 -c 0.8"
+    else:
+        coverage_settings = "-c 1.0"
+    cmd = f"mmseqs {cluster_method} {step_B_initial_db} {clustered_db} {mmseqs_tmp_2_for_clustering} {coverage_settings}"
     cmd = _handle_mmseqs_cli_arguments(
         cmd,
         threads=threads,
