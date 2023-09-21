@@ -39,6 +39,8 @@ task_tokens = [  # pairwise tasks
     "MOLECULAR_ENTITY_TCR_ALPHA_CHAIN",  # TCR "light" chain - only V, J and C segments
     "MOLECULAR_ENTITY_TCR_BETA_VDJ",  # TCR "heavy" chain - V(ariable), D(iversity), and J(oining) segments, as well as the C(onstant) segment
     "MOLECULAR_ENTITY_TCR_BETA_CDR3",
+    "TARGETED_ANTIBODY_DESIGN_ENCODER_ONLY_MODE",  # A prefix to our T5 model to inform it that it will run in "encoder only" mode (so only
+    # the encoder-stack is used, plus the encoder-output-tokens-classification-head)
     "DECODER_START",
     "AMINO_ACID_SEQUENCE",  # The next tokens depict a sequence of amino acids
     "SEQUENCE_NATURAL_START",  # To be placed at the beginning of an uncropped sequence, meaning that in nature, the sequence starts with the next token
