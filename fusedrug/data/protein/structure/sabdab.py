@@ -23,8 +23,13 @@ def load_sabdab_dataframe(path: Optional[str] = None) -> pd.DataFrame:
 
 
 class SAbDAb:
+    """
+    A very simplistic class for loading sabdab entries. useful for quick testing and debugging.
+    For more complex processing and usage please use bmfm-bench
+    """
+
     def __init__(self, main_dataframe_path: str = None):
-        self.df = load_sabdab_dataframe()
+        self.df = load_sabdab_dataframe(main_dataframe_path)
 
     def get_entry(self, pdb_id: str, heavy_chain_id: Optional[str] = None) -> pd.Series:
         if heavy_chain_id is not None:
