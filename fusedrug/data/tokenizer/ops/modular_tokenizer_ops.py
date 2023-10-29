@@ -148,8 +148,8 @@ class FastModularTokenizer(OpBase):
 
         return (min_token, max_token)
 
-    def get_token_id(self, token_str: str) -> int:
-        ans = self._tokenizer.token_to_id(token_str)
+    def get_token_id(self, token_str: str, t_type: Optional[str] = None) -> int:
+        ans = self._tokenizer.token_to_id(token_str, t_type)
         assert ans is not None, f"could not find token id for token:{token_str}!"
         return ans
 
