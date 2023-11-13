@@ -148,8 +148,18 @@ class FastModularTokenizer(OpBase):
 
         return (min_token, max_token)
 
-    def get_token_id(self, token_str: str) -> int:
-        ans = self._tokenizer.token_to_id(token_str)
+    def get_token_id(self, token_str: str, t_type: Optional[str] = None) -> int:
+        """
+        Args:
+            token_str (:obj:`str`):
+                The token to convert
+            t_type (:obj:`str`): The sub-tokenizer to use. If None, the first (in order defined in the config)
+                sub-tokenizer is used. If the token is special, type should not be set.
+
+        Returns:
+            :obj:`int`: The token's id under the tokenizer type (if given)
+        """
+        ans = self._tokenizer.token_to_id(token_str, t_type)
         assert ans is not None, f"could not find token id for token:{token_str}!"
         return ans
 
