@@ -1634,6 +1634,11 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         Returns:
             :obj:`Optional[str]`: An optional token, :obj:`None` if out of vocabulary
         """
+        if not isinstance(id, int):
+            raise TypeError(
+                f"Expected 'id' to be an integer, got {type(id).__name__} instead."
+            )
+
         token_info = self.decoder_dict.get(id, None)
         if token_info is not None:
             return token_info["token"]
