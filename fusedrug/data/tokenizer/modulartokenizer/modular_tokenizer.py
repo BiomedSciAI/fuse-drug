@@ -852,7 +852,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         padding_token_id: Optional[int] = None,
         padding_token: Optional[str] = "<PAD>",
         pad_type_id: Optional[int] = None,
-    ) -> Encoding:
+        return_overflow_info: Optional[bool] = False,
+    ) -> Union[Encoding, Tuple[Encoding, str]]:
         """_summary_
 
         Args:
@@ -867,7 +868,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             padding_token_id (Optional[str], optional): _description_. Defaults to 0. TODO: default to None and infer it
             padding_token (Optional[str], optional): _description_. Defaults to "<PAD>".
             pad_type_id (Optional[int], optional): _description_. Defaults to 0. (TODO: raise exception)
-
+            return_overflow_info (Optional[bool], optional): _description_. If True return an additional string with overflow information. Defaults to False.
         Returns:
             Encoding: _description_
         """
@@ -877,6 +878,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         sequence_ids = []  # sequence id for each token (starting with 1)
         sequence_types = []  # encoder name used for each token
         curr_sequence_id = 1
+        overflow_info = ""
         for inpt in typed_input_list:
             input_type = inpt.input_type
             data_str = inpt.input_string
@@ -887,6 +889,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 sequence_id=curr_sequence_id,
             )
             if sub_max_len is not None:
+                if len(sub_encoding) > sub_max_len:
+                    overflow_info += f"{len(sub_encoding)} => {sub_max_len}|"
                 sub_encoding.truncate(max_length=sub_max_len)
             encoded_list.append(sub_encoding)
             sequence_ids.extend([curr_sequence_id] * len(sub_encoding))
@@ -915,6 +919,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         #         max_len = self.max_len
 
         if max_len is not None:
+            if len(merged_encoding) > max_len:
+                overflow_info += f"{len(merged_encoding)} => {max_len}|"
             merged_encoding.truncate(max_length=max_len)
 
         if padding_token_id is None and padding_token is None:
@@ -947,6 +953,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                     f"both padding token and padding id are None, but padding length is {max_len}. It's possible that it was set for truncation alone."
                 )
 
+        if return_overflow_info:
+            return merged_encoding, overflow_info
         return merged_encoding
 
     def decode(self, ids: Iterable, skip_special_tokens: Optional[bool] = False) -> str:
@@ -982,6 +990,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         padding_token_id: Optional[int] = 0,
         padding_token: Optional[str] = "<PAD>",
         pad_type_id: Optional[int] = 0,
+        return_overflow_info: Optional[bool] = False,
     ) -> Encoding:
         # (self, sequence, pair=None, is_pretokenized=False, add_special_tokens=True)
         """Receives a user-supplied string that contains, in addition to the text that is to be tokenized, special delimiters signifying the type
@@ -998,9 +1007,11 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             padding_token_id (Optional[str], optional): _description_. Defaults to 0.
             padding_token (Optional[str], optional): _description_. Defaults to "<PAD>".
             pad_type_id (Optional[int], optional): _description_. Defaults to 0.
+            return_overflow_info (Optional[bool], optional): _description_. If True return an additional string with overflow information. Defaults to False.
 
         Returns:
             Encoding: _description_
+            str: _description_ information on overflow, if return_overflow_info=True
         """
         # split sequence to token hints and the following sequence
 
@@ -1036,6 +1047,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             padding_token_id=padding_token_id,
             padding_token=padding_token,
             pad_type_id=pad_type_id,
+            return_overflow_info=return_overflow_info,
         )
 
     def get_tokenizer_types(self) -> List:
