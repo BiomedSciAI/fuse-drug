@@ -890,7 +890,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             )
             if sub_max_len is not None:
                 if len(sub_encoding) > sub_max_len:
-                    overflow_info += f"{len(sub_encoding)} => {sub_max_len}|"
+                    overflow_info += f"{input_type}:{len(sub_encoding)}=>{sub_max_len}|"
                 sub_encoding.truncate(max_length=sub_max_len)
             encoded_list.append(sub_encoding)
             sequence_ids.extend([curr_sequence_id] * len(sub_encoding))
@@ -920,7 +920,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
 
         if max_len is not None:
             if len(merged_encoding) > max_len:
-                overflow_info += f"{len(merged_encoding)} => {max_len}|"
+                overflow_info += f"OVERALL:{len(merged_encoding)}=>{max_len}|"
             merged_encoding.truncate(max_length=max_len)
 
         if padding_token_id is None and padding_token is None:
