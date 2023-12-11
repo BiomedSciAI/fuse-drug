@@ -2576,6 +2576,51 @@
       "rstrip": false,
       "normalized": false,
       "special": true
+    },
+    {
+      "id": 286,
+      "content": "<ANTIGEN_ANTIBODY_INTERACTION_RANKING>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 287,
+      "content": "<PROTEIN_PROTEIN_INTERACTION_RANKING>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 288,
+      "content": "<OPTION_0>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 289,
+      "content": "<OPTIONS_COMPARABLE>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 290,
+      "content": "<OPTION_1>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
     }
   ],
   "normalizer": null,
@@ -2883,6 +2928,11 @@
       "<SEQUENCE_NATURAL_START>": 283,
       "<NOOP>": 284,
       "<TARGETED_ANTIBODY_DESIGN_ENCODER_ONLY_MODE>": 285,
+      "<ANTIGEN_ANTIBODY_INTERACTION_RANKING>": 286,
+      "<PROTEIN_PROTEIN_INTERACTION_RANKING>": 287,
+      "<OPTION_0>": 288,
+      "<OPTIONS_COMPARABLE>": 289,
+      "<OPTION_1>": 290,
       "A": 501,
       "B": 502,
       "C": 503,
