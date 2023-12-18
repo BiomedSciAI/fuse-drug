@@ -122,7 +122,9 @@ def dti_binding_dataset(
     dynamic_pipeline = PipelineDefault("DTI dataset", dynamic_pipeline)
 
     dataset = DatasetDefault(
-        sample_ids=None, dynamic_pipeline=dynamic_pipeline
+        # sample_ids=None,
+        sample_ids=pairs_df.index,
+        dynamic_pipeline=dynamic_pipeline
     )  # TODO: sample_ids here should be either pairs_df.index, or len(pairs_df)
     dataset.create()
 
@@ -486,6 +488,9 @@ def _load_dataframes(
     _targets = fix_df_types(_targets)
     _targets.set_index("target_id", inplace=True)
     print(f"tagets num: {len(_targets)}")
+    _targets = _targets[_targets.index.to_series().notna()]
+    print(f"tagets num after keeping only non-NaN ids: {len(_targets)}")
+
 
     print(
         f"pairs num before keeping only pairs with ligands found in the (preprocessed) ligands table: {len(_pairs)}"
