@@ -31,6 +31,7 @@ def test_tokenizer(
         TypedInput("SMILES", "CCCHHCCCHC", 4),
         TypedInput("AA", "EFGHEFGHEFGH", 5),
         TypedInput("SMILES", "C=H==CC=HCCC", None),
+        TypedInput("GENES","<BINDING> [LOC101928625][MED21][MTHFD1] [LIMD1]",5),
     ]
     # TODO: named tuples with specific properties, e.g. max_len for every input, not for input type
     # Test general encoding: (per-tokenizer truncation works)
@@ -284,11 +285,10 @@ def main(cfg: DictConfig) -> None:
     # t_mult.save_jsons(tokenizers_info=cfg_raw["data"]["tokenizer"]["tokenizers_info"]) #This is a less preferable way to save a tokenizer
 
     t_mult.save(path=cfg_raw["data"]["tokenizer"]["out_path"])
-
+    print(f'saved to {cfg_raw["data"]["tokenizer"]["out_path"]}')
     test_tokenizer(t_mult, cfg_raw)
 
     print("Fin")
-
 
 if __name__ == "__main__":
     main()
