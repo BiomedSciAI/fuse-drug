@@ -136,6 +136,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             t_json = self.tokenizers_info[t_type]["json_instance"]
             # operations on the tokenizer json
             if not load_adjusted_jsons:
+                min_id = t_info.get("minimal_token_id", 0)
+                next_index = max(min_id, next_index )
                 t_json["added_tokens"] = all_special_token_structs
                 (t_json["model"]["vocab"], next_index,) = ModularTokenizer.remap_vocab(
                     vocab=t_json["model"]["vocab"],
