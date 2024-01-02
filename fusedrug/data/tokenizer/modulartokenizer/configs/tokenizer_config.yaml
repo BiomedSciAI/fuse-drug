@@ -3,7 +3,7 @@ paths:
   AA_tokenizer_json: "t5_tokenizer_AA_special.json"
   SMILES_tokenizer_json: "bpe_tokenizer_trained_on_chembl_zinc_with_aug_4272372_samples_balanced_1_1.json"
   Genes_tokenizer_json: "genes_tokenizer.json"
-  modular_tokenizers_out_path: "${paths.tokenizers_path}/modular_ASG/"
+  modular_tokenizers_out_path: "${paths.tokenizers_path}/modular_AA_SMILES_genes_single_path/"
   original_tokenizers_path: "${paths.tokenizers_path}"
 
 
@@ -17,7 +17,7 @@ data:
     overall_max_len: null
     max_possible_token_id: 35000
     max_special_token_id: 500
-    out_path: "${paths.tokenizers_path}/modular_AA_SMILES_genes_single_path/"
+    out_path: ${paths.modular_tokenizers_out_path} # is this redundent? 
     tokenizers_info:
       - name: AA
         tokenizer_id: 0 #unique int identifier of the tokenizer
