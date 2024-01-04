@@ -128,7 +128,11 @@ def dti_binding_dataset(
     )  # TODO: sample_ids here should be either pairs_df.index, or len(pairs_df)
     dataset.create()
 
-    return dataset
+    indices_per_class = {
+        label : [pairs_df.index.get_loc(key) for key in pairs_df[pairs_df.activity_label == label].index]  for label in pairs_df.activity_label.unique()
+    }
+
+    return dataset, indices_per_class
 
 
 def dti_binding_dataset_combined(
