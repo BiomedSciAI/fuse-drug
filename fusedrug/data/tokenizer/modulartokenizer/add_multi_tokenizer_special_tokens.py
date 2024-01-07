@@ -2,7 +2,7 @@ import hydra
 from omegaconf import DictConfig, OmegaConf
 from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import ModularTokenizer
 from typing import Dict, Any, List
-from fusedrug.data.tokenizer.modulartokenizer.test_multi_tokenizer_creation import (
+from fusedrug.data.tokenizer.modulartokenizer.create_multi_tokenizer import (
     test_tokenizer,
 )
 from fusedrug.data.tokenizer.modulartokenizer.special_tokens import (
@@ -10,14 +10,7 @@ from fusedrug.data.tokenizer.modulartokenizer.special_tokens import (
 )
 
 
-def update_special_tokens(
-    tokenizer_inst: ModularTokenizer, added_tokens: List, path_out: str
-) -> ModularTokenizer:
-    tokenizer_inst.add_special_tokens(tokens=added_tokens)
-    tokenizer_inst.save(path=path_out)
-    return tokenizer_inst
-
-
+# this needs to be run on the bmfm_modular_tokenizer and the bmfm_extended_modular_tokenizer
 @hydra.main(config_path="./configs", config_name="tokenizer_config", version_base=None)
 def main(cfg: DictConfig) -> None:
     print(str(cfg))
@@ -41,12 +34,11 @@ def main(cfg: DictConfig) -> None:
 
     # Update tokenizer with special tokens:
     added_tokens = get_additional_tokens(subset=["special", "task"])
-    t_mult_updated = update_special_tokens(
-        tokenizer_inst=t_mult_loaded_path,
+    t_mult_loaded_path.update_special_tokens(
         added_tokens=added_tokens,
-        path_out=cfg_raw["data"]["tokenizer"]["out_path"],
+        save_tokenizer_path=cfg_raw["data"]["tokenizer"]["out_path"],
     )
-    test_tokenizer(t_mult_updated, cfg_raw=cfg_raw, mode="updated_tokenizer")
+    test_tokenizer(t_mult_loaded_path, cfg_raw=cfg_raw, mode="updated_tokenizer")
 
     print("Fin")
 

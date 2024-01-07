@@ -56,6 +56,33 @@
         "rstrip": false,
         "normalized": false,
         "special": true
+      },
+      {
+        "id": 6,
+        "content": "<CELL_TYPE_CLASS>",
+        "single_word": false,
+        "lstrip": false,
+        "rstrip": false,
+        "normalized": false,
+        "special": true
+      },
+      {
+        "id": 7,
+        "content": "<TISSUE_TYPE_CLASS>",
+        "single_word": false,
+        "lstrip": false,
+        "rstrip": false,
+        "normalized": false,
+        "special": true
+      },
+      {
+        "id": 8,
+        "content": "<MOLECULAR_ENTITY_CELL_GENE_EXPRESSION_RANKED>",
+        "single_word": false,
+        "lstrip": false,
+        "rstrip": false,
+        "normalized": false,
+        "special": true
       }],
     "normalizer": null,
     "pre_tokenizer": {

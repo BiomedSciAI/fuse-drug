@@ -2,8 +2,9 @@ paths:
   tokenizers_path: "${oc.env:MY_GIT_REPOS}/fuse-drug/fusedrug/data/tokenizer/modulartokenizer/pretrained_tokenizers/" #tokenizer base work path
   AA_tokenizer_json: "t5_tokenizer_AA_special.json"
   SMILES_tokenizer_json: "bpe_tokenizer_trained_on_chembl_zinc_with_aug_4272372_samples_balanced_1_1.json"
-  Genes_tokenizer_json: "genes_tokenizer.json"
-  modular_tokenizers_out_path: "${paths.tokenizers_path}/modular_AA_SMILES_genes_single_path/"
+  cell_attributes_tokenizer_json: "cell_attributes_tokenizer.json"
+  gene_tokenizer_json: "gene_tokenizer.json"
+  modular_tokenizers_out_path: "${paths.tokenizers_path}/bmfm_extended_modular_tokenizer/"
   original_tokenizers_path: "${paths.tokenizers_path}"
 
 
@@ -13,31 +14,17 @@ hydra:
 
 data:
   tokenizer:
-    # modular_tokenizers_out_path: "${paths.tokenizers_path}/modular_wordlevelAA_BPESMILES/"
+    tokenizer_to_add: GENE
     overall_max_len: null
     max_possible_token_id: 35000
     max_special_token_id: 500
-    out_path: ${paths.modular_tokenizers_out_path} # is this redundent? 
+    in_path: "${paths.tokenizers_path}/bmfm_modular_tokenizer"
+    out_path: "${paths.modular_tokenizers_out_path}" # is this redundent? 
     tokenizers_info:
-      - name: AA
-        tokenizer_id: 0 #unique int identifier of the tokenizer
-        # raw tokenizer json path:
-        json_path:         "${paths.original_tokenizers_path}/${paths.AA_tokenizer_json}"
-        # updated for use with modular tokenizer json path:
-        modular_json_path: "${paths.modular_tokenizers_out_path}/${paths.AA_tokenizer_json}"
-        # max_len: 100 # [Optional] max number of tokens to be used by all instances of this tokenizer. If None or undefined, no limit is set.
-        start_delimiter: "<start_AA>"
-        end_delimiter: "<end_AA>"
-      - name: SMILES  #if None or undefined, type key will be used as the name
-        tokenizer_id: 1 #unique identifier of the tokenizer
-        json_path:         "${paths.original_tokenizers_path}/${paths.SMILES_tokenizer_json}"
-        modular_json_path: "${paths.modular_tokenizers_out_path}/${paths.SMILES_tokenizer_json}"
-        start_delimiter: "<start_SMILES>" #String to start the sequence. If None or undefined, <start_${type key}> will be used as the name
-        end_delimiter: "<end_SMILES>" #String to end the sequence. If None or undefined, <end_${type key}> will be used as the name
-      - name: GENES  #if None or undefined, type key will be used as the name
-        tokenizer_id: 2 #unique identifier of the tokenizer
-        json_path:         "${paths.original_tokenizers_path}/${paths.Genes_tokenizer_json}"
-        modular_json_path: "${paths.modular_tokenizers_out_path}/${paths.Genes_tokenizer_json}"
-        start_delimiter: "<start_GENES>" #String to start the sequence. If None or undefined, <start_${type key}> will be used as the name
-        end_delimiter: "<end_GENEA>" #String to end the sequence. If None or undefined, <end_${type key}> will be used as the name
+      - name: GENE  #if None or undefined, type key will be used as the name
+        tokenizer_id: 3 #unique identifier of the tokenizer
+        json_path:         "${paths.original_tokenizers_path}/${paths.gene_tokenizer_json}"
+        modular_json_path: "${paths.modular_tokenizers_out_path}/${paths.gene_tokenizer_json}"
+        start_delimiter: "<start_GENE>" #String to start the sequence. If None or undefined, <start_${type key}> will be used as the name
+        end_delimiter: "<end_GENE>" #String to end the sequence. If None or undefined, <end_${type key}> will be used as the name
         minimal_token_id: 5000
