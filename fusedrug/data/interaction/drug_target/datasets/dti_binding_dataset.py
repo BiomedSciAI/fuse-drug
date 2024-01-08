@@ -48,6 +48,7 @@ def dti_binding_dataset(
     ligands_rename_columns: Optional[Dict[str, str]] = None,
     targets_columns_to_extract: Optional[List[str]] = None,
     targets_rename_columns: Optional[Dict[str, str]] = None,
+    get_indices_per_class: bool = False,
     **kwargs: Any,
 ) -> DatasetDefault:
     """_summary_
@@ -127,12 +128,17 @@ def dti_binding_dataset(
         dynamic_pipeline=dynamic_pipeline,
     )  # TODO: sample_ids here should be either pairs_df.index, or len(pairs_df)
     dataset.create()
-
-    indices_per_class = {
-        label : [pairs_df.index.get_loc(key) for key in pairs_df[pairs_df.activity_label == label].index]  for label in pairs_df.activity_label.unique()
-    }
-
-    return dataset, indices_per_class
+    if get_indices_per_class:
+        indices_per_class = {
+            label: [
+                pairs_df.index.get_loc(key)
+                for key in pairs_df[pairs_df.activity_label == label].index
+            ]
+            for label in pairs_df.activity_label.unique()
+        }
+        return dataset, indices_per_class
+    else:
+        return dataset
 
 
 def dti_binding_dataset_combined(
