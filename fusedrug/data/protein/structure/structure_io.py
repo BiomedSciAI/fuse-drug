@@ -5,7 +5,7 @@ import os
 import torch
 from copy import deepcopy
 import pathlib
-
+from tqdm import trange
 import numpy as np
 from Bio.PDB import *  # noqa: F401, F403
 from Bio.PDB import StructureBuilder
@@ -566,6 +566,7 @@ def save_trajectory_to_pdb_file(
     save_path: str,
     traj_b_factors: torch.Tensor = None,
     init_chain: str = "A",
+    verbose: bool = False,
 ) -> None:
     """
     Stores a trajectory into a single PDB file.
@@ -590,7 +591,9 @@ def save_trajectory_to_pdb_file(
     builder = StructureBuilder.StructureBuilder()
     builder.init_structure(0)
 
-    for model in range(traj_xyz.shape[0]):
+    use_range_func = trange if verbose else range
+
+    for model in use_range_func(traj_xyz.shape[0]):
         builder.init_model(model)
         builder.init_chain(init_chain)
         builder.init_seg("    ")
@@ -605,7 +608,8 @@ def save_trajectory_to_pdb_file(
             if not m_res:
                 continue
             aa_idx = aa_idx.item()
-            p_res = p_res.clone().detach().cpu()  # fixme: this looks slow
+            if torch.is_tensor(p_res):
+                p_res = p_res.clone().detach().cpu()  # fixme: this looks slow
             if aa_idx == 21:
                 continue
             try:
@@ -707,13 +711,16 @@ def flexible_save_pdb_file(
     builder.init_model(model)
     builder.init_chain(init_chain)
     builder.init_seg("    ")
+    if torch.is_tensor(residues_mask):
+        residues_mask = residues_mask.bool()
     for i, (aa_idx, p_res, b, m_res) in enumerate(
-        zip(sequence, xyz, b_factors, residues_mask.bool())
+        zip(sequence, xyz, b_factors, residues_mask)
     ):
         if not m_res:
             continue
         aa_idx = aa_idx.item()
-        p_res = p_res.clone().detach().cpu()  # fixme: this looks slow
+        if torch.is_tensor(p_res):
+            p_res = p_res.clone().detach().cpu()  # fixme: this looks slow
         if aa_idx == 21:
             continue
         try:
