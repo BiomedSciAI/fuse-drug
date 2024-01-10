@@ -2625,7 +2625,6 @@
     "continuing_subword_prefix": null,
     "end_of_word_suffix": null,
     "fuse_unk": false,
-    "byte_fallback": false,
     "vocab": {
       "<UNK>": 0,
       "<PAD>": 1,
