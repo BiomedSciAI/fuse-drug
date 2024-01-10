@@ -19,7 +19,7 @@ data:
     max_possible_token_id: 35000
     max_special_token_id: 500
     in_path: "${paths.tokenizers_path}/bmfm_modular_tokenizer"
-    out_path: "${paths.modular_tokenizers_out_path}" # is this redundent? 
+    out_path: "${paths.modular_tokenizers_out_path}"
     tokenizers_info:
       - name: GENE  #if None or undefined, type key will be used as the name
         tokenizer_id: 3 #unique identifier of the tokenizer

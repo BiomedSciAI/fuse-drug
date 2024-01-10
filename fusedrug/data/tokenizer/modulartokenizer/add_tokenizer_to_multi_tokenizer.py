@@ -1,7 +1,7 @@
 import hydra
 from omegaconf import DictConfig, OmegaConf
 from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import ModularTokenizer
-from typing import Dict, Any, List
+from typing import Dict, Any
 from fusedrug.data.tokenizer.modulartokenizer.create_multi_tokenizer import (
     test_tokenizer,
 )
@@ -14,10 +14,11 @@ config_name = "tokenizer_config_with_celltype"
 # add gene names and extend tokenizer:
 # config_name = "extended_tokenizer_config"
 
+
 @hydra.main(config_path="./configs", config_name=config_name, version_base=None)
 def main(cfg: DictConfig) -> None:
     """script to add a tokenizer (and all special tokens from it and special_tokens.py) to an existing tokenizer.
-    The old tokenizer is read from the in_path, tokenizer to add is taken from the tokenizer_to_add variable.  
+    The old tokenizer is read from the in_path, tokenizer to add is taken from the tokenizer_to_add variable.
     max_possible_token_id will be updated if the new max is larger then the old one.
     Add the tokenizer_info of the new tokenizer, as usual.
 
@@ -25,7 +26,6 @@ def main(cfg: DictConfig) -> None:
     Args:
         cfg (DictConfig): the config file.
     """
-
 
     # cfg= OmegaConf.load(config_path /  config_name)
     # print(str(cfg))
@@ -35,10 +35,8 @@ def main(cfg: DictConfig) -> None:
     cfg_raw: Dict[str, Any] = tmp
 
     new_max_token_id = cfg_raw["data"]["tokenizer"]["max_possible_token_id"]
- 
-    t_mult = ModularTokenizer.load(
-        path=cfg_raw["data"]["tokenizer"]["in_path"]
-    )
+
+    t_mult = ModularTokenizer.load(path=cfg_raw["data"]["tokenizer"]["in_path"])
 
     test_tokenizer(t_mult, cfg_raw=cfg_raw, mode="loaded_path")
 
@@ -50,14 +48,16 @@ def main(cfg: DictConfig) -> None:
     )
     test_tokenizer(t_mult, cfg_raw=cfg_raw, mode="updated_tokenizer")
 
-
     new_tokenizer_name = cfg_raw["data"]["tokenizer"]["tokenizer_to_add"]
-    cfg_tokenizer_info={info['name']: info for info in cfg_raw["data"]["tokenizer"]["tokenizers_info"]}
+    cfg_tokenizer_info = {
+        info["name"]: info for info in cfg_raw["data"]["tokenizer"]["tokenizers_info"]
+    }
     new_tokenizer_info = cfg_tokenizer_info[new_tokenizer_name]
     if new_max_token_id > t_mult._max_possible_token_id:
-        print(f"updating the max possible token ID from {t_mult._max_possible_token_id} to {new_max_token_id}")
+        print(
+            f"updating the max possible token ID from {t_mult._max_possible_token_id} to {new_max_token_id}"
+        )
         t_mult._max_possible_token_id = new_max_token_id
-        
 
     t_mult.add_single_tokenizer(new_tokenizer_info)
     t_mult.save(path=cfg_raw["data"]["tokenizer"]["out_path"])

@@ -138,7 +138,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             # operations on the tokenizer json
             if not load_adjusted_jsons:
                 min_id = t_info.get("minimal_token_id", 0)
-                next_index = max(min_id, next_index )
+                next_index = max(min_id, next_index)
                 t_json["added_tokens"] = all_special_token_structs
                 (t_json["model"]["vocab"], next_index,) = ModularTokenizer.remap_vocab(
                     vocab=t_json["model"]["vocab"],
@@ -178,7 +178,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         self._pad_token: Union[str, None] = None
 
         test_res, test_res_detail = self.diagnose()
-        assert False not in test_res.values(), f"resulting tokenizer is not consistent: {test_res_detail}"
+        assert (
+            False not in test_res.values()
+        ), f"resulting tokenizer is not consistent: {test_res_detail}"
         self.build_inner_decoder()
         if self._max_possible_token_id is not None:
             if self._get_max_mapped_id() > self._max_possible_token_id:
@@ -603,7 +605,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 all_inds_set = all_inds_set.union(regular_tokens_ID_set)
                 if len(all_inds_set) != all_inds_len + len(regular_tokens_ID_set):
                     result["ID collisions across vocabs"] = False
-                    result_details["ID collisions across vocabs"].append(f"{t_type}:{old_all_inds_set.intersection(regular_tokens_ID_set)}")
+                    result_details["ID collisions across vocabs"].append(
+                        f"{t_type}:{old_all_inds_set.intersection(regular_tokens_ID_set)}"
+                    )
                 all_inds_len = len(all_inds_set)
 
             special_tokens_ID_set = set(special_tokens_vocab.values())
@@ -755,45 +759,53 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         with open(os.path.join(path, "config.yaml"), "w") as f:
             OmegaConf.save(tokenizer_config_overall, f)
 
-    def update_special_tokens(self, added_tokens: List, save_tokenizer_path: str = None):
+    def update_special_tokens(
+        self, added_tokens: List, save_tokenizer_path: str = None
+    ) -> None:
         self.add_special_tokens(tokens=added_tokens)
         if save_tokenizer_path:
             self.save(path=save_tokenizer_path)
-
 
     def add_single_tokenizer(
         self,
         tokenizer_info: Dict,
     ) -> None:
-       
 
         # first we load the new tokenizer
 
         # TODO: rename variable
         new_tokenizer_info = tokenizer_info
 
-
-        self.tokenizers_info_raw_cfg.append({k:v for k,v in new_tokenizer_info.items() if k not in ["json_instance","tokenizer_inst",]})
-        new_tokenizer_path = new_tokenizer_info['json_path']
+        self.tokenizers_info_raw_cfg.append(
+            {
+                k: v
+                for k, v in new_tokenizer_info.items()
+                if k
+                not in [
+                    "json_instance",
+                    "tokenizer_inst",
+                ]
+            }
+        )
+        new_tokenizer_path = new_tokenizer_info["json_path"]
         t_json = json.load(open(new_tokenizer_path))
-        new_tokenizer_info["json_instance"]=t_json
-       
-        
+        new_tokenizer_info["json_instance"] = t_json
+
         # we can set a minimal starting id for each tokenizer.  Used for the extended tokenizer.
         min_id = new_tokenizer_info.get("minimal_token_id", 0)
-        next_index = self._get_max_mapped_id() +1
-        next_index = max(min_id, next_index )
-        
+        next_index = self._get_max_mapped_id() + 1
+        next_index = max(min_id, next_index)
+
         # the new tokenizer may not have all the special tokens in the vocabulary
-        # We keep the old vocabulary, 
-        
+        # We keep the old vocabulary,
+
         old_vocab = t_json["model"]["vocab"]
 
         # and special tokens
 
         new_tokenize_special_tokens = self.get_subtokenizer_added_tokens(t_json)
-        
-        # update the ids 
+
+        # update the ids
         updated_vocab, next_index = ModularTokenizer.remap_vocab(
             vocab=old_vocab,
             starting_index=next_index,
@@ -801,42 +813,43 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
 
         # Take the special tokens as they appear in the first tokenizer inside the modular tokenizer
         first_tok_key = list(self.tokenizers_info.keys())[0]
-        all_special_token_structs = self.tokenizers_info[first_tok_key]["json_instance"]["added_tokens"]
+        all_special_token_structs = self.tokenizers_info[first_tok_key][
+            "json_instance"
+        ]["added_tokens"]
 
         # check if we are really adding any tokens from the new tokenizer
-        new_special_tokens = set(new_tokenize_special_tokens) - set([tok["content"] for tok in all_special_token_structs])
-         # in the begging of the list, with their id's
+        new_special_tokens = set(new_tokenize_special_tokens) - set(
+            [tok["content"] for tok in all_special_token_structs]
+        )
+        # in the begging of the list, with their id's
 
-        t_json["model"]["vocab"] = {sp["content"]:sp["id"] for sp in all_special_token_structs}
+        t_json["model"]["vocab"] = {
+            sp["content"]: sp["id"] for sp in all_special_token_structs
+        }
         # and finally we add the updated vocabulary.
 
         t_json["model"]["vocab"].update(updated_vocab)
 
         # we also need to add the tokens to the added_tokens section as special tokens
-        t_json["added_tokens"]=copy.deepcopy(all_special_token_structs)
+        t_json["added_tokens"] = copy.deepcopy(all_special_token_structs)
 
         # create the tokenizer instance TODO: do we need this?
         json_str = json.dumps(t_json)
         tokenizer_inst = tokenizers.Tokenizer.from_str(json_str)
-        new_tokenizer_info["tokenizer_inst"]=tokenizer_inst
+        new_tokenizer_info["tokenizer_inst"] = tokenizer_inst
 
         self.tokenizers_info[new_tokenizer_info["name"]] = new_tokenizer_info
-        
+
         added_tokens = get_additional_tokens(subset=["special", "task"])
-        if new_special_tokens: # did we add them in the special_tokens.py file - which is the correct way to work for extended tokenizers
+        if (
+            new_special_tokens
+        ):  # did we add them in the special_tokens.py file - which is the correct way to work for extended tokenizers
             new_special_tokens = set(new_special_tokens) - set(added_tokens)
         if new_special_tokens:
             warn(
-                    f"Added tokenizer {new_tokenizer_info['name']} came with {len(new_special_tokens)} new special tokens: {','.join(new_special_tokens)}"
-                )
+                f"Added tokenizer {new_tokenizer_info['name']} came with {len(new_special_tokens)} new special tokens: {','.join(new_special_tokens)}"
+            )
             added_tokens += new_special_tokens
-
-        # we update the special tokens but do not save here.  remember to save yourself.
-        self.update_special_tokens(
-            added_tokens=added_tokens,
-            # save_tokenizer_path=self.cfg_raw["data"]["tokenizer"]["out_path"],
-        )
- 
 
         self.build_inner_decoder()
         if self._max_possible_token_id is not None:
@@ -844,6 +857,11 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 raise Exception(
                     f"tokenizer remapping resulted in IDs greater (max_id={self._get_max_mapped_id()}) than max_possible_id ({self._max_possible_token_id}). Reinitialize the modular tokenizer with larger max_possible_id"
                 )
+        # we update the special tokens but do not save here.  remember to save yourself.
+        self.update_special_tokens(
+            added_tokens=added_tokens,
+            # save_tokenizer_path=self.cfg_raw["data"]["tokenizer"]["out_path"],
+        )
 
     def add_tokenizers(
         self,
