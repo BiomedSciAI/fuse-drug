@@ -6,7 +6,7 @@ try:
     )
 except ImportError:
     print(
-        "WARNING: could not import biophi.humanization. If biophi is not install please run the following within your conda env: conda install biophi -c bioconda -c conda-forge --override-channels"
+        "WARNING: could not import biophi.humanization. If biophi is not install please run the following within your conda env: conda install biophi -c bioconda -c conda-forge --override-channels.\nNOTE: it tends to conflict with existing conda env content, so it's better to create a separate conda env for it!"
     )
     raise
 

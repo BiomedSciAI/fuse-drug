@@ -36,11 +36,12 @@ def test_tokenizer(
     # Test general encoding: (per-tokenizer truncation works)
     t_inst = copy.deepcopy(t_inst)
 
-    enc = t_inst.encode_list(
+    enc, overflow_msg = t_inst.encode_list(
         typed_input_list=input_strings,
         max_len=cfg_raw["data"]["tokenizer"]["overall_max_len"],
+        return_overflow_info=True,
     )
-    print(f"encoded tokens: {enc.tokens}")
+    print(f"encoded tokens: {enc.tokens}, overflow=[{overflow_msg}]")
     # Test overall padding: (global padding works)
     enc_pad = t_inst.encode_list(
         typed_input_list=input_strings,
