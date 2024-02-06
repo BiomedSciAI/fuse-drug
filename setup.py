@@ -49,6 +49,7 @@ setup(
         exclude=["*.tests", "*.tests.*", "tests.*", "tests"]
     ),
     license="Apache License 2.0",
+    include_package_data=True,
     install_requires=fusedrug_requirements,
     extras_require={
         "examples": fusedrug_examples_requirements,
