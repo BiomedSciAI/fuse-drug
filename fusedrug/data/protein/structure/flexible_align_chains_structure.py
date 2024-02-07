@@ -1,5 +1,6 @@
 from jsonargparse import CLI
 from typing import List, Union, Dict, Tuple
+from Bio import Align
 
 # from fusedrug.data.protein.structure.protein_complex import ProteinComplex
 from fusedrug.data.protein.structure.structure_io import (
@@ -74,22 +75,60 @@ def flexible_align_chains_structure(
 
     # concatanate
     dynamic_concat = {
-        chain_id: {
-            attribute: _concat_elements_from_dict(dynamic_chains, attribute)
-            for attribute in attributes
-        }
-        for chain_id in dynamic_chains.keys()
+        attribute: _concat_elements_from_dict(dynamic_chains, attribute)
+        for attribute in attributes
     }
     static_concat = {
-        chain_id: {
-            attribute: _concat_elements_from_dict(static_chains, attribute)
-            for attribute in attributes
-        }
-        for chain_id in static_chains.keys()
+        attribute: _concat_elements_from_dict(static_chains, attribute)
+        for attribute in attributes
     }
 
-    dynamic_concat = dynamic_concat
-    static_concat = static_concat
+    dynamic_indices, static_indices = get_alignment_indices(
+        dynamic_concat["aasequence_str"], static_concat["aasequence_str"]
+    )
+
+    dynamic_matching = _apply_indices(dynamic_concat, dynamic_indices)
+    static_matching = _apply_indices(static_concat, static_indices)
+
+    # next: calculate the rigid transformation
+
+    # banana = 123
+
+    dynamic_matching = dynamic_matching
+    static_matching = static_matching
+
+
+def _apply_indices(x: Dict, indices: np.ndarray) -> Tuple[str, np.ndarray]:
+    ans = {}
+    for k, d in x.items():
+        if isinstance(d, str):
+            ans[k] = "".join(d[i] for i in indices)
+        else:
+            ans[k] = d[indices]
+    return ans
+
+
+def get_alignment_indices(target: str, query: str) -> Tuple[np.ndarray, np.ndarray]:
+    aligner = Align.PairwiseAligner()
+
+    ###https://biopython.org/docs/1.75/api/Bio.Align.html#Bio.Align.PairwiseAlignment
+    ### https://github.com/biopython/biopython/blob/master/Bio/Align/substitution_matrices/data/README.txt
+    aligner.substitution_matrix = Align.substitution_matrices.load("BLOSUM62")
+
+    alignments = aligner.align(target, query)
+    alignment = alignments[0]
+
+    target_indices = []
+    query_indices = []
+
+    for (target_start, target_end), (query_start, query_end) in zip(*alignment.aligned):
+        target_indices.extend(list(range(target_start, target_end)))
+        query_indices.extend(list(range(query_start, query_end)))
+
+    target_indices = np.array(target_indices)
+    query_indices = np.array(query_indices)
+
+    return target_indices, query_indices
 
 
 def _concat_elements_from_dict(
