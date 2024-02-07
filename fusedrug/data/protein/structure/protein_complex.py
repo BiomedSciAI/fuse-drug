@@ -30,6 +30,7 @@ class ProteinComplex:
         min_chain_residues_count: int = 10,
         max_residue_type_part: float = 0.5,
         allow_dna_or_rna_in_complex: bool = False,
+        chain_id_type: str = "author_assigned",
     ) -> None:
         """
         Args:
@@ -54,6 +55,7 @@ class ProteinComplex:
             pdb_id,
             pdb_id=pdb_id if len(pdb_id) == 4 else None,
             chain_id=chain_ids,
+            chain_id_type=chain_id_type,
             also_return_mmcif_object=True,
             **load_protein_structure_features_overrides,
         )
