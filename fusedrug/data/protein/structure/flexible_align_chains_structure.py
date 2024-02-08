@@ -1,11 +1,14 @@
 from jsonargparse import CLI
 from typing import List, Union, Dict, Tuple
 from Bio import Align
+from tiny_openfold.utils.superimposition import superimpose
 
 # from fusedrug.data.protein.structure.protein_complex import ProteinComplex
 from fusedrug.data.protein.structure.structure_io import (
-    pdb_to_openfold_protein,
+    load_pdb_chain_features,
     protein_utils,
+    # flexible_save_pdb_file,
+    save_structure_file,
 )
 import numpy as np
 
@@ -14,7 +17,7 @@ def flexible_align_chains_structure(
     dynamic_ordered_chains: Union[List[Tuple], str],
     apply_rigid_transformation_to_dynamic_chain_ids: Union[List[Tuple], str],
     static_ordered_chains: Union[List[Tuple], str],
-    output_pdb_filename: str,
+    output_pdb_filename_extentionless: str,
     ###chain_id_type:str = "author_assigned",
 ) -> None:
     """
@@ -59,18 +62,24 @@ def flexible_align_chains_structure(
 
     dynamic_chains: Dict[str, protein_utils.Protein] = {}
     for pdb_file, chain_id in dynamic_ordered_chains:
-        dynamic_chains[chain_id] = pdb_to_openfold_protein(pdb_file, chain_id)
+        dynamic_chains[chain_id] = load_pdb_chain_features(pdb_file, chain_id)
+
+    apply_rigid_on_dynamic_chains: Dict[str, protein_utils.Protein] = {}
+    for pdb_file, chain_id in apply_rigid_transformation_to_dynamic_chain_ids:
+        apply_rigid_on_dynamic_chains[chain_id] = load_pdb_chain_features(
+            pdb_file, chain_id
+        )
 
     static_chains: Dict[str, protein_utils.Protein] = {}
     for pdb_file, chain_id in static_ordered_chains:
-        static_chains[chain_id] = pdb_to_openfold_protein(pdb_file, chain_id)
+        static_chains[chain_id] = load_pdb_chain_features(pdb_file, chain_id)
 
     attributes = [
-        "atom_positions",
+        "atom14_gt_positions",
+        "atom14_gt_exists",
         "aasequence_str",
         "aatype",
-        "atom_mask",
-        "residue_index",
+        # "residue_index",
     ]
 
     # concatanate
@@ -78,21 +87,87 @@ def flexible_align_chains_structure(
         attribute: _concat_elements_from_dict(dynamic_chains, attribute)
         for attribute in attributes
     }
+
     static_concat = {
         attribute: _concat_elements_from_dict(static_chains, attribute)
         for attribute in attributes
     }
 
+    # calculate alignment in sequence space
     dynamic_indices, static_indices = get_alignment_indices(
         dynamic_concat["aasequence_str"], static_concat["aasequence_str"]
     )
 
+    # extract seq-level matching atoms coordinates
     dynamic_matching = _apply_indices(dynamic_concat, dynamic_indices)
     static_matching = _apply_indices(static_concat, static_indices)
 
-    # next: calculate the rigid transformation
+    # calculate the rigid transformation to translate from the starting pose of the dynamic onto the static
 
-    # banana = 123
+    combined_mask = np.logical_and(
+        dynamic_matching["atom14_gt_exists"].astype(bool),
+        static_matching["atom14_gt_exists"].astype(bool),
+    )
+    # orig_atom_pos_shape = dynamic_matching["atom14_gt_positions"].shape
+    _, _, rot_matrix, trans_matrix = superimpose(
+        static_matching["atom14_gt_positions"].reshape(-1, 3),
+        dynamic_matching["atom14_gt_positions"].reshape(-1, 3),
+        combined_mask.reshape(-1),
+        verbose=True,
+    )
+
+    assert rot_matrix.shape == (1, 3, 3)
+    rot_matrix = rot_matrix[0]
+
+    assert trans_matrix.shape == (1, 3)
+    trans_matrix = trans_matrix[0]
+
+    # apply the rigid transformation on the chains described in `apply_rigid_transformation_to_dynamic_chain_ids` argument
+    transformed_dynamic_atom_pos = {}
+    for chain_id, prot in apply_rigid_on_dynamic_chains.items():
+        _atom_pos_orig_shape = prot["atom14_gt_positions"].shape
+        _atom_pos_flat = prot["atom14_gt_positions"].reshape(-1, 3)
+        _atom_pos_flat_transformed = np.dot(_atom_pos_flat, rot_matrix) + trans_matrix
+        _atom_pos_transformed = _atom_pos_flat_transformed.reshape(
+            *_atom_pos_orig_shape
+        )
+        transformed_dynamic_atom_pos[chain_id] = _atom_pos_transformed
+
+        # transformed_dynamic_atom_pos[chain_id] = prot['atom14_gt_positions']
+
+    save_structure_file(
+        output_filename_extensionless=output_pdb_filename_extentionless,
+        pdb_id="unknown",
+        chain_to_atom14=transformed_dynamic_atom_pos,
+        chain_to_aa_str_seq={
+            chain_id: apply_rigid_on_dynamic_chains[chain_id]["aasequence_str"]
+            for chain_id in apply_rigid_on_dynamic_chains.keys()
+        },
+        chain_to_aa_index_seq={
+            chain_id: apply_rigid_on_dynamic_chains[chain_id]["aatype"]
+            for chain_id in apply_rigid_on_dynamic_chains.keys()
+        },
+        save_cif=False,
+        mask=None,  # TODO: check
+    )
+
+    # apply_on_atom_pos = apply_rigid_on_dynamic_concat['atom_positions']
+    # apply_on_atom_pos_flat = apply_on_atom_pos.reshape(-1,3)
+
+    # transformed_flat = np.dot(apply_on_atom_pos_flat, rot_matrix) + trans_matrix
+    # transformed = transformed_flat.reshape()
+
+    # superimposed = superimposed_flat.reshape(*orig_atom_pos_shape)
+
+    # flexible_save_pdb_file(
+    #     xyz: torch.Tensor,
+    #     sequence: torch.Tensor,
+    #     residues_mask: torch.Tensor,
+    #     save_path: str,
+    #     model: int = 0,
+    #     init_chain: str = "A",
+    #     only_save_backbone: bool = False,
+    #     b_factors: Optional[torch.Tensor] = None,
 
     dynamic_matching = dynamic_matching
     static_matching = static_matching
@@ -134,7 +209,8 @@ def get_alignment_indices(target: str, query: str) -> Tuple[np.ndarray, np.ndarr
 def _concat_elements_from_dict(
     input_dict: Dict, attribute: str
 ) -> Union[str, np.ndarray]:
-    elements = [getattr(p, attribute) for (_, p) in input_dict.items()]
+    # elements = [getattr(p, attribute) for (_, p) in input_dict.items()]
+    elements = [p[attribute] for (_, p) in input_dict.items()]
     ans = _concat_elements(elements)
     return ans
 
@@ -167,12 +243,10 @@ if __name__ == "__main__":
 
 """
 python $MY_GIT_REPOS/fuse-drug/fusedrug/data/protein/structure/flexible_align_chains_structure.py  \
-    $MY_GIT_REPOS/fuse-drug/fusedrug/tests_data/structure/protein/flexible_align/antibody_dimer_candidate_with_indels_NOT_aligned.pdb \
-    "A" \
-    "A,B" \
-    $MY_GIT_REPOS/fuse-drug/fusedrug/tests_data/structure/protein/flexible_align/PD1_7VUX_antibody_heavy_chain_from_equalized_reference_complex.pdb \
-    'H' \
-    $MY_GIT_REPOS/fuse-drug/fusedrug/tests_data/structure/protein/flexible_align/output_aligned_candidate_antibody_dimer_used_only_H_for_alignment.pdb
+    $MY_GIT_REPOS/fuse-drug/fusedrug/tests_data/structure/protein/flexible_align/antibody_dimer_candidate_with_indels_NOT_aligned.pdb^A \
+    $MY_GIT_REPOS/fuse-drug/fusedrug/tests_data/structure/protein/flexible_align/antibody_dimer_candidate_with_indels_NOT_aligned.pdb^A@$MY_GIT_REPOS/fuse-drug/fusedrug/tests_data/structure/protein/flexible_align/antibody_dimer_candidate_with_indels_NOT_aligned.pdb^B \
+    $MY_GIT_REPOS/fuse-drug/fusedrug/tests_data/structure/protein/flexible_align/PD1_7VUX_antibody_heavy_chain_from_equalized_reference_complex.pdb^H \
+    $MY_GIT_REPOS/fuse-drug/fusedrug/tests_data/structure/protein/flexible_align/output_aligned_candidate_antibody_dimer_only_H_for_alignment
 
 
 
@@ -180,7 +254,7 @@ python $MY_GIT_REPOS/fuse-drug/fusedrug/data/protein/structure/flexible_align_ch
     $MY_GIT_REPOS/fuse-drug/fusedrug/tests_data/structure/protein/flexible_align/antibody_dimer_candidate_with_indels_NOT_aligned.pdb^A@$MY_GIT_REPOS/fuse-drug/fusedrug/tests_data/structure/protein/flexible_align/antibody_dimer_candidate_with_indels_NOT_aligned.pdb^B \
     $MY_GIT_REPOS/fuse-drug/fusedrug/tests_data/structure/protein/flexible_align/antibody_dimer_candidate_with_indels_NOT_aligned.pdb^A@$MY_GIT_REPOS/fuse-drug/fusedrug/tests_data/structure/protein/flexible_align/antibody_dimer_candidate_with_indels_NOT_aligned.pdb^B \
     $MY_GIT_REPOS/fuse-drug/fusedrug/tests_data/structure/protein/flexible_align/PD1_7VUX_antibody_heavy_chain_from_equalized_reference_complex.pdb^H@$MY_GIT_REPOS/fuse-drug/fusedrug/tests_data/structure/protein/flexible_align/PD1_7VUX_antibody_light_chain_from_equalized_reference_complex.pdb^L \
-    $MY_GIT_REPOS/fuse-drug/fusedrug/tests_data/structure/protein/flexible_align/output_aligned_candidate_antibody_dimer_used_both_LH_for_alignment.pdb
+    $MY_GIT_REPOS/fuse-drug/fusedrug/tests_data/structure/protein/flexible_align/output_aligned_candidate_antibody_dimer_used_both_LH_for_alignment
 
 
 
