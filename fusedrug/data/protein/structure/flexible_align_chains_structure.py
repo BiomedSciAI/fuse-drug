@@ -11,6 +11,7 @@ from fusedrug.data.protein.structure.structure_io import (
     save_structure_file,
 )
 import numpy as np
+from warnings import warn
 
 
 def flexible_align_chains_structure(
@@ -18,6 +19,7 @@ def flexible_align_chains_structure(
     apply_rigid_transformation_to_dynamic_chain_ids: Union[List[Tuple], str],
     static_ordered_chains: Union[List[Tuple], str],
     output_pdb_filename_extentionless: str,
+    minimal_matching_sequence_level_chunk: int = 8,
     ###chain_id_type:str = "author_assigned",
 ) -> None:
     """
@@ -50,7 +52,8 @@ def flexible_align_chains_structure(
 
         output_pdb_filename: the chains from pdb_dynamic that are selected and moved will be saved into this pdb file
 
-        chain_id_type: either "author_assigned" (default) or "pdb_assigned"
+        minimal_matching_sequence_level_chunk: the minimal size in which a chunk of matching aligned sequence will be used for the 3d alignment.
+            The motivation for this is to avoid "nonsense" matches scattered all over the sequence, resulting in (very) suboptimal alignment
 
     """
 
@@ -95,8 +98,13 @@ def flexible_align_chains_structure(
 
     # calculate alignment in sequence space
     dynamic_indices, static_indices = get_alignment_indices(
-        dynamic_concat["aasequence_str"], static_concat["aasequence_str"]
+        dynamic_concat["aasequence_str"],
+        static_concat["aasequence_str"],
+        minimal_matching_sequence_level_chunk=minimal_matching_sequence_level_chunk,
     )
+
+    # dynamic_indices = dynamic_indices[:50]
+    # static_indices = static_indices[:50]
 
     # extract seq-level matching atoms coordinates
     dynamic_matching = _apply_indices(dynamic_concat, dynamic_indices)
@@ -109,7 +117,7 @@ def flexible_align_chains_structure(
         static_matching["atom14_gt_exists"].astype(bool),
     )
     # orig_atom_pos_shape = dynamic_matching["atom14_gt_positions"].shape
-    _, _, rot_matrix, trans_matrix = superimpose(
+    _, rmsd, rot_matrix, trans_matrix = superimpose(
         static_matching["atom14_gt_positions"].reshape(-1, 3),
         dynamic_matching["atom14_gt_positions"].reshape(-1, 3),
         combined_mask.reshape(-1),
@@ -121,6 +129,13 @@ def flexible_align_chains_structure(
 
     assert trans_matrix.shape == (1, 3)
     trans_matrix = trans_matrix[0]
+
+    assert len(rmsd.shape) == 0
+
+    if rmsd > 6.0:
+        warn(
+            f"flexible_align_chains_structure: got a pretty high rmsd={rmsd} in alignment. Either the structures are very different or the sequence alignment was suboptimal."
+        )
 
     # apply the rigid transformation on the chains described in `apply_rigid_transformation_to_dynamic_chain_ids` argument
     transformed_dynamic_atom_pos = {}
@@ -183,7 +198,9 @@ def _apply_indices(x: Dict, indices: np.ndarray) -> Tuple[str, np.ndarray]:
     return ans
 
 
-def get_alignment_indices(target: str, query: str) -> Tuple[np.ndarray, np.ndarray]:
+def get_alignment_indices(
+    target: str, query: str, minimal_matching_sequence_level_chunk: int
+) -> Tuple[np.ndarray, np.ndarray]:
     aligner = Align.PairwiseAligner()
 
     ###https://biopython.org/docs/1.75/api/Bio.Align.html#Bio.Align.PairwiseAlignment
@@ -197,8 +214,9 @@ def get_alignment_indices(target: str, query: str) -> Tuple[np.ndarray, np.ndarr
     query_indices = []
 
     for (target_start, target_end), (query_start, query_end) in zip(*alignment.aligned):
-        target_indices.extend(list(range(target_start, target_end)))
-        query_indices.extend(list(range(query_start, query_end)))
+        if target_end - target_start >= minimal_matching_sequence_level_chunk:
+            target_indices.extend(list(range(target_start, target_end)))
+            query_indices.extend(list(range(query_start, query_end)))
 
     target_indices = np.array(target_indices)
     query_indices = np.array(query_indices)
