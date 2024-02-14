@@ -18,7 +18,7 @@ from Bio.PDB.Chain import Chain
 from Bio.PDB.Residue import Residue
 from Bio.PDB.Atom import Atom
 from Bio import PDB
-from warnings import warn
+
 
 from tiny_openfold.data import data_transforms
 from tiny_openfold.utils.tensor_utils import tree_map
@@ -56,7 +56,7 @@ def save_structure_file(
     save_cif: bool = True,
     b_factors: Optional[Dict[str, torch.Tensor]] = None,
     reference_cif_filename: Optional[str] = None,
-    mask: Optional[List] = None,
+    mask: Optional[Dict[str, List]] = None,
 ) -> List[str]:
     """
     A helper function allowing to save single or multi chain structure into pdb and/or mmcif format.
@@ -72,7 +72,7 @@ def save_structure_file(
         save_cif - should it store mmCIF format (newer, and no length limits)
         b_factors -
         reference_cif_filename:Optional[str] - for mmCIF outputs you must provide an mmCIF reference file (you can use the ground truth one)
-        mask:Optional[List] - a mask describing which residues to store
+        mask: - an optional dictionary mapping chain_id to *residue-level* mask
 
     Returns:
         A list with paths for all saved files
@@ -118,6 +118,10 @@ def save_structure_file(
 
     for chain_id in sorted_chain_ids:
         pos_atom14 = chain_to_atom14[chain_id]
+        if mask is not None:
+            curr_mask = mask[chain_id]
+        else:
+            curr_mask = torch.full((pos_atom14.shape[0],), fill_value=True)
 
         if save_pdb:
             out_pdb = output_filename_extensionless + "_chain_" + chain_id + ".pdb"
@@ -136,9 +140,7 @@ def save_structure_file(
                 if b_factors is not None
                 else torch.tensor([100.0] * pos_atom14.shape[0]),
                 sequence=chain_to_aa_index_seq[chain_id],
-                residues_mask=mask
-                if mask is not None
-                else torch.full((pos_atom14.shape[0],), fill_value=True),
+                residues_mask=curr_mask,
                 save_path=out_pdb,
                 init_chain=potentially_fixed_chain_id,
                 model=0,
@@ -428,8 +430,27 @@ def structure_from_pdb(pdb_filename: str) -> Structure:
     return structure
 
 
+def load_pdb_chain_features(
+    filename: str,
+    chain_id: Optional[str] = None,
+    also_return_openfold_protein: bool = False,
+) -> Dict:
+    prot = pdb_to_openfold_protein(
+        filename,
+        chain_id,
+    )
+
+    features = convert_openfold_protein_to_dict(prot)
+    features = calculate_additional_features(features)
+
+    if also_return_openfold_protein:
+        return features, prot
+    return features
+
+
 def pdb_to_openfold_protein(
-    filename: str, chain_id: Optional[str] = None
+    filename: str,
+    chain_id: Optional[str] = None,
 ) -> protein_utils.Protein:
     """
     Loads data from the pdb file - which includes the atoms positions, atom mask, the AA sequence.
@@ -444,6 +465,35 @@ def pdb_to_openfold_protein(
 
     # with open(filename,'rt') as f:
     #     return protein_utils.from_pdb_string(f.read(), chain_id=chain_id)
+
+
+def convert_openfold_protein_to_dict(
+    prot: protein_utils.Protein, to_torch: bool = True
+) -> Dict:
+    """
+    Note: Aligning with the mmcif code expected names
+    """
+
+    names_mapping = {  # Protin to expected keys in dict
+        "atom_positions": "all_atom_positions",
+        "aatype": "aatype",
+        "atom_mask": "all_atom_mask",
+        #'residue_index' :  'residue_index',
+        #'b_factors' : ,
+        #'chain_index' :  ,
+        #'remark' :  ,
+        #'parents' :  ,
+        #'parents_chain_index' :  ,
+        "aasequence_str": "aasequence_str",
+    }
+
+    ans = {}
+    for from_name, to_name in names_mapping.items():
+        ans[to_name] = getattr(prot, from_name)
+        if to_torch and (not isinstance(ans[to_name], str)):
+            ans[to_name] = torch.from_numpy(ans[to_name])
+
+    return ans
 
 
 def get_available_chain_ids_in_pdb(filename: str) -> List[str]:
@@ -703,11 +753,14 @@ def flexible_save_pdb_file(
             "flexible_save_pdb_file:: only output backbone requested, will store coordinates only for the first 4 atoms in atom14 convention order."
         )
         xyz = xyz[:, :4, ...]
-
     elif xyz.shape[1] != 14:
-        warn(
-            f"flexible_save_pdb_file:: info: note that xyz contains {xyz.shape[1]} max atoms, and not max 14 atoms (all possible heavy atoms). This is ok if intentional, for example, when outputting only backbone."
-        )
+        if xyz.shape[1] != 4:
+            raise Exception(
+                f"xyz shape is allowed to be 14 (all heavy atoms) or 4 (only BB), got xyz.shap={xyz.shape}"
+            )
+            # warn(
+            #     f"flexible_save_pdb_file:: info: note that xyz contains {xyz.shape[1]} max atoms, and not max 14 atoms (all possible heavy atoms). This is ok if intentional, for example, when outputting only backbone."
+            # )
 
     if b_factors is None:
         b_factors = torch.tensor([100.0] * xyz.shape[0])
