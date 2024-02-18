@@ -84,12 +84,12 @@ def main(
 
         # heavy chain
         df.loc[index, output_excel_aligned_heavy_chain_pdb_filename_column] = (
-            output_aligned_fn + f"chain_{heavy_chain_id}.pdb"
+            output_aligned_fn + f"_chain_{heavy_chain_id}.pdb"
         )
         df.loc[index, output_excel_aligned_heavy_chain_id_column] = heavy_chain_id
         # light chain
         df.loc[index, output_excel_aligned_light_chain_pdb_filename_column] = (
-            output_aligned_fn + f"chain_{light_chain_id}.pdb"
+            output_aligned_fn + f"_chain_{light_chain_id}.pdb"
         )
         df.loc[index, output_excel_aligned_light_chain_id_column] = light_chain_id
 
