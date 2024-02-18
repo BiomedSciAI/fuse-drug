@@ -191,9 +191,6 @@ def flexible_align_chains_structure(
     #     only_save_backbone: bool = False,
     #     b_factors: Optional[torch.Tensor] = None,
 
-    dynamic_matching = dynamic_matching
-    static_matching = static_matching
-
 
 def _apply_indices(x: Dict, indices: np.ndarray) -> Tuple[str, np.ndarray]:
     ans = {}
