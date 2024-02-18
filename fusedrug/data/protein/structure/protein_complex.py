@@ -179,7 +179,7 @@ class ProteinComplex:
     ) -> None:
         """
         Spatial crop of a pair of chains which favors interacting residues.
-        Note - you must call "flatten" (with only two chain descriptor) prior to calling this method.
+        Note - you must call "flatten" prior to calling this method.
 
         The code is heavily influenced from the spatial crop done in RF2
         """

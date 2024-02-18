@@ -310,6 +310,7 @@ def load_protein_structure_features(
                     "aatype",
                     "all_atom_positions",
                     "all_atom_mask",
+                    "all_atom_bfactors",
                     "resolution",
                     "residue_index",
                     "chain_index",
@@ -652,8 +653,13 @@ def save_trajectory_to_pdb_file(
         xyz = traj_xyz[model]
         b_factors = traj_b_factors[model]
 
+        if torch.is_tensor(residues_mask):
+            residues_mask = residues_mask.bool()
+        else:
+            residues_mask = residues_mask.astype(bool)
+
         for i, (aa_idx, p_res, b, m_res) in enumerate(
-            zip(sequence, xyz, b_factors, residues_mask.bool())
+            zip(sequence, xyz, b_factors, residues_mask)
         ):
             if not m_res:
                 continue
