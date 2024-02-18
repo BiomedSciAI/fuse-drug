@@ -55,8 +55,20 @@ def main(
         light_chain_id = row[light_chain_id_column]  # 'B'
 
         output_aligned_fn = join(
-            dirname(heavy_chain_pdb_filename_column), output_structure_file_prefix
+            dirname(heavy_chain_pdb_filename), output_structure_file_prefix
         )
+
+        if not isinstance(reference_heavy_chain_pdb_filename, str):
+            print(
+                f"ERROR: expected reference_heavy_chain_pdb_filename to be string, but got {reference_heavy_chain_pdb_filename} of type {type(reference_heavy_chain_pdb_filename)}"
+            )
+            continue
+
+        if len(reference_heavy_chain_pdb_filename) < 2:
+            print(
+                f'ERROR: expected reference_heavy_chain_pdb_filename to be string, but got a suspicious empty or extremely short one: "{reference_heavy_chain_pdb_filename}"'
+            )
+            continue
 
         flexible_align_chains_structure(
             dynamic_ordered_chains=[(heavy_chain_pdb_filename, heavy_chain_id)],
@@ -69,6 +81,17 @@ def main(
             ],
             output_pdb_filename_extentionless=output_aligned_fn,
         )
+
+        # heavy chain
+        df.loc[index, output_excel_aligned_heavy_chain_pdb_filename_column] = (
+            output_aligned_fn + f"chain_{heavy_chain_id}.pdb"
+        )
+        df.loc[index, output_excel_aligned_heavy_chain_id_column] = heavy_chain_id
+        # light chain
+        df.loc[index, output_excel_aligned_light_chain_pdb_filename_column] = (
+            output_aligned_fn + f"chain_{light_chain_id}.pdb"
+        )
+        df.loc[index, output_excel_aligned_light_chain_id_column] = light_chain_id
 
     if output_excel_filename is not None:
         df.to_excel(output_excel_filename)
