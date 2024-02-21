@@ -1,5 +1,5 @@
 from fuse.utils import NDict
-from fuse.data import OpBase
+from fuse.data import OpBase, get_sample_id
 from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import (
     ModularTokenizer as Tokenizer,
 )
@@ -287,7 +287,7 @@ class FastModularTokenizer(OpBase):
         ):  # note, encoded.overflowing may have multiple items, and each item can contain multiple items
             print(
                 f"Warning: FastModularTokenizer (pid={os.getpid()}) had to truncate sequence: [{overflow_info}]  \
-                    for tokenizer: {self._tokenizer_path} for sample_dict={sample_dict}"
+                    for tokenizer: {self._tokenizer_path} for sample_id {get_sample_id(sample_dict)}"
             )
 
         if key_out_tokenized_object is not None:
