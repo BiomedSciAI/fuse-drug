@@ -148,8 +148,18 @@ class FastModularTokenizer(OpBase):
 
         return (min_token, max_token)
 
-    def get_token_id(self, token_str: str) -> int:
-        ans = self._tokenizer.token_to_id(token_str)
+    def get_token_id(self, token_str: str, t_type: Optional[str] = None) -> int:
+        """
+        Args:
+            token_str (:obj:`str`):
+                The token to convert
+            t_type (:obj:`str`): The sub-tokenizer to use. If None, the first (in order defined in the config)
+                sub-tokenizer is used. If the token is special, type should not be set.
+
+        Returns:
+            :obj:`int`: The token's id under the tokenizer type (if given)
+        """
+        ans = self._tokenizer.token_to_id(token_str, t_type)
         assert ans is not None, f"could not find token id for token:{token_str}!"
         return ans
 
@@ -206,9 +216,14 @@ class FastModularTokenizer(OpBase):
                 )
 
         if isinstance(data, str):
-            encoded = self._tokenizer.encode(data, max_len=max_seq_len)
+            encoded, overflow_info = self._tokenizer.encode(
+                data, max_len=max_seq_len, return_overflow_info=True
+            )
         else:
-            encoded = self._tokenizer.encode_list(data, max_len=max_seq_len)
+            encoded, overflow_info = self._tokenizer.encode_list(
+                data, max_len=max_seq_len, return_overflow_info=True
+            )
+
         expected_max_len = self.get_max_len(override_max_len=max_seq_len)
         if (
             expected_max_len is not None
@@ -249,15 +264,8 @@ class FastModularTokenizer(OpBase):
         if (
             len(encoded.overflowing) > 0
         ):  # note, encoded.overflowing may have multiple items, and each item can contain multiple items
-            if isinstance(data, str):
-                overall_char_len = len(data)
-            else:
-                overall_char_len = sum([len(x.input_string) for x in data])
-
-            max_len = self.get_max_len(override_max_len=max_seq_len)
             print(
-                f"Warning: FastModularTokenizer (pid={os.getpid()}) had to truncate sequence. Original Sequence Length = {overall_char_len} \
-                    max supported = {max_len} {'possibly due to per-subtokenizer upper limits set in the input list' if max_len is None else ''} \
+                f"Warning: FastModularTokenizer (pid={os.getpid()}) had to truncate sequence: [{overflow_info}]  \
                     for tokenizer: {self._tokenizer_path} for sample_id {get_sample_id(sample_dict)}"
             )
 

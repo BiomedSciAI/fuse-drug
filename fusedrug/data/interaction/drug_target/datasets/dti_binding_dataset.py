@@ -48,6 +48,7 @@ def dti_binding_dataset(
     ligands_rename_columns: Optional[Dict[str, str]] = None,
     targets_columns_to_extract: Optional[List[str]] = None,
     targets_rename_columns: Optional[Dict[str, str]] = None,
+    get_indices_per_class: bool = False,
     **kwargs: Any,
 ) -> DatasetDefault:
     """_summary_
@@ -122,11 +123,22 @@ def dti_binding_dataset(
     dynamic_pipeline = PipelineDefault("DTI dataset", dynamic_pipeline)
 
     dataset = DatasetDefault(
-        sample_ids=None, dynamic_pipeline=dynamic_pipeline
+        # sample_ids=None,
+        sample_ids=pairs_df.index,
+        dynamic_pipeline=dynamic_pipeline,
     )  # TODO: sample_ids here should be either pairs_df.index, or len(pairs_df)
     dataset.create()
-
-    return dataset
+    if get_indices_per_class:
+        indices_per_class = {
+            label: [
+                pairs_df.index.get_loc(key)
+                for key in pairs_df[pairs_df.activity_label == label].index
+            ]
+            for label in pairs_df.activity_label.unique()
+        }
+        return dataset, indices_per_class
+    else:
+        return dataset
 
 
 def dti_binding_dataset_combined(
@@ -491,6 +503,8 @@ def _load_dataframes(
     _targets = fix_df_types(_targets)
     _targets.set_index("target_id", inplace=True)
     print(f"tagets num: {len(_targets)}")
+    _targets = _targets[_targets.index.to_series().notna()]
+    print(f"tagets num after keeping only non-NaN ids: {len(_targets)}")
 
     print(
         f"pairs num before keeping only pairs with ligands found in the (preprocessed) ligands table: {len(_pairs)}"
