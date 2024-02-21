@@ -23,7 +23,9 @@ def fix_df_types(df: pd.DataFrame) -> pd.DataFrame:
 
 def set_activity_multiindex(df: pd.DataFrame) -> pd.DataFrame:
     df.set_index(
-        ["source_dataset_versioned_name", "source_dataset_activity_id"], drop=False, inplace=True
+        ["source_dataset_versioned_name", "source_dataset_activity_id"],
+        drop=False,
+        inplace=True,
     )
     return df
 
@@ -435,7 +437,7 @@ def _load_dataframes(
     _pairs = pd.read_csv(pairs_tsv, sep="\t")
     _pairs = fix_df_types(_pairs)
     # _pairs = concat_full_activity_col(_pairs)
-    #set_activity_multiindex(_pairs) 
+    # set_activity_multiindex(_pairs)
     # A.G note: disabled this so that merge happens on columns.
     # this is important where one of the index columns needs to be extracted. then,
     # if the merge is on index, we have to drop the columns (otherwise there will be ambiguity)
@@ -456,7 +458,7 @@ def _load_dataframes(
         print(f"loading split file {splits_tsv}")
         _splits = pd.read_csv(splits_tsv, sep="\t")
         _splits = fix_df_types(_splits)
-        #set_activity_multiindex(_splits)
+        # set_activity_multiindex(_splits)
         # _splits = concat_full_activity_col(_splits)
         print(f"split contains {len(_splits)} rows")
 
@@ -464,7 +466,7 @@ def _load_dataframes(
             raise Exception(
                 f"split file {splits_tsv} contains {len(_splits)} rows while the pairs file {pairs_tsv} contains {len(_pairs)} rows! they should be identical."
             )
-        
+
         _pairs_MERGED = _pairs.merge(
             _splits,
             how="inner",
