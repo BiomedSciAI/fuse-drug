@@ -485,6 +485,7 @@ def _load_dataframes(
         _pairs = _pairs[_pairs.split.isin(use_folds)]
         print(f"use_folds={use_folds} keeps {len(_pairs)} rows")
 
+    set_activity_multiindex(_pairs)
     assert isinstance(ligands_tsv, str)
     print(f"loading {ligands_tsv}")
     _ligands = pd.read_csv(ligands_tsv, sep="\t")
