@@ -13,7 +13,11 @@ import omegaconf
 import copy
 import traceback
 import re
-from .special_tokens import get_additional_tokens
+from fusedrug.data.tokenizer.modulartokenizer.special_tokens import (
+    get_additional_tokens,
+    special_tokens,
+    special_wrap_input,
+)
 
 
 TypedInput = collections.namedtuple(
@@ -938,6 +942,29 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             return override_max_len
         return self.max_len
 
+    def count_unknowns(
+        self, encoding: Union[List, Encoding], unk_token: Optional[str] = None
+    ) -> int:
+        """Counts the number of unknown tokens in the encoding
+
+        Args:
+            encoding (Union[List, Encoding]): Either a list of IDs or an Encoding. If it is an encoding, only encoding.ids is parsed. Overflowing
+                information is ignored, i.e. there may be an unknown token in overflowing ids (i.e. those that were cut due to encoding length limit)
+            unk_token (Optional[str], optional): Unknown token string (usually "<UNK>"). If None, locates the token in special_tokens.special_tokens.
+                Defaults to None.
+
+        Returns:
+            int: count of unknown tokens in the encoding
+        """
+        if isinstance(encoding, list):
+            ids = encoding
+        elif isinstance(encoding, Encoding):
+            ids = encoding.ids
+        if unk_token is None:
+            unk_token = special_wrap_input(special_tokens["unk_token"])
+        unk_token_id = self.token_to_id(unk_token)
+        return ids.count(unk_token_id)
+
     def encode_list(
         self,
         typed_input_list: List,
@@ -946,6 +973,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         padding_token: Optional[str] = "<PAD>",
         pad_type_id: Optional[int] = None,
         return_overflow_info: Optional[bool] = False,
+        on_unknown: Optional[str] = "warn",
     ) -> Union[Encoding, Tuple[Encoding, str]]:
         """_summary_
 
@@ -962,6 +990,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             padding_token (Optional[str], optional): _description_. Defaults to "<PAD>".
             pad_type_id (Optional[int], optional): _description_. Defaults to 0. (TODO: raise exception)
             return_overflow_info (Optional[bool], optional): _description_. If True return an additional string with overflow information. Defaults to False.
+            on_unknown: (Optional[str], optional): What happens if unknown tokens (i.e. ones mapped to <UNK>) are encountered: 'raise' or 'warn'
         Returns:
             Encoding: _description_
         """
@@ -1046,6 +1075,21 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                     f"both padding token and padding id are None, but padding length is {max_len}. It's possible that it was set for truncation alone."
                 )
 
+        # Check if we have any unknown tokens in our input
+        if self.count_unknowns(merged_encoding) > 0:
+            if on_unknown == "raise":
+                raise Exception(
+                    f"Encountered unknown tokens in input starting with {typed_input_list[0].input_string}"
+                )
+            elif on_unknown == "warn":
+                warn(
+                    f"Encountered unknown tokens in input starting with {typed_input_list[0].input_string}"
+                )
+            else:
+                raise Exception(
+                    f"Unexpected on_unknown value {on_unknown}. Should be 'warn' or 'raise'"
+                )
+
         if return_overflow_info:
             return merged_encoding, overflow_info
         return merged_encoding
@@ -1084,6 +1128,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         padding_token: Optional[str] = "<PAD>",
         pad_type_id: Optional[int] = 0,
         return_overflow_info: Optional[bool] = False,
+        on_unknown: Optional[str] = "warn",
     ) -> Encoding:
         # (self, sequence, pair=None, is_pretokenized=False, add_special_tokens=True)
         """Receives a user-supplied string that contains, in addition to the text that is to be tokenized, special delimiters signifying the type
@@ -1101,6 +1146,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             padding_token (Optional[str], optional): _description_. Defaults to "<PAD>".
             pad_type_id (Optional[int], optional): _description_. Defaults to 0.
             return_overflow_info (Optional[bool], optional): _description_. If True return an additional string with overflow information. Defaults to False.
+            on_unknown: (Optional[str], optional): What happens if unknown tokens (i.e. ones mapped to <UNK>) are encountered: 'raise' or 'warn'
 
         Returns:
             Encoding: _description_
@@ -1141,6 +1187,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             padding_token=padding_token,
             pad_type_id=pad_type_id,
             return_overflow_info=return_overflow_info,
+            on_unknown=on_unknown,
         )
 
     def get_tokenizer_types(self) -> List:
