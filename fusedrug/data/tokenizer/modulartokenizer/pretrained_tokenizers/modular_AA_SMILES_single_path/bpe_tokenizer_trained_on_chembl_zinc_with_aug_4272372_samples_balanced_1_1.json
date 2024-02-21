@@ -2612,6 +2612,24 @@
       "rstrip": false,
       "normalized": false,
       "special": true
+    },
+    {
+      "id": 290,
+      "content": "<MOLECULAR_ENTITY_PROTEIN_CHAIN>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 291,
+      "content": "<MOLECULAR_ENTITY_MUTATED_PROTEIN_CHAIN>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
     }
   ],
   "normalizer": null,
@@ -2625,6 +2643,7 @@
     "continuing_subword_prefix": null,
     "end_of_word_suffix": null,
     "fuse_unk": false,
+    "byte_fallback": false,
     "vocab": {
       "<UNK>": 0,
       "<PAD>": 1,
@@ -2916,6 +2935,8 @@
       "<TISSUE_TYPE_CLASS>": 287,
       "<MOLECULAR_ENTITY_CELL_GENE_EXPRESSION_RANKED>": 288,
       "<CELL_TYPE_CLASS>": 289,
+      "<MOLECULAR_ENTITY_PROTEIN_CHAIN>": 290,
+      "<MOLECULAR_ENTITY_MUTATED_PROTEIN_CHAIN>": 291,
       "#": 527,
       "%": 528,
       "(": 529,
