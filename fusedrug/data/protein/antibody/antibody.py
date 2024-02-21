@@ -33,7 +33,9 @@ def get_antibody_regions(sequence: str, scheme: str = "chothia") -> Dict[str, st
     return ans
 
 
-def get_antibodies_info_from_sabdab(antibodies_pdb_ids: Optional[List[str]] = None) -> List[Antibody]:
+def get_antibodies_info_from_sabdab(
+    antibodies_pdb_ids: Optional[List[str]] = None,
+) -> List[Antibody]:
     """
     Collects information on all provided antibodies_pdb_ids based on SabDab DB.
 
