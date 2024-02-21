@@ -60,7 +60,7 @@ def main(cfg: DictConfig) -> None:
     )
 
     print(
-        "Testing input that sontains characters mapped to <UNK> token, should raise exception"
+        "Testing input that contains characters mapped to <UNK> token, should raise exception"
     )
     input_strings = [
         TypedInput("AA", "<BINDING>AC11DEFGHIJKLMNPQRSUVACDEF", 10),

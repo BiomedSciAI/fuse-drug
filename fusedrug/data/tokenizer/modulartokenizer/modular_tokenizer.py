@@ -1078,9 +1078,17 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         # Check if we have any unknown tokens in our input
         if self.count_unknowns(merged_encoding) > 0:
             if on_unknown == "raise":
-                raise Exception("Encountered unknown tokens in the input")
+                raise Exception(
+                    f"Encountered unknown tokens in input starting with {typed_input_list[0].input_string}"
+                )
             elif on_unknown == "warn":
-                warn("Encountered unknown tokens in the input")
+                warn(
+                    f"Encountered unknown tokens in input starting with {typed_input_list[0].input_string}"
+                )
+            else:
+                raise Exception(
+                    f"Unexpected on_unknown value {on_unknown}. Should be 'warn' or 'raise'"
+                )
 
         if return_overflow_info:
             return merged_encoding, overflow_info
