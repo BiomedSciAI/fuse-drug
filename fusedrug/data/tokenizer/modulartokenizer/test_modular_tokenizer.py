@@ -9,6 +9,8 @@ from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import TypedInpu
 
 # add cell type:
 config_name = "tokenizer_config_with_celltype"
+
+
 @hydra.main(config_path="./configs", config_name="tokenizer_config", version_base=None)
 def main(cfg: DictConfig) -> None:
     print(str(cfg))
@@ -33,27 +35,47 @@ def main(cfg: DictConfig) -> None:
         TypedInput("AA", "EFGHEFGHEFGH", 5),
         TypedInput("SMILES", "C=H==CC=HCCC", None),
     ]
-    test_tokenizer(t_mult_loaded_path, cfg_raw=cfg_raw, mode="loaded_path", input_strings=input_strings)
-    
-    print("Testing input that sontains characters mapped to <UNK> token, suppressing exception, should raise warning")
+    test_tokenizer(
+        t_mult_loaded_path,
+        cfg_raw=cfg_raw,
+        mode="loaded_path",
+        input_strings=input_strings,
+    )
+
+    print(
+        "Testing input that sontains characters mapped to <UNK> token, suppressing exception, should raise warning"
+    )
     input_strings = [
         TypedInput("AA", "<BINDING>AC11DEFGHIJKLMNPQRSUVACDEF", 10),
         TypedInput("SMILES", "CCCHHCCCHC", 4),
         TypedInput("AA", "EFGHEFGHEFGH", 5),
         TypedInput("SMILES", "C=H==CC=HCCC", None),
     ]
-    test_tokenizer(t_mult_loaded_path, cfg_raw=cfg_raw, mode="loaded_path", input_strings=input_strings, on_unknown='warn')
-    
-    print("Testing input that sontains characters mapped to <UNK> token, should raise exception")
+    test_tokenizer(
+        t_mult_loaded_path,
+        cfg_raw=cfg_raw,
+        mode="loaded_path",
+        input_strings=input_strings,
+        on_unknown="warn",
+    )
+
+    print(
+        "Testing input that sontains characters mapped to <UNK> token, should raise exception"
+    )
     input_strings = [
         TypedInput("AA", "<BINDING>AC11DEFGHIJKLMNPQRSUVACDEF", 10),
         TypedInput("SMILES", "CCCHHCCCHC", 4),
         TypedInput("AA", "EFGHEFGHEFGH", 5),
         TypedInput("SMILES", "C=H==CC=HCCC", None),
     ]
-    test_tokenizer(t_mult_loaded_path, cfg_raw=cfg_raw, mode="loaded_path", input_strings=input_strings, on_unknown='raise')
+    test_tokenizer(
+        t_mult_loaded_path,
+        cfg_raw=cfg_raw,
+        mode="loaded_path",
+        input_strings=input_strings,
+        on_unknown="raise",
+    )
 
 
 if __name__ == "__main__":
     main()
-

@@ -13,7 +13,11 @@ import omegaconf
 import copy
 import traceback
 import re
-from fusedrug.data.tokenizer.modulartokenizer.special_tokens import get_additional_tokens, special_tokens, special_wrap_input
+from fusedrug.data.tokenizer.modulartokenizer.special_tokens import (
+    get_additional_tokens,
+    special_tokens,
+    special_wrap_input,
+)
 
 
 TypedInput = collections.namedtuple(
@@ -938,18 +942,20 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             return override_max_len
         return self.max_len
 
-    def count_unknowns(self, encoding: Union[List, Encoding], unk_token: Optional[str] = None) -> int:
+    def count_unknowns(
+        self, encoding: Union[List, Encoding], unk_token: Optional[str] = None
+    ) -> int:
         """Counts the number of unknown tokens in the encoding
 
         Args:
-            encoding (Union[List, Encoding]): Either a list of IDs or an Encoding. If it is an encoding, only encoding.ids is parsed. Overflowing 
+            encoding (Union[List, Encoding]): Either a list of IDs or an Encoding. If it is an encoding, only encoding.ids is parsed. Overflowing
                 information is ignored, i.e. there may be an unknown token in overflowing ids (i.e. those that were cut due to encoding length limit)
             unk_token (Optional[str], optional): Unknown token string (usually "<UNK>"). If None, locates the token in special_tokens.special_tokens.
                 Defaults to None.
 
         Returns:
             int: count of unknown tokens in the encoding
-        """        
+        """
         if isinstance(encoding, list):
             ids = encoding
         elif isinstance(encoding, Encoding):

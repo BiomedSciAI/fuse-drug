@@ -24,7 +24,11 @@ TITAN_SMILES_PATH = os.environ["TITAN_DATA"] + "/public/epitopes.smi"
 
 
 def test_tokenizer(
-    t_inst: ModularTokenizer, cfg_raw: Dict, mode: Optional[str] = "", input_strings: Optional[List] = None, on_unknown: Optional[str] = 'warn'
+    t_inst: ModularTokenizer,
+    cfg_raw: Dict,
+    mode: Optional[str] = "",
+    input_strings: Optional[List] = None,
+    on_unknown: Optional[str] = "warn",
 ) -> None:
     if input_strings is None:
         input_strings = [
@@ -57,7 +61,8 @@ def test_tokenizer(
     t_inst.enable_padding(length=70, pad_token="<PAD>")
     # Test overall padding: (global padding works)
     enc_pad = t_inst.encode_list(
-        typed_input_list=input_strings, on_unknown=on_unknown,
+        typed_input_list=input_strings,
+        on_unknown=on_unknown,
     )
     assert (
         len(enc_pad.ids) == 70
@@ -66,7 +71,8 @@ def test_tokenizer(
     t_inst.enable_padding(length=70, pad_token="<PAD>")
     # Test overall padding: (global padding works)
     enc_pad = t_inst.encode_list(
-        typed_input_list=input_strings, on_unknown=on_unknown,
+        typed_input_list=input_strings,
+        on_unknown=on_unknown,
     )
     assert (
         len(enc_pad.ids) == 70
@@ -74,7 +80,8 @@ def test_tokenizer(
 
     # Test overall cropping: (global truncation works)
     enc_trunc = t_inst.encode_list(
-        typed_input_list=input_strings, on_unknown=on_unknown,
+        typed_input_list=input_strings,
+        on_unknown=on_unknown,
         max_len=15,
     )
     assert (

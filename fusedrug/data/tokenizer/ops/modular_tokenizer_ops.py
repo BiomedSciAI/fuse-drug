@@ -232,11 +232,17 @@ class FastModularTokenizer(OpBase):
 
         if isinstance(data, str):
             encoded, overflow_info = self._tokenizer.encode(
-                data, max_len=max_seq_len, return_overflow_info=True, on_unknown=on_unknown,
+                data,
+                max_len=max_seq_len,
+                return_overflow_info=True,
+                on_unknown=on_unknown,
             )
         else:
             encoded, overflow_info = self._tokenizer.encode_list(
-                data, max_len=max_seq_len, return_overflow_info=True, on_unknown=on_unknown,
+                data,
+                max_len=max_seq_len,
+                return_overflow_info=True,
+                on_unknown=on_unknown,
             )
 
         expected_max_len = self.get_max_len(override_max_len=max_seq_len)
