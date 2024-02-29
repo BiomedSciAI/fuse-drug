@@ -1084,6 +1084,18 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
 
         # Check if we have any unknown tokens in our input
         if self.count_unknowns(merged_encoding) > 0:
+            # At some point we may want to know which parts of text were mapped to "UNK"
+            # This is not quite intuitive:
+            # - Encoding does not contain original text information
+            # - Encoding does contain a field called Encoding.offsets, which contains a tuple
+            #   (start index, end index) that point to the beginning and end of each token in
+            #   the input text. That would allow us to access the original strings, if we knew
+            #   the mapping between our input strings and the actual tokenized strings. However,
+            #   this is not the case since we merge multiple inputs, and we may truncate each
+            #   of them by number of tokens (not actual string length).
+            # - Encoding.overflowing may contain relevant information, but I don't think it works
+            #   properly, or, at least, I don't understand its logic. E.g. one instance of a
+            #   TypedInput list containing 3 members resulted in 17 Encodings in overflowing...
             if on_unknown == "raise":
                 raise Exception(
                     f"Encountered unknown tokens in input starting with {typed_input_list[0].input_string}"
