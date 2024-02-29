@@ -1083,7 +1083,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 )
 
         # Check if we have any unknown tokens in our input
-        if self.count_unknowns(merged_encoding) > 0:
+        unk_count = self.count_unknowns(merged_encoding)
+        if unk_count > 0:
             # At some point we may want to know which parts of text were mapped to "UNK"
             # This is not quite intuitive:
             # - Encoding does not contain original text information
@@ -1108,9 +1109,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 if verbose <= 1:
                     warning_message = "Encountered unknown tokens in input"
                 elif verbose == 2:
-                    warning_message = f"Encountered unknown tokens in input starting with {typed_input_list[0].input_string[:20]}"
+                    warning_message = f"Encountered {unk_count} unknown tokens in input starting with {typed_input_list[0].input_string[:20]}"
                 elif verbose >= 3:
-                    warning_message = f"Encountered unknown tokens in input starting with {typed_input_list[0].input_string}"
+                    warning_message = f"Encountered {unk_count} unknown tokens out of {len(merged_encoding.ids)} in input starting with {typed_input_list[0].input_string}"
                 else:
                     Exception("We shouldn't be here")
                 warn(warning_message)
