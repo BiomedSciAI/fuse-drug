@@ -1096,6 +1096,10 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             # - Encoding.overflowing may contain relevant information, but I don't think it works
             #   properly, or, at least, I don't understand its logic. E.g. one instance of a
             #   TypedInput list containing 3 members resulted in 17 Encodings in overflowing...
+            # - Finally, it would seem that encoding and then decoding (or, at this point,
+            #   combining the contents of Embedding.tokens), and carefully parsing and comparing
+            #   the input string and its encoded-decoded variant, will allow us to identify parts
+            #   of input mapped to unk.
             if on_unknown == "raise":
                 raise Exception(
                     f"Encountered unknown tokens in input starting with {typed_input_list[0].input_string}"
