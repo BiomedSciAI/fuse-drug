@@ -978,6 +978,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         pad_type_id: Optional[int] = None,
         return_overflow_info: Optional[bool] = False,
         on_unknown: Optional[str] = "warn",
+        verbose: Optional[int] = 1,
     ) -> Union[Encoding, Tuple[Encoding, str]]:
         """_summary_
 
@@ -995,6 +996,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             pad_type_id (Optional[int], optional): _description_. Defaults to 0. (TODO: raise exception)
             return_overflow_info (Optional[bool], optional): _description_. If True return an additional string with overflow information. Defaults to False.
             on_unknown: (Optional[str], optional): What happens if unknown tokens (i.e. ones mapped to <UNK>) are encountered: 'raise' or 'warn'
+            verbose (Optional[int], optional): verbosity level. 0,1: warning notification, 2: warning with partial data, 3: warning
+                with full data. Defaults to 1.
         Returns:
             Encoding: _description_
         """
@@ -1086,9 +1089,15 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                     f"Encountered unknown tokens in input starting with {typed_input_list[0].input_string}"
                 )
             elif on_unknown == "warn":
-                warn(
-                    f"Encountered unknown tokens in input starting with {typed_input_list[0].input_string}"
-                )
+                if verbose <= 1:
+                    warning_message = "Encountered unknown tokens in input"
+                elif verbose == 2:
+                    warning_message = f"Encountered unknown tokens in input starting with {typed_input_list[0].input_string[:20]}"
+                elif verbose >= 3:
+                    warning_message = f"Encountered unknown tokens in input starting with {typed_input_list[0].input_string}"
+                else:
+                    Exception("We shouldn't be here")
+                warn(warning_message)
             else:
                 raise Exception(
                     f"Unexpected on_unknown value {on_unknown}. Should be 'warn' or 'raise'"
@@ -1133,6 +1142,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         pad_type_id: Optional[int] = 0,
         return_overflow_info: Optional[bool] = False,
         on_unknown: Optional[str] = "warn",
+        verbose: Optional[int] = 1,
     ) -> Encoding:
         # (self, sequence, pair=None, is_pretokenized=False, add_special_tokens=True)
         """Receives a user-supplied string that contains, in addition to the text that is to be tokenized, special delimiters signifying the type
@@ -1151,7 +1161,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             pad_type_id (Optional[int], optional): _description_. Defaults to 0.
             return_overflow_info (Optional[bool], optional): _description_. If True return an additional string with overflow information. Defaults to False.
             on_unknown: (Optional[str], optional): What happens if unknown tokens (i.e. ones mapped to <UNK>) are encountered: 'raise' or 'warn'
-
+            verbose (Optional[int], optional): verbosity level. 0,1: warning notification, 2: warning with partial data, 3: warning
+                with full data. Defaults to 1.
         Returns:
             Encoding: _description_
             str: _description_ information on overflow, if return_overflow_info=True
@@ -1192,6 +1203,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             pad_type_id=pad_type_id,
             return_overflow_info=return_overflow_info,
             on_unknown=on_unknown,
+            verbose=verbose,
         )
 
     def get_tokenizer_types(self) -> List:

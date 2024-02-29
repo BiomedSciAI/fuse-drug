@@ -189,6 +189,7 @@ class FastModularTokenizer(OpBase):
         convert_attention_mask_to_bool: Optional[bool] = True,
         max_seq_len: Optional[int] = None,
         on_unknown: Optional[str] = "warn",
+        verbose: Optional[int] = 1,
     ) -> NDict:
         """_summary_
 
@@ -204,6 +205,8 @@ class FastModularTokenizer(OpBase):
             convert_attention_mask_to_bool (Optional[bool], optional): _description_. Defaults to True.
             max_seq_len (Optional[int], optional): set maximum sequence len dynamically, used for both padding and truncation.. Defaults to None.
             on_unknown (Optional[str], optional): What happens if unknown tokens (i.e. ones mapped to <UNK>) are encountered: 'raise' or 'warn'. Defaults to "warn".
+            verbose (Optional[int], optional): verbosity level. 0,1: warning notification, 2: warning with partial data, 3: warning
+                with full data. Defaults to 1.
 
         Raises:
             Exception: _description_
@@ -236,6 +239,7 @@ class FastModularTokenizer(OpBase):
                 max_len=max_seq_len,
                 return_overflow_info=True,
                 on_unknown=on_unknown,
+                verbose=verbose,
             )
         else:
             encoded, overflow_info = self._tokenizer.encode_list(
@@ -243,6 +247,7 @@ class FastModularTokenizer(OpBase):
                 max_len=max_seq_len,
                 return_overflow_info=True,
                 on_unknown=on_unknown,
+                verbose=verbose,
             )
 
         expected_max_len = self.get_max_len(override_max_len=max_seq_len)
