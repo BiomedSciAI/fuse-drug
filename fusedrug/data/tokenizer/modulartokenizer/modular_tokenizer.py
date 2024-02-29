@@ -960,6 +960,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             ids = encoding
         elif isinstance(encoding, Encoding):
             ids = encoding.ids
+        else:
+            raise Exception(f"Unexpected type of encoding {type(encoding)}, should be list or Encoding")
         if unk_token is None:
             unk_token = special_wrap_input(special_tokens["unk_token"])
         unk_token_id = self.token_to_id(unk_token)
@@ -1664,7 +1666,19 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         """
         t_types = self.get_tokenizer_types()
         assert len(t_types) >= 1
-        t_type = t_types[0]
+        t_type = t_types[0] #TODO: Here we consider the special tokens of the first subtokenizer alone,
+            # Assuming all subtokenizers are consistent. This, however, is not necessarily the case. For example,
+            # if a second multitokenizer (Z) was created from the first one (Y) by adding another subtokenizer (A). 
+            # The first multitokenizer (Y) then was updated with additional special tokens, then all its subtokenizers
+            # were updated, but subtokenizer A was not (since it's only part of Z and not of Y). Next time multitokenizer
+            # Z is loaded, it will no longer be consistent - its subtokenizer A will be missing special tokens.
+            # If we try to add the missing tokens to Z, we'll fail because they're found in its first subtokenizer.
+            # Possible solutions:
+            # A. Test a ModularTokenizer for consistency each time it's loaded.
+            #       - If it is not consistent, add a consolidation function that will identify missing tokens (and their IDs) 
+            #           from each subtokenizer and add them, if possible (throwing an exception if not)
+            # B. Test ModularTokenizer for consistency each time before it is changed (e.g. by add_special_tokens), and consilidate it
+            #       if needed/possible
         tokenizer_json_inst = self.tokenizers_info[t_type]["json_instance"]
         special_tokens_list = ModularTokenizer.get_subtokenizer_added_tokens(
             tokenizer_json_inst=tokenizer_json_inst
