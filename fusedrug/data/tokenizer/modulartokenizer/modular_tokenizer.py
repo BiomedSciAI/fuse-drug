@@ -1181,7 +1181,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             pad_type_id (Optional[int], optional): _description_. Defaults to 0.
             return_overflow_info (Optional[bool], optional): _description_. If True return an additional string with overflow information. Defaults to False.
             on_unknown: (Optional[str], optional): What happens if unknown tokens (i.e. ones mapped to <UNK>) are encountered: 'raise' or 'warn'
-            verbose (Optional[int], optional): verbosity level. 0,1: warning notification, 2: warning with partial data, 3: warning
+            verbose (Optional[int], optional): verbosity level. 0: no notification, 1: warning notification, 2: warning with partial data, 3: warning
                 with full data. Defaults to 1.
         Returns:
             Encoding: _description_
