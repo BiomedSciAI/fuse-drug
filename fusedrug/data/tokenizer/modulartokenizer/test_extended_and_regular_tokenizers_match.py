@@ -14,36 +14,16 @@ def compare_modular_tokenizers(tokenizer1_name: str, tokenizer2_name: str) -> No
 
     pertrained_tokenizers_path = Path(__file__).parent / "pretrained_tokenizers"
 
-    #%%
     modular_tokenizer_1 = ModularTokenizer.load(
         path=pertrained_tokenizers_path / tokenizer1_name
     )
-    # path="/u/matanin/git/fuse-drug/fusedrug/data/tokenizer/modulartokenizer/pretrained_tokenizers/bmfm_modular_tokenizer"
-    # %%
     modular_tokenizer_2 = ModularTokenizer.load(
         path=pertrained_tokenizers_path / tokenizer2_name
     )
-    # path="/u/matanin/git/fuse-drug/fusedrug/data/tokenizer/modulartokenizer/pretrained_tokenizers/bmfm_extended_modular_tokenizer"
-    # # %%
-    # for t_type in tok1.tokenizers_info:
-    #     print(t_type)
-    #     tokenizer_instance_1 =  tok1.tokenizers_info[t_type]['tokenizer_inst']
-    #     tokenizer_instance_2 =  tok2.tokenizers_info[t_type]['tokenizer_inst']
-    #     voc1 = tokenizer_instance_1.get_vocab()
-    #     voc2 = tokenizer_instance_2.get_vocab()
-    #     voc1:dict
-    #     print(voc1==voc2)
-    #     print(123)
-
-    #     # %%
-    # tok3 = ModularTokenizer.load(
-    #         path="/u/matanin/git/fuse-drug/fusedrug/data/tokenizer/modulartokenizer/pretrained_tokenizers/modular_AA_SMILES_single_path"
-    #     )
-    # # %%
-
     # we go over all the tokenizers in modular_tokenizer_1
     for t_type in modular_tokenizer_1.tokenizers_info:
         if t_type not in modular_tokenizer_2.tokenizers_info:
+            # this is fine - we expect some different sub-tokenizers - just report
             lgr.info(f"could not find sub-tokenizer {t_type} in {tokenizer2_name}")
             continue
 
@@ -77,14 +57,15 @@ def compare_modular_tokenizers(tokenizer1_name: str, tokenizer2_name: str) -> No
             )
 
 
-def main() -> None:
+def test_modular_tokenizers_compatibility() -> None:
     old_tokenizer_name = "modular_AA_SMILES_single_path"
     regular_tokenizer_name = "bmfm_modular_tokenizer"
     extended_tokenizer_name = "bmfm_extended_modular_tokenizer"
+    # If new modular tokenizers are added, and need to be kept synchronized, add more name and tests
 
     compare_modular_tokenizers(old_tokenizer_name, regular_tokenizer_name)
     compare_modular_tokenizers(regular_tokenizer_name, extended_tokenizer_name)
 
 
 if __name__ == "__main__":
-    main()
+    test_modular_tokenizers_compatibility()
