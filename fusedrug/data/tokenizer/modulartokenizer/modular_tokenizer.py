@@ -994,9 +994,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             padding_token_id (Optional[str], optional): _description_. Defaults to 0. TODO: default to None and infer it
             padding_token (Optional[str], optional): _description_. Defaults to "<PAD>".
             pad_type_id (Optional[int], optional): _description_. Defaults to 0. (TODO: raise exception)
-            return_overflow_info (Optional[bool], optional): _description_. If True return an additional string with overflow information. Defaults to False.
+            return_overflow_info (Optional[bool], optional): If True return an additional string with overflow information. Defaults to False.
             on_unknown: (Optional[str], optional): What happens if unknown tokens (i.e. ones mapped to <UNK>) are encountered: 'raise' or 'warn'
-            verbose (Optional[int], optional): verbosity level. 0,1: warning notification, 2: warning with partial data, 3: warning
+            verbose (Optional[int], optional): verbosity level. 0: no notification, 1: warning notification, 2: warning with partial data, 3: warning
                 with full data. Defaults to 1.
         Returns:
             Encoding: _description_
@@ -1103,10 +1103,12 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             #   of input mapped to unk.
             if on_unknown == "raise":
                 raise Exception(
-                    f"Encountered unknown tokens in input starting with {typed_input_list[0].input_string}"
+                    f"Encountered {unk_count} unknown tokens out of {len(merged_encoding.ids)} in input starting with {typed_input_list[0].input_string}"
                 )
             elif on_unknown == "warn":
-                if verbose <= 1:
+                if verbose == 0:
+                    warning_message = None
+                if verbose == 1:
                     warning_message = "Encountered unknown tokens in input"
                 elif verbose == 2:
                     warning_message = f"Encountered {unk_count} unknown tokens in input starting with {typed_input_list[0].input_string[:20]}"
@@ -1114,7 +1116,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                     warning_message = f"Encountered {unk_count} unknown tokens out of {len(merged_encoding.ids)} in input starting with {typed_input_list[0].input_string}"
                 else:
                     Exception("We shouldn't be here")
-                warn(warning_message)
+                if warning_message is not None:
+                    warn(warning_message)
             else:
                 raise Exception(
                     f"Unexpected on_unknown value {on_unknown}. Should be 'warn' or 'raise'"

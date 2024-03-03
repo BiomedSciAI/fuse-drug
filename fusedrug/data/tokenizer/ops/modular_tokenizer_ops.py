@@ -205,7 +205,7 @@ class FastModularTokenizer(OpBase):
             convert_attention_mask_to_bool (Optional[bool], optional): _description_. Defaults to True.
             max_seq_len (Optional[int], optional): set maximum sequence len dynamically, used for both padding and truncation.. Defaults to None.
             on_unknown (Optional[str], optional): What happens if unknown tokens (i.e. ones mapped to <UNK>) are encountered: 'raise' or 'warn'. Defaults to "warn".
-            verbose (Optional[int], optional): verbosity level. 0,1: warning notification, 2: warning with partial data, 3: warning
+            verbose (Optional[int], optional): verbosity level. 0: no notification, 1: warning notification, 2: warning with partial data, 3: warning
                 with full data. Defaults to 1.
 
         Raises:
