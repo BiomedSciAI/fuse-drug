@@ -14,6 +14,10 @@ def compare_modular_tokenizers(tokenizer1_name: str, tokenizer2_name: str) -> No
 
     pertrained_tokenizers_path = Path(__file__).parent / "pretrained_tokenizers"
 
+    lgr.info(
+        f"comparing modular tokenizers {tokenizer1_name} and {tokenizer2_name} in {pertrained_tokenizers_path}"
+    )
+
     modular_tokenizer_1 = ModularTokenizer.load(
         path=pertrained_tokenizers_path / tokenizer1_name
     )
