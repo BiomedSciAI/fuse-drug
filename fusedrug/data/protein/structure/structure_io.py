@@ -314,6 +314,7 @@ def load_protein_structure_features(
                     "resolution",
                     "residue_index",
                     "chain_index",
+                    "all_atom_bfactors",
                 ]
             }
 
@@ -753,14 +754,8 @@ def flexible_save_pdb_file(
             "flexible_save_pdb_file:: only output backbone requested, will store coordinates only for the first 4 atoms in atom14 convention order."
         )
         xyz = xyz[:, :4, ...]
-    elif xyz.shape[1] != 14:
-        if xyz.shape[1] != 4:
-            raise Exception(
-                f"xyz shape is allowed to be 14 (all heavy atoms) or 4 (only BB), got xyz.shap={xyz.shape}"
-            )
-            # warn(
-            #     f"flexible_save_pdb_file:: info: note that xyz contains {xyz.shape[1]} max atoms, and not max 14 atoms (all possible heavy atoms). This is ok if intentional, for example, when outputting only backbone."
-            # )
+
+    assert xyz.shape[1] in [4,14,37] , f"xyz shape is allowed to be 14 (all heavy atoms) or 4 (only BB), got xyz.shap={xyz.shape}"
 
     if b_factors is None:
         b_factors = torch.tensor([100.0] * xyz.shape[0])
@@ -772,6 +767,7 @@ def flexible_save_pdb_file(
     builder.init_seg("    ")
     if torch.is_tensor(residues_mask):
         residues_mask = residues_mask.bool()
+
     for i, (aa_idx, p_res, b, m_res) in enumerate(
         zip(sequence, xyz, b_factors, residues_mask)
     ):
@@ -780,17 +776,25 @@ def flexible_save_pdb_file(
         aa_idx = aa_idx.item()
         if torch.is_tensor(p_res):
             p_res = p_res.clone().detach().cpu()  # fixme: this looks slow
-        if aa_idx == 21:
+        if aa_idx == 21: ## is this X ? (unknown/special)
             continue
         try:
             three = residx_to_3(aa_idx)
         except IndexError:
             continue
         builder.init_residue(three, " ", int(i), icode=" ")
+
+        if xyz.shape[1] == 37:
+            atom_names = rc.atom_types
+        else:
+            atom_names = rc.restype_name_to_atom14_names[three]
+
+        residue_atom_names = rc.residue_atoms[three]
+
         for j, (atom_name,) in enumerate(
-            zip(rc.restype_name_to_atom14_names[three])
+            zip(atom_names)
         ):  # why is zip used here?
-            if (len(atom_name) > 0) and (len(p_res) > j):
+            if (len(atom_name) > 0) and (len(p_res) > j) and atom_name in residue_atom_names:
                 builder.init_atom(
                     atom_name,
                     p_res[j].tolist(),
@@ -805,7 +809,7 @@ def flexible_save_pdb_file(
     io.set_structure(structure)
     os.makedirs(pathlib.Path(save_path).parent, exist_ok=True)
     io.save(save_path)
-
+    pass
 
 def save_pdb_file(
     pos14: torch.Tensor,
