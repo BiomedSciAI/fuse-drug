@@ -191,9 +191,6 @@ def flexible_align_chains_structure(
     #     only_save_backbone: bool = False,
     #     b_factors: Optional[torch.Tensor] = None,
 
-    dynamic_matching = dynamic_matching
-    static_matching = static_matching
-
 
 def _apply_indices(x: Dict, indices: np.ndarray) -> Tuple[str, np.ndarray]:
     ans = {}
@@ -208,7 +205,7 @@ def _apply_indices(x: Dict, indices: np.ndarray) -> Tuple[str, np.ndarray]:
 def get_alignment_indices(
     target: str,
     query: str,
-    minimal_matching_sequence_level_chunk: Optional[int],
+    minimal_matching_sequence_level_chunk: Optional[int] = None,
 ) -> Tuple[np.ndarray, np.ndarray]:
     aligner = Align.PairwiseAligner()
 
@@ -228,6 +225,11 @@ def get_alignment_indices(
         ):
             target_indices.extend(list(range(target_start, target_end)))
             query_indices.extend(list(range(query_start, query_end)))
+
+    if len(target_indices) == 0:
+        raise Exception(
+            f"ERROR: in flexible_align_chains_structure(), could not align even a single chunk of minimal defined size {minimal_matching_sequence_level_chunk}"
+        )
 
     target_indices = np.array(target_indices)
     query_indices = np.array(query_indices)
