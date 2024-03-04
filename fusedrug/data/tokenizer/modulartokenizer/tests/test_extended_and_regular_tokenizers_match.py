@@ -1,5 +1,6 @@
 import logging
 from pathlib import Path
+import unittest
 
 from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import ModularTokenizer
 
@@ -12,7 +13,7 @@ lgr = logging.getLogger(__file__)
 
 def compare_modular_tokenizers(tokenizer1_name: str, tokenizer2_name: str) -> None:
 
-    pertrained_tokenizers_path = Path(__file__).parent / "pretrained_tokenizers"
+    pertrained_tokenizers_path = Path(__file__).parents[1] / "pretrained_tokenizers"
 
     lgr.info(
         f"comparing modular tokenizers {tokenizer1_name} and {tokenizer2_name} in {pertrained_tokenizers_path}"
@@ -61,15 +62,16 @@ def compare_modular_tokenizers(tokenizer1_name: str, tokenizer2_name: str) -> No
             )
 
 
-def test_modular_tokenizers_compatibility() -> None:
-    old_tokenizer_name = "modular_AA_SMILES_single_path"
-    regular_tokenizer_name = "bmfm_modular_tokenizer"
-    extended_tokenizer_name = "bmfm_extended_modular_tokenizer"
-    # If new modular tokenizers are added, and need to be kept synchronized, add more name and tests
+class TestModularTokenizersCompatibility(unittest.TestCase):
+    def test_modular_tokenizers_compatibility(self) -> None:
+        old_tokenizer_name = "modular_AA_SMILES_single_path"
+        regular_tokenizer_name = "bmfm_modular_tokenizer"
+        extended_tokenizer_name = "bmfm_extended_modular_tokenizer"
+        # If new modular tokenizers are added, and need to be kept synchronized, add more name and tests
 
-    compare_modular_tokenizers(old_tokenizer_name, regular_tokenizer_name)
-    compare_modular_tokenizers(regular_tokenizer_name, extended_tokenizer_name)
+        compare_modular_tokenizers(old_tokenizer_name, regular_tokenizer_name)
+        compare_modular_tokenizers(regular_tokenizer_name, extended_tokenizer_name)
 
 
 if __name__ == "__main__":
-    test_modular_tokenizers_compatibility()
+    unittest.main()

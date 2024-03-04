@@ -1102,7 +1102,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             #   the input string and its encoded-decoded variant, will allow us to identify parts
             #   of input mapped to unk.
             if on_unknown == "raise":
-                raise Exception(
+                raise RuntimeError(
                     f"Encountered {unk_count} unknown tokens out of {len(merged_encoding.ids)} in input starting with {typed_input_list[0].input_string}"
                 )
             elif on_unknown == "warn":
@@ -1115,11 +1115,11 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 elif verbose >= 3:
                     warning_message = f"Encountered {unk_count} unknown tokens out of {len(merged_encoding.ids)} in input starting with {typed_input_list[0].input_string}"
                 else:
-                    Exception("We shouldn't be here")
+                    ValueError("We shouldn't be here")
                 if warning_message is not None:
                     warn(warning_message)
             else:
-                raise Exception(
+                raise ValueError(
                     f"Unexpected on_unknown value {on_unknown}. Should be 'warn' or 'raise'"
                 )
 
