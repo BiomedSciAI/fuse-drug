@@ -1,3 +1,4 @@
+from pathlib import Path
 import unittest
 import hydra
 from omegaconf import DictConfig, OmegaConf
@@ -12,12 +13,12 @@ from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import TypedInpu
 config_name = "tokenizer_config_with_celltype"
 
 
-CONFIG_PATH = "../configs"
+CONFIG_PATH = str((Path(__file__).parents[1] / "configs").absolute())
 CONFIG_NAME = "tokenizer_config"
 
 
 class ConfigHolder:
-    def __init__(self, cfg: DictConfig | None = None) -> None:
+    def __init__(self, cfg: DictConfig = None) -> None:
         if cfg is None:
             with hydra.initialize_config_dir(CONFIG_PATH):
                 cfg = hydra.compose(CONFIG_NAME)
@@ -28,7 +29,7 @@ class ConfigHolder:
 
 
 class TestModularTokenizer(unittest.TestCase):
-    def setup(self, config_holder: ConfigHolder = None) -> None:
+    def setUp(self, config_holder: ConfigHolder = None) -> None:
         if config_holder is None:
             config_holder = ConfigHolder()
         cfg = config_holder.get_config()
@@ -94,7 +95,7 @@ def main(cfg: DictConfig) -> None:
     print(str(cfg))
     config_holder = ConfigHolder(cfg)
     tester = TestModularTokenizer()
-    tester.setup(config_holder)
+    tester.setUp(config_holder)
     tester.test_tokenizer_with_warning()
     tester.test_tokenizer_with_exception()  # handles getting the exception
 
