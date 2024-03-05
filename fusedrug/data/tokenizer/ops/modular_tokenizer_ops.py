@@ -188,14 +188,32 @@ class FastModularTokenizer(OpBase):
         key_out_attention_mask: Optional[str] = None,
         convert_attention_mask_to_bool: Optional[bool] = True,
         max_seq_len: Optional[int] = None,
+        on_unknown: Optional[str] = "warn",
+        verbose: Optional[int] = 1,
     ) -> NDict:
-        """
-        :param key_in: key to either a:
-            (1) string that contains, in addition to the text that is to be tokenized, special delimiters signifying the type
-        of input within each span of text (e.g. <@TOKENIZER-TYPE=AA> sequence, <@TOKENIZER-TYPE=SMILES>, etc.).
-            (2) list of modular_tokenizer.TypedInput specifying the tokenizer type and the subsequence to tokenize
+        """_summary_
 
-        :param max_seq_len: set maximum sequence len dynamically, used for both padding and truncation.
+        Args:
+            sample_dict (NDict): _description_
+            key_in (str): key to either a:
+                (1) string that contains, in addition to the text that is to be tokenized, special delimiters signifying the type
+                of input within each span of text (e.g. <@TOKENIZER-TYPE=AA> sequence, <@TOKENIZER-TYPE=SMILES>, etc.).
+                (2) list of modular_tokenizer.TypedInput specifying the tokenizer type and the subsequence to tokenize
+            key_out_tokenized_object (Optional[str], optional): _description_. Defaults to None.
+            key_out_tokens_ids (Optional[str], optional): _description_. Defaults to None.
+            key_out_attention_mask (Optional[str], optional): _description_. Defaults to None.
+            convert_attention_mask_to_bool (Optional[bool], optional): _description_. Defaults to True.
+            max_seq_len (Optional[int], optional): set maximum sequence len dynamically, used for both padding and truncation.. Defaults to None.
+            on_unknown (Optional[str], optional): What happens if unknown tokens (i.e. ones mapped to <UNK>) are encountered: 'raise' or 'warn'. Defaults to "warn".
+            verbose (Optional[int], optional): verbosity level. 0: no notification, 1: warning notification, 2: warning with partial data, 3: warning
+                with full data. Defaults to 1.
+
+        Raises:
+            Exception: _description_
+            Exception: _description_
+
+        Returns:
+            NDict: _description_
         """
 
         data = sample_dict[key_in]
@@ -217,11 +235,19 @@ class FastModularTokenizer(OpBase):
 
         if isinstance(data, str):
             encoded, overflow_info = self._tokenizer.encode(
-                data, max_len=max_seq_len, return_overflow_info=True
+                data,
+                max_len=max_seq_len,
+                return_overflow_info=True,
+                on_unknown=on_unknown,
+                verbose=verbose,
             )
         else:
             encoded, overflow_info = self._tokenizer.encode_list(
-                data, max_len=max_seq_len, return_overflow_info=True
+                data,
+                max_len=max_seq_len,
+                return_overflow_info=True,
+                on_unknown=on_unknown,
+                verbose=verbose,
             )
 
         expected_max_len = self.get_max_len(override_max_len=max_seq_len)

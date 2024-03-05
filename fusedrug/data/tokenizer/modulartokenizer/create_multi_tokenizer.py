@@ -24,14 +24,19 @@ TITAN_SMILES_PATH = os.environ["TITAN_DATA"] + "/public/epitopes.smi"
 
 
 def test_tokenizer(
-    t_inst: ModularTokenizer, cfg_raw: Dict, mode: Optional[str] = ""
+    t_inst: ModularTokenizer,
+    cfg_raw: Dict,
+    mode: Optional[str] = "",
+    input_strings: Optional[List] = None,
+    on_unknown: Optional[str] = "warn",
 ) -> None:
-    input_strings = [
-        TypedInput("AA", "<BINDING>ACDEFGHIJKLMNPQRSUVACDEF", 10),
-        TypedInput("SMILES", "CCCHHCCCHC", 4),
-        TypedInput("AA", "EFGHEFGHEFGH", 5),
-        TypedInput("SMILES", "C=H==CC=HCCC", None),
-    ]
+    if input_strings is None:
+        input_strings = [
+            TypedInput("AA", "<BINDING>ACDEFGHIJKLMNPQRSUVACDEF", 10),
+            TypedInput("SMILES", "CCCHHCCCHC", 4),
+            TypedInput("AA", "EFGHEFGHEFGH", 5),
+            TypedInput("SMILES", "C=H==CC=HCCC", None),
+        ]
     # TODO: named tuples with specific properties, e.g. max_len for every input, not for input type
     # Test general encoding: (per-tokenizer truncation works)
     t_inst = copy.deepcopy(t_inst)
@@ -40,12 +45,14 @@ def test_tokenizer(
         typed_input_list=input_strings,
         max_len=cfg_raw["data"]["tokenizer"]["overall_max_len"],
         return_overflow_info=True,
+        on_unknown=on_unknown,
     )
     print(f"encoded tokens: {enc.tokens}, overflow=[{overflow_msg}]")
     # Test overall padding: (global padding works)
     enc_pad = t_inst.encode_list(
         typed_input_list=input_strings,
         max_len=50,
+        on_unknown=on_unknown,
     )
     assert (
         len(enc_pad.ids) == 50
@@ -55,6 +62,7 @@ def test_tokenizer(
     # Test overall padding: (global padding works)
     enc_pad = t_inst.encode_list(
         typed_input_list=input_strings,
+        on_unknown=on_unknown,
     )
     assert (
         len(enc_pad.ids) == 70
@@ -64,6 +72,7 @@ def test_tokenizer(
     # Test overall padding: (global padding works)
     enc_pad = t_inst.encode_list(
         typed_input_list=input_strings,
+        on_unknown=on_unknown,
     )
     assert (
         len(enc_pad.ids) == 70
@@ -72,6 +81,7 @@ def test_tokenizer(
     # Test overall cropping: (global truncation works)
     enc_trunc = t_inst.encode_list(
         typed_input_list=input_strings,
+        on_unknown=on_unknown,
         max_len=15,
     )
     assert (

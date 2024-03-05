@@ -91,13 +91,13 @@ Removing tokens from special_tokens.py will accomplish nothing, since they are a
 
 Short version:
 * Update task_tokens in [special_tokens.py](special_tokens.py) with the required tokens in
-* Run [update_multi_tokenizer_special_tokens](update_multi_tokenizer_special_tokens.py)
+* Run [add_multi_tokenizer_special_tokens](add_multi_tokenizer_special_tokens.py)
 Note: by default this will write over the old version
 
 Long version:
-* Load an existing modular tokenizer, like [here](update_multi_tokenizer_special_tokens.py#L30)
-* Create a list of the required tokens, similarly to [here](update_multi_tokenizer_special_tokens.py#L35)
-* Call ModularTokenizer.update_special_tokens() with the list: [add_tokens](update_multi_tokenizer_special_tokens.py#L36)
+* Load an existing modular tokenizer, like [here](add_multi_tokenizer_special_tokens.py#L30)
+* Create a list of the required tokens, similarly to [here](add_multi_tokenizer_special_tokens.py#L36)
+* Call ModularTokenizer.update_special_tokens() with the list: [add_tokens](add_multi_tokenizer_special_tokens.py#L37)
 * Use `save_tokenizer_path` parameter to save, or manually save the new tokenizer, usually over the original modular tokenizer.
 
 ## Config structure:
