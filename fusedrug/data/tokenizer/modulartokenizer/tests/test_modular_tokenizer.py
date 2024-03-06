@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 import unittest
 import hydra
@@ -20,12 +21,21 @@ CONFIG_NAME = "tokenizer_config"
 class ConfigHolder:
     def __init__(self, cfg: DictConfig = None) -> None:
         if cfg is None:
+            self._setup_test_env()
             with hydra.initialize_config_dir(CONFIG_PATH):
                 cfg = hydra.compose(CONFIG_NAME)
         self.config_obj = cfg
 
     def get_config(self) -> DictConfig:
         return self.config_obj
+
+    def _setup_test_env(self) -> None:
+        REPO_ROOT = "fuse-drug"
+        if "MY_GIT_REPO" not in os.environ:
+            for i in range(len(Path(__file__).parents)):
+                if Path(__file__).parents[i].name == REPO_ROOT:
+                    os.environ["MY_GIT_REPOS"] = str(Path(__file__).parents[i + 1])
+                    break
 
 
 class TestModularTokenizer(unittest.TestCase):
