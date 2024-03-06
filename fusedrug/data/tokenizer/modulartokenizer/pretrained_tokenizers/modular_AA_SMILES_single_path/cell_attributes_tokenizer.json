@@ -2588,15 +2588,6 @@
     },
     {
       "id": 287,
-      "content": "<TISSUE_TYPE_CLASS>",
-      "single_word": false,
-      "lstrip": false,
-      "rstrip": false,
-      "normalized": false,
-      "special": true
-    },
-    {
-      "id": 288,
       "content": "<MOLECULAR_ENTITY_CELL_GENE_EXPRESSION_RANKED>",
       "single_word": false,
       "lstrip": false,
@@ -2605,8 +2596,17 @@
       "special": true
     },
     {
-      "id": 289,
+      "id": 288,
       "content": "<CELL_TYPE_CLASS>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 289,
+      "content": "<TISSUE_TYPE_CLASS>",
       "single_word": false,
       "lstrip": false,
       "rstrip": false,
@@ -2920,9 +2920,9 @@
       "<NOOP>": 284,
       "<TARGETED_ANTIBODY_DESIGN_ENCODER_ONLY_MODE>": 285,
       "<MOLECULAR_ENTITY_SMALL_MOLECULE>": 286,
-      "<TISSUE_TYPE_CLASS>": 287,
-      "<MOLECULAR_ENTITY_CELL_GENE_EXPRESSION_RANKED>": 288,
-      "<CELL_TYPE_CLASS>": 289,
+      "<MOLECULAR_ENTITY_CELL_GENE_EXPRESSION_RANKED>": 287,
+      "<CELL_TYPE_CLASS>": 288,
+      "<TISSUE_TYPE_CLASS>": 289,
       "[CL:0000499]": 3522,
       "[CL:2000060]": 3523,
       "[CL:0000235]": 3524,
