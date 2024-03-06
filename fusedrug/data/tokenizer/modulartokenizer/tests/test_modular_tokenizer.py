@@ -20,7 +20,6 @@ CONFIG_NAME = "tokenizer_config"
 
 class ConfigHolder:
     def __init__(self, cfg: DictConfig = None) -> None:
-        print(f' L23 {os.environ.get("MY_GIT_REPOS")}')
         if cfg is None:
             self._setup_test_env()
             with hydra.initialize_config_dir(CONFIG_PATH):
@@ -31,12 +30,11 @@ class ConfigHolder:
         return self.config_obj
 
     def _setup_test_env(self) -> None:
-        REPO_ROOT = "fuse-drug"
+        REPO_ROOT = "fusedrug"
         if "MY_GIT_REPOS" not in os.environ:
             for i in range(len(Path(__file__).parents)):
-                print(f" L37 dir[{i}] =  {Path(__file__).parents[i].name}")
                 if Path(__file__).parents[i].name == REPO_ROOT:
-                    os.environ["MY_GIT_REPOS"] = str(Path(__file__).parents[i + 1])
+                    os.environ["MY_GIT_REPOS"] = str(Path(__file__).parents[i + 2])
                     break
 
 
