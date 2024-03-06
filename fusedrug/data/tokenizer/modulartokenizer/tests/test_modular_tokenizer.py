@@ -23,7 +23,10 @@ class ConfigHolder:
         if cfg is None:
             self._setup_test_env()
             with hydra.initialize_config_dir(CONFIG_PATH):
-                cfg = hydra.compose(CONFIG_NAME)
+                overrides = [
+                    f"paths.tokenizers_path={str(Path(__file__).parents[1] / 'pretrained_tokenizers')}"
+                ]
+                cfg = hydra.compose(CONFIG_NAME, overrides=overrides)
         self.config_obj = cfg
 
     def get_config(self) -> DictConfig:
