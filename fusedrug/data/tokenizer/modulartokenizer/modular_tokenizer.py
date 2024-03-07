@@ -25,6 +25,23 @@ TypedInput = collections.namedtuple(
 )
 
 
+def list_to_tokenizer_string(lst: List[TypedInput]) -> str:
+    out = ""
+    # prev_tokenizer = None
+    for in_named_tuple in lst:
+        curr_tokenizer = in_named_tuple.input_type
+        curr_len = in_named_tuple.max_len
+        # NOTE: For now we don't combine consequent strings encoded by the same tokenizer,
+        # since they may have different max lengths, so we create a new entry, even if curr_tokenizer == prev_tokenizer:
+        if curr_len is None:
+            out += f"<@TOKENIZER-TYPE={curr_tokenizer}>"
+        else:
+            out += f"<@TOKENIZER-TYPE={curr_tokenizer}@MAX-LEN={curr_len}>"
+        out += in_named_tuple.input_string
+        # prev_tokenizer = curr_tokenizer
+    return out
+
+
 class ModularTokenizer(transformers.PreTrainedTokenizerFast):
     def __init__(
         self,
