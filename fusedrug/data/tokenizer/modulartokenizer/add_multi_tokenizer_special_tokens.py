@@ -11,7 +11,11 @@ from fusedrug.data.tokenizer.modulartokenizer.special_tokens import (
 
 
 # this needs to be run on the bmfm_modular_tokenizer and the bmfm_extended_modular_tokenizer
-@hydra.main(config_path="./configs", config_name="tokenizer_config", version_base=None)
+@hydra.main(
+    config_path="./configs",
+    config_name="tokenizer_config_with_celltype",
+    version_base=None,
+)
 def main(cfg: DictConfig) -> None:
     print(str(cfg))
 

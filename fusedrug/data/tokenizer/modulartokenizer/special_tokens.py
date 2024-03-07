@@ -312,6 +312,9 @@ task_tokens = [  # pairwise tasks
     "CELL_TYPE_CLASS",
     "TISSUE_TYPE_CLASS",
     "MOLECULAR_ENTITY_CELL_GENE_EXPRESSION_RANKED",
+    "SOME_VALUE",
+    "TESTY42",
+    "BANANA",
 ]
 
 AA_tokens = [

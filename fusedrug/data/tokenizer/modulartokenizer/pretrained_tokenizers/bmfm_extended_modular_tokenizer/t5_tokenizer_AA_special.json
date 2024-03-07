@@ -2612,6 +2612,33 @@
       "rstrip": false,
       "normalized": false,
       "special": true
+    },
+    {
+      "id": 290,
+      "content": "<BANANA>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 291,
+      "content": "<SOME_VALUE>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 292,
+      "content": "<TESTY42>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
     }
   ],
   "normalizer": null,
@@ -2923,6 +2950,9 @@
       "<MOLECULAR_ENTITY_CELL_GENE_EXPRESSION_RANKED>": 287,
       "<CELL_TYPE_CLASS>": 288,
       "<TISSUE_TYPE_CLASS>": 289,
+      "<BANANA>": 290,
+      "<SOME_VALUE>": 291,
+      "<TESTY42>": 292,
       "A": 501,
       "B": 502,
       "C": 503,

@@ -1358,7 +1358,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         # At this point tokens contain to existing special tokens, but may contain regular tokens
         all_existing_tokens = set([x["token"] for x in self.decoder_dict.values()])
         tokens_regular = list(set(tokens).intersection(all_existing_tokens))
-        tokens = list(set(tokens) - set(tokens_regular))
+        tokens = sorted(list(set(tokens) - set(tokens_regular)))
         # At this point tokens contain no tokens that currently exist in the modular tokenizer, and tokens_regular contain
         # special tokens to be added that are currently regular tokens in the tokenizer
 
