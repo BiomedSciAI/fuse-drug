@@ -100,8 +100,16 @@ Long version:
 * Call ModularTokenizer.update_special_tokens() with the list: [add_tokens](add_multi_tokenizer_special_tokens.py#L37)
 * Use `save_tokenizer_path` parameter to save, or manually save the new tokenizer, usually over the original modular tokenizer.
 
+#### Note regarding adding tokens:
+Due to memory limitations, we currently have a full modular tokenizer *bmfm_extended_modular_tokenizer* and a smaller tokenizer, the *bmfm_modular_tokenizer* which is a strict subset of the first.
+This relationship must be maintained, as it will allow mixing models and tasks between different modalities.  To maintain this consistency, whenever adding tokens to one of the modular tokenizers, the same tokens must be added to each the modular tokenizers.  A test in the Jenkins run will prevent merging of inconsistent tokenizers.
+#### Backward compatibility and deprecation of old modular tokenizer:
+The *modular_AA_SMILES_single_path* modular tokenizer was renamed to *bmfm_modular_tokenizer*, and is temporarily kept as an identical copy for backwards compatibility.  Remember to update this version as well to maintain compatibility, and update your code to new name.
+
+
+
 ## Config structure:
-The init and load_from_jsons functiona both receive a list of dictionaries, each defining a single type of tokenizer. The dictionaries have the following fields:
+The init and load_from_jsons functions both receive a list of dictionaries, each defining a single type of tokenizer. The dictionaries have the following fields:
 * name: Name of the tokenizer (usually depicting its use context - AA sequences, SMILES, etc)
 * tokenizer_id:    unique int identifier of the tokenizer
 * json_path:       a path to a json file containing the initial input tokenizer
@@ -126,8 +134,8 @@ To add a new tokenizer:
 * run the `add_tokenizer_to_multi_tokenizer.py` script
 
 ## Extended tokenizer
-The default tokenizer has the hightst token ID set to 5000. This leaves plenty of free space to add tokenizers, heavy memory useage.
-The human genes taxonony we use includs about 24000 genes, and will clearly not fit inside the 5k space.
-For the time beeing, the gene taxonomy is only used by the BMFM-targets team.  For this usecase, we extended to tokenizer to 35000 id's by adding the genes from id 5000 and on.
+The default tokenizer has the hights token ID set to 5000. This leaves plenty of free space to add tokenizers, heavy memory usage.
+The human genes taxonomy we use includes at least about 24000 genes, and will clearly not fit inside the 5k space.
+For the time being, the gene taxonomy is only used by the BMFM-targets team.  For this use case, we extended to tokenizer to 35000 id's by adding the genes from id 5000 and on.
 This allows for an "all but genes" tokenizer which is small, while the extended tokenizer is kept consistent.
 To maintain this, one need to place all special-tokens from the extended tokenizers (for now, only GENE) in the [special-tokens.py] file, and update both the [bmfm_modular_tokenizer] and the [bmfm_extended_modular_tokenizer] when new spacial tokens are added.
