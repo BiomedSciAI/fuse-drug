@@ -2615,7 +2615,7 @@
     },
     {
       "id": 290,
-      "content": "<CORRUPTED_AREA_END>",
+      "content": "<CORRUPTED_AREA_START>",
       "single_word": false,
       "lstrip": false,
       "rstrip": false,
@@ -2624,7 +2624,7 @@
     },
     {
       "id": 291,
-      "content": "<CORRUPTED_AREA_START>",
+      "content": "<CORRUPTED_AREA_END>",
       "single_word": false,
       "lstrip": false,
       "rstrip": false,
@@ -2935,8 +2935,8 @@
       "<MOLECULAR_ENTITY_CELL_GENE_EXPRESSION_RANKED>": 287,
       "<CELL_TYPE_CLASS>": 288,
       "<TISSUE_TYPE_CLASS>": 289,
-      "<CORRUPTED_AREA_END>": 290,
-      "<CORRUPTED_AREA_START>": 291,
+      "<CORRUPTED_AREA_START>": 290,
+      "<CORRUPTED_AREA_END>": 291,
       "#": 527,
       "%": 528,
       "(": 529,
