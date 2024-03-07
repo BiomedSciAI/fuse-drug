@@ -25,6 +25,23 @@ TypedInput = collections.namedtuple(
 )
 
 
+def list_to_tokenizer_string(lst: List[TypedInput]) -> str:
+    out = ""
+    # prev_tokenizer = None
+    for in_named_tuple in lst:
+        curr_tokenizer = in_named_tuple.input_type
+        curr_len = in_named_tuple.max_len
+        # NOTE: For now we don't combine consequent strings encoded by the same tokenizer,
+        # since they may have different max lengths, so we create a new entry, even if curr_tokenizer == prev_tokenizer:
+        if curr_len is None:
+            out += f"<@TOKENIZER-TYPE={curr_tokenizer}>"
+        else:
+            out += f"<@TOKENIZER-TYPE={curr_tokenizer}@MAX-LEN={curr_len}>"
+        out += in_named_tuple.input_string
+        # prev_tokenizer = curr_tokenizer
+    return out
+
+
 class ModularTokenizer(transformers.PreTrainedTokenizerFast):
     def __init__(
         self,
@@ -1102,7 +1119,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             #   the input string and its encoded-decoded variant, will allow us to identify parts
             #   of input mapped to unk.
             if on_unknown == "raise":
-                raise Exception(
+                raise RuntimeError(
                     f"Encountered {unk_count} unknown tokens out of {len(merged_encoding.ids)} in input starting with {typed_input_list[0].input_string}"
                 )
             elif on_unknown == "warn":
@@ -1115,11 +1132,11 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 elif verbose >= 3:
                     warning_message = f"Encountered {unk_count} unknown tokens out of {len(merged_encoding.ids)} in input starting with {typed_input_list[0].input_string}"
                 else:
-                    Exception("We shouldn't be here")
+                    ValueError("We shouldn't be here")
                 if warning_message is not None:
                     warn(warning_message)
             else:
-                raise Exception(
+                raise ValueError(
                     f"Unexpected on_unknown value {on_unknown}. Should be 'warn' or 'raise'"
                 )
 
