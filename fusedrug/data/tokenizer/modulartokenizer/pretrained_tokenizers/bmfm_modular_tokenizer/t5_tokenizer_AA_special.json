@@ -2639,6 +2639,24 @@
       "rstrip": false,
       "normalized": false,
       "special": true
+    },
+    {
+      "id": 293,
+      "content": "<CORRUPTED_AREA_END>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 294,
+      "content": "<CORRUPTED_AREA_START>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
     }
   ],
   "normalizer": null,
@@ -2953,6 +2971,8 @@
       "<BANANA>": 290,
       "<SOME_VALUE>": 291,
       "<TESTY42>": 292,
+      "<CORRUPTED_AREA_END>": 293,
+      "<CORRUPTED_AREA_START>": 294,
       "A": 501,
       "B": 502,
       "C": 503,

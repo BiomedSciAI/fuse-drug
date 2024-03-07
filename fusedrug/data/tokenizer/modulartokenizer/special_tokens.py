@@ -315,6 +315,8 @@ task_tokens = [  # pairwise tasks
     "SOME_VALUE",
     "TESTY42",
     "BANANA",
+    "CORRUPTED_AREA_START",
+    "CORRUPTED_AREA_END",
 ]
 
 AA_tokens = [
