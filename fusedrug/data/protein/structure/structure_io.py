@@ -364,6 +364,7 @@ def calculate_additional_features(gt_mmcif_feats: Dict) -> Dict:
 
     gt_mmcif_feats = data_transforms.make_atom14_masks(gt_mmcif_feats)
     gt_mmcif_feats = data_transforms.make_atom14_positions(gt_mmcif_feats)
+    gt_mmcif_feats = data_transforms.make_atom14_bfactors(gt_mmcif_feats)
 
     # for reference, remember .../openfold/openfold/data/input_pipeline.py
     # data_transforms.make_atom14_masks

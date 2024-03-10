@@ -31,7 +31,7 @@ class ProteinComplex:
         max_residue_type_part: float = 0.5,
         allow_dna_or_rna_in_complex: bool = False,
         chain_id_type: str = "author_assigned",
-    ) -> None:
+    ) -> bool:
         """
         Args:
             pdb_id: for example '7vux'
@@ -63,7 +63,7 @@ class ProteinComplex:
         if ans is None:
             if self.verbose:
                 print(f"ProteinComplex::add could not load pdb_id={pdb_id}")
-            return
+            return False
 
         loaded_chains, mmcif_object = ans
 
@@ -73,10 +73,12 @@ class ProteinComplex:
                     print(
                         f'dna or rna sequences are not allowed, and detected {mmcif_object.info["rna_or_dna_only_sequences_count"]}'
                     )
-                return
+                return False
 
         # min_chain_residues_count:int = 10,
         # max_residue_type_part:float = 0.5,
+
+        added_any = False
 
         for k, d in loaded_chains.items():
             if min_chain_residues_count is not None:
@@ -98,6 +100,9 @@ class ProteinComplex:
                     continue
 
             self.chains_data[(pdb_id, k)] = d
+            added_any = True
+        
+        return added_any
 
     def flatten(
         self,
@@ -541,6 +546,58 @@ class ProteinComplex:
             too_few_residues_interacting_pairs=too_few_residues_interacting_pairs,
             non_interacting_pairs=non_interacting_pairs,
         )
+
+    def get_main_features(self, atom_representation:int = 14):
+        """
+        Returns a dictionary, extracting from all features based on the requested atom_representation
+        {
+            "chain_identifier" : [ list of chain identifiers, each is (pdb_id, chain_id)],
+            "atom_positions" : [list of numpy arrays each contains atom position and having the shape [residues num, 14 or 37, 3]],
+            "aa_types" : [list of numpy arrays each containing integer values of amino-acid types, based on tiny_openfold.np.residue_constants.restypes_with_x order],
+            "gt_atom_exists": [list of numpy arrays each containing a boolean value if that atom exists, in the shape [residues num, 14 or 37]],
+            TODO: add the str version
+        }
+        """        
+        if atom_representation == 14:
+            features_names = dict(
+                atom_positions='atom14_gt_positions',
+                atom_exists='atom14_gt_exists',
+                aatype='aatype',
+                bfactors='atom14_bfactors', ###
+            )
+        elif self.atom_representation == 37:
+            features_names = dict(
+                atom_positions='all_atom_positions',
+                atom_exists='all_atom_mask', # it seems that atom37_atom_exists contains valid masks for residues with missing positional data
+                aatype='aatype',
+                bfactors='all_atom_bfactors',
+            )
+        else:
+            raise Exception(f'Only supported options for atom_representation are 14 and 37 of type integer. Got {atom_representation} of type {type(atom_representation)}')
+
+        ans = {}
+
+        ans['chain_identifier'] = []
+        ans['atom_positions'] = []
+        ans['aa_types'] = []
+        ans['gt_atom_exists'] = []
+        ans['aa_sequence_str'] = []
+        ans['bfactors'] = []
+        ###ans['chain_index'] = []
+
+        for pdb_id_chain_id, (k, chain_data) in enumerate(self.chains_data.items()):
+            ans['chain_identifier'].append(k)
+            ans['atom_positions'].append(chain_data[features_names['atom_positions']])
+            ans['aa_types'].append(chain_data[features_names['aatype']])
+            ans['gt_atom_exists'].append(chain_data[features_names['atom_exists']])
+            ans['bfactors'].append(chain_data[features_names['bfactors']])
+            ans['aa_sequence_str'].append(chain_data['aa_sequence_str'])
+            ###ans['chain_index'] += [chain_index]*ans['atom_positions'].shape[0]
+            
+        ans['atom_representation'] = atom_representation
+
+        return ans
+
 
 
 def calculate_number_of_interacting_residues(
