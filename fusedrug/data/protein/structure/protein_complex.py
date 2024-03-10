@@ -27,7 +27,7 @@ class ProteinComplex:
         pdb_id: str,
         chain_ids: Optional[List[Union[str, int]]] = None,
         load_protein_structure_features_overrides: Dict = None,
-        min_chain_residues_count: int = 10,
+        min_chain_residues_count: int = 8,
         max_residue_type_part: float = 0.5,
         allow_dna_or_rna_in_complex: bool = False,
         chain_id_type: str = "author_assigned",
