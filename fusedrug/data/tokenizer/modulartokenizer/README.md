@@ -134,7 +134,7 @@ To add a new tokenizer:
 * run the `add_tokenizer_to_multi_tokenizer.py` script
 
 ## Extended tokenizer
-The default tokenizer has the hights token ID set to 5000. This leaves plenty of free space to add tokenizers, heavy memory usage.
+The default tokenizer has the highest token ID set to 5000. This leaves plenty of free space to add tokenizers, heavy memory usage.
 The human genes taxonomy we use includes at least about 24000 genes, and will clearly not fit inside the 5k space.
 For the time being, the gene taxonomy is only used by the BMFM-targets team.  For this use case, we extended to tokenizer to 35000 id's by adding the genes from id 5000 and on.
 This allows for an "all but genes" tokenizer which is small, while the extended tokenizer is kept consistent.
