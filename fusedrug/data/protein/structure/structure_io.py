@@ -176,7 +176,7 @@ def load_protein_structure_features(
     chain_id_type: str = "author_assigned",
     device: str = "cpu",
     max_allowed_file_size_mbs: float = None,
-    also_return_mmcif_object: bool = False,
+    #also_return_mmcif_object: bool = False,
 ) -> Union[Tuple[str, dict], None]:
     """
     Extracts ground truth features from a given pdb_id or filename.
@@ -251,8 +251,9 @@ def load_protein_structure_features(
             return None
     elif structure_file_format == "cif":
         try:
-            mmcif_object = parse_mmcif(
-                native_structure_filename, unique_file_id=pdb_id, quiet_parsing=True
+            mmcif_object, mmcif_dict = parse_mmcif(
+                native_structure_filename, unique_file_id=pdb_id, quiet_parsing=True,
+                also_return_mmcif_dict=True,
             )
             chains_names = list(mmcif_object.chain_to_seqres.keys())
         except Exception as e:
@@ -340,8 +341,7 @@ def load_protein_structure_features(
     else:
         final_ans = ans[chain_id]
 
-    if also_return_mmcif_object:
-        final_ans = (final_ans, mmcif_object)
+    final_ans = (final_ans, mmcif_object, mmcif_dict)
 
     return final_ans
 
