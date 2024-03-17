@@ -22,9 +22,15 @@ class ProteinComplex:
         self.chains_data = {}  # maps from chain description (e.g. ('7vux', 'A')) to
         self.flattened_data = {}
 
+        #
+        self.per_chain_most_frequent_residue_part = {}
+        self.per_chain_mmcif_object = {}
+        self.per_chain_mmcif_dict = {}
+
     def add(
         self,
-        pdb_id: str,
+        pdb_id_or_filename: str,
+        pdb_id:Optional[str] = None,
         chain_ids: Optional[List[Union[str, int]]] = None,
         load_protein_structure_features_overrides: Dict = None,
         min_chain_residues_count: int = 8,
@@ -34,7 +40,8 @@ class ProteinComplex:
     ) -> bool:
         """
         Args:
-            pdb_id: for example '7vux'
+            pdb_id_or_filename: for example '7vux' or '/some/path/to/7vux.cif.gz'
+            pdb_id: must be provided if pdb_id_or_filename is a filename
             chain_ids: provide None (default) to load all chains
                 provide a list of chain identifiers to select which are loaded.
                     use str to use chain_id
@@ -51,12 +58,12 @@ class ProteinComplex:
         if load_protein_structure_features_overrides is None:
             load_protein_structure_features_overrides = {}
 
+
         ans = load_protein_structure_features(
-            pdb_id,
-            pdb_id=pdb_id if len(pdb_id) == 4 else None,
+            pdb_id_or_filename = pdb_id_or_filename,
+            pdb_id=pdb_id,
             chain_id=chain_ids,
-            chain_id_type=chain_id_type,
-            also_return_mmcif_object=True,
+            chain_id_type=chain_id_type,            
             **load_protein_structure_features_overrides,
         )
 
@@ -65,7 +72,7 @@ class ProteinComplex:
                 print(f"ProteinComplex::add could not load pdb_id={pdb_id}")
             return False
 
-        loaded_chains, mmcif_object = ans
+        loaded_chains, mmcif_object, mmcif_dict = ans
 
         if not allow_dna_or_rna_in_complex:
             if mmcif_object.info["rna_or_dna_only_sequences_count"] > 0:
@@ -74,6 +81,7 @@ class ProteinComplex:
                         f'dna or rna sequences are not allowed, and detected {mmcif_object.info["rna_or_dna_only_sequences_count"]}'
                     )
                 return False
+        
 
         # min_chain_residues_count:int = 10,
         # max_residue_type_part:float = 0.5,
@@ -88,10 +96,12 @@ class ProteinComplex:
                             f"chain {k} is too small, less than {min_chain_residues_count}"
                         )
                     continue
+            most_frequent_residue_part = d["aatype"].unique(return_counts=True)[
+                1
+            ].max() / len(d["aatype"])
+            self.per_chain_most_frequent_residue_part[(pdb_id, k)] = most_frequent_residue_part.item()
             if max_residue_type_part is not None:
-                most_frequent_residue_part = d["aatype"].unique(return_counts=True)[
-                    1
-                ].max() / len(d["aatype"])
+                
                 if most_frequent_residue_part > max_residue_type_part:
                     if self.verbose:
                         print(
@@ -100,6 +110,8 @@ class ProteinComplex:
                     continue
 
             self.chains_data[(pdb_id, k)] = d
+            self.per_chain_mmcif_object[(pdb_id, k)] = mmcif_object
+            self.per_chain_mmcif_dict[(pdb_id, k)] = mmcif_dict
             added_any = True
         
         return added_any
