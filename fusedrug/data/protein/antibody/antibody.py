@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Optional
 from fusedrug.data.protein.structure.sabdab import load_sabdab_dataframe
 import pandas as pd
 from collections import namedtuple
@@ -33,12 +33,16 @@ def get_antibody_regions(sequence: str, scheme: str = "chothia") -> Dict[str, st
     return ans
 
 
-def get_antibodies_info_from_sabdab(antibodies_pdb_ids: List[str]) -> List[Antibody]:
+def get_antibodies_info_from_sabdab(
+    antibodies_pdb_ids: Optional[List[str]] = None,
+) -> List[Antibody]:
     """
     Collects information on all provided antibodies_pdb_ids based on SabDab DB.
 
     """
     sabdab_df = load_sabdab_dataframe()
+    if antibodies_pdb_ids is None:
+        antibodies_pdb_ids = sabdab_df.pdb.unique().tolist()
     antibodies = []
     for pdb_id in antibodies_pdb_ids:
         found = sabdab_df[sabdab_df.pdb == pdb_id]
