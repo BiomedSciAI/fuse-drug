@@ -114,7 +114,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             # collect all special tokens (without indices):
             for t_type in self.tokenizers_info:
                 t_info = self.tokenizers_info[t_type]
-                t_json = json.load(open(t_info["json_path"]))
+                with open(t_info["json_path"]) as json_file:
+                    t_json = json.load(json_file)
                 self.tokenizers_info[t_type]["json_instance"] = t_json
 
                 part_special_tokens = ModularTokenizer.get_subtokenizer_added_tokens(
@@ -149,7 +150,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 )
             for t_type in self.tokenizers_info:
                 t_info = self.tokenizers_info[t_type]
-                t_json = json.load(open(t_info["modular_json_path"]))
+                with open(t_info["modular_json_path"]) as modular_file:
+                    t_json = json.load(modular_file)
                 self.tokenizers_info[t_type]["json_instance"] = t_json
 
         # rearrange regular token indices to map to IDs starting from next_index:
@@ -809,7 +811,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             }
         )
         new_tokenizer_path = new_tokenizer_info["json_path"]
-        t_json = json.load(open(new_tokenizer_path))
+        with open(new_tokenizer_path) as new_tokenizer:
+            t_json = json.load(new_tokenizer)
         new_tokenizer_info["json_instance"] = t_json
 
         # we can set a minimal starting id for each tokenizer.  Used for the extended tokenizer.
