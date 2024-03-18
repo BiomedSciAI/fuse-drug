@@ -17,7 +17,7 @@ data:
     overall_max_len: null
     max_possible_token_id: 5000
     max_special_token_id: 500
-    out_path: "${paths.tokenizers_path}/bmfm_modular_tokenizer/"
+    out_path: "${paths.tokenizers_path}/modular_AA_SMILES_single_path/"
     tokenizers_info:
       - name: AA
         tokenizer_id: 0 #unique int identifier of the tokenizer

@@ -14,13 +14,32 @@ hydra:
 
 data:
   tokenizer:
-    tokenizer_to_add: GENE
     overall_max_len: null
-    max_possible_token_id: 35000
+    max_possible_token_id: 100000
     max_special_token_id: 500
-    in_path: "${paths.tokenizers_path}/bmfm_modular_tokenizer"
     out_path: "${paths.modular_tokenizers_out_path}"
     tokenizers_info:
+      - name: AA
+        tokenizer_id: 0 #unique int identifier of the tokenizer
+        # raw tokenizer json path:
+        json_path:         "${paths.original_tokenizers_path}/${paths.AA_tokenizer_json}"
+        # updated for use with modular tokenizer json path:
+        modular_json_path: "${paths.modular_tokenizers_out_path}/${paths.AA_tokenizer_json}"
+        # max_len: 100 # [Optional] max number of tokens to be used by all instances of this tokenizer. If None or undefined, no limit is set.
+        start_delimiter: "<start_AA>"
+        end_delimiter: "<end_AA>"
+      - name: SMILES  #if None or undefined, type key will be used as the name
+        tokenizer_id: 1 #unique identifier of the tokenizer
+        json_path:         "${paths.original_tokenizers_path}/${paths.SMILES_tokenizer_json}"
+        modular_json_path: "${paths.modular_tokenizers_out_path}/${paths.SMILES_tokenizer_json}"
+        start_delimiter: "<start_SMILES>" #String to start the sequence. If None or undefined, <start_${type key}> will be used as the name
+        end_delimiter: "<end_SMILES>" #String to end the sequence. If None or undefined, <end_${type key}> will be used as the name
+      - name: CELL_ATTRIBUTES  #if None or undefined, type key will be used as the name
+        tokenizer_id: 2 #unique identifier of the tokenizer
+        json_path:         "${paths.original_tokenizers_path}${paths.cell_attributes_tokenizer_json}"
+        modular_json_path: "${paths.modular_tokenizers_out_path}${paths.cell_attributes_tokenizer_json}"
+        start_delimiter: "<start_CELL_ATTRIBUTES>" #String to start the sequence. If None or undefined, <start_${type key}> will be used as the name
+        end_delimiter: "<end_CELL_ATTRIBUTES>" #String to end the sequence. If None or undefined, <end_${type key}> will be used as the name
       - name: GENE  #if None or undefined, type key will be used as the name
         tokenizer_id: 3 #unique identifier of the tokenizer
         json_path:         "${paths.original_tokenizers_path}/${paths.gene_tokenizer_json}"

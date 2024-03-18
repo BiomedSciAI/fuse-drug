@@ -91,7 +91,8 @@ Removing tokens from special_tokens.py will accomplish nothing, since they are a
 
 Short version:
 * Update task_tokens in [special_tokens.py](special_tokens.py) with the required tokens in
-* Run [add_multi_tokenizer_special_tokens](add_multi_tokenizer_special_tokens.py)
+* Run [update_special_tokens_for_all_modular_tokenizers.sh](update_special_tokens_for_all_modular_tokenizers.sh)
+This is a handy script to update all tokemizers and test that they are consistent.
 Note: by default this will write over the old version
 
 Long version:
