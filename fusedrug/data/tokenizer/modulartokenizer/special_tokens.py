@@ -17,7 +17,6 @@ special_tokens = {
     "mask_token": "MASK",  # Mask token
     "eos_token": "EOS",  # End of Sentence token
 }
-
 # Remember: do not use the below tokens as is. They must be wrapped by token markers ('<', '>') first, using special_wrap_input()
 task_tokens = [  # pairwise tasks
     "GLOBAL_INTERACTION_ATTRIBUTES",  # the token following this marks which global attribute type is encoded next
