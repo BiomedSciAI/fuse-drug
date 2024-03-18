@@ -25,6 +25,8 @@ task_tokens = [  # pairwise tasks
     "MOLECULAR_ENTITY",  # the token following this marks which specific type of molecular entity comes next. All tokens
     # after this (and before the next MOLECULAR_ENTITY token) relate to the same molecule
     "MOLECULAR_ENTITY_GENERAL_PROTEIN",
+    "MOLECULAR_ENTITY_PROTEIN_CHAIN",
+    "MOLECULAR_ENTITY_MUTATED_PROTEIN_CHAIN",
     "MOLECULAR_ENTITY_ANTIGEN",
     "MOLECULAR_ENTITY_EPITOPE",
     "MOLECULAR_ENTITY_ANTIBODY_HEAVY_CHAIN",

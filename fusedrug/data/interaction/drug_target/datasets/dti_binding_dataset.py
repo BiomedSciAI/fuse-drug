@@ -23,7 +23,9 @@ def fix_df_types(df: pd.DataFrame) -> pd.DataFrame:
 
 def set_activity_multiindex(df: pd.DataFrame) -> pd.DataFrame:
     df.set_index(
-        ["source_dataset_versioned_name", "source_dataset_activity_id"], inplace=True
+        ["source_dataset_versioned_name", "source_dataset_activity_id"],
+        drop=False,
+        inplace=True,
     )
     return df
 
@@ -435,7 +437,11 @@ def _load_dataframes(
     _pairs = pd.read_csv(pairs_tsv, sep="\t")
     _pairs = fix_df_types(_pairs)
     # _pairs = concat_full_activity_col(_pairs)
-    set_activity_multiindex(_pairs)
+    # set_activity_multiindex(_pairs)
+    # A.G note: disabled this so that merge happens on columns.
+    # this is important where one of the index columns needs to be extracted. then,
+    # if the merge is on index, we have to drop the columns (otherwise there will be ambiguity)
+    # so they cannot be extracted.
     print(f"pairs num: {len(_pairs)}")
 
     if splits_tsv is not None and use_folds is None:
@@ -452,7 +458,7 @@ def _load_dataframes(
         print(f"loading split file {splits_tsv}")
         _splits = pd.read_csv(splits_tsv, sep="\t")
         _splits = fix_df_types(_splits)
-        set_activity_multiindex(_splits)
+        # set_activity_multiindex(_splits)
         # _splits = concat_full_activity_col(_splits)
         print(f"split contains {len(_splits)} rows")
 
@@ -474,10 +480,12 @@ def _load_dataframes(
 
         _pairs.reset_index(inplace=True)
         set_activity_multiindex(_pairs)
+        set_activity_multiindex(_splits)
 
         _pairs = _pairs[_pairs.split.isin(use_folds)]
         print(f"use_folds={use_folds} keeps {len(_pairs)} rows")
 
+    set_activity_multiindex(_pairs)
     assert isinstance(ligands_tsv, str)
     print(f"loading {ligands_tsv}")
     _ligands = pd.read_csv(ligands_tsv, sep="\t")
