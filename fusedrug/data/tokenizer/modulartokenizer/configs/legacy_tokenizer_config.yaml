@@ -34,9 +34,3 @@ data:
         modular_json_path: "${paths.modular_tokenizers_out_path}/${paths.SMILES_tokenizer_json}"
         start_delimiter: "<start_SMILES>" #String to start the sequence. If None or undefined, <start_${type key}> will be used as the name
         end_delimiter: "<end_SMILES>" #String to end the sequence. If None or undefined, <end_${type key}> will be used as the name
-      - name: CELL_ATTRIBUTES  #if None or undefined, type key will be used as the name
-        tokenizer_id: 2 #unique identifier of the tokenizer
-        json_path:         "${paths.original_tokenizers_path}${paths.cell_attributes_tokenizer_json}"
-        modular_json_path: "${paths.modular_tokenizers_out_path}${paths.cell_attributes_tokenizer_json}"
-        start_delimiter: "<start_CELL_ATTRIBUTES>" #String to start the sequence. If None or undefined, <start_${type key}> will be used as the name
-        end_delimiter: "<end_CELL_ATTRIBUTES>" #String to end the sequence. If None or undefined, <end_${type key}> will be used as the name
