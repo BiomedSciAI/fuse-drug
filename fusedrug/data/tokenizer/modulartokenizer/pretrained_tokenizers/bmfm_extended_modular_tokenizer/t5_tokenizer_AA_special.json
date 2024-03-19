@@ -2612,6 +2612,42 @@
       "rstrip": false,
       "normalized": false,
       "special": true
+    },
+    {
+      "id": 290,
+      "content": "<CORRUPTED_AREA_START>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 291,
+      "content": "<CORRUPTED_AREA_END>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 292,
+      "content": "<MOLECULAR_ENTITY_MUTATED_PROTEIN_CHAIN>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 293,
+      "content": "<MOLECULAR_ENTITY_PROTEIN_CHAIN>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
     }
   ],
   "normalizer": null,
@@ -2923,6 +2959,10 @@
       "<MOLECULAR_ENTITY_CELL_GENE_EXPRESSION_RANKED>": 287,
       "<CELL_TYPE_CLASS>": 288,
       "<TISSUE_TYPE_CLASS>": 289,
+      "<CORRUPTED_AREA_START>": 290,
+      "<CORRUPTED_AREA_END>": 291,
+      "<MOLECULAR_ENTITY_MUTATED_PROTEIN_CHAIN>": 292,
+      "<MOLECULAR_ENTITY_PROTEIN_CHAIN>": 293,
       "A": 501,
       "B": 502,
       "C": 503,
