@@ -38,7 +38,7 @@ def main(cfg: DictConfig) -> None:
 
     t_mult = ModularTokenizer.load(path=cfg_raw["data"]["tokenizer"]["in_path"])
 
-    test_tokenizer(t_mult, mode="loaded_path")
+    test_tokenizer(t_mult, cfg_raw=cfg_raw, mode="loaded_path")
 
     # Update tokenizer with special tokens:
     added_tokens = get_additional_tokens(subset=["special", "task"])
@@ -46,7 +46,7 @@ def main(cfg: DictConfig) -> None:
         added_tokens=added_tokens,
         save_tokenizer_path=cfg_raw["data"]["tokenizer"]["out_path"],
     )
-    test_tokenizer(t_mult, mode="updated_tokenizer")
+    test_tokenizer(t_mult, cfg_raw=cfg_raw, mode="updated_tokenizer")
 
     new_tokenizer_name = cfg_raw["data"]["tokenizer"]["tokenizer_to_add"]
     cfg_tokenizer_info = {
