@@ -29,8 +29,13 @@ def test_tokenizer(
     mode: Optional[str] = "",
     input_strings: Optional[List] = None,
     on_unknown: Optional[str] = "warn",
-    verbose: bool = False,
+    verbose: int = 0,
+    cfg_raw: Dict = None,
 ) -> None:
+    # for competability
+    if overall_max_length is None and cfg_raw is not None:
+        overall_max_length = cfg_raw["data"]["tokenizer"]["overall_max_len"]
+
     if input_strings is None:
         input_strings = [
             TypedInput("AA", "<BINDING>ACDEFGHIJKLMNPQRSUVACDEF", 10),
@@ -47,7 +52,7 @@ def test_tokenizer(
         max_len=overall_max_length,
         return_overflow_info=True,
         on_unknown=on_unknown,
-        verbose=1 if verbose else 0,
+        verbose=verbose,
     )
     if verbose:
         print(f"encoded tokens: {enc.tokens}, overflow=[{overflow_msg}]")
@@ -56,7 +61,7 @@ def test_tokenizer(
         typed_input_list=input_strings,
         max_len=50,
         on_unknown=on_unknown,
-        verbose=1 if verbose else 0,
+        verbose=verbose,
     )
     assert (
         len(enc_pad.ids) == 50
@@ -67,7 +72,7 @@ def test_tokenizer(
     enc_pad = t_inst.encode_list(
         typed_input_list=input_strings,
         on_unknown=on_unknown,
-        verbose=1 if verbose else 0,
+        verbose=verbose,
     )
     assert (
         len(enc_pad.ids) == 70
@@ -78,7 +83,7 @@ def test_tokenizer(
     enc_pad = t_inst.encode_list(
         typed_input_list=input_strings,
         on_unknown=on_unknown,
-        verbose=1 if verbose else 0,
+        verbose=verbose,
     )
     assert (
         len(enc_pad.ids) == 70
@@ -89,7 +94,7 @@ def test_tokenizer(
         typed_input_list=input_strings,
         on_unknown=on_unknown,
         max_len=15,
-        verbose=1 if verbose else 0,
+        verbose=verbose,
     )
     assert (
         len(enc_trunc.ids) == 15

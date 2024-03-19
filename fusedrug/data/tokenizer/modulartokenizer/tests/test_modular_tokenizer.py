@@ -42,7 +42,7 @@ class ConfigHolder:
 
 
 class TestModularTokenizer(unittest.TestCase):
-    def setUp(self, config_holder: ConfigHolder = None, verbose: bool = False) -> None:
+    def setUp(self, config_holder: ConfigHolder = None, verbose: int = 0) -> None:
         if config_holder is None:
             config_holder = ConfigHolder()
         cfg = config_holder.get_config()
@@ -108,7 +108,7 @@ class TestModularTokenizer(unittest.TestCase):
 
 @hydra.main(config_path=CONFIG_PATH, config_name=CONFIG_NAME, version_base=None)
 def main(cfg: DictConfig) -> None:
-    verbose = cfg.get("verbose", False)
+    verbose = cfg.get("verbose", 0)
     if verbose:
         print(str(cfg))
     config_holder = ConfigHolder(cfg)

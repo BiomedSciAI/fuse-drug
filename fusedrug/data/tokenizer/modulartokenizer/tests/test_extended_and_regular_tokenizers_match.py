@@ -12,7 +12,7 @@ lgr = logging.getLogger(__file__)
 
 
 def compare_modular_tokenizers(
-    tokenizer1_name: str, tokenizer2_name: str, verbose: bool = False
+    tokenizer1_name: str, tokenizer2_name: str, verbose: int = 0
 ) -> None:
 
     pertrained_tokenizers_path = Path(__file__).parents[1] / "pretrained_tokenizers"
