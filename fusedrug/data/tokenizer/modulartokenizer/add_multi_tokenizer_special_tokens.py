@@ -29,10 +29,6 @@ def main(tokenizer_path: str, output_path: str | None) -> None:
     else:
         print(f"output into  {output_path}")
 
-    # cfg = hydra.utils.instantiate(cfg)
-    # tmp = OmegaConf.to_object(cfg)
-    # cfg_raw: Dict[str, Any] = tmp
-    # overall_max_length==cfg_raw["data"]["tokenizer"]["overall_max_len"]
     overall_max_length = None
 
     ### load_from_jsons example. This is a less preferable way to load a tokenizer
