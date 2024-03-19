@@ -56,7 +56,7 @@ class TestModularTokenizer(unittest.TestCase):
     #     tokenizers_info=cfg_raw["data"]["tokenizer"]["tokenizers_info"]
     # )
 
-    # test_tokenizer(t_mult_loaded, cfg_raw=cfg_raw, mode="loaded")
+    # test_tokenizer(t_mult_loaded, mode="loaded")
 
     def common_tokenizer_test(self, on_unknown: str = "warn") -> None:
 
@@ -71,7 +71,6 @@ class TestModularTokenizer(unittest.TestCase):
         ]
         test_tokenizer(
             t_mult_loaded_path,
-            cfg_raw=self.cfg_raw,
             mode="loaded_path",
             input_strings=input_strings,
             verbose=self.verbose,
@@ -85,7 +84,6 @@ class TestModularTokenizer(unittest.TestCase):
         ]
         test_tokenizer(
             t_mult_loaded_path,
-            cfg_raw=self.cfg_raw,
             mode="loaded_path",
             input_strings=input_strings,
             on_unknown=on_unknown,

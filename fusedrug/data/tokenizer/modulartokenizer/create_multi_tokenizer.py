@@ -25,7 +25,7 @@ TITAN_SMILES_PATH = os.environ["TITAN_DATA"] + "/public/epitopes.smi"
 
 def test_tokenizer(
     t_inst: ModularTokenizer,
-    cfg_raw: Dict,
+    overall_max_length: None | int = None,
     mode: Optional[str] = "",
     input_strings: Optional[List] = None,
     on_unknown: Optional[str] = "warn",
@@ -44,7 +44,7 @@ def test_tokenizer(
 
     enc, overflow_msg = t_inst.encode_list(
         typed_input_list=input_strings,
-        max_len=cfg_raw["data"]["tokenizer"]["overall_max_len"],
+        max_len=overall_max_length,
         return_overflow_info=True,
         on_unknown=on_unknown,
         verbose=1 if verbose else 0,
