@@ -24,5 +24,5 @@ tokenizers_info:
   start_delimiter: <start_GENE>
   end_delimiter: <end_GENE>
   minimal_token_id: 5000
-max_possible_token_id: 100000
+max_possible_token_id: 35000
 max_special_token_id: 500
