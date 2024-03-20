@@ -738,8 +738,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
 
         tokenizers_info_cfg = self.tokenizers_info_raw_cfg
 
-        if not os.path.exists(os.path.dirname(path)):
-            os.makedirs(os.path.dirname(path))
+        if not os.path.exists(path):
+            os.makedirs(path)
         for t_type in self.tokenizers_info:
             tokenizer_inst = self.tokenizers_info[t_type]["tokenizer_inst"]
             if self.tokenizers_info[t_type]["json_path"] is not None:
@@ -998,7 +998,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         pad_type_id: Optional[int] = None,
         return_overflow_info: Optional[bool] = False,
         on_unknown: Optional[str] = "warn",
-        verbose: Optional[int] = 1,
+        verbose: int = 1,
     ) -> Union[Encoding, Tuple[Encoding, str]]:
         """_summary_
 
@@ -1201,7 +1201,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             pad_type_id (Optional[int], optional): _description_. Defaults to 0.
             return_overflow_info (Optional[bool], optional): _description_. If True return an additional string with overflow information. Defaults to False.
             on_unknown: (Optional[str], optional): What happens if unknown tokens (i.e. ones mapped to <UNK>) are encountered: 'raise' or 'warn'
-            verbose (Optional[int], optional): verbosity level. 0: no notification, 1: warning notification, 2: warning with partial data, 3: warning
+            verbose (int, optional): verbosity level. 0: no notification, 1: warning notification, 2: warning with partial data, 3: warning
                 with full data. Defaults to 1.
         Returns:
             Encoding: _description_
