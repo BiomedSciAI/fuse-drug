@@ -710,7 +710,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         (i.e. all json paths have base dir of './'). The correct path is updated upon calling ModularTokenizer.load()
 
         Args:
-            path (str): a directory there the modular tokenizer info will be saved.
+            path (str): a directory where the modular tokenizer info will be saved. For compatibility with huggingface format, this can also be a path to a json
+            file, in which case its base directory will be used.
         """
 
         def get_out_path(input_json_path: str, base_path: Optional[str] = None) -> str:
@@ -735,6 +736,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                     tokenizers_info_cfg[i] = t
                     return tokenizers_info_cfg
             raise Exception(f"name {name} not found")
+
+        if path.endswith(".json") or path.endswith(".yaml"):
+            path = os.path.dirname(path)
 
         tokenizers_info_cfg = self.tokenizers_info_raw_cfg
 
