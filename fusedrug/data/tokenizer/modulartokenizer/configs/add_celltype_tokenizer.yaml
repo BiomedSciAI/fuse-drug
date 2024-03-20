@@ -5,7 +5,6 @@ paths:
   cell_attributes_tokenizer_json: "cell_attributes_tokenizer.json"
   gene_tokenizer_json: "gene_tokenizer.json"
   modular_tokenizers_out_path: "${paths.tokenizers_path}/bmfm_modular_tokenizer/"
-  # modular_tokenizers_out_path: "${paths.tokenizers_path}/modular_AA_SMILES_single_path/"
 
   original_tokenizers_path: "${paths.tokenizers_path}"
 
