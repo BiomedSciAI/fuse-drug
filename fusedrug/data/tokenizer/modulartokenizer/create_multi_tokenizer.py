@@ -25,14 +25,14 @@ TITAN_SMILES_PATH = os.environ["TITAN_DATA"] + "/public/epitopes.smi"
 
 def test_tokenizer(
     t_inst: ModularTokenizer,
-    overall_max_length: None | int = None,
+    overall_max_length: Optional[int] = None,
     mode: Optional[str] = "",
     input_strings: Optional[List] = None,
     on_unknown: Optional[str] = "warn",
     verbose: int = 0,
     cfg_raw: Dict = None,
 ) -> None:
-    # for competability
+    # for compatibility
     if overall_max_length is None and cfg_raw is not None:
         overall_max_length = cfg_raw["data"]["tokenizer"]["overall_max_len"]
 
