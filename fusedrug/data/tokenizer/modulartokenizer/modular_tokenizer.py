@@ -737,7 +737,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                     return tokenizers_info_cfg
             raise Exception(f"name {name} not found")
 
-        if path.endswith(".json"):
+        if path.endswith(".json") or path.endswith(".yaml"):
             path = os.path.dirname(path)
 
         tokenizers_info_cfg = self.tokenizers_info_raw_cfg
