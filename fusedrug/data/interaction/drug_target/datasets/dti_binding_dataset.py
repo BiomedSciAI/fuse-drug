@@ -23,7 +23,9 @@ def fix_df_types(df: pd.DataFrame) -> pd.DataFrame:
 
 def set_activity_multiindex(df: pd.DataFrame) -> pd.DataFrame:
     df.set_index(
-        ["source_dataset_versioned_name", "source_dataset_activity_id"], inplace=True
+        ["source_dataset_versioned_name", "source_dataset_activity_id"],
+        drop=False,
+        inplace=True,
     )
     return df
 
@@ -48,6 +50,7 @@ def dti_binding_dataset(
     ligands_rename_columns: Optional[Dict[str, str]] = None,
     targets_columns_to_extract: Optional[List[str]] = None,
     targets_rename_columns: Optional[Dict[str, str]] = None,
+    get_indices_per_class: bool = False,
     **kwargs: Any,
 ) -> DatasetDefault:
     """_summary_
@@ -124,11 +127,24 @@ def dti_binding_dataset(
     dataset = DatasetDefault(
         # sample_ids=None,
         sample_ids=pairs_df.index,
+<<<<<<< HEAD
         dynamic_pipeline=dynamic_pipeline
+=======
+        dynamic_pipeline=dynamic_pipeline,
+>>>>>>> 6f5d6f69dda5c67a06cee5257dec4179774ba1ab
     )  # TODO: sample_ids here should be either pairs_df.index, or len(pairs_df)
     dataset.create()
-
-    return dataset
+    if get_indices_per_class:
+        indices_per_class = {
+            label: [
+                pairs_df.index.get_loc(key)
+                for key in pairs_df[pairs_df.activity_label == label].index
+            ]
+            for label in pairs_df.activity_label.unique()
+        }
+        return dataset, indices_per_class
+    else:
+        return dataset
 
 
 def dti_binding_dataset_combined(
@@ -425,7 +441,11 @@ def _load_dataframes(
     _pairs = pd.read_csv(pairs_tsv, sep="\t")
     _pairs = fix_df_types(_pairs)
     # _pairs = concat_full_activity_col(_pairs)
-    set_activity_multiindex(_pairs)
+    # set_activity_multiindex(_pairs)
+    # A.G note: disabled this so that merge happens on columns.
+    # this is important where one of the index columns needs to be extracted. then,
+    # if the merge is on index, we have to drop the columns (otherwise there will be ambiguity)
+    # so they cannot be extracted.
     print(f"pairs num: {len(_pairs)}")
 
     if splits_tsv is not None and use_folds is None:
@@ -442,7 +462,7 @@ def _load_dataframes(
         print(f"loading split file {splits_tsv}")
         _splits = pd.read_csv(splits_tsv, sep="\t")
         _splits = fix_df_types(_splits)
-        set_activity_multiindex(_splits)
+        # set_activity_multiindex(_splits)
         # _splits = concat_full_activity_col(_splits)
         print(f"split contains {len(_splits)} rows")
 
@@ -464,10 +484,12 @@ def _load_dataframes(
 
         _pairs.reset_index(inplace=True)
         set_activity_multiindex(_pairs)
+        set_activity_multiindex(_splits)
 
         _pairs = _pairs[_pairs.split.isin(use_folds)]
         print(f"use_folds={use_folds} keeps {len(_pairs)} rows")
 
+    set_activity_multiindex(_pairs)
     assert isinstance(ligands_tsv, str)
     print(f"loading {ligands_tsv}")
     _ligands = pd.read_csv(ligands_tsv, sep="\t")
@@ -490,7 +512,10 @@ def _load_dataframes(
     print(f"tagets num: {len(_targets)}")
     _targets = _targets[_targets.index.to_series().notna()]
     print(f"tagets num after keeping only non-NaN ids: {len(_targets)}")
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6f5d6f69dda5c67a06cee5257dec4179774ba1ab
 
     print(
         f"pairs num before keeping only pairs with ligands found in the (preprocessed) ligands table: {len(_pairs)}"

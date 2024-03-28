@@ -181,7 +181,7 @@ class IndexedTextTable(Dataset):
         """
         splitted = self._split_line_basic(line_str)
         ser = pd.Series(dict(zip(self._columns_names, splitted)), index=None)
-        ans_id = ser[self._id_column_idx]
+        ans_id = ser.iloc[self._id_column_idx]
         return ans_id, ser
 
     def __len__(self) -> int:

@@ -17,5 +17,12 @@ tokenizers_info:
   modular_json_path: ./cell_attributes_tokenizer.json
   start_delimiter: <start_CELL_ATTRIBUTES>
   end_delimiter: <end_CELL_ATTRIBUTES>
-max_possible_token_id: 5000
+- name: GENE
+  tokenizer_id: 3
+  json_path: ./gene_tokenizer.json
+  modular_json_path: ./gene_tokenizer.json
+  start_delimiter: <start_GENE>
+  end_delimiter: <end_GENE>
+  minimal_token_id: 5000
+max_possible_token_id: 100000
 max_special_token_id: 500

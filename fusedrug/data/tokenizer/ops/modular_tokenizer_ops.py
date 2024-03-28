@@ -148,8 +148,18 @@ class FastModularTokenizer(OpBase):
 
         return (min_token, max_token)
 
-    def get_token_id(self, token_str: str) -> int:
-        ans = self._tokenizer.token_to_id(token_str)
+    def get_token_id(self, token_str: str, t_type: Optional[str] = None) -> int:
+        """
+        Args:
+            token_str (:obj:`str`):
+                The token to convert
+            t_type (:obj:`str`): The sub-tokenizer to use. If None, the first (in order defined in the config)
+                sub-tokenizer is used. If the token is special, type should not be set.
+
+        Returns:
+            :obj:`int`: The token's id under the tokenizer type (if given)
+        """
+        ans = self._tokenizer.token_to_id(token_str, t_type)
         assert ans is not None, f"could not find token id for token:{token_str}!"
         return ans
 
@@ -178,14 +188,32 @@ class FastModularTokenizer(OpBase):
         key_out_attention_mask: Optional[str] = None,
         convert_attention_mask_to_bool: Optional[bool] = True,
         max_seq_len: Optional[int] = None,
+        on_unknown: Optional[str] = "warn",
+        verbose: Optional[int] = 1,
     ) -> NDict:
-        """
-        :param key_in: key to either a:
-            (1) string that contains, in addition to the text that is to be tokenized, special delimiters signifying the type
-        of input within each span of text (e.g. <@TOKENIZER-TYPE=AA> sequence, <@TOKENIZER-TYPE=SMILES>, etc.).
-            (2) list of modular_tokenizer.TypedInput specifying the tokenizer type and the subsequence to tokenize
+        """_summary_
 
-        :param max_seq_len: set maximum sequence len dynamically, used for both padding and truncation.
+        Args:
+            sample_dict (NDict): _description_
+            key_in (str): key to either a:
+                (1) string that contains, in addition to the text that is to be tokenized, special delimiters signifying the type
+                of input within each span of text (e.g. <@TOKENIZER-TYPE=AA> sequence, <@TOKENIZER-TYPE=SMILES>, etc.).
+                (2) list of modular_tokenizer.TypedInput specifying the tokenizer type and the subsequence to tokenize
+            key_out_tokenized_object (Optional[str], optional): _description_. Defaults to None.
+            key_out_tokens_ids (Optional[str], optional): _description_. Defaults to None.
+            key_out_attention_mask (Optional[str], optional): _description_. Defaults to None.
+            convert_attention_mask_to_bool (Optional[bool], optional): _description_. Defaults to True.
+            max_seq_len (Optional[int], optional): set maximum sequence len dynamically, used for both padding and truncation.. Defaults to None.
+            on_unknown (Optional[str], optional): What happens if unknown tokens (i.e. ones mapped to <UNK>) are encountered: 'raise' or 'warn'. Defaults to "warn".
+            verbose (Optional[int], optional): verbosity level. 0: no notification, 1: warning notification, 2: warning with partial data, 3: warning
+                with full data. Defaults to 1.
+
+        Raises:
+            Exception: _description_
+            Exception: _description_
+
+        Returns:
+            NDict: _description_
         """
 
         data = sample_dict[key_in]
@@ -206,9 +234,22 @@ class FastModularTokenizer(OpBase):
                 )
 
         if isinstance(data, str):
-            encoded = self._tokenizer.encode(data, max_len=max_seq_len)
+            encoded, overflow_info = self._tokenizer.encode(
+                data,
+                max_len=max_seq_len,
+                return_overflow_info=True,
+                on_unknown=on_unknown,
+                verbose=verbose,
+            )
         else:
-            encoded = self._tokenizer.encode_list(data, max_len=max_seq_len)
+            encoded, overflow_info = self._tokenizer.encode_list(
+                data,
+                max_len=max_seq_len,
+                return_overflow_info=True,
+                on_unknown=on_unknown,
+                verbose=verbose,
+            )
+
         expected_max_len = self.get_max_len(override_max_len=max_seq_len)
         if (
             expected_max_len is not None
@@ -249,15 +290,8 @@ class FastModularTokenizer(OpBase):
         if (
             len(encoded.overflowing) > 0
         ):  # note, encoded.overflowing may have multiple items, and each item can contain multiple items
-            if isinstance(data, str):
-                overall_char_len = len(data)
-            else:
-                overall_char_len = sum([len(x.input_string) for x in data])
-
-            max_len = self.get_max_len(override_max_len=max_seq_len)
             print(
-                f"Warning: FastModularTokenizer (pid={os.getpid()}) had to truncate sequence. Original Sequence Length = {overall_char_len} \
-                    max supported = {max_len} {'possibly due to per-subtokenizer upper limits set in the input list' if max_len is None else ''} \
+                f"Warning: FastModularTokenizer (pid={os.getpid()}) had to truncate sequence: [{overflow_info}]  \
                     for tokenizer: {self._tokenizer_path} for sample_id {get_sample_id(sample_dict)}"
             )
 
