@@ -25,6 +25,23 @@ TypedInput = collections.namedtuple(
 )
 
 
+def list_to_tokenizer_string(lst: List[TypedInput]) -> str:
+    out = ""
+    # prev_tokenizer = None
+    for in_named_tuple in lst:
+        curr_tokenizer = in_named_tuple.input_type
+        curr_len = in_named_tuple.max_len
+        # NOTE: For now we don't combine consequent strings encoded by the same tokenizer,
+        # since they may have different max lengths, so we create a new entry, even if curr_tokenizer == prev_tokenizer:
+        if curr_len is None:
+            out += f"<@TOKENIZER-TYPE={curr_tokenizer}>"
+        else:
+            out += f"<@TOKENIZER-TYPE={curr_tokenizer}@MAX-LEN={curr_len}>"
+        out += in_named_tuple.input_string
+        # prev_tokenizer = curr_tokenizer
+    return out
+
+
 class ModularTokenizer(transformers.PreTrainedTokenizerFast):
     def __init__(
         self,
@@ -97,7 +114,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             # collect all special tokens (without indices):
             for t_type in self.tokenizers_info:
                 t_info = self.tokenizers_info[t_type]
-                t_json = json.load(open(t_info["json_path"]))
+                with open(t_info["json_path"]) as json_file:
+                    t_json = json.load(json_file)
                 self.tokenizers_info[t_type]["json_instance"] = t_json
 
                 part_special_tokens = ModularTokenizer.get_subtokenizer_added_tokens(
@@ -132,7 +150,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 )
             for t_type in self.tokenizers_info:
                 t_info = self.tokenizers_info[t_type]
-                t_json = json.load(open(t_info["modular_json_path"]))
+                with open(t_info["modular_json_path"]) as modular_file:
+                    t_json = json.load(modular_file)
                 self.tokenizers_info[t_type]["json_instance"] = t_json
 
         # rearrange regular token indices to map to IDs starting from next_index:
@@ -691,7 +710,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         (i.e. all json paths have base dir of './'). The correct path is updated upon calling ModularTokenizer.load()
 
         Args:
-            path (str): a directory there the modular tokenizer info will be saved.
+            path (str): a directory where the modular tokenizer info will be saved. For compatibility with huggingface format, this can also be a path to a json
+            file, in which case its base directory will be used.
         """
 
         def get_out_path(input_json_path: str, base_path: Optional[str] = None) -> str:
@@ -717,10 +737,13 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                     return tokenizers_info_cfg
             raise Exception(f"name {name} not found")
 
+        if path.endswith(".json") or path.endswith(".yaml"):
+            path = os.path.dirname(path)
+
         tokenizers_info_cfg = self.tokenizers_info_raw_cfg
 
-        if not os.path.exists(os.path.dirname(path)):
-            os.makedirs(os.path.dirname(path))
+        if not os.path.exists(path):
+            os.makedirs(path)
         for t_type in self.tokenizers_info:
             tokenizer_inst = self.tokenizers_info[t_type]["tokenizer_inst"]
             if self.tokenizers_info[t_type]["json_path"] is not None:
@@ -792,7 +815,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             }
         )
         new_tokenizer_path = new_tokenizer_info["json_path"]
-        t_json = json.load(open(new_tokenizer_path))
+        with open(new_tokenizer_path) as new_tokenizer:
+            t_json = json.load(new_tokenizer)
         new_tokenizer_info["json_instance"] = t_json
 
         # we can set a minimal starting id for each tokenizer.  Used for the extended tokenizer.
@@ -978,7 +1002,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         pad_type_id: Optional[int] = None,
         return_overflow_info: Optional[bool] = False,
         on_unknown: Optional[str] = "warn",
-        verbose: Optional[int] = 1,
+        verbose: int = 1,
     ) -> Union[Encoding, Tuple[Encoding, str]]:
         """_summary_
 
@@ -1102,7 +1126,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             #   the input string and its encoded-decoded variant, will allow us to identify parts
             #   of input mapped to unk.
             if on_unknown == "raise":
-                raise Exception(
+                raise RuntimeError(
                     f"Encountered {unk_count} unknown tokens out of {len(merged_encoding.ids)} in input starting with {typed_input_list[0].input_string}"
                 )
             elif on_unknown == "warn":
@@ -1115,11 +1139,11 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 elif verbose >= 3:
                     warning_message = f"Encountered {unk_count} unknown tokens out of {len(merged_encoding.ids)} in input starting with {typed_input_list[0].input_string}"
                 else:
-                    Exception("We shouldn't be here")
+                    ValueError("We shouldn't be here")
                 if warning_message is not None:
                     warn(warning_message)
             else:
-                raise Exception(
+                raise ValueError(
                     f"Unexpected on_unknown value {on_unknown}. Should be 'warn' or 'raise'"
                 )
 
@@ -1181,7 +1205,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             pad_type_id (Optional[int], optional): _description_. Defaults to 0.
             return_overflow_info (Optional[bool], optional): _description_. If True return an additional string with overflow information. Defaults to False.
             on_unknown: (Optional[str], optional): What happens if unknown tokens (i.e. ones mapped to <UNK>) are encountered: 'raise' or 'warn'
-            verbose (Optional[int], optional): verbosity level. 0: no notification, 1: warning notification, 2: warning with partial data, 3: warning
+            verbose (int, optional): verbosity level. 0: no notification, 1: warning notification, 2: warning with partial data, 3: warning
                 with full data. Defaults to 1.
         Returns:
             Encoding: _description_
@@ -1340,8 +1364,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
 
         # At this point tokens contain to existing special tokens, but may contain regular tokens
         all_existing_tokens = set([x["token"] for x in self.decoder_dict.values()])
-        tokens_regular = list(set(tokens).intersection(all_existing_tokens))
-        tokens = list(set(tokens) - set(tokens_regular))
+        tokens_regular = sorted(list(set(tokens).intersection(all_existing_tokens)))
+        tokens = sorted(list(set(tokens) - set(tokens_regular)))
         # At this point tokens contain no tokens that currently exist in the modular tokenizer, and tokens_regular contain
         # special tokens to be added that are currently regular tokens in the tokenizer
 

@@ -2588,15 +2588,6 @@
     },
     {
       "id": 287,
-      "content": "<TISSUE_TYPE_CLASS>",
-      "single_word": false,
-      "lstrip": false,
-      "rstrip": false,
-      "normalized": false,
-      "special": true
-    },
-    {
-      "id": 288,
       "content": "<MOLECULAR_ENTITY_CELL_GENE_EXPRESSION_RANKED>",
       "single_word": false,
       "lstrip": false,
@@ -2605,8 +2596,53 @@
       "special": true
     },
     {
-      "id": 289,
+      "id": 288,
       "content": "<CELL_TYPE_CLASS>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 289,
+      "content": "<TISSUE_TYPE_CLASS>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 290,
+      "content": "<CORRUPTED_AREA_START>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 291,
+      "content": "<CORRUPTED_AREA_END>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 292,
+      "content": "<MOLECULAR_ENTITY_MUTATED_PROTEIN_CHAIN>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 293,
+      "content": "<MOLECULAR_ENTITY_PROTEIN_CHAIN>",
       "single_word": false,
       "lstrip": false,
       "rstrip": false,
@@ -2920,9 +2956,13 @@
       "<NOOP>": 284,
       "<TARGETED_ANTIBODY_DESIGN_ENCODER_ONLY_MODE>": 285,
       "<MOLECULAR_ENTITY_SMALL_MOLECULE>": 286,
-      "<TISSUE_TYPE_CLASS>": 287,
-      "<MOLECULAR_ENTITY_CELL_GENE_EXPRESSION_RANKED>": 288,
-      "<CELL_TYPE_CLASS>": 289,
+      "<MOLECULAR_ENTITY_CELL_GENE_EXPRESSION_RANKED>": 287,
+      "<CELL_TYPE_CLASS>": 288,
+      "<TISSUE_TYPE_CLASS>": 289,
+      "<CORRUPTED_AREA_START>": 290,
+      "<CORRUPTED_AREA_END>": 291,
+      "<MOLECULAR_ENTITY_MUTATED_PROTEIN_CHAIN>": 292,
+      "<MOLECULAR_ENTITY_PROTEIN_CHAIN>": 293,
       "A": 501,
       "B": 502,
       "C": 503,
