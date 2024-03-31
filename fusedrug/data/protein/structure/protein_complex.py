@@ -30,7 +30,7 @@ class ProteinComplex:
     def add(
         self,
         pdb_id_or_filename: str,
-        pdb_id:Optional[str] = None,
+        pdb_id: Optional[str] = None,
         chain_ids: Optional[List[Union[str, int]]] = None,
         load_protein_structure_features_overrides: Dict = None,
         min_chain_residues_count: int = 8,
@@ -58,12 +58,11 @@ class ProteinComplex:
         if load_protein_structure_features_overrides is None:
             load_protein_structure_features_overrides = {}
 
-
         ans = load_protein_structure_features(
-            pdb_id_or_filename = pdb_id_or_filename,
+            pdb_id_or_filename=pdb_id_or_filename,
             pdb_id=pdb_id,
             chain_id=chain_ids,
-            chain_id_type=chain_id_type,            
+            chain_id_type=chain_id_type,
             **load_protein_structure_features_overrides,
         )
 
@@ -81,7 +80,6 @@ class ProteinComplex:
                         f'dna or rna sequences are not allowed, and detected {mmcif_object.info["rna_or_dna_only_sequences_count"]}'
                     )
                 return False
-        
 
         # min_chain_residues_count:int = 10,
         # max_residue_type_part:float = 0.5,
@@ -99,9 +97,11 @@ class ProteinComplex:
             most_frequent_residue_part = d["aatype"].unique(return_counts=True)[
                 1
             ].max() / len(d["aatype"])
-            self.per_chain_most_frequent_residue_part[(pdb_id, k)] = most_frequent_residue_part.item()
+            self.per_chain_most_frequent_residue_part[
+                (pdb_id, k)
+            ] = most_frequent_residue_part.item()
             if max_residue_type_part is not None:
-                
+
                 if most_frequent_residue_part > max_residue_type_part:
                     if self.verbose:
                         print(
@@ -113,7 +113,7 @@ class ProteinComplex:
             self.per_chain_mmcif_object[(pdb_id, k)] = mmcif_object
             self.per_chain_mmcif_dict[(pdb_id, k)] = mmcif_dict
             added_any = True
-        
+
         return added_any
 
     def flatten(
@@ -559,7 +559,7 @@ class ProteinComplex:
             non_interacting_pairs=non_interacting_pairs,
         )
 
-    def get_main_features(self, atom_representation:int = 14):
+    def get_main_features(self, atom_representation: int = 14) -> Dict:
         """
         Returns a dictionary, extracting from all features based on the requested atom_representation
         {
@@ -569,47 +569,48 @@ class ProteinComplex:
             "gt_atom_exists": [list of numpy arrays each containing a boolean value if that atom exists, in the shape [residues num, 14 or 37]],
             TODO: add the str version
         }
-        """        
+        """
         if atom_representation == 14:
             features_names = dict(
-                atom_positions='atom14_gt_positions',
-                atom_exists='atom14_gt_exists',
-                aatype='aatype',
-                bfactors='atom14_bfactors', ###
+                atom_positions="atom14_gt_positions",
+                atom_exists="atom14_gt_exists",
+                aatype="aatype",
+                bfactors="atom14_bfactors",  #
             )
         elif self.atom_representation == 37:
             features_names = dict(
-                atom_positions='all_atom_positions',
-                atom_exists='all_atom_mask', # it seems that atom37_atom_exists contains valid masks for residues with missing positional data
-                aatype='aatype',
-                bfactors='all_atom_bfactors',
+                atom_positions="all_atom_positions",
+                atom_exists="all_atom_mask",  # it seems that atom37_atom_exists contains valid masks for residues with missing positional data
+                aatype="aatype",
+                bfactors="all_atom_bfactors",
             )
         else:
-            raise Exception(f'Only supported options for atom_representation are 14 and 37 of type integer. Got {atom_representation} of type {type(atom_representation)}')
+            raise Exception(
+                f"Only supported options for atom_representation are 14 and 37 of type integer. Got {atom_representation} of type {type(atom_representation)}"
+            )
 
         ans = {}
 
-        ans['chain_identifier'] = []
-        ans['atom_positions'] = []
-        ans['aa_types'] = []
-        ans['gt_atom_exists'] = []
-        ans['aa_sequence_str'] = []
-        ans['bfactors'] = []
+        ans["chain_identifier"] = []
+        ans["atom_positions"] = []
+        ans["aa_types"] = []
+        ans["gt_atom_exists"] = []
+        ans["aa_sequence_str"] = []
+        ans["bfactors"] = []
         ###ans['chain_index'] = []
 
         for pdb_id_chain_id, (k, chain_data) in enumerate(self.chains_data.items()):
-            ans['chain_identifier'].append(k)
-            ans['atom_positions'].append(chain_data[features_names['atom_positions']])
-            ans['aa_types'].append(chain_data[features_names['aatype']])
-            ans['gt_atom_exists'].append(chain_data[features_names['atom_exists']])
-            ans['bfactors'].append(chain_data[features_names['bfactors']])
-            ans['aa_sequence_str'].append(chain_data['aa_sequence_str'])
+            ans["chain_identifier"].append(k)
+            ans["atom_positions"].append(chain_data[features_names["atom_positions"]])
+            ans["aa_types"].append(chain_data[features_names["aatype"]])
+            ans["gt_atom_exists"].append(chain_data[features_names["atom_exists"]])
+            ans["bfactors"].append(chain_data[features_names["bfactors"]])
+            ans["aa_sequence_str"].append(chain_data["aa_sequence_str"])
             ###ans['chain_index'] += [chain_index]*ans['atom_positions'].shape[0]
-            
-        ans['atom_representation'] = atom_representation
+
+        ans["atom_representation"] = atom_representation
 
         return ans
-
 
 
 def calculate_number_of_interacting_residues(

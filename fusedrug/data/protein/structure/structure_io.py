@@ -176,7 +176,7 @@ def load_protein_structure_features(
     chain_id_type: str = "author_assigned",
     device: str = "cpu",
     max_allowed_file_size_mbs: float = None,
-    #also_return_mmcif_object: bool = False,
+    # also_return_mmcif_object: bool = False,
 ) -> Union[Tuple[str, dict], None]:
     """
     Extracts ground truth features from a given pdb_id or filename.
@@ -252,7 +252,9 @@ def load_protein_structure_features(
     elif structure_file_format == "cif":
         try:
             mmcif_object, mmcif_dict = parse_mmcif(
-                native_structure_filename, unique_file_id=pdb_id, quiet_parsing=True,
+                native_structure_filename,
+                unique_file_id=pdb_id,
+                quiet_parsing=True,
                 also_return_mmcif_dict=True,
             )
             chains_names = list(mmcif_object.chain_to_seqres.keys())
@@ -756,7 +758,11 @@ def flexible_save_pdb_file(
         )
         xyz = xyz[:, :4, ...]
 
-    assert xyz.shape[1] in [4,14,37] , f"xyz shape is allowed to be 14 (all heavy atoms) or 4 (only BB), got xyz.shap={xyz.shape}"
+    assert xyz.shape[1] in [
+        4,
+        14,
+        37,
+    ], f"xyz shape is allowed to be 14 (all heavy atoms) or 4 (only BB), got xyz.shap={xyz.shape}"
 
     if b_factors is None:
         b_factors = torch.tensor([100.0] * xyz.shape[0])
@@ -777,7 +783,7 @@ def flexible_save_pdb_file(
         aa_idx = aa_idx.item()
         if torch.is_tensor(p_res):
             p_res = p_res.clone().detach().cpu()  # fixme: this looks slow
-        if aa_idx == 21: ## is this X ? (unknown/special)
+        if aa_idx == 21:  # is this X ? (unknown/special)
             continue
         try:
             three = residx_to_3(aa_idx)
@@ -792,10 +798,12 @@ def flexible_save_pdb_file(
 
         residue_atom_names = rc.residue_atoms[three]
 
-        for j, (atom_name,) in enumerate(
-            zip(atom_names)
-        ):  # why is zip used here?
-            if (len(atom_name) > 0) and (len(p_res) > j) and atom_name in residue_atom_names:
+        for j, (atom_name,) in enumerate(zip(atom_names)):  # why is zip used here?
+            if (
+                (len(atom_name) > 0)
+                and (len(p_res) > j)
+                and atom_name in residue_atom_names
+            ):
                 builder.init_atom(
                     atom_name,
                     p_res[j].tolist(),
@@ -811,6 +819,7 @@ def flexible_save_pdb_file(
     os.makedirs(pathlib.Path(save_path).parent, exist_ok=True)
     io.save(save_path)
     pass
+
 
 def save_pdb_file(
     pos14: torch.Tensor,
