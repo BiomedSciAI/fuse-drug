@@ -765,7 +765,8 @@ def flexible_save_pdb_file(
     ], f"xyz shape is allowed to be 14 (all heavy atoms) or 4 (only BB), got xyz.shap={xyz.shape}"
 
     if b_factors is None:
-        b_factors = torch.tensor([100.0] * xyz.shape[0])
+        # b_factors = torch.tensor([100.0] * xyz.shape[0])
+        b_factors = torch.zeros((xyz.shape[:-1]))
 
     builder = StructureBuilder.StructureBuilder()
     builder.init_structure(0)
@@ -775,14 +776,17 @@ def flexible_save_pdb_file(
     if torch.is_tensor(residues_mask):
         residues_mask = residues_mask.bool()
 
+    if torch.is_tensor(xyz):
+        xyz = xyz.clone().detach().cpu()
+
     for i, (aa_idx, p_res, b, m_res) in enumerate(
         zip(sequence, xyz, b_factors, residues_mask)
     ):
         if not m_res:
             continue
         aa_idx = aa_idx.item()
-        if torch.is_tensor(p_res):
-            p_res = p_res.clone().detach().cpu()  # fixme: this looks slow
+        # if torch.is_tensor(p_res):
+        #    p_res = p_res.clone().detach().cpu()  # fixme: this looks slow
         if aa_idx == 21:  # is this X ? (unknown/special)
             continue
         try:
@@ -807,7 +811,7 @@ def flexible_save_pdb_file(
                 builder.init_atom(
                     atom_name,
                     p_res[j].tolist(),
-                    b.item(),
+                    b[j].item(),
                     1.0,
                     " ",
                     atom_name.join([" ", " "]),
