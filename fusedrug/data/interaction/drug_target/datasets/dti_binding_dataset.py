@@ -7,6 +7,9 @@ from fuse.data import DatasetDefault
 from fuse.data.ops.caching_tools import run_cached_func
 from fuse.data.ops.ops_read import OpReadDataframe
 from fuse.data.pipelines.pipeline_default import PipelineDefault
+from fusedrug.data.interaction.drug_target.loaders.indexed_text_PPI_table_loader import (
+    IndexedTextPPITableLoader,
+)
 
 
 def fix_df_types(df: pd.DataFrame) -> pd.DataFrame:
@@ -127,11 +130,7 @@ def dti_binding_dataset(
     dataset = DatasetDefault(
         # sample_ids=None,
         sample_ids=pairs_df.index,
-<<<<<<< HEAD
-        dynamic_pipeline=dynamic_pipeline
-=======
         dynamic_pipeline=dynamic_pipeline,
->>>>>>> 6f5d6f69dda5c67a06cee5257dec4179774ba1ab
     )  # TODO: sample_ids here should be either pairs_df.index, or len(pairs_df)
     dataset.create()
     if get_indices_per_class:
@@ -145,6 +144,46 @@ def dti_binding_dataset(
         return dataset, indices_per_class
     else:
         return dataset
+
+
+def dti_binding_ds(
+    pairs_tsv: str,
+    pairs_rename_columns: Optional[Dict[str, str]] = None,
+    **kwargs: Any,
+) -> DatasetDefault:
+    """_summary_
+
+    Args:
+        pairs_tsv (str): path to tab-separated pairs csv (tsv) file
+        pairs_rename_columns (_type_, optional): _description_. Defaults to None.
+
+    Returns:
+        DatasetDefault: _description_
+    """
+
+    dynamic_pipeline = [
+        (
+            IndexedTextPPITableLoader(
+                pairs_tsv,
+                separator="\t",
+                rename_columns=pairs_rename_columns,
+            ),
+            {},
+        ),
+    ]
+
+    # append custom pipeline:
+    if "dynamic_pipeline" in kwargs and kwargs["dynamic_pipeline"] is not None:
+        dynamic_pipeline += kwargs["dynamic_pipeline"]
+
+    dynamic_pipeline = PipelineDefault("DTI dataset", dynamic_pipeline)
+
+    dataset = DatasetDefault(
+        sample_ids=sum(1 for _ in open(pairs_tsv, "r")),
+        dynamic_pipeline=dynamic_pipeline,
+    )
+    dataset.create()
+    return dataset
 
 
 def dti_binding_dataset_combined(
@@ -512,10 +551,6 @@ def _load_dataframes(
     print(f"tagets num: {len(_targets)}")
     _targets = _targets[_targets.index.to_series().notna()]
     print(f"tagets num after keeping only non-NaN ids: {len(_targets)}")
-<<<<<<< HEAD
-
-=======
->>>>>>> 6f5d6f69dda5c67a06cee5257dec4179774ba1ab
 
     print(
         f"pairs num before keeping only pairs with ligands found in the (preprocessed) ligands table: {len(_pairs)}"
