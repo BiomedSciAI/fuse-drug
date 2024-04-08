@@ -13,6 +13,7 @@ class IndexedTextPPITableLoader(OpBase):
     def __init__(
         self,
         table_file_loc: Optional[str] = None,
+        index_filename: Optional[str] = None,
         id_column_index: int = 0,
         rename_columns: Optional[Dict[str, str]] = None,
         separator: str = " ",
@@ -23,6 +24,7 @@ class IndexedTextPPITableLoader(OpBase):
         :param table_file_loc: location of .txt file
             the file format is expected to be a text file in which each line is expected to be ' ' separated,
             containing the columns named
+        :param index_filename: index file for the table, if not exist or None, it will recreate the index
         """
         super().__init__(**kwargs)
         self._table_file_loc = table_file_loc
@@ -31,7 +33,8 @@ class IndexedTextPPITableLoader(OpBase):
         self._separator = separator
         self._allow_access_by_id = allow_access_by_id
         self._indexed_text_table = IndexedTextTable(
-            table_file_loc,
+            filename=table_file_loc,
+            index_filename=index_filename,
             seperator=self._separator,
             id_column_idx=self._id_column_index,
             allow_access_by_id=self._allow_access_by_id,
