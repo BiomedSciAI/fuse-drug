@@ -2648,6 +2648,15 @@
       "rstrip": false,
       "normalized": false,
       "special": true
+    },
+    {
+      "id": 294,
+      "content": "<COMPLEX_ENTITY>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
     }
   ],
   "normalizer": null,
@@ -2957,6 +2966,7 @@
       "<CORRUPTED_AREA_END>": 291,
       "<MOLECULAR_ENTITY_MUTATED_PROTEIN_CHAIN>": 292,
       "<MOLECULAR_ENTITY_PROTEIN_CHAIN>": 293,
+      "<COMPLEX_ENTITY>": 294,
       "#": 527,
       "%": 528,
       "(": 529,
