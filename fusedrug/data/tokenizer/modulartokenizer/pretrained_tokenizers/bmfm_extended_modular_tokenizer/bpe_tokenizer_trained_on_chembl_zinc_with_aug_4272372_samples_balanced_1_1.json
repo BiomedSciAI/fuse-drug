@@ -2657,6 +2657,42 @@
       "rstrip": false,
       "normalized": false,
       "special": true
+    },
+    {
+      "id": 295,
+      "content": "<ALTERNATIVE>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 296,
+      "content": "<CDR3_REGION>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 297,
+      "content": "<GENERAL_CHAIN>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 298,
+      "content": "<SUBMOLECULAR_ENTITY>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
     }
   ],
   "normalizer": null,
@@ -2967,6 +3003,10 @@
       "<MOLECULAR_ENTITY_MUTATED_PROTEIN_CHAIN>": 292,
       "<MOLECULAR_ENTITY_PROTEIN_CHAIN>": 293,
       "<COMPLEX_ENTITY>": 294,
+      "<ALTERNATIVE>": 295,
+      "<CDR3_REGION>": 296,
+      "<GENERAL_CHAIN>": 297,
+      "<SUBMOLECULAR_ENTITY>": 298,
       "#": 527,
       "%": 528,
       "(": 529,

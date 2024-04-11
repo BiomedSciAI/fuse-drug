@@ -316,6 +316,10 @@ task_tokens = [  # pairwise tasks
     "CORRUPTED_AREA_START",  # Indicates where the corruption area in the diffusion task starts
     "CORRUPTED_AREA_END",  # Indicates where the corruption area in the diffusion task ends
     "COMPLEX_ENTITY",
+    "SUBMOLECULAR_ENTITY",
+    "ALTERNATIVE",
+    "GENERAL_CHAIN",
+    "CDR3_REGION",
 ]
 
 AA_tokens = [
