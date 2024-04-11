@@ -1,7 +1,7 @@
 from typing import Optional
 from fuse.data.ops.op_base import OpBase
 from fuse.utils import NDict
-from fusedrug.data.interaction.drug_target.datasets.dti_binding_dataset import (
+from bmfm_bench.benchmarks.interaction.drug_target_interaction.dti_binding_dataset import (
     DTIBindingDataset,
 )
 from fuse.utils.cpu_profiling import Timer
