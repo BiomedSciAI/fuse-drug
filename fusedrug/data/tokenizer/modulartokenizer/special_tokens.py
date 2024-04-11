@@ -315,6 +315,7 @@ task_tokens = [  # pairwise tasks
     "MOLECULAR_ENTITY_CELL_GENE_EXPRESSION_RANKED",
     "CORRUPTED_AREA_START",  # Indicates where the corruption area in the diffusion task starts
     "CORRUPTED_AREA_END",  # Indicates where the corruption area in the diffusion task ends
+    "COMPLEX_ENTITY",
 ]
 
 AA_tokens = [
