@@ -1,4 +1,5 @@
 import click
+from typing import Union
 from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import ModularTokenizer
 from fusedrug.data.tokenizer.modulartokenizer.create_multi_tokenizer import (
     test_tokenizer,
@@ -22,7 +23,7 @@ from fusedrug.data.tokenizer.modulartokenizer.special_tokens import (
     help="path to write tokenizer in",
 )
 # # this needs to be run on all the related modular tokenizers
-def main(tokenizer_path: str, output_path: str | None) -> None:
+def main(tokenizer_path: str, output_path: Union[str, None]) -> None:
     print(f"adding special tokens to {tokenizer_path}")
     if output_path is None:
         output_path = tokenizer_path
