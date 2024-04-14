@@ -320,7 +320,7 @@ task_tokens = [  # pairwise tasks
     "ALTERNATIVE",
     "GENERAL_CHAIN",
     "CDR3_REGION",
-    "MUTATED"
+    "MUTATED",
 ]
 
 AA_tokens = [
