@@ -2693,6 +2693,15 @@
       "rstrip": false,
       "normalized": false,
       "special": true
+    },
+    {
+      "id": 299,
+      "content": "<MUTATED>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
     }
   ],
   "normalizer": null,
@@ -3013,6 +3022,7 @@
       "<CDR3_REGION>": 296,
       "<GENERAL_CHAIN>": 297,
       "<SUBMOLECULAR_ENTITY>": 298,
+      "<MUTATED>": 299,
       "A": 501,
       "B": 502,
       "C": 503,
