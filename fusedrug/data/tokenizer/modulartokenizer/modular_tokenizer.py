@@ -114,7 +114,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             # collect all special tokens (without indices):
             for t_type in self.tokenizers_info:
                 t_info = self.tokenizers_info[t_type]
-                t_json = json.load(open(t_info["json_path"]))
+                with open(t_info["json_path"]) as json_file:
+                    t_json = json.load(json_file)
                 self.tokenizers_info[t_type]["json_instance"] = t_json
 
                 part_special_tokens = ModularTokenizer.get_subtokenizer_added_tokens(
@@ -149,7 +150,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 )
             for t_type in self.tokenizers_info:
                 t_info = self.tokenizers_info[t_type]
-                t_json = json.load(open(t_info["modular_json_path"]))
+                with open(t_info["modular_json_path"]) as modular_file:
+                    t_json = json.load(modular_file)
                 self.tokenizers_info[t_type]["json_instance"] = t_json
 
         # rearrange regular token indices to map to IDs starting from next_index:
@@ -708,7 +710,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         (i.e. all json paths have base dir of './'). The correct path is updated upon calling ModularTokenizer.load()
 
         Args:
-            path (str): a directory there the modular tokenizer info will be saved.
+            path (str): a directory where the modular tokenizer info will be saved. For compatibility with huggingface format, this can also be a path to a json
+            file, in which case its base directory will be used.
         """
 
         def get_out_path(input_json_path: str, base_path: Optional[str] = None) -> str:
@@ -734,10 +737,13 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                     return tokenizers_info_cfg
             raise Exception(f"name {name} not found")
 
+        if path.endswith(".json") or path.endswith(".yaml"):
+            path = os.path.dirname(path)
+
         tokenizers_info_cfg = self.tokenizers_info_raw_cfg
 
-        if not os.path.exists(os.path.dirname(path)):
-            os.makedirs(os.path.dirname(path))
+        if not os.path.exists(path):
+            os.makedirs(path)
         for t_type in self.tokenizers_info:
             tokenizer_inst = self.tokenizers_info[t_type]["tokenizer_inst"]
             if self.tokenizers_info[t_type]["json_path"] is not None:
@@ -809,7 +815,8 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             }
         )
         new_tokenizer_path = new_tokenizer_info["json_path"]
-        t_json = json.load(open(new_tokenizer_path))
+        with open(new_tokenizer_path) as new_tokenizer:
+            t_json = json.load(new_tokenizer)
         new_tokenizer_info["json_instance"] = t_json
 
         # we can set a minimal starting id for each tokenizer.  Used for the extended tokenizer.
@@ -995,7 +1002,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         pad_type_id: Optional[int] = None,
         return_overflow_info: Optional[bool] = False,
         on_unknown: Optional[str] = "warn",
-        verbose: Optional[int] = 1,
+        verbose: int = 1,
     ) -> Union[Encoding, Tuple[Encoding, str]]:
         """_summary_
 
@@ -1198,7 +1205,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             pad_type_id (Optional[int], optional): _description_. Defaults to 0.
             return_overflow_info (Optional[bool], optional): _description_. If True return an additional string with overflow information. Defaults to False.
             on_unknown: (Optional[str], optional): What happens if unknown tokens (i.e. ones mapped to <UNK>) are encountered: 'raise' or 'warn'
-            verbose (Optional[int], optional): verbosity level. 0: no notification, 1: warning notification, 2: warning with partial data, 3: warning
+            verbose (int, optional): verbosity level. 0: no notification, 1: warning notification, 2: warning with partial data, 3: warning
                 with full data. Defaults to 1.
         Returns:
             Encoding: _description_
