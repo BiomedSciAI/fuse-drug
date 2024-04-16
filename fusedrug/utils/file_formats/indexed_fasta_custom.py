@@ -1,4 +1,5 @@
 import os
+import warnings
 from fuse.utils.cpu_profiling import Timer
 from fuse.utils.file_io import save_hdf5_safe, load_hdf5
 import numpy as np
@@ -97,6 +98,16 @@ class IndexedFastaCustom(Dataset):
                 if verbose > 0:
                     print(f"index file already found: {index_filename}")
                     already_found = True
+
+            if already_found:
+                # Fasta file should be older than it's corresponding index file
+                fasta_file_creation_time = os.path.getctime(self.filename)
+                index_file_creation_time = os.path.getctime(self.index_filename)
+
+                if fasta_file_creation_time > index_file_creation_time + 42:
+                    warnings.warn(
+                        f"Fasta file is newer than it's corresponding index file by at least 42 seconds! Please make sure they are matching: {self.filename=}, {self.index_filename=}"
+                    )
 
             if not already_found:
                 lines_offsets = []
