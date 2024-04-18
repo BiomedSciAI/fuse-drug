@@ -42,7 +42,9 @@ class IndexedTextPPITableLoader(OpBase):
 
     def __call__(self, sample_dict: NDict, prefix: Optional[str] = None) -> NDict:
         sid = get_sample_id(sample_dict)
-        assert isinstance(sid, (int, numpy.int64, numpy.uint32))
+        assert isinstance(
+            sid, (int, numpy.int64, numpy.int32, numpy.uint32, numpy.uint64)
+        )
 
         _, entry_data = self._indexed_text_table[sid]
 
