@@ -7,9 +7,6 @@ from fuse.data import DatasetDefault
 from fuse.data.ops.caching_tools import run_cached_func
 from fuse.data.ops.ops_read import OpReadDataframe
 from fuse.data.pipelines.pipeline_default import PipelineDefault
-from fusedrug.data.interaction.drug_target.loaders.indexed_text_PPI_table_loader import (
-    IndexedTextPPITableLoader,
-)
 
 
 def fix_df_types(df: pd.DataFrame) -> pd.DataFrame:
@@ -144,7 +141,6 @@ def dti_binding_dataset(
         return dataset, indices_per_class
     else:
         return dataset
-
 
 
 def dti_binding_dataset_combined(
