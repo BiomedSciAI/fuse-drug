@@ -25,6 +25,7 @@ class IndexedTextPPITableLoader(OpBase):
             the file format is expected to be a text file in which each line is expected to be ' ' separated,
             containing the columns named
         :param index_filename: index file for the table, if not exist or None, it will recreate the index
+        :param rename_columns: rename columns from table, when None (default) column names are kept
         """
         super().__init__(**kwargs)
         self._table_file_loc = table_file_loc
@@ -40,7 +41,9 @@ class IndexedTextPPITableLoader(OpBase):
             allow_access_by_id=self._allow_access_by_id,
         )
 
-    def __call__(self, sample_dict: NDict, prefix: Optional[str] = None) -> NDict:
+    def __call__(
+        self, sample_dict: NDict, key_out_prefix: Optional[str] = None
+    ) -> NDict:
         sid = get_sample_id(sample_dict)
         assert isinstance(
             sid, (int, numpy.int64, numpy.int32, numpy.uint32, numpy.uint64)
@@ -49,9 +52,11 @@ class IndexedTextPPITableLoader(OpBase):
         _, entry_data = self._indexed_text_table[sid]
 
         for c in entry_data.axes[0]:
-            if prefix is None:
+            if key_out_prefix is None:
                 sample_dict[self._rename_columns.get(c, c)] = entry_data[c]
             else:
-                sample_dict[f"{prefix}.{self._rename_columns.get(c,c)}"] = entry_data[c]
+                sample_dict[
+                    f"{key_out_prefix}.{self._rename_columns.get(c,c)}"
+                ] = entry_data[c]
 
         return sample_dict

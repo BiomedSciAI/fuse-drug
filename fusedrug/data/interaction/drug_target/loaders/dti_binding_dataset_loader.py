@@ -1,7 +1,7 @@
 from typing import List, Optional, Union
 from fuse.utils import NDict
 from fuse.data import OpBase, get_sample_id
-import fusedrug.data.interaction.drug_target.datasets as dbd
+import fusedrug.data.interaction.drug_target.datasets.dti_binding_dataset as dbd
 
 
 class DTIBindingDatasetLoader(OpBase):
