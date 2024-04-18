@@ -2,7 +2,7 @@ import os
 import unittest
 import random
 
-from bmfm_bench.benchmarks.interaction.drug_target_interaction.dti_binding_dataset import (
+from fusedrug.data.interaction.drug_target.datasets.dti_binding_dataset import (
     DTIBindingDataset,
 )
 
