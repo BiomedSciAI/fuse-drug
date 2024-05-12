@@ -30,13 +30,13 @@ class IndexedTextPPITableLoader(OpBase):
         super().__init__(**kwargs)
         self._table_file_loc = table_file_loc
         self._id_column_index = id_column_index
-        self._rename_columns = rename_columns
+        self._rename_columns = rename_columns if rename_columns is not None else {}
         self._separator = separator
         self._allow_access_by_id = allow_access_by_id
         self._indexed_text_table = IndexedTextTable(
             filename=table_file_loc,
             index_filename=index_filename,
-            seperator=self._separator,
+            separator=self._separator,
             id_column_idx=self._id_column_index,
             allow_access_by_id=self._allow_access_by_id,
         )

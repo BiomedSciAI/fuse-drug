@@ -90,7 +90,7 @@ if __name__ == "__main__":
 
     ligands_table = IndexedTextTable(
         smiles_path,
-        seperator="\t",
+        separator="\t",
         first_row_is_columns_names=False,
         columns_names=["molecule_sequence", "molecule_id"],
         id_column_name="molecule_id",
@@ -99,7 +99,7 @@ if __name__ == "__main__":
 
     proteins_table = IndexedTextTable(
         proteins_path,
-        seperator="\t",
+        separator="\t",
         first_row_is_columns_names=False,
         columns_names=["protein_sequence", "protein_id"],
         id_column_name="protein_id",

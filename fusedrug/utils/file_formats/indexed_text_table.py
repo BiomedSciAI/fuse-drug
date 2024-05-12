@@ -16,7 +16,7 @@ class IndexedTextTable(Dataset):
     def __init__(
         self,
         filename: str,
-        seperator: str = "\t",
+        separator: str = "\t",
         first_row_is_columns_names: bool = True,
         columns_names: Optional[List[str]] = None,
         id_column_idx: Optional[int] = None,
@@ -62,7 +62,7 @@ class IndexedTextTable(Dataset):
                 self._id_column_idx < self._columns_num_expectation
             ), f"self._id_column_idx={self._id_column_idx} is outside of range for the provided while self._columns_num_expectation={self._columns_num_expectation}"
 
-        self._seperator = seperator
+        self._seperator = separator
         self._allow_access_by_id = allow_access_by_id
 
         if (not first_row_is_columns_names) and (columns_names is None):
