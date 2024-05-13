@@ -11,7 +11,7 @@ class TestIndexedTextTable(unittest.TestCase):
         )
         itt = IndexedTextTable(
             ligands_smi_path,
-            seperator="\t",
+            separator="\t",
             columns_names=(
                 "smiles_string",
                 "smiles_id",
@@ -34,7 +34,7 @@ class TestIndexedTextTable(unittest.TestCase):
         )
         itt = IndexedTextTable(
             ligands_smi_path,
-            seperator="\t",
+            separator="\t",
             first_row_is_columns_names=True,
             id_column_idx=1,
             allow_access_by_id=True,
@@ -50,7 +50,7 @@ class TestIndexedTextTable(unittest.TestCase):
         ## now with providing custom columns names
         itt_custom_col_names = IndexedTextTable(
             ligands_smi_path,
-            seperator="\t",
+            separator="\t",
             first_row_is_columns_names=True,
             columns_names=(
                 "banoni",

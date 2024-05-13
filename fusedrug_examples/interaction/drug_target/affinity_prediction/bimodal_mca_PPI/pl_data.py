@@ -266,7 +266,7 @@ class AffinityDataModule(pl.LightningDataModule):
         super().__init__()
 
         self._shared_ligands_indexed_text_table_kwargs = dict(
-            seperator="\t",
+            separator="\t",
             first_row_is_columns_names=False,
             columns_names=["peptide_sequence", "peptide_id"],
             id_column_name="peptide_id",
@@ -274,7 +274,7 @@ class AffinityDataModule(pl.LightningDataModule):
         )
 
         self._shared_proteins_indexed_text_table_kwargs = dict(
-            seperator="\t",
+            separator="\t",
             first_row_is_columns_names=False,
             columns_names=["protein_sequence", "protein_id"],
             id_column_name="protein_id",
