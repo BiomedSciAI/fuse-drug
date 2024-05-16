@@ -2648,6 +2648,60 @@
       "rstrip": false,
       "normalized": false,
       "special": true
+    },
+    {
+      "id": 294,
+      "content": "<COMPLEX_ENTITY>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 295,
+      "content": "<ALTERNATIVE>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 296,
+      "content": "<CDR3_REGION>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 297,
+      "content": "<GENERAL_CHAIN>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 298,
+      "content": "<SUBMOLECULAR_ENTITY>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 299,
+      "content": "<MUTATED>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
     }
   ],
   "normalizer": null,
@@ -2963,6 +3017,12 @@
       "<CORRUPTED_AREA_END>": 291,
       "<MOLECULAR_ENTITY_MUTATED_PROTEIN_CHAIN>": 292,
       "<MOLECULAR_ENTITY_PROTEIN_CHAIN>": 293,
+      "<COMPLEX_ENTITY>": 294,
+      "<ALTERNATIVE>": 295,
+      "<CDR3_REGION>": 296,
+      "<GENERAL_CHAIN>": 297,
+      "<SUBMOLECULAR_ENTITY>": 298,
+      "<MUTATED>": 299,
       "[CL:0000499]": 3522,
       "[CL:2000060]": 3523,
       "[CL:0000235]": 3524,
