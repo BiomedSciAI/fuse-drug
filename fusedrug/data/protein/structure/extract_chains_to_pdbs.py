@@ -15,6 +15,8 @@ def main(
 ) -> None:
     """
 
+    Takes an input PDB files and splits it into separate files, one per describe chain, allowing to rename the chains if desired
+
     Args:
     input_pdb_path:
     input_chain_ids_to_extract: '_' separated chain ids

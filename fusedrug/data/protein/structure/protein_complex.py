@@ -22,7 +22,7 @@ class ProteinComplex:
         self.chains_data = {}  # maps from chain description (e.g. ('7vux', 'A')) to
         self.flattened_data = {}
 
-        #
+        # a key is a tuple in the format (pdb_id, chain_id)
         self.per_chain_most_frequent_residue_part = {}
         self.per_chain_mmcif_object = {}
         self.per_chain_mmcif_dict = {}

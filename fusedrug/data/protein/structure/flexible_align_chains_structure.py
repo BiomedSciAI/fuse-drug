@@ -173,24 +173,6 @@ def flexible_align_chains_structure(
         mask=None,  # TODO: check
     )
 
-    # apply_on_atom_pos = apply_rigid_on_dynamic_concat['atom_positions']
-    # apply_on_atom_pos_flat = apply_on_atom_pos.reshape(-1,3)
-
-    # transformed_flat = np.dot(apply_on_atom_pos_flat, rot_matrix) + trans_matrix
-    # transformed = transformed_flat.reshape()
-
-    # superimposed = superimposed_flat.reshape(*orig_atom_pos_shape)
-
-    # flexible_save_pdb_file(
-    #     xyz: torch.Tensor,
-    #     sequence: torch.Tensor,
-    #     residues_mask: torch.Tensor,
-    #     save_path: str,
-    #     model: int = 0,
-    #     init_chain: str = "A",
-    #     only_save_backbone: bool = False,
-    #     b_factors: Optional[torch.Tensor] = None,
-
 
 def _apply_indices(x: Dict, indices: np.ndarray) -> Tuple[str, np.ndarray]:
     ans = {}

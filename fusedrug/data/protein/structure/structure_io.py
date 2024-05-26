@@ -176,7 +176,6 @@ def load_protein_structure_features(
     chain_id_type: str = "author_assigned",
     device: str = "cpu",
     max_allowed_file_size_mbs: float = None,
-    # also_return_mmcif_object: bool = False,
 ) -> Union[Tuple[str, dict], None]:
     """
     Extracts ground truth features from a given pdb_id or filename.
@@ -785,8 +784,7 @@ def flexible_save_pdb_file(
         if not m_res:
             continue
         aa_idx = aa_idx.item()
-        # if torch.is_tensor(p_res):
-        #    p_res = p_res.clone().detach().cpu()  # fixme: this looks slow
+
         if aa_idx == 21:  # is this X ? (unknown/special)
             continue
         try:
