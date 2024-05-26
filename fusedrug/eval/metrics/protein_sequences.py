@@ -18,7 +18,7 @@ Created on June 30, 2021
 """
 from typing import List, Dict, Any
 from functools import partial
-
+import pandas as pd
 from fuse.eval.metrics.metrics_common import MetricPerBatchDefault
 from Bio import Align
 import difflib
@@ -89,8 +89,8 @@ def _pairwise_protein_sequence_alignment_compute(
 
 
 def _pairwise_aligned_score(preds: List[str], target: List[str]) -> List[float]:
-    assert isinstance(preds, list)
-    assert isinstance(target, list)
+    assert isinstance(preds, (list, pd.Series))
+    assert isinstance(target, (list, pd.Series))
     assert len(preds) == len(target)
 
     penalty_score = 0.0
