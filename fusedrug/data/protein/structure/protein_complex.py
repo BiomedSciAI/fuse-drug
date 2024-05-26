@@ -22,18 +22,26 @@ class ProteinComplex:
         self.chains_data = {}  # maps from chain description (e.g. ('7vux', 'A')) to
         self.flattened_data = {}
 
+        # a key is a tuple in the format (pdb_id, chain_id)
+        self.per_chain_most_frequent_residue_part = {}
+        self.per_chain_mmcif_object = {}
+        self.per_chain_mmcif_dict = {}
+
     def add(
         self,
-        pdb_id: str,
+        pdb_id_or_filename: str,
+        pdb_id: Optional[str] = None,
         chain_ids: Optional[List[Union[str, int]]] = None,
         load_protein_structure_features_overrides: Dict = None,
-        min_chain_residues_count: int = 10,
+        min_chain_residues_count: int = 8,
         max_residue_type_part: float = 0.5,
         allow_dna_or_rna_in_complex: bool = False,
-    ) -> None:
+        chain_id_type: str = "author_assigned",
+    ) -> bool:
         """
         Args:
-            pdb_id: for example '7vux'
+            pdb_id_or_filename: for example '7vux' or '/some/path/to/7vux.cif.gz'
+            pdb_id: must be provided if pdb_id_or_filename is a filename
             chain_ids: provide None (default) to load all chains
                 provide a list of chain identifiers to select which are loaded.
                     use str to use chain_id
@@ -51,19 +59,19 @@ class ProteinComplex:
             load_protein_structure_features_overrides = {}
 
         ans = load_protein_structure_features(
-            pdb_id,
-            pdb_id=pdb_id if len(pdb_id) == 4 else None,
+            pdb_id_or_filename=pdb_id_or_filename,
+            pdb_id=pdb_id,
             chain_id=chain_ids,
-            also_return_mmcif_object=True,
+            chain_id_type=chain_id_type,
             **load_protein_structure_features_overrides,
         )
 
         if ans is None:
             if self.verbose:
                 print(f"ProteinComplex::add could not load pdb_id={pdb_id}")
-            return
+            return False
 
-        loaded_chains, mmcif_object = ans
+        loaded_chains, mmcif_object, mmcif_dict = ans
 
         if not allow_dna_or_rna_in_complex:
             if mmcif_object.info["rna_or_dna_only_sequences_count"] > 0:
@@ -71,10 +79,12 @@ class ProteinComplex:
                     print(
                         f'dna or rna sequences are not allowed, and detected {mmcif_object.info["rna_or_dna_only_sequences_count"]}'
                     )
-                return
+                return False
 
         # min_chain_residues_count:int = 10,
         # max_residue_type_part:float = 0.5,
+
+        added_any = False
 
         for k, d in loaded_chains.items():
             if min_chain_residues_count is not None:
@@ -84,10 +94,14 @@ class ProteinComplex:
                             f"chain {k} is too small, less than {min_chain_residues_count}"
                         )
                     continue
+            most_frequent_residue_part = d["aatype"].unique(return_counts=True)[
+                1
+            ].max() / len(d["aatype"])
+            self.per_chain_most_frequent_residue_part[
+                (pdb_id, k)
+            ] = most_frequent_residue_part.item()
             if max_residue_type_part is not None:
-                most_frequent_residue_part = d["aatype"].unique(return_counts=True)[
-                    1
-                ].max() / len(d["aatype"])
+
                 if most_frequent_residue_part > max_residue_type_part:
                     if self.verbose:
                         print(
@@ -96,6 +110,11 @@ class ProteinComplex:
                     continue
 
             self.chains_data[(pdb_id, k)] = d
+            self.per_chain_mmcif_object[(pdb_id, k)] = mmcif_object
+            self.per_chain_mmcif_dict[(pdb_id, k)] = mmcif_dict
+            added_any = True
+
+        return added_any
 
     def flatten(
         self,
@@ -177,7 +196,7 @@ class ProteinComplex:
     ) -> None:
         """
         Spatial crop of a pair of chains which favors interacting residues.
-        Note - you must call "flatten" (with only two chain descriptor) prior to calling this method.
+        Note - you must call "flatten" prior to calling this method.
 
         The code is heavily influenced from the spatial crop done in RF2
         """
@@ -539,6 +558,59 @@ class ProteinComplex:
             too_few_residues_interacting_pairs=too_few_residues_interacting_pairs,
             non_interacting_pairs=non_interacting_pairs,
         )
+
+    def get_main_features(self, atom_representation: int = 14) -> Dict:
+        """
+        Returns a dictionary, extracting from all features based on the requested atom_representation
+        {
+            "chain_identifier" : [ list of chain identifiers, each is (pdb_id, chain_id)],
+            "atom_positions" : [list of numpy arrays each contains atom position and having the shape [residues num, 14 or 37, 3]],
+            "aa_types" : [list of numpy arrays each containing integer values of amino-acid types, based on tiny_openfold.np.residue_constants.restypes_with_x order],
+            "gt_atom_exists": [list of numpy arrays each containing a boolean value if that atom exists, in the shape [residues num, 14 or 37]],
+            TODO: add the str version
+        }
+        """
+        if atom_representation == 14:
+            features_names = dict(
+                atom_positions="atom14_gt_positions",
+                atom_exists="atom14_gt_exists",
+                aatype="aatype",
+                bfactors="atom14_bfactors",  #
+            )
+        elif self.atom_representation == 37:
+            features_names = dict(
+                atom_positions="all_atom_positions",
+                atom_exists="all_atom_mask",  # it seems that atom37_atom_exists contains valid masks for residues with missing positional data
+                aatype="aatype",
+                bfactors="all_atom_bfactors",
+            )
+        else:
+            raise Exception(
+                f"Only supported options for atom_representation are 14 and 37 of type integer. Got {atom_representation} of type {type(atom_representation)}"
+            )
+
+        ans = {}
+
+        ans["chain_identifier"] = []
+        ans["atom_positions"] = []
+        ans["aa_types"] = []
+        ans["gt_atom_exists"] = []
+        ans["aa_sequence_str"] = []
+        ans["bfactors"] = []
+        ###ans['chain_index'] = []
+
+        for pdb_id_chain_id, (k, chain_data) in enumerate(self.chains_data.items()):
+            ans["chain_identifier"].append(k)
+            ans["atom_positions"].append(chain_data[features_names["atom_positions"]])
+            ans["aa_types"].append(chain_data[features_names["aatype"]])
+            ans["gt_atom_exists"].append(chain_data[features_names["atom_exists"]])
+            ans["bfactors"].append(chain_data[features_names["bfactors"]])
+            ans["aa_sequence_str"].append(chain_data["aa_sequence_str"])
+            ###ans['chain_index'] += [chain_index]*ans['atom_positions'].shape[0]
+
+        ans["atom_representation"] = atom_representation
+
+        return ans
 
 
 def calculate_number_of_interacting_residues(
