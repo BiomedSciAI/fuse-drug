@@ -37,9 +37,14 @@ task_tokens = [  # pairwise tasks
     "MOLECULAR_ENTITY_ANTIBODY_HEAVY_CHAIN_CDR1",
     "MOLECULAR_ENTITY_ANTIBODY_HEAVY_CHAIN_CDR2",
     "MOLECULAR_ENTITY_ANTIBODY_HEAVY_CHAIN_CDR3",
-    "MOLECULAR_ENTITY_TCR_ALPHA_CHAIN",  # TCR "light" chain - only V, J and C segments
+    "MOLECULAR_ENTITY_TCR_ALPHA_CHAIN",  # TCR "light" chain - only V, J and C segments (variable region)
     "MOLECULAR_ENTITY_TCR_BETA_VDJ",  # TCR "heavy" chain - V(ariable), D(iversity), and J(oining) segments, as well as the C(onstant) segment
-    "MOLECULAR_ENTITY_TCR_BETA_CDR3",
+    "MOLECULAR_ENTITY_TCR_BETA_CDR3", # TCR beta chain CDR3 region
+    "MOLECULAR_ENTITY_TCR_GAMMA_VAR", # TCR gamma chain variable region
+    "MOLECULAR_ENTITY_TCR_DELTA_VAR", # TCR delta chain variable region
+    "MOLECULAR_ENTITY_TCR_ALPHA_CDR3", # TCR alpha chain CDR3 region
+    "MOLECULAR_ENTITY_TCR_GAMMA_CDR3", # TCR gamma chain CDR3 region
+    "MOLECULAR_ENTITY_TCR_DELTA_CDR3", # TCR delta chain CDR3 region
     "TARGETED_ANTIBODY_DESIGN_ENCODER_ONLY_MODE",  # A prefix to our T5 model to inform it that it will run in "encoder only" mode (so only
     # the encoder-stack is used, plus the encoder-output-tokens-classification-head)
     "DECODER_START",
