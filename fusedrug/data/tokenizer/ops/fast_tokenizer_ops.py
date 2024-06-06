@@ -22,7 +22,8 @@ class FastTokenizer(OpBase):
         max_size: int = None,
         pad_token: str = None,
         pad_type_id: str = None,
-        validate_ends_with_eos: Optional[str] = "<EOS>",
+        validate_ends_with_eos: Optional[bool] = True,
+        eos: Optional[str] = "<EOS>",
         verbose: bool = False,
         **kwargs: dict,
     ):
@@ -54,11 +55,12 @@ class FastTokenizer(OpBase):
             )
 
         self._validate_ends_with_eos = validate_ends_with_eos
+        self._eos = eos
 
-        if self._validate_ends_with_eos is not None:
-            if self._validate_ends_with_eos not in vocab.keys():
+        if self._validate_ends_with_eos:
+            if self._eos not in vocab.keys():
                 raise Exception(
-                    f"Could not find eos token = {validate_ends_with_eos} in {tokenizer_json}. You can disable the validation by setting validate_ends_with_eos=None"
+                    f"Could not find eos token = {self._eos} in {tokenizer_json}. You can disable the validation by setting validate_ends_with_eos=False"
                 )
 
         self._pad_id = pad_id
@@ -171,6 +173,7 @@ class FastTokenizer(OpBase):
         key_out_tokens_ids: str = None,
         key_out_attention_mask: str = None,
         convert_attention_mask_to_bool: bool = True,
+        validate_ends_with_eos: Optional[bool] = None,
     ) -> NDict:
         # if self._verbose:
         #     print(
@@ -182,11 +185,13 @@ class FastTokenizer(OpBase):
             raise Exception(
                 f"Expected key_in={key_in} to point to a string, and instead got a {type(data_str)}. value={data_str}"
             )
+        if validate_ends_with_eos is None:
+            validate_ends_with_eos = self._validate_ends_with_eos
 
-        if self._validate_ends_with_eos is not None:
-            if not data_str.rstrip().endswith(self._validate_ends_with_eos):
+        if validate_ends_with_eos:
+            if not data_str.rstrip().endswith(self._eos):
                 raise Exception(
-                    f"self._validate_ends_with_eos was set to {self._validate_ends_with_eos}, but about to encode a string that does not end with it. The str was: {data_str}"
+                    f"validate_ends_with_eos was set to {validate_ends_with_eos}, but about to encode a string that does not end with {self._eos}. The str was: {data_str}"
                 )
 
         encoded = self._tokenizer.encode(data_str)
