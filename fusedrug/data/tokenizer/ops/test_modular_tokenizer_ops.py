@@ -1,3 +1,5 @@
+import unittest
+
 import hydra
 from omegaconf import DictConfig, OmegaConf
 
@@ -6,6 +8,11 @@ import pytorch_lightning as pl
 from fuse.utils import NDict
 from fusedrug.data.tokenizer.ops import FastModularTokenizer as FastTokenizer
 from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import TypedInput
+
+
+class TestModularTokenizerOps(unittest.TestCase):
+    def test_main(self) -> None:
+        main()
 
 
 def seed(seed_value: int) -> int:
@@ -163,4 +170,4 @@ def main(cfg: DictConfig) -> None:
 
 
 if __name__ == "__main__":
-    main()
+    unittest.main()
