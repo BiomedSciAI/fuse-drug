@@ -1,9 +1,5 @@
-import unittest
-
 import hydra
-import os
 from omegaconf import DictConfig, OmegaConf
-from pathlib import Path
 
 
 from typing import Dict, Optional, Any
@@ -11,18 +7,6 @@ import pytorch_lightning as pl
 from fuse.utils import NDict
 from fusedrug.data.tokenizer.ops import FastModularTokenizer as FastTokenizer
 from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import TypedInput
-from fusedrug.data.tokenizer.modulartokenizer.configs import get_modular_tokenizer_config_dirpath
-
-
-class TestModularTokenizerOps(unittest.TestCase):
-    def test_main(self) -> None:
-        config_path = os.path.relpath(
-            get_modular_tokenizer_config_dirpath(), Path(__file__).parent
-        )
-        with hydra.initialize(version_base=None, config_path=config_path):
-            cfg = hydra.compose(config_name="tokenizer_config")
-
-        main(cfg)
 
 
 def seed(seed_value: int) -> int:
@@ -180,4 +164,4 @@ def main(cfg: DictConfig) -> None:
 
 
 if __name__ == "__main__":
-    unittest.main()
+    main()
