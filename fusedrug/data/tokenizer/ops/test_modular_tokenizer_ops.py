@@ -20,7 +20,7 @@ class TestModularTokenizerOps(unittest.TestCase):
             get_modular_tokenizer_config_dirpath(), Path(__file__).parent
         )
         with hydra.initialize(version_base=None, config_path=config_path):
-            cfg = hydra.compose(config_name="tokenizer_config_personal")
+            cfg = hydra.compose(config_name="tokenizer_config")
 
         main(cfg)
 
