@@ -21,7 +21,8 @@ class FastModularTokenizer(OpBase):
         max_size: Union[int, None] = None,
         pad_token: Union[str, None] = None,
         pad_type_id: Union[int, None] = None,
-        validate_ends_with_eos: Optional[str] = "<EOS>",
+        validate_ends_with_eos: Optional[bool] = True,
+        eos: Optional[str] = "<EOS>",
         verbose: Optional[bool] = False,
         **kwargs: Any,
     ) -> None:
@@ -53,12 +54,13 @@ class FastModularTokenizer(OpBase):
             )
 
         self._validate_ends_with_eos = validate_ends_with_eos
+        self._eos = eos
 
-        if self._validate_ends_with_eos is not None:
-            eos_id = self._tokenizer.token_to_id(self._validate_ends_with_eos)
+        if self._validate_ends_with_eos:
+            eos_id = self._tokenizer.token_to_id(self._eos)
             if eos_id is None:
                 raise Exception(
-                    f"Could not find eos token = {validate_ends_with_eos} in {tokenizer_path}. You can disable the validation by setting validate_ends_with_eos=None"
+                    f"Could not find eos token = {self._eos} in {tokenizer_path}. You can disable the validation by setting validate_ends_with_eos=False"
                 )
 
         self._pad_id = pad_id
@@ -190,6 +192,7 @@ class FastModularTokenizer(OpBase):
         max_seq_len: Optional[int] = None,
         on_unknown: Optional[str] = "warn",
         verbose: Optional[int] = 1,
+        validate_ends_with_eos: Optional[bool] = None,
     ) -> NDict:
         """_summary_
 
@@ -207,6 +210,7 @@ class FastModularTokenizer(OpBase):
             on_unknown (Optional[str], optional): What happens if unknown tokens (i.e. ones mapped to <UNK>) are encountered: 'raise' or 'warn'. Defaults to "warn".
             verbose (Optional[int], optional): verbosity level. 0: no notification, 1: warning notification, 2: warning with partial data, 3: warning
                 with full data. Defaults to 1.
+            validate_ends_with_eos (Optional[bool], optional): if not None, overrides self._validate_ends_with_eos
 
         Raises:
             Exception: _description_
@@ -222,15 +226,17 @@ class FastModularTokenizer(OpBase):
             raise Exception(
                 f"Expected key_in={key_in} to point to a list of inputs or string with builtin tokenizer hints, and instead got a {type(data)}. value={data}"
             )
+        if validate_ends_with_eos is None:
+            validate_ends_with_eos = self._validate_ends_with_eos
 
-        if self._validate_ends_with_eos is not None:
+        if validate_ends_with_eos:
             if isinstance(data, str):
                 last_seq = data
             else:
                 last_seq = data[-1].input_string
-            if not last_seq.rstrip().endswith(self._validate_ends_with_eos):
+            if not last_seq.rstrip().endswith(self._eos):
                 raise Exception(
-                    f"self._validate_ends_with_eos was set to {self._validate_ends_with_eos}, but about to encode a string that does not end with it. The str end was: {last_seq}"
+                    f"validate_ends_with_eos was set to {validate_ends_with_eos}, but about to encode a string that does not end with {self._eos}. The str end was: {last_seq}"
                 )
 
         if isinstance(data, str):

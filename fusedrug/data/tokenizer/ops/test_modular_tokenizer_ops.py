@@ -1,6 +1,7 @@
 import hydra
 from omegaconf import DictConfig, OmegaConf
 
+
 from typing import Dict, Optional, Any
 import pytorch_lightning as pl
 from fuse.utils import NDict
@@ -142,7 +143,7 @@ def main(cfg: DictConfig) -> None:
         tokenizer_path=cfg_raw["data"]["tokenizer"]["out_path"],
         max_size=global_max_len,
         pad_token="<PAD>",
-        validate_ends_with_eos="<EOS>",
+        validate_ends_with_eos=True,
     )
     test_tokenizer_op(
         tokenizer_op_inst=mod_tokenizer_op,
@@ -154,7 +155,7 @@ def main(cfg: DictConfig) -> None:
         tokenizer_path=cfg_raw["data"]["tokenizer"]["out_path"],
         max_size=global_max_len,
         pad_token="<PAD>",
-        validate_ends_with_eos="<EOS>",
+        validate_ends_with_eos=True,
     )
     test_tokenizer_op(
         tokenizer_op_inst=mod_tokenizer_op,
