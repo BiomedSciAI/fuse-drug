@@ -776,6 +776,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 key="json_path",
                 val=config_out_path,
             )
+            tokenizer_dir = os.path.dirname(write_out_path)
+            if not os.path.exists(tokenizer_dir):
+                os.mkdir(tokenizer_dir)
             tokenizer_inst.save(write_out_path)
         tokenizer_config_overall = {
             "tokenizers_info": tokenizers_info_cfg,
