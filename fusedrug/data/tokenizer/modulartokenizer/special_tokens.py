@@ -326,6 +326,8 @@ task_tokens = [  # pairwise tasks
     "GENERAL_CHAIN",
     "CDR3_REGION",
     "MUTATED",
+    "AUTOENCODER_TASK",
+    "DECODED_FROM_LATENT",
 ]
 
 AA_tokens = [
