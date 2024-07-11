@@ -5,7 +5,7 @@ import os
 import torch
 from copy import deepcopy
 import pathlib
-
+from tqdm import trange
 import numpy as np
 from Bio.PDB import *  # noqa: F401, F403
 from Bio.PDB import StructureBuilder
@@ -18,7 +18,7 @@ from Bio.PDB.Chain import Chain
 from Bio.PDB.Residue import Residue
 from Bio.PDB.Atom import Atom
 from Bio import PDB
-from warnings import warn
+
 
 from tiny_openfold.data import data_transforms
 from tiny_openfold.utils.tensor_utils import tree_map
@@ -56,7 +56,7 @@ def save_structure_file(
     save_cif: bool = True,
     b_factors: Optional[Dict[str, torch.Tensor]] = None,
     reference_cif_filename: Optional[str] = None,
-    mask: Optional[List] = None,
+    mask: Optional[Dict[str, List]] = None,
 ) -> List[str]:
     """
     A helper function allowing to save single or multi chain structure into pdb and/or mmcif format.
@@ -72,7 +72,7 @@ def save_structure_file(
         save_cif - should it store mmCIF format (newer, and no length limits)
         b_factors -
         reference_cif_filename:Optional[str] - for mmCIF outputs you must provide an mmCIF reference file (you can use the ground truth one)
-        mask:Optional[List] - a mask describing which residues to store
+        mask: - an optional dictionary mapping chain_id to *residue-level* mask
 
     Returns:
         A list with paths for all saved files
@@ -118,6 +118,10 @@ def save_structure_file(
 
     for chain_id in sorted_chain_ids:
         pos_atom14 = chain_to_atom14[chain_id]
+        if mask is not None:
+            curr_mask = mask[chain_id]
+        else:
+            curr_mask = torch.full((pos_atom14.shape[0],), fill_value=True)
 
         if save_pdb:
             out_pdb = output_filename_extensionless + "_chain_" + chain_id + ".pdb"
@@ -136,9 +140,7 @@ def save_structure_file(
                 if b_factors is not None
                 else torch.tensor([100.0] * pos_atom14.shape[0]),
                 sequence=chain_to_aa_index_seq[chain_id],
-                residues_mask=mask
-                if mask is not None
-                else torch.full((pos_atom14.shape[0],), fill_value=True),
+                residues_mask=curr_mask,
                 save_path=out_pdb,
                 init_chain=potentially_fixed_chain_id,
                 model=0,
@@ -174,7 +176,6 @@ def load_protein_structure_features(
     chain_id_type: str = "author_assigned",
     device: str = "cpu",
     max_allowed_file_size_mbs: float = None,
-    also_return_mmcif_object: bool = False,
 ) -> Union[Tuple[str, dict], None]:
     """
     Extracts ground truth features from a given pdb_id or filename.
@@ -249,8 +250,11 @@ def load_protein_structure_features(
             return None
     elif structure_file_format == "cif":
         try:
-            mmcif_object = parse_mmcif(
-                native_structure_filename, unique_file_id=pdb_id, quiet_parsing=True
+            mmcif_object, mmcif_dict = parse_mmcif(
+                native_structure_filename,
+                unique_file_id=pdb_id,
+                quiet_parsing=True,
+                also_return_mmcif_dict=True,
             )
             chains_names = list(mmcif_object.chain_to_seqres.keys())
         except Exception as e:
@@ -308,9 +312,11 @@ def load_protein_structure_features(
                     "aatype",
                     "all_atom_positions",
                     "all_atom_mask",
+                    "all_atom_bfactors",
                     "resolution",
                     "residue_index",
                     "chain_index",
+                    "all_atom_bfactors",
                 ]
             }
 
@@ -336,8 +342,7 @@ def load_protein_structure_features(
     else:
         final_ans = ans[chain_id]
 
-    if also_return_mmcif_object:
-        final_ans = (final_ans, mmcif_object)
+    final_ans = (final_ans, mmcif_object, mmcif_dict)
 
     return final_ans
 
@@ -360,6 +365,7 @@ def calculate_additional_features(gt_mmcif_feats: Dict) -> Dict:
 
     gt_mmcif_feats = data_transforms.make_atom14_masks(gt_mmcif_feats)
     gt_mmcif_feats = data_transforms.make_atom14_positions(gt_mmcif_feats)
+    gt_mmcif_feats = data_transforms.make_atom14_bfactors(gt_mmcif_feats)
 
     # for reference, remember .../openfold/openfold/data/input_pipeline.py
     # data_transforms.make_atom14_masks
@@ -427,8 +433,27 @@ def structure_from_pdb(pdb_filename: str) -> Structure:
     return structure
 
 
+def load_pdb_chain_features(
+    filename: str,
+    chain_id: Optional[str] = None,
+    also_return_openfold_protein: bool = False,
+) -> Dict:
+    prot = pdb_to_openfold_protein(
+        filename,
+        chain_id,
+    )
+
+    features = convert_openfold_protein_to_dict(prot)
+    features = calculate_additional_features(features)
+
+    if also_return_openfold_protein:
+        return features, prot
+    return features
+
+
 def pdb_to_openfold_protein(
-    filename: str, chain_id: Optional[str] = None
+    filename: str,
+    chain_id: Optional[str] = None,
 ) -> protein_utils.Protein:
     """
     Loads data from the pdb file - which includes the atoms positions, atom mask, the AA sequence.
@@ -443,6 +468,35 @@ def pdb_to_openfold_protein(
 
     # with open(filename,'rt') as f:
     #     return protein_utils.from_pdb_string(f.read(), chain_id=chain_id)
+
+
+def convert_openfold_protein_to_dict(
+    prot: protein_utils.Protein, to_torch: bool = True
+) -> Dict:
+    """
+    Note: Aligning with the mmcif code expected names
+    """
+
+    names_mapping = {  # Protin to expected keys in dict
+        "atom_positions": "all_atom_positions",
+        "aatype": "aatype",
+        "atom_mask": "all_atom_mask",
+        #'residue_index' :  'residue_index',
+        #'b_factors' : ,
+        #'chain_index' :  ,
+        #'remark' :  ,
+        #'parents' :  ,
+        #'parents_chain_index' :  ,
+        "aasequence_str": "aasequence_str",
+    }
+
+    ans = {}
+    for from_name, to_name in names_mapping.items():
+        ans[to_name] = getattr(prot, from_name)
+        if to_torch and (not isinstance(ans[to_name], str)):
+            ans[to_name] = torch.from_numpy(ans[to_name])
+
+    return ans
 
 
 def get_available_chain_ids_in_pdb(filename: str) -> List[str]:
@@ -566,6 +620,7 @@ def save_trajectory_to_pdb_file(
     save_path: str,
     traj_b_factors: torch.Tensor = None,
     init_chain: str = "A",
+    verbose: bool = False,
 ) -> None:
     """
     Stores a trajectory into a single PDB file.
@@ -590,7 +645,9 @@ def save_trajectory_to_pdb_file(
     builder = StructureBuilder.StructureBuilder()
     builder.init_structure(0)
 
-    for model in range(traj_xyz.shape[0]):
+    use_range_func = trange if verbose else range
+
+    for model in use_range_func(traj_xyz.shape[0]):
         builder.init_model(model)
         builder.init_chain(init_chain)
         builder.init_seg("    ")
@@ -599,13 +656,19 @@ def save_trajectory_to_pdb_file(
         xyz = traj_xyz[model]
         b_factors = traj_b_factors[model]
 
+        if torch.is_tensor(residues_mask):
+            residues_mask = residues_mask.bool()
+        else:
+            residues_mask = residues_mask.astype(bool)
+
         for i, (aa_idx, p_res, b, m_res) in enumerate(
-            zip(sequence, xyz, b_factors, residues_mask.bool())
+            zip(sequence, xyz, b_factors, residues_mask)
         ):
             if not m_res:
                 continue
             aa_idx = aa_idx.item()
-            p_res = p_res.clone().detach().cpu()  # fixme: this looks slow
+            if torch.is_tensor(p_res):
+                p_res = p_res.clone().detach().cpu()  # fixme: this looks slow
             if aa_idx == 21:
                 continue
             try:
@@ -694,41 +757,59 @@ def flexible_save_pdb_file(
         )
         xyz = xyz[:, :4, ...]
 
-    elif xyz.shape[1] != 14:
-        warn(
-            f"flexible_save_pdb_file:: info: note that xyz contains {xyz.shape[1]} max atoms, and not max 14 atoms (all possible heavy atoms). This is ok if intentional, for example, when outputting only backbone."
-        )
+    assert xyz.shape[1] in [
+        4,
+        14,
+        37,
+    ], f"xyz shape is allowed to be 14 (all heavy atoms) or 4 (only BB), got xyz.shap={xyz.shape}"
 
     if b_factors is None:
-        b_factors = torch.tensor([100.0] * xyz.shape[0])
+        # b_factors = torch.tensor([100.0] * xyz.shape[0])
+        b_factors = torch.zeros((xyz.shape[:-1]))
 
     builder = StructureBuilder.StructureBuilder()
     builder.init_structure(0)
     builder.init_model(model)
     builder.init_chain(init_chain)
     builder.init_seg("    ")
+    if torch.is_tensor(residues_mask):
+        residues_mask = residues_mask.bool()
+
+    if torch.is_tensor(xyz):
+        xyz = xyz.clone().detach().cpu()
+
     for i, (aa_idx, p_res, b, m_res) in enumerate(
-        zip(sequence, xyz, b_factors, residues_mask.bool())
+        zip(sequence, xyz, b_factors, residues_mask)
     ):
         if not m_res:
             continue
         aa_idx = aa_idx.item()
-        p_res = p_res.clone().detach().cpu()  # fixme: this looks slow
-        if aa_idx == 21:
+
+        if aa_idx == 21:  # is this X ? (unknown/special)
             continue
         try:
             three = residx_to_3(aa_idx)
         except IndexError:
             continue
         builder.init_residue(three, " ", int(i), icode=" ")
-        for j, (atom_name,) in enumerate(
-            zip(rc.restype_name_to_atom14_names[three])
-        ):  # why is zip used here?
-            if (len(atom_name) > 0) and (len(p_res) > j):
+
+        if xyz.shape[1] == 37:
+            atom_names = rc.atom_types
+        else:
+            atom_names = rc.restype_name_to_atom14_names[three]
+
+        residue_atom_names = rc.residue_atoms[three]
+
+        for j, (atom_name,) in enumerate(zip(atom_names)):  # why is zip used here?
+            if (
+                (len(atom_name) > 0)
+                and (len(p_res) > j)
+                and atom_name in residue_atom_names
+            ):
                 builder.init_atom(
                     atom_name,
                     p_res[j].tolist(),
-                    b.item(),
+                    b[j].item(),
                     1.0,
                     " ",
                     atom_name.join([" ", " "]),
@@ -739,6 +820,7 @@ def flexible_save_pdb_file(
     io.set_structure(structure)
     os.makedirs(pathlib.Path(save_path).parent, exist_ok=True)
     io.save(save_path)
+    pass
 
 
 def save_pdb_file(

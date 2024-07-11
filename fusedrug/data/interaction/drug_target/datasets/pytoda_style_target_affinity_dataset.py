@@ -34,7 +34,7 @@ class PytodaStyleDrugTargetAffinityDataset(Dataset):
 
         self._ligands_smi = ligands_smi
         # _indexed_table_table_kwargs = dict(
-        #     #seperator='\t',
+        #     #separator='\t',
         #     #id_column_idx=1,
         #     allow_access_by_id=True
         # )

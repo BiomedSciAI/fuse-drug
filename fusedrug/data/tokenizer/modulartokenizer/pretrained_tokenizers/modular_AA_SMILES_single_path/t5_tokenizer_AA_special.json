@@ -2702,6 +2702,51 @@
       "rstrip": false,
       "normalized": false,
       "special": true
+    },
+    {
+      "id": 300,
+      "content": "<MOLECULAR_ENTITY_TCR_ALPHA_CDR3>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 301,
+      "content": "<MOLECULAR_ENTITY_TCR_DELTA_CDR3>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 302,
+      "content": "<MOLECULAR_ENTITY_TCR_DELTA_VAR>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 303,
+      "content": "<MOLECULAR_ENTITY_TCR_GAMMA_CDR3>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 304,
+      "content": "<MOLECULAR_ENTITY_TCR_GAMMA_VAR>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
     }
   ],
   "normalizer": null,
@@ -3023,6 +3068,11 @@
       "<GENERAL_CHAIN>": 297,
       "<SUBMOLECULAR_ENTITY>": 298,
       "<MUTATED>": 299,
+      "<MOLECULAR_ENTITY_TCR_ALPHA_CDR3>": 300,
+      "<MOLECULAR_ENTITY_TCR_DELTA_CDR3>": 301,
+      "<MOLECULAR_ENTITY_TCR_DELTA_VAR>": 302,
+      "<MOLECULAR_ENTITY_TCR_GAMMA_CDR3>": 303,
+      "<MOLECULAR_ENTITY_TCR_GAMMA_VAR>": 304,
       "A": 501,
       "B": 502,
       "C": 503,

@@ -16,7 +16,7 @@ class IndexedTextTable(Dataset):
     def __init__(
         self,
         filename: str,
-        seperator: str = "\t",
+        separator: str = "\t",
         first_row_is_columns_names: bool = True,
         columns_names: Optional[List[str]] = None,
         id_column_idx: Optional[int] = None,
@@ -62,7 +62,7 @@ class IndexedTextTable(Dataset):
                 self._id_column_idx < self._columns_num_expectation
             ), f"self._id_column_idx={self._id_column_idx} is outside of range for the provided while self._columns_num_expectation={self._columns_num_expectation}"
 
-        self._seperator = seperator
+        self._separator = separator
         self._allow_access_by_id = allow_access_by_id
 
         if (not first_row_is_columns_names) and (columns_names is None):
@@ -164,12 +164,12 @@ class IndexedTextTable(Dataset):
                 self._offsets_map.update(m)
 
     def _split_line_basic(self, line_str: str) -> Tuple:
-        splitted = line_str.split(self._seperator)
+        splitted = line_str.split(self._separator)
 
         if self._columns_num_expectation is not None:
             if self._columns_num_expectation != len(splitted):
                 raise Exception(
-                    f"Expected each line to be {repr(self._seperator)} separated and contain exactly {self._columns_num_expectation} values, but instead got {len(splitted)} values : {splitted} Make sure that your smi file {self._filename} is in correct format."
+                    f"Expected each line to be {repr(self._separator)} separated and contain exactly {self._columns_num_expectation} values, but instead got {len(splitted)} values : {splitted} Make sure that your smi file {self._filename} is in correct format."
                 )
 
         splitted[-1] = splitted[-1].rstrip()  # remove trailing endline etc.

@@ -3,7 +3,7 @@ from fusedrug.data.protein.ops.loaders.fasta_loader import FastaLoader
 from fusedrug.data.protein.ops.aa_ops import (
     OpToUpperCase,
     OpKeepOnlyUpperCase,
-)  # OpAddSeperator, OpStrToTokenIds, OpTokenIdsToStr, OpMaskRandom, OpCropRandom
+)  # OpAddSeparator, OpStrToTokenIds, OpTokenIdsToStr, OpMaskRandom, OpCropRandom
 
 from fuse.data import PipelineDefault
 import os
@@ -44,7 +44,7 @@ class TestAAOps(unittest.TestCase):
                 {},
             ),
             # (OpRepeat(OpCropRandom, [dict(key_out='data.gt.seq'), dict(key_out='data.input.seq')]), {} ),
-            # (OpRepeat(OpAddSeperator, [
+            # (OpRepeat(OpAddSeparator, [
             #     dict(inputs={'data.gt.seq':'seq'}, outputs='data.gt.seq'),
             #     dict(inputs={'data.input.seq':'seq'}, outputs='data.input.seq'),
             #     ]), {}),

@@ -13,7 +13,7 @@ class SmiLoader(OpBase):
         self,
         smi_file_loc: Optional[str] = None,
         molecule_id_column_idx: int = 0,
-        seperator: str = "\t",
+        separator: str = "\t",
         allow_access_by_id: bool = True,
         **kwargs: dict
     ):
@@ -25,7 +25,7 @@ class SmiLoader(OpBase):
         super().__init__(**kwargs)
         self._smi_file_loc = smi_file_loc
         self._molecule_id_column_idx = molecule_id_column_idx
-        self._seperator = seperator
+        self._separator = separator
         self._allow_access_by_id = allow_access_by_id
         self._indexed_text_table = IndexedTextTable(
             smi_file_loc,
