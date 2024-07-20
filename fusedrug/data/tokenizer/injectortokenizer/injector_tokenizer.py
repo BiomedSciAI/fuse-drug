@@ -186,7 +186,7 @@ class InjectorTokenizer(ModularTokenizer):
                 seq = "<1>" * len(values)
                 with_placeholders.append(seq)
             else:
-                with_placeholders.append(tokenizer_type)
+                with_placeholders.append("<@TOKENIZER-TYPE=" + tokenizer_type + ">")
                 with_placeholders.append(subseq)
 
         return "".join(with_placeholders), with_placeholders

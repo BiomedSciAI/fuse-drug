@@ -193,6 +193,7 @@ class FastModularTokenizer(OpBase):
         on_unknown: Optional[str] = "warn",
         verbose: Optional[int] = 1,
         validate_ends_with_eos: Optional[bool] = None,
+        key_out_encoding_per_meta: Optional[str] = None,
     ) -> NDict:
         """_summary_
 
@@ -211,6 +212,7 @@ class FastModularTokenizer(OpBase):
             verbose (Optional[int], optional): verbosity level. 0: no notification, 1: warning notification, 2: warning with partial data, 3: warning
                 with full data. Defaults to 1.
             validate_ends_with_eos (Optional[bool], optional): if not None, overrides self._validate_ends_with_eos
+            key_out_encoding_per_meta: optional key out. If set to a string will put in it the per-meta-instruction encoded parts as a list of Encoding elements
 
         Raises:
             Exception: _description_
@@ -240,21 +242,29 @@ class FastModularTokenizer(OpBase):
                 )
 
         if isinstance(data, str):
-            encoded, overflow_info = self._tokenizer.encode(
+            _ans = self._tokenizer.encode(
                 data,
                 max_len=max_seq_len,
                 return_overflow_info=True,
                 on_unknown=on_unknown,
                 verbose=verbose,
+                also_return_split=key_out_encoding_per_meta is not None,
             )
         else:
-            encoded, overflow_info = self._tokenizer.encode_list(
+            _ans = self._tokenizer.encode_list(
                 data,
                 max_len=max_seq_len,
                 return_overflow_info=True,
                 on_unknown=on_unknown,
                 verbose=verbose,
+                also_return_split=key_out_encoding_per_meta is not None,
             )
+
+        if key_out_encoding_per_meta is not None:
+            encoded, overflow_info, per_meta_encoded = _ans
+            sample_dict[key_out_encoding_per_meta] = per_meta_encoded
+        else:
+            encoded, overflow_info = _ans
 
         expected_max_len = self.get_max_len(override_max_len=max_seq_len)
         if (

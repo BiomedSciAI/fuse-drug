@@ -126,11 +126,11 @@ class InjectorTokenizerOp(FastModularTokenizer):
             with_placeholders_str,
             with_placeholders_per_meta,
         ) = InjectorTokenizer.build_placeholder_meta_tokenization(sample_dict[key_in])
-        sample_dict[key_in + "@with_placeholders"] = with_placeholders_str
+        sample_dict[key_in + ".with_placeholders"] = with_placeholders_str
 
         super().__call__(
             sample_dict=sample_dict,
-            key_in=key_in + "@with_placeholders",
+            key_in=key_in + ".with_placeholders",
             key_out_tokenized_object=key_out_tokenized_object,
             key_out_tokens_ids=key_out_tokens_ids,
             key_out_attention_mask=key_out_attention_mask,
@@ -139,6 +139,17 @@ class InjectorTokenizerOp(FastModularTokenizer):
             on_unknown=on_unknown,
             verbose=verbose,
             validate_ends_with_eos=validate_ends_with_eos,
+            key_out_encoding_per_meta=key_in
+            + ".per_meta_part_encoding",  # using the key_in as base for the name because key_out_* are optional
         )
 
+        # TODO 1: call embedding layer on all tokens to get a [sequence_length, model_dim] matrix. Make sure that gradients are allowed to flow to it when needed
+        #         what is the best way to provide the model embedding layer here? the data-pipeline seems to be created BEFORE the model is constructed
+        #         if we want to call the model with the entire minibatch, then we can go with option 1:
+        #         option 1 - only prepare data towards that, and actually run the last part of the logic inside the *_step in pl_module
+        #         option 2 - call the model embedding layer per individual sample, and also somehow load the model BEFORE the data pipeline (less likely we'll go with this option...)
+        # TODO 2: override per injecting meta tokenizer type (FLOAT and VECTOR) the
+
         print("")
+
+        return sample_dict
