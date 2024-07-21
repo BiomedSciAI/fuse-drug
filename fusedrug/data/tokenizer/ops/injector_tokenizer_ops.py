@@ -15,6 +15,7 @@ from typing import Optional, Union, Any
 # import os
 # import re
 # import torch
+import torch
 
 
 class InjectorTokenizerOp(FastModularTokenizer):
@@ -72,7 +73,6 @@ class InjectorTokenizerOp(FastModularTokenizer):
     def __call__(
         self,
         sample_dict: NDict,
-        embedding_layer_key_in: str,  # should point to a torch.nn.Module of an embedding layer
         key_in: str,
         key_out_tokenized_object: Optional[str] = None,
         key_out_tokens_ids: Optional[str] = None,
@@ -82,6 +82,8 @@ class InjectorTokenizerOp(FastModularTokenizer):
         on_unknown: Optional[str] = "warn",
         verbose: Optional[int] = 1,
         validate_ends_with_eos: Optional[bool] = None,
+        key_out_scalars_indices: Optional[str] = None,
+        key_out_scalars_values: Optional[str] = None,
     ) -> NDict:
         """_summary_
 
@@ -100,6 +102,11 @@ class InjectorTokenizerOp(FastModularTokenizer):
             verbose (Optional[int], optional): verbosity level. 0: no notification, 1: warning notification, 2: warning with partial data, 3: warning
                 with full data. Defaults to 1.
             validate_ends_with_eos (Optional[bool], optional): if not None, overrides self._validate_ends_with_eos
+            key_out_scalars_indices:str optional
+                if provided, will write to sample_dict in this key a 1D torch tensor with indices of all scalar elements.
+            key_out_scalars_values:str optional
+                if provided, will write to sample_dict in this key a 1D torch tensor with indices of all scalar values.
+
 
         Raises:
             Exception: _description_
@@ -116,16 +123,22 @@ class InjectorTokenizerOp(FastModularTokenizer):
         # <@TOKENIZER-TYPE=AA><MUTATED><MOLECULAR_ENTITY><MOLECULAR_ENTITY_GENERAL_PROTEIN><SEQUENCE_NATURAL_START>WAITGTEASCENEGEVLAIPNITDNPCISCVCLNQKAECKQEKCAPLAEDCALVVKQTGACCEKCKG<SEQUENCE_NATURAL_END><EOS>'
         sample_dict[key_in] = (
             "<@TOKENIZER-TYPE=AA><GENERAL_AFFINITY_CLASS><MASK>"
-            + "<@TOKENIZER-TYPE=FLOAT>12.7,3.2,14.8,99,9"
+            + "<@TOKENIZER-TYPE=SCALARS_LITERALS>12.7,3.2,14.8,99,9"
             + "<@TOKENIZER-TYPE=AA><COMPLEX_ENTITY><MOLECULAR_ENTITY><MOLECULAR_ENTITY_GENERAL_PROTEIN><SEQUENCE_NATURAL_START>KSSCKRIPLYVDFSDVGWNDWIVAPPGYIAMYCIGECPFPLADILNSTNIAIVQTLVNSVNSKIPKACCVPTELSAISMLMLDENEKVVLKNYQDMVVEGCGCR<SEQUENCE_NATURAL_END>"
+            + "<@TOKENIZER-TYPE=SCALARS_FROM_DICT>blah.model.banana"
             + "<@TOKENIZER-TYPE=AA><COMPLEX_ENTITY><MOLECULAR_ENTITY><MOLECULAR_ENTITY_GENERAL_PROTEIN><SEQUENCE_NATURAL_START>WLITGTEASCENEGEVLIIPNITDNPCISCVCLNQKAECKQEKCAPLAEDCALVVKQTGACCEKCKG<SEQUENCE_NATURAL_END>"
             + "<@TOKENIZER-TYPE=AA><MUTATED><MOLECULAR_ENTITY><MOLECULAR_ENTITY_GENERAL_PROTEIN><SEQUENCE_NATURAL_START>WAITGTEASCENEGEVLAIPNITDNPCISCVCLNQKAECKQEKCAPLAEDCALVVKQTGACCEKCKG<SEQUENCE_NATURAL_END><EOS>"
+        )
+        sample_dict["blah.model.banana"] = torch.tensor(
+            [100.0, 200.0, 300.0], dtype=torch.float32
         )
 
         (
             with_placeholders_str,
-            with_placeholders_per_meta,
-        ) = InjectorTokenizer.build_placeholder_meta_tokenization(sample_dict[key_in])
+            per_meta_orig,
+        ) = InjectorTokenizer.build_placeholder_meta_tokenization(
+            sequence=sample_dict[key_in], sample_dict=sample_dict
+        )
         sample_dict[key_in + ".with_placeholders"] = with_placeholders_str
 
         super().__call__(
@@ -150,6 +163,15 @@ class InjectorTokenizerOp(FastModularTokenizer):
         #         option 2 - call the model embedding layer per individual sample, and also somehow load the model BEFORE the data pipeline (less likely we'll go with this option...)
         # TODO 2: override per injecting meta tokenizer type (FLOAT and VECTOR) the
 
-        print("")
+        prepared_data = InjectorTokenizer.prepare_info_for_model_step(
+            per_meta_tokenizer_data=per_meta_orig,
+            per_meta_encoding_including_placeholders=sample_dict[
+                key_in + ".per_meta_part_encoding"
+            ],
+            sample_dict=sample_dict,
+        )
+
+        sample_dict[key_out_scalars_indices] = prepared_data["scalars_indices"]
+        sample_dict[key_out_scalars_values] = prepared_data["scalars_values"]
 
         return sample_dict
