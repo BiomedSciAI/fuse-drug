@@ -5,10 +5,10 @@ pytorch-lightning
 torchvision
 tokenizers
 hydra-core
-rdkit
+rdkit >= 2023
 descriptastorus @ git+https://github.com/bp-kelley/descriptastorus
 DeepPurpose
-PyTDC
+PyTDC  >= 1
 psycopg2-binary
 sqlalchemy
 rdflib
