@@ -8,7 +8,7 @@ hydra-core
 rdkit >= 2023
 descriptastorus @ git+https://github.com/bp-kelley/descriptastorus
 DeepPurpose
-PyTDC  >= 1
+PyTDC >= 0.4.3
 psycopg2-binary
 sqlalchemy
 rdflib
