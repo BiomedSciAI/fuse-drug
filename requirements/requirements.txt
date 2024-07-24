@@ -5,7 +5,7 @@ pytorch-lightning
 torchvision
 tokenizers
 hydra-core
-rdkit >= 2023
+rdkit
 descriptastorus @ git+https://github.com/bp-kelley/descriptastorus
 DeepPurpose
 PyTDC
