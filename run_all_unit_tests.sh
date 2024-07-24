@@ -64,6 +64,10 @@ create_env() {
             conda create $env python=$PYTHON_VER -y
             echo "Creating new environment: $env - Done"
 
+            echo "Updating new environment: $env"
+            conda update $env -y
+            echo "Updating new environment: $env - Done"
+
             # install PyTorch
             if [ $force_cuda_version != "no" ]; then
                 echo "forcing cudatoolkit $force_cuda_version"
@@ -86,6 +90,9 @@ create_env() {
                 conda run $env --no-capture-output --live-stream pip install -r ./fusedrug_examples/requirements.txt
                 echo "Installing examples requirements - Done"
             fi
+
+            echo "pip list:"
+            conda run $env pip list
         fi
     ) 873>$lock_filename
 
