@@ -62,6 +62,7 @@ create_env() {
             # create an environment
             echo "Creating new environment: $env"
             conda create $env python=$PYTHON_VER -y
+            conda run $env --no-capture-output --live-stream  pip install uv
             echo "Creating new environment: $env - Done"
 
             # install PyTorch
@@ -72,18 +73,18 @@ create_env() {
             fi
 
             echo "Installing FuseMedML"
-            conda run $env --no-capture-output --live-stream pip install git+https://github.com/BiomedSciAI/fuse-med-ml@master
+            conda run $env --no-capture-output --live-stream uv pip install git+https://github.com/BiomedSciAI/fuse-med-ml@master
             echo "Installing FuseMedML - Done"
 
 
             echo "Installing core requirements"
-            conda run $env --no-capture-output --live-stream pip install -r ./requirements/requirements.txt
-            conda run $env --no-capture-output --live-stream pip install -r ./requirements/requirements_dev.txt
+            conda run $env --no-capture-output --live-stream uv pip install -r ./requirements/requirements.txt
+            conda run $env --no-capture-output --live-stream uv pip install -r ./requirements/requirements_dev.txt
             echo "Installing core requirements - Done"
 
             if [ $mode = "examples" ]; then
                 echo "Installing examples requirements"
-                conda run $env --no-capture-output --live-stream pip install -r ./fusedrug_examples/requirements.txt
+                conda run $env --no-capture-output --live-stream uv pip install -r ./fusedrug_examples/requirements.txt
                 echo "Installing examples requirements - Done"
             fi
         fi
