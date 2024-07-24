@@ -90,6 +90,9 @@ create_env() {
                 conda run $env --no-capture-output --live-stream pip install -r ./fusedrug_examples/requirements.txt
                 echo "Installing examples requirements - Done"
             fi
+
+            echo "pip list:"
+            conda run $env pip list
         fi
     ) 873>$lock_filename
 
