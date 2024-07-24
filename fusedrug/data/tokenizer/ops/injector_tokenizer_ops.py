@@ -15,7 +15,6 @@ from typing import Optional, Union, Any
 # import os
 # import re
 # import torch
-import torch
 
 
 class InjectorTokenizerOp(FastModularTokenizer):
@@ -84,6 +83,7 @@ class InjectorTokenizerOp(FastModularTokenizer):
         validate_ends_with_eos: Optional[bool] = None,
         key_out_scalars_indices: Optional[str] = None,
         key_out_scalars_values: Optional[str] = None,
+        key_out_masked_scalars_indices: Optional[str] = None,
     ) -> NDict:
         """_summary_
 
@@ -102,10 +102,11 @@ class InjectorTokenizerOp(FastModularTokenizer):
             verbose (Optional[int], optional): verbosity level. 0: no notification, 1: warning notification, 2: warning with partial data, 3: warning
                 with full data. Defaults to 1.
             validate_ends_with_eos (Optional[bool], optional): if not None, overrides self._validate_ends_with_eos
-            key_out_scalars_indices:str optional
-                if provided, will write to sample_dict in this key a 1D torch tensor with indices of all scalar elements.
-            key_out_scalars_values:str optional
-                if provided, will write to sample_dict in this key a 1D torch tensor with indices of all scalar values.
+            key_out_scalars_inputs_indices:str optional
+                if provided, will write to sample_dict in this key a 1D torch tensor with indices of all inputs scalar elements.
+            key_out_scalars_inputs_values:str optional
+                if provided, will write to sample_dict in this key a 1D torch tensor with indices of all inputs scalar values.
+
 
 
         Raises:
@@ -115,23 +116,6 @@ class InjectorTokenizerOp(FastModularTokenizer):
         Returns:
             NDict: _description_
         """
-
-        print("FOR DEBUGGING! REMOVE !!!!!!")
-        # orig: '<@TOKENIZER-TYPE=AA><GENERAL_AFFINITY_CLASS><MASK>
-        # <@TOKENIZER-TYPE=AA><COMPLEX_ENTITY><MOLECULAR_ENTITY><MOLECULAR_ENTITY_GENERAL_PROTEIN><SEQUENCE_NATURAL_START>KSSCKRIPLYVDFSDVGWNDWIVAPPGYIAMYCIGECPFPLADILNSTNIAIVQTLVNSVNSKIPKACCVPTELSAISMLMLDENEKVVLKNYQDMVVEGCGCR<SEQUENCE_NATURAL_END>
-        # <@TOKENIZER-TYPE=AA><COMPLEX_ENTITY><MOLECULAR_ENTITY><MOLECULAR_ENTITY_GENERAL_PROTEIN><SEQUENCE_NATURAL_START>WLITGTEASCENEGEVLIIPNITDNPCISCVCLNQKAECKQEKCAPLAEDCALVVKQTGACCEKCKG<SEQUENCE_NATURAL_END>
-        # <@TOKENIZER-TYPE=AA><MUTATED><MOLECULAR_ENTITY><MOLECULAR_ENTITY_GENERAL_PROTEIN><SEQUENCE_NATURAL_START>WAITGTEASCENEGEVLAIPNITDNPCISCVCLNQKAECKQEKCAPLAEDCALVVKQTGACCEKCKG<SEQUENCE_NATURAL_END><EOS>'
-        sample_dict[key_in] = (
-            "<@TOKENIZER-TYPE=AA><GENERAL_AFFINITY_CLASS><MASK>"
-            + "<@TOKENIZER-TYPE=SCALARS_LITERALS>12.7,3.2,14.8,99,9"
-            + "<@TOKENIZER-TYPE=AA><COMPLEX_ENTITY><MOLECULAR_ENTITY><MOLECULAR_ENTITY_GENERAL_PROTEIN><SEQUENCE_NATURAL_START>KSSCKRIPLYVDFSDVGWNDWIVAPPGYIAMYCIGECPFPLADILNSTNIAIVQTLVNSVNSKIPKACCVPTELSAISMLMLDENEKVVLKNYQDMVVEGCGCR<SEQUENCE_NATURAL_END>"
-            + "<@TOKENIZER-TYPE=SCALARS_FROM_DICT>blah.model.banana"
-            + "<@TOKENIZER-TYPE=AA><COMPLEX_ENTITY><MOLECULAR_ENTITY><MOLECULAR_ENTITY_GENERAL_PROTEIN><SEQUENCE_NATURAL_START>WLITGTEASCENEGEVLIIPNITDNPCISCVCLNQKAECKQEKCAPLAEDCALVVKQTGACCEKCKG<SEQUENCE_NATURAL_END>"
-            + "<@TOKENIZER-TYPE=AA><MUTATED><MOLECULAR_ENTITY><MOLECULAR_ENTITY_GENERAL_PROTEIN><SEQUENCE_NATURAL_START>WAITGTEASCENEGEVLAIPNITDNPCISCVCLNQKAECKQEKCAPLAEDCALVVKQTGACCEKCKG<SEQUENCE_NATURAL_END><EOS>"
-        )
-        sample_dict["blah.model.banana"] = torch.tensor(
-            [100.0, 200.0, 300.0], dtype=torch.float32
-        )
 
         (
             with_placeholders_str,
@@ -156,13 +140,6 @@ class InjectorTokenizerOp(FastModularTokenizer):
             + ".per_meta_part_encoding",  # using the key_in as base for the name because key_out_* are optional
         )
 
-        # TODO 1: call embedding layer on all tokens to get a [sequence_length, model_dim] matrix. Make sure that gradients are allowed to flow to it when needed
-        #         what is the best way to provide the model embedding layer here? the data-pipeline seems to be created BEFORE the model is constructed
-        #         if we want to call the model with the entire minibatch, then we can go with option 1:
-        #         option 1 - only prepare data towards that, and actually run the last part of the logic inside the *_step in pl_module
-        #         option 2 - call the model embedding layer per individual sample, and also somehow load the model BEFORE the data pipeline (less likely we'll go with this option...)
-        # TODO 2: override per injecting meta tokenizer type (FLOAT and VECTOR) the
-
         prepared_data = InjectorTokenizer.prepare_info_for_model_step(
             per_meta_tokenizer_data=per_meta_orig,
             per_meta_encoding_including_placeholders=sample_dict[
@@ -171,7 +148,30 @@ class InjectorTokenizerOp(FastModularTokenizer):
             sample_dict=sample_dict,
         )
 
-        sample_dict[key_out_scalars_indices] = prepared_data["scalars_indices"]
-        sample_dict[key_out_scalars_values] = prepared_data["scalars_values"]
+        if key_out_scalars_indices is not None:
+            sample_dict[key_out_scalars_indices] = prepared_data["scalars_indices"]
+        else:
+            if prepared_data["scalars_indices"] is not None:
+                raise Exception(
+                    "non None scalars_indices found but no key_out_scalars_indices found"
+                )
+
+        if key_out_scalars_values is not None:
+            sample_dict[key_out_scalars_values] = prepared_data["scalars_values"]
+        else:
+            if prepared_data["scalars_values"] is not None:
+                raise Exception(
+                    "non None scalars_value found but no key_out_scalars_values found"
+                )
+
+        if key_out_masked_scalars_indices is not None:
+            sample_dict[key_out_masked_scalars_indices] = prepared_data[
+                "scalars_masked_indices"
+            ]
+        else:
+            if prepared_data["scalars_masked_indices"] is not None:
+                raise Exception(
+                    "non None scalars_masked_indices found but no key_out_masked_scalars_indices found"
+                )
 
         return sample_dict
