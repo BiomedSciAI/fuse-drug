@@ -64,6 +64,10 @@ create_env() {
             conda create $env python=$PYTHON_VER -y
             echo "Creating new environment: $env - Done"
 
+            echo "Updating new environment: $env"
+            conda update $env -y
+            echo "Updating new environment: $env - Done"
+
             # install PyTorch
             if [ $force_cuda_version != "no" ]; then
                 echo "forcing cudatoolkit $force_cuda_version"
