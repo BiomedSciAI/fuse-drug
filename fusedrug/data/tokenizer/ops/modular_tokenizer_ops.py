@@ -193,6 +193,7 @@ class FastModularTokenizer(OpBase):
         on_unknown: Optional[str] = "warn",
         verbose: Optional[int] = 1,
         validate_ends_with_eos: Optional[bool] = None,
+        additional_caller_info_text: Optional[str] = "",
         key_out_encoding_per_meta: Optional[str] = None,
     ) -> NDict:
         """_summary_
@@ -307,7 +308,7 @@ class FastModularTokenizer(OpBase):
             len(encoded.overflowing) > 0
         ):  # note, encoded.overflowing may have multiple items, and each item can contain multiple items
             print(
-                f"Warning: FastModularTokenizer (pid={os.getpid()}) had to truncate sequence: [{overflow_info}]  \
+                f"Warning: FastModularTokenizer (pid={os.getpid()}, {additional_caller_info_text}) had to truncate sequence: [{overflow_info}]  \
                     for tokenizer: {self._tokenizer_path} for sample_id {get_sample_id(sample_dict)}"
             )
 
