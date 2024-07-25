@@ -73,20 +73,22 @@ create_env() {
             fi
 
             echo "Installing FuseMedML"
-            conda run $env --no-capture-output --live-stream uv pip install --upgrade git+https://github.com/BiomedSciAI/fuse-med-ml@master
+            conda run $env --no-capture-output --live-stream uv pip install -q --upgrade git+https://github.com/BiomedSciAI/fuse-med-ml@master
             echo "Installing FuseMedML - Done"
 
 
-            echo "Installing core requirements"
-            conda run $env --no-capture-output --live-stream uv pip install --upgrade  -r ./requirements/requirements.txt -r ./requirements/requirements_dev.txt
-            echo "Installing core requirements - Done"
-
+            echo "Installing requirements"
             if [ $mode = "examples" ]; then
-                echo "Installing examples requirements"
-                conda run $env --no-capture-output --live-stream uv pip install --upgrade -r ./fusedrug_examples/requirements.txt
-                echo "Installing examples requirements - Done"
+                echo "Installing core + examples requirements"
+                conda run $env --no-capture-output --live-stream uv pip install -q --upgrade -r ./requirements/requirements.txt -r ./requirements/requirements_dev.txt -r ./fusedrug_examples/requirements.txt
+                echo "Installing core + examples requirements - Done"
+            else
+                echo "Installing core requirements"
+                conda run $env --no-capture-output --live-stream uv pip install -q --upgrade  -r ./requirements/requirements.txt -r ./requirements/requirements_dev.txt
             fi
+            echo "Installing requirements done"
         fi
+
     ) 873>$lock_filename
 
     # set env name
