@@ -30,7 +30,7 @@ create_env() {
     fi
 
     # Python version
-    PYTHON_VER=3.8
+    PYTHON_VER=3.10
     ENV_NAME="fuse-drug_$PYTHON_VER-CUDA-$force_cuda_version-$(echo -n $requirements | sha256sum | awk '{print $1;}')"
     echo $ENV_NAME
 
@@ -73,18 +73,17 @@ create_env() {
             fi
 
             echo "Installing FuseMedML"
-            conda run $env --no-capture-output --live-stream uv pip install git+https://github.com/BiomedSciAI/fuse-med-ml@master
+            conda run $env --no-capture-output --live-stream uv pip install --upgrade git+https://github.com/BiomedSciAI/fuse-med-ml@master
             echo "Installing FuseMedML - Done"
 
 
             echo "Installing core requirements"
-            conda run $env --no-capture-output --live-stream uv pip install -r ./requirements/requirements.txt
-            conda run $env --no-capture-output --live-stream uv pip install -r ./requirements/requirements_dev.txt
+            conda run $env --no-capture-output --live-stream uv pip install --upgrade  -r ./requirements/requirements.txt -r ./requirements/requirements_dev.txt
             echo "Installing core requirements - Done"
 
             if [ $mode = "examples" ]; then
                 echo "Installing examples requirements"
-                conda run $env --no-capture-output --live-stream uv pip install -r ./fusedrug_examples/requirements.txt
+                conda run $env --no-capture-output --live-stream uv pip install --upgrade -r ./fusedrug_examples/requirements.txt
                 echo "Installing examples requirements - Done"
             fi
         fi
