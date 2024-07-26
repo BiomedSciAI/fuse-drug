@@ -1,4 +1,3 @@
-from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import ModularTokenizer
 from typing import Optional, List, Tuple, Dict
 from tokenizers import Encoding
 import torch
@@ -6,32 +5,38 @@ import re
 from fuse.utils import NDict
 
 
-class InjectorTokenizer(ModularTokenizer):
+class InjectorTokenizerHelpers:
     """
     InjectorTokenizer builds on top of ModularTokenizer.
+    !!!!
+    Note - this file contains only few utility (static) functions for InjectorTokenizerOp
+    as a user, you are not expected to InjectorTokenizer directly, instead you should use fusedrug.data.tokenizer.ops.injector_tokenizer_ops.InjectorTokenizerOp
+    !!!!
 
-    Its purpose is to extend beyond "standard" input tokens as integers as input for a model.
-    Instead, it provides control on *vectors* that are to be used as input for a model.
+    applies a injector tokenizer
 
-    Example use cases:
-    1. Providing scalars (floating point) as inputs
-    2. Providing vectors of embeddings - for example of a protein embedding
+    injector tokenizer builds on top of modular tokenizer.
+    its purpose is to build inputs_emb for the model (instead of input_ids)
+        this allows to support more advanced inputs beyond token ids, like:
+        * scalars inputs
+        * embeddings vector within a single input
 
-    Each input "token" becomes a tensor of a defined size, and is built of:
-    1. Header
-        made of 4 floats
-        [
-            0.0 or 1.0 #is this a sentinel/mask or not
-            0.0 or 1.0 #is this a standard vocabulary token
-            0.0 or 1.0 #is this a scalar
-            0.0 or 1.0 #is this a full injected vector (e.g. an embedding)
-        ]
-    2. Content
-        the rest of each input vector is made of input_dim-4 float elements.
+    supported syntax/format:
 
+    for text following <@TOKENIZER-TYPE=SCALARS_LITERALS> supports the following format:
+    ',' separated float values and/or <MASK> tokens -
+        for example: "2.7,3.99,-12.9" or "<MASK><MASK>" or "2.19,<MASK>,3.19,<MASK>"
 
-    Note - in the "standard vocabulary token" - we support providing an external embeding layer (like in vanilla T5),
-        as it's part of the trained weights.
+    for text following <@TOKENIZER-TYPE=SCALARS_FROM_DICT> is expected to be a key to the sample NDict
+        for example: "blah.boo.banana"  or "data.input.encoder_input"
+        note: in SCALARS_FROM_DICT you can't describe masked scalars (outputs) you can only describe inputs
+
+    example usage:
+
+    encoder_input:
+    <@TOKENIZER-TYPE=AA><MOLECULAR_WEIGHT_IN_SOME_UNIT><@TOKENIZER-TYPE=SCALARS_LITERALS>0.3<@TOKENIZER-TYPE=AA><BINDING_AFFINITY_NANOMOLAR><@TOKENIZER-TYPE=SCALARS_LITERALS><MASK><@TOKENIZER-TYPE=AA><SEQUENCE_NATURAL_START>ISGGDAIYSSTGRCSLGFNVRSGSTYYFLTAGICTDGATTWWANSARTTVLGTTSGSSFPNNDYGIVRYTNTTIPKDGTVGGQDITSAANATVGMAVTRRGSTTGTISGSVTALNATVNYGGGDVVYGMIRTNVCAEPGDSGGPLYSGTRAIGLTSGGSGNCSSGGTTFFQPVTEALVAYGVSVY<SEQUENCE_NATURAL_END>
+    labels:
+    <@TOKENIZER-TYPE=AA><MOLECULAR_WEIGHT_IN_SOME_UNIT><@TOKENIZER-TYPE=SCALARS_LITERALS>0.3<@TOKENIZER-TYPE=AA><BINDING_AFFINITY_NANOMOLAR><@TOKENIZER-TYPE=SCALARS_LITERALS>12.4<@TOKENIZER-TYPE=AA><SEQUENCE_NATURAL_START>ISGGDAIYSSTGRCSLGFNVRSGSTYYFLTAGICTDGATTWWANSARTTVLGTTSGSSFPNNDYGIVRYTNTTIPKDGTVGGQDITSAANATVGMAVTRRGSTTGTISGSVTALNATVNYGGGDVVYGMIRTNVCAEPGDSGGPLYSGTRAIGLTSGGSGNCSSGGTTFFQPVTEALVAYGVSVY<SEQUENCE_NATURAL_END>
 
     """
 
@@ -89,11 +94,6 @@ class InjectorTokenizer(ModularTokenizer):
                     seq = "<SCALAR>" * len(values)
                 else:
                     raise Exception(f"tokenizer_type={tokenizer_type} is not supported")
-
-                # elif tokenizer_type == "SCALARS_MASKED":
-                #     values = subseq.split(",")
-                #     assert all([x=='<MASK>' for x in values]) #only <MASK> is currently supported
-                #     seq = "<MASKED_SCALAR>" * len(values)
 
                 with_placeholders.append(seq)
 
@@ -201,7 +201,7 @@ class InjectorTokenizer(ModularTokenizer):
             scalars_masked_indices = None
 
         return {
-            "scalars_indices": scalars_indices,
-            "scalars_values": scalars_values,
-            "scalars_masked_indices": scalars_masked_indices,
+            "scalars_indices": scalars_indices,  # 1d - its length is the number of actual scalars (provided) found
+            "scalars_values": scalars_values,  # 1d - values of provided scalars
+            "scalars_masked_indices": scalars_masked_indices,  # 1d - indices of masked scalars
         }

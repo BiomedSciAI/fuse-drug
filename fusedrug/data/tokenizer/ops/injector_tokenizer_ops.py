@@ -1,20 +1,12 @@
 from fuse.utils import NDict
 
-# from fuse.data import OpBase, get_sample_id
 from fusedrug.data.tokenizer.injectortokenizer.injector_tokenizer import (
-    InjectorTokenizer,
+    InjectorTokenizerHelpers,
 )
 
-# from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import ModularTokenizer
 from fusedrug.data.tokenizer.ops import FastModularTokenizer
 
-# from warnings import warn
-# from collections import defaultdict
 from typing import Optional, Union, Any
-
-# import os
-# import re
-# import torch
 
 
 class InjectorTokenizerOp(FastModularTokenizer):
@@ -26,11 +18,27 @@ class InjectorTokenizerOp(FastModularTokenizer):
         this allows to support more advanced inputs beyond token ids, like:
         * scalars inputs
         * embeddings vector within a single input
+
+    supported syntax/format:
+
+    for text following <@TOKENIZER-TYPE=SCALARS_LITERALS> supports the following format:
+    ',' separated float values and/or <MASK> tokens -
+        for example: "2.7,3.99,-12.9" or "<MASK><MASK>" or "2.19,<MASK>,3.19,<MASK>"
+
+    for text following <@TOKENIZER-TYPE=SCALARS_FROM_DICT> is expected to be a key to the sample NDict
+        for example: "blah.boo.banana"  or "data.input.encoder_input"
+        note: in SCALARS_FROM_DICT you can't describe masked scalars (outputs) you can only describe inputs
+
+    example usage:
+
+    encoder_input:
+    <@TOKENIZER-TYPE=AA><MOLECULAR_WEIGHT_IN_SOME_UNIT><@TOKENIZER-TYPE=SCALARS_LITERALS>0.3<@TOKENIZER-TYPE=AA><BINDING_AFFINITY_NANOMOLAR><@TOKENIZER-TYPE=SCALARS_LITERALS><MASK><@TOKENIZER-TYPE=AA><SEQUENCE_NATURAL_START>ISGGDAIYSSTGRCSLGFNVRSGSTYYFLTAGICTDGATTWWANSARTTVLGTTSGSSFPNNDYGIVRYTNTTIPKDGTVGGQDITSAANATVGMAVTRRGSTTGTISGSVTALNATVNYGGGDVVYGMIRTNVCAEPGDSGGPLYSGTRAIGLTSGGSGNCSSGGTTFFQPVTEALVAYGVSVY<SEQUENCE_NATURAL_END>
+    labels:
+    <@TOKENIZER-TYPE=AA><MOLECULAR_WEIGHT_IN_SOME_UNIT><@TOKENIZER-TYPE=SCALARS_LITERALS>0.3<@TOKENIZER-TYPE=AA><BINDING_AFFINITY_NANOMOLAR><@TOKENIZER-TYPE=SCALARS_LITERALS>12.4<@TOKENIZER-TYPE=AA><SEQUENCE_NATURAL_START>ISGGDAIYSSTGRCSLGFNVRSGSTYYFLTAGICTDGATTWWANSARTTVLGTTSGSSFPNNDYGIVRYTNTTIPKDGTVGGQDITSAANATVGMAVTRRGSTTGTISGSVTALNATVNYGGGDVVYGMIRTNVCAEPGDSGGPLYSGTRAIGLTSGGSGNCSSGGTTFFQPVTEALVAYGVSVY<SEQUENCE_NATURAL_END>
     """
 
     def __init__(
         self,
-        input_dim: int,
         tokenizer_path: str,
         max_size: Union[int, None] = None,
         pad_token: Union[str, None] = None,
@@ -66,8 +74,6 @@ class InjectorTokenizerOp(FastModularTokenizer):
             verbose=verbose,
             **kwargs,
         )
-
-        self._input_dim = input_dim
 
     def __call__(
         self,
@@ -107,12 +113,6 @@ class InjectorTokenizerOp(FastModularTokenizer):
             key_out_scalars_inputs_values:str optional
                 if provided, will write to sample_dict in this key a 1D torch tensor with indices of all inputs scalar values.
 
-
-
-        Raises:
-            Exception: _description_
-            Exception: _description_
-
         Returns:
             NDict: _description_
         """
@@ -120,7 +120,7 @@ class InjectorTokenizerOp(FastModularTokenizer):
         (
             with_placeholders_str,
             per_meta_orig,
-        ) = InjectorTokenizer.build_placeholder_meta_tokenization(
+        ) = InjectorTokenizerHelpers.build_placeholder_meta_tokenization(
             sequence=sample_dict[key_in], sample_dict=sample_dict
         )
         sample_dict[key_in + ".with_placeholders"] = with_placeholders_str
@@ -140,7 +140,7 @@ class InjectorTokenizerOp(FastModularTokenizer):
             + ".per_meta_part_encoding",  # using the key_in as base for the name because key_out_* are optional
         )
 
-        prepared_data = InjectorTokenizer.prepare_info_for_model_step(
+        prepared_data = InjectorTokenizerHelpers.prepare_info_for_model_step(
             per_meta_tokenizer_data=per_meta_orig,
             per_meta_encoding_including_placeholders=sample_dict[
                 key_in + ".per_meta_part_encoding"
