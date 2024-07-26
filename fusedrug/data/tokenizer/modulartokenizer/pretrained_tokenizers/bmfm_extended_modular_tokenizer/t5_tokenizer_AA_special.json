@@ -2747,6 +2747,42 @@
       "rstrip": false,
       "normalized": false,
       "special": true
+    },
+    {
+      "id": 305,
+      "content": "<SCALAR>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 306,
+      "content": "<VECTOR>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 307,
+      "content": "<MASKED_SCALAR>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 308,
+      "content": "<MASKED_VECTOR>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
     }
   ],
   "normalizer": null,
@@ -3073,6 +3109,10 @@
       "<MOLECULAR_ENTITY_TCR_DELTA_VAR>": 302,
       "<MOLECULAR_ENTITY_TCR_GAMMA_CDR3>": 303,
       "<MOLECULAR_ENTITY_TCR_GAMMA_VAR>": 304,
+      "<SCALAR>": 305,
+      "<VECTOR>": 306,
+      "<MASKED_SCALAR>": 307,
+      "<MASKED_VECTOR>": 308,
       "A": 501,
       "B": 502,
       "C": 503,

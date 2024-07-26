@@ -326,6 +326,10 @@ task_tokens = [  # pairwise tasks
     "GENERAL_CHAIN",
     "CDR3_REGION",
     "MUTATED",
+    "SCALAR",
+    "VECTOR",
+    "MASKED_SCALAR",
+    "MASKED_VECTOR",
 ]
 
 AA_tokens = [
