@@ -1,6 +1,6 @@
 click
 pyfastx
-torch
+torch <= 2.2.1 # due to dgl limitis with included libgraphblot_pytorch so files
 pytorch-lightning
 torchvision
 tokenizers
