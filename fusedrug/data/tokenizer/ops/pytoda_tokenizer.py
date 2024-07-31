@@ -8,9 +8,10 @@ from pytoda.proteins.transforms import SequenceToTokenIndexes
 from pytoda.transforms import (
     Compose,
     LeftPadding,
-    ToTensor,
+    # ToTensor,
 )
-import torch
+
+# import torch
 
 
 class Op_pytoda_SMILESTokenizer(OpBase):
@@ -18,9 +19,9 @@ class Op_pytoda_SMILESTokenizer(OpBase):
         super().__init__(**kwargs)
         self.language = SMILESTokenizer(
             **SMILES_Tokenizer_kwargs,
-            device=torch.device(
-                "cpu"
-            ),  # this is critical for DataLoader multiprocessing to work well !!!
+            # device=torch.device(   # cpu is now the default. TODO: verify that this is correct
+            #     "cpu"
+            # ),  # this is critical for DataLoader multiprocessing to work well !!!
         )
 
     def __call__(
@@ -66,7 +67,8 @@ class Op_pytoda_ProteinTokenizer(OpBase):
 
         if isinstance(self.protein_language, ProteinLanguage):
             # transforms += [ToTensor(device=self.device)]
-            transforms += [ToTensor(torch.device("cpu"))]
+            # transforms += [ToTensor(torch.device("cpu"))]
+            pass
         else:
             # note: ProteinFeatureLanguage supported wasn't transferred here.
             raise TypeError(
