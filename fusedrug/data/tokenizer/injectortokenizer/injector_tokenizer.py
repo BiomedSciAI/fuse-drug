@@ -3,6 +3,10 @@ from tokenizers import Encoding
 import torch
 import re
 from fuse.utils import NDict
+from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import (
+    TypedInput,
+    list_to_tokenizer_string,
+)
 
 
 class InjectorTokenizerHelpers:
@@ -56,6 +60,21 @@ class InjectorTokenizerHelpers:
             a list of [meta-tokenizer name, data, meta-tokenizer name, data, meta-tokenizer name, data,  ...]
          )
         """
+        if not isinstance(sequence, str):
+            if not isinstance(sequence, (list, tuple)):
+                raise Exception(
+                    f"Expected sequence to be either string or a list of TypedInput elements. Instead got {type(sequence)}"
+                )
+            if len(sequence) > 0:
+                if isinstance(sequence[0], TypedInput):
+                    sequence = list_to_tokenizer_string(
+                        sequence
+                    )  # currently supporting it in this simple way. Consider optimizing if it causes a bottleneck.
+                else:
+                    raise Exception(
+                        f"Expected sequence to be either string or a list of TypedInput elements. Got a list, but the first element is of type {type(sequence[0])}"
+                    )
+
         hints_and_subseq = re.split("<@TOKENIZER-TYPE=([^>]*)>", sequence)[
             1:
         ]  # the first element is blank - removing it
