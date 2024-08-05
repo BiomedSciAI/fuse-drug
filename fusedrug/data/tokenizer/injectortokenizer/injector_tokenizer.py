@@ -192,6 +192,9 @@ class InjectorTokenizerHelpers:
         if len(scalars_indices) > 0:
             scalars_indices = torch.concat(scalars_indices)
             scalars_values = torch.concat(scalars_values)
+        else:
+            scalars_indices = None
+            scalars_values = None
 
         if len(scalars_masked_indices) > 0:
             scalars_masked_indices = torch.tensor(
