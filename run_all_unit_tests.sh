@@ -30,7 +30,7 @@ create_env() {
     fi
 
     # Python version
-    PYTHON_VER=3.8
+    PYTHON_VER=3.10
     ENV_NAME="fuse-drug_$PYTHON_VER-CUDA-$force_cuda_version-$(echo -n $requirements | sha256sum | awk '{print $1;}')"
     echo $ENV_NAME
 
@@ -62,6 +62,7 @@ create_env() {
             # create an environment
             echo "Creating new environment: $env"
             conda create $env python=$PYTHON_VER -y
+            conda run $env --no-capture-output --live-stream  pip install uv
             echo "Creating new environment: $env - Done"
 
             # install PyTorch
@@ -72,21 +73,22 @@ create_env() {
             fi
 
             echo "Installing FuseMedML"
-            conda run $env --no-capture-output --live-stream pip install git+https://github.com/BiomedSciAI/fuse-med-ml@master
+            conda run $env --no-capture-output --live-stream uv pip install -q --upgrade git+https://github.com/BiomedSciAI/fuse-med-ml@master
             echo "Installing FuseMedML - Done"
 
 
-            echo "Installing core requirements"
-            conda run $env --no-capture-output --live-stream pip install -r ./requirements/requirements.txt
-            conda run $env --no-capture-output --live-stream pip install -r ./requirements/requirements_dev.txt
-            echo "Installing core requirements - Done"
-
+            echo "Installing requirements"
             if [ $mode = "examples" ]; then
-                echo "Installing examples requirements"
-                conda run $env --no-capture-output --live-stream pip install -r ./fusedrug_examples/requirements.txt
-                echo "Installing examples requirements - Done"
+                echo "Installing core + examples requirements"
+                conda run $env --no-capture-output --live-stream uv pip install -q --upgrade -r ./requirements/requirements.txt -r ./requirements/requirements_dev.txt -r ./fusedrug_examples/requirements.txt
+                echo "Installing core + examples requirements - Done"
+            else
+                echo "Installing core requirements"
+                conda run $env --no-capture-output --live-stream uv pip install -q --upgrade  -r ./requirements/requirements.txt -r ./requirements/requirements_dev.txt
             fi
+            echo "Installing requirements done"
         fi
+
     ) 873>$lock_filename
 
     # set env name
