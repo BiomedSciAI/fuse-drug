@@ -156,7 +156,7 @@ class InjectorTokenizerHelpers:
                             scalars_masked_indices.append(i + prev_index_end + 1)
 
                     if len(curr_indices) > 0:
-                        curr_indices = torch.tensor(curr_data, dtype=torch.int64)
+                        curr_indices = torch.tensor(curr_indices, dtype=torch.int64)
                         curr_data = torch.tensor(curr_data, dtype=torch.float32)
 
                         scalars_indices.append(curr_indices)
@@ -192,6 +192,9 @@ class InjectorTokenizerHelpers:
         if len(scalars_indices) > 0:
             scalars_indices = torch.concat(scalars_indices)
             scalars_values = torch.concat(scalars_values)
+        else:
+            scalars_indices = None
+            scalars_values = None
 
         if len(scalars_masked_indices) > 0:
             scalars_masked_indices = torch.tensor(
