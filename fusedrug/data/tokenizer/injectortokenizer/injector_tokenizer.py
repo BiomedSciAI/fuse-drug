@@ -182,6 +182,8 @@ class InjectorTokenizerHelpers:
                         scalars_values.append(curr_data)
 
                         assert len(curr_data.shape) == 1
+
+                    prev_index_end += len(curr_str_data)
                 elif "SCALARS_FROM_DICT" == tokenizer_name:
                     if sample_dict is None:
                         raise Exception(
