@@ -1820,6 +1820,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         Returns:
             :obj:`int`: The size of the vocabulary
         """
+        raise Exception(
+            "Not implemented. Current implementation is wrong - it returns regular max mapped ID"
+        )
         if not with_added_tokens:
             raise Exception("Not implemented")
         else:

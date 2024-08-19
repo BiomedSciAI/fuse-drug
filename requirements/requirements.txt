@@ -5,6 +5,7 @@ pytorch-lightning
 torchvision
 tokenizers
 hydra-core
+grpcio==1.64.1
 rdkit
 descriptastorus @ git+https://github.com/bp-kelley/descriptastorus
 DeepPurpose
