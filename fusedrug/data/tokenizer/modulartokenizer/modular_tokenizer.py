@@ -1006,7 +1006,13 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         return_overflow_info: Optional[bool] = False,
         on_unknown: Optional[str] = "warn",
         verbose: int = 1,
-    ) -> Union[Encoding, Tuple[Encoding, str]]:
+        also_return_split: bool = False,
+    ) -> Union[
+        Encoding,
+        Tuple[Encoding, str],
+        Tuple[Encoding, List[Encoding]],
+        Tuple[Encoding, str, List[Encoding]],
+    ]:
         """_summary_
 
         Args:
@@ -1025,6 +1031,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             on_unknown: (Optional[str], optional): What happens if unknown tokens (i.e. ones mapped to <UNK>) are encountered: 'raise' or 'warn'
             verbose (Optional[int], optional): verbosity level. 0: no notification, 1: warning notification, 2: warning with partial data, 3: warning
                 with full data. Defaults to 1.
+            also_return_split: defaults to False. If set to True, the return value will also contain a list that contains per meta-tokenizer-instruction element of Encoding
         Returns:
             Encoding: _description_
         """
@@ -1150,9 +1157,15 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                     f"Unexpected on_unknown value {on_unknown}. Should be 'warn' or 'raise'"
                 )
 
+        if (not return_overflow_info) and (not also_return_split):
+            return merged_encoding
+        ans = [merged_encoding]
         if return_overflow_info:
-            return merged_encoding, overflow_info
-        return merged_encoding
+            ans += [overflow_info]
+        if also_return_split:
+            ans += [encoded_list]
+
+        return tuple(ans)
 
     def decode(self, ids: Iterable, skip_special_tokens: Optional[bool] = False) -> str:
         """Receives a list of IDs and returns a string of tokens
@@ -1190,6 +1203,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
         return_overflow_info: Optional[bool] = False,
         on_unknown: Optional[str] = "warn",
         verbose: Optional[int] = 1,
+        also_return_split: bool = False,
     ) -> Encoding:
         # (self, sequence, pair=None, is_pretokenized=False, add_special_tokens=True)
         """Receives a user-supplied string that contains, in addition to the text that is to be tokenized, special delimiters signifying the type
@@ -1210,6 +1224,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             on_unknown: (Optional[str], optional): What happens if unknown tokens (i.e. ones mapped to <UNK>) are encountered: 'raise' or 'warn'
             verbose (int, optional): verbosity level. 0: no notification, 1: warning notification, 2: warning with partial data, 3: warning
                 with full data. Defaults to 1.
+            also_return_split: also return the per-meta-instruction encoded parts as a list of Encoding elements
         Returns:
             Encoding: _description_
             str: _description_ information on overflow, if return_overflow_info=True
@@ -1251,6 +1266,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             return_overflow_info=return_overflow_info,
             on_unknown=on_unknown,
             verbose=verbose,
+            also_return_split=also_return_split,
         )
 
     def get_tokenizer_types(self) -> List:
