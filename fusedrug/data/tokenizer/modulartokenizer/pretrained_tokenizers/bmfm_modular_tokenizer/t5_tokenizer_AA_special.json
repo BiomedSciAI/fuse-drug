@@ -2783,6 +2783,51 @@
       "rstrip": false,
       "normalized": false,
       "special": true
+    },
+    {
+      "id": 309,
+      "content": "<AUTOENCODER_LATENT_LOG_VARIANCE>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 310,
+      "content": "<AUTOENCODER_LATENT_MEAN>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 311,
+      "content": "<AUTOENCODER_LATENT_SAMPLED_Z>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 312,
+      "content": "<AUTOENCODER_TASK>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 313,
+      "content": "<DECODED_FROM_LATENT>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
     }
   ],
   "normalizer": null,
@@ -3113,6 +3158,11 @@
       "<VECTOR>": 306,
       "<MASKED_SCALAR>": 307,
       "<MASKED_VECTOR>": 308,
+      "<AUTOENCODER_LATENT_LOG_VARIANCE>": 309,
+      "<AUTOENCODER_LATENT_MEAN>": 310,
+      "<AUTOENCODER_LATENT_SAMPLED_Z>": 311,
+      "<AUTOENCODER_TASK>": 312,
+      "<DECODED_FROM_LATENT>": 313,
       "A": 501,
       "B": 502,
       "C": 503,
