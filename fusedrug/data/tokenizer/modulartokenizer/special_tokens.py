@@ -330,6 +330,11 @@ task_tokens = [  # pairwise tasks
     "VECTOR",
     "MASKED_SCALAR",
     "MASKED_VECTOR",
+    "AUTOENCODER_TASK",
+    "DECODED_FROM_LATENT",
+    "AUTOENCODER_LATENT_LOG_VARIANCE",
+    "AUTOENCODER_LATENT_MEAN",
+    "AUTOENCODER_LATENT_SAMPLED_Z",
 ]
 
 AA_tokens = [
