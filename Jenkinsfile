@@ -1,5 +1,5 @@
 //reference: https://github.com/Pragmatists/testing-examples/blob/master/Jenkinsfile
-
+//
 pipeline {
     agent { label 'cccxl016 || cccxl014' }
     stages {
