@@ -927,7 +927,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
 
         if (len(encoded.overflowing) > 0) and (verbose > 0):
             print(
-                f"Warning: FastTokenizer had to truncate sequence. Original Sequence Length = {len(data_str)}, max tokens supported = {self.tokenizers_info[input_type]['max_len']}, exceeded by {len(encoded.overflowing[0].ids)} tokens, for tokenizer: {input_type}"
+                f"Warning: {self.__class__.__name__} had to truncate sequence. Original Sequence Length = {len(data_str)}, max tokens supported = {self.tokenizers_info[input_type]['max_len']}, exceeded by {len(encoded.overflowing[0].ids)} tokens, for tokenizer: {input_type}"
             )
 
         if sequence_id is None:

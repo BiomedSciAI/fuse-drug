@@ -210,7 +210,7 @@ class TokenizerOp(OpBase):
                 > self._debug_max_tokenized_len_encountered[self._tokenizer_json]
             ):
                 print(
-                    "DEBUG: FastTokenizer: encountered new max encoded size:",
+                    f"DEBUG: {self.__class__.__name__}: encountered new max encoded size:",
                     _encoded_len_unpadded,
                     " for tokenizer: ",
                     self._tokenizer_json,
@@ -235,7 +235,7 @@ class TokenizerOp(OpBase):
             n_tokens_org = len(list(filter(None, self.split_regex.split(data_str))))
 
             print(
-                f"Warning: FastTokenizer (pid={os.getpid()}) had to truncate sequence. Original num tokens = {n_tokens_org} max supported = {self._max_size} for tokenizer: {self._tokenizer_json} for sample_id {get_sample_id(sample_dict)}"
+                f"Warning: {self.__class__.__nasme__} (pid={os.getpid()}) had to truncate sequence. Original num tokens = {n_tokens_org} max supported = {self._max_size} for tokenizer: {self._tokenizer_json} for sample_id {get_sample_id(sample_dict)}"
             )
 
         if key_out_tokenized_object is not None:
