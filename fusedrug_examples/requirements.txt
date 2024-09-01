@@ -1,6 +1,7 @@
 tensorflow
 dscript
 dgl
+pydantic
 pysmiles
 deepchem
 mol2vec @ git+https://github.com/samoturk/mol2vec
