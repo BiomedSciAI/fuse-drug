@@ -4,16 +4,16 @@ from fusedrug.data.tokenizer.injectortokenizer.injector_tokenizer import (
     InjectorTokenizerHelpers,
 )
 
-from fusedrug.data.tokenizer.ops import FastModularTokenizer
+from fusedrug.data.tokenizer.ops.modular_tokenizer_op import ModularTokenizerOp
 
 from typing import Optional, Union, Any
 
 
-class InjectorTokenizerOp(FastModularTokenizer):
+class InjectorModularTokenizerOp(ModularTokenizerOp):
     """
     applies a injector tokenizer
 
-    injector tokenizer builds on top of modular tokenizer.
+    injector tokenizer builds on top of modular tokenizer op.
     its purpose is to build inputs_emb for the model (instead of input_ids)
         this allows to support more advanced inputs beyond token ids, like:
         * scalars inputs
@@ -61,7 +61,7 @@ class InjectorTokenizerOp(FastModularTokenizer):
         """
         if verbose:
             print(
-                f"DEBUG:InjectorTokenizerOp __init__ called for path {tokenizer_path}"
+                f"DEBUG:{self.__class__.__name__} __init__ called for path {tokenizer_path}"
             )
 
         super().__init__(

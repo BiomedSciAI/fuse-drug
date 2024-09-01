@@ -1,3 +1,4 @@
+from typing import Dict
 from fuse.utils import NDict
 from fuse.data import OpBase, get_sample_id
 from tokenizers import Tokenizer
@@ -11,7 +12,7 @@ import os
 import re
 
 
-class FastTokenizer(OpBase):
+class TokenizerOp(OpBase):
     """
     applies a tokenizers (https://github.com/huggingface/tokenizers) based tokenizer
     """
@@ -41,11 +42,13 @@ class FastTokenizer(OpBase):
         super().__init__(**kwargs)
 
         if verbose:
-            print(f"DEBUG:FastTokenizer __init__ called for json {tokenizer_json}")
+            print(
+                f"DEBUG:{self.__class__.__name__} __init__ called for json {tokenizer_json}"
+            )
 
         self._tokenizer_json = tokenizer_json
-        self._tokenizer = Tokenizer.from_file(self._tokenizer_json)
-        vocab = self._tokenizer.get_vocab()
+        self._tokenizer: Tokenizer = Tokenizer.from_file(self._tokenizer_json)
+        vocab: Dict[str, int] = self._tokenizer.get_vocab()
 
         if pad_token in vocab.keys():
             pad_id = vocab[pad_token]
@@ -174,12 +177,8 @@ class FastTokenizer(OpBase):
         key_out_attention_mask: str = None,
         convert_attention_mask_to_bool: bool = True,
         validate_ends_with_eos: Optional[bool] = None,
+        verbose: int = 1,
     ) -> NDict:
-        # if self._verbose:
-        #     print(
-        #         f'PID:{os.getpid()} FastTokenizer op sample_id {sample_dict["data.sample_id"]} key_in={key_in} pdb={sample_dict["pdb"]} HeavyChain: {sample_dict["Hchain"]} LightChain: {sample_dict["Lchain"]}'
-        #     )
-
         data_str = sample_dict[key_in]
         if not isinstance(data_str, str):
             raise Exception(
@@ -231,7 +230,7 @@ class FastTokenizer(OpBase):
         # overflowing - I *assume* it's any original content that get clipped out due to max length definition
 
         if (
-            len(encoded.overflowing) > 0
+            len(encoded.overflowing) > 0 and verbose > 0
         ):  # note, encoded.overflowing may have multiple items, and each item can contain multiple items
             n_tokens_org = len(list(filter(None, self.split_regex.split(data_str))))
 
@@ -255,7 +254,7 @@ class FastTokenizer(OpBase):
 
         if (key_out_tokens_ids is None) and (key_out_tokenized_object is None):
             warn(
-                "FastTokenizer Op got key_out_tokens_ids=None and key_out_tokenized_object=None, which means it will not modify anything in the sample. Is this intended?"
+                f"{self.__class__.__name__} Op got key_out_tokens_ids=None and key_out_tokenized_object=None, which means it will not modify anything in the sample. Is this intended?"
             )
 
         return sample_dict

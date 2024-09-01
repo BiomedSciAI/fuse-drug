@@ -10,7 +10,7 @@ import os
 import re
 
 
-class FastModularTokenizer(OpBase):
+class ModularTokenizerOp(OpBase):
     """
     applies a modular tokenizer
     """
@@ -305,7 +305,7 @@ class FastModularTokenizer(OpBase):
         # overflowing - it's encoded original content that get clipped out due to max length definition
 
         if (
-            len(encoded.overflowing) > 0
+            len(encoded.overflowing) > 0 and verbose > 0
         ):  # note, encoded.overflowing may have multiple items, and each item can contain multiple items
             print(
                 f"Warning: FastModularTokenizer (pid={os.getpid()}, {additional_caller_info_text}) had to truncate sequence: [{overflow_info}]  \
