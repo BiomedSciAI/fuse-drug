@@ -5,6 +5,6 @@ deepchem
 mol2vec @ git+https://github.com/samoturk/mol2vec
 paccmann_predictor @ git+https://git@github.com/PaccMann/paccmann_predictor#egg=paccmann-predictor
 modlamp
-biopython
 torchtext
+biopython
 x_transformers
