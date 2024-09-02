@@ -1,5 +1,4 @@
 torchtext==0.3.1 # old version of tokenizer - need to replace with another tokenizer and remove this
-dgl<2.2.1
 dscript
 pysmiles
 deepchem
