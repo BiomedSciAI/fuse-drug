@@ -86,6 +86,13 @@ create_env() {
                 conda run $env --no-capture-output --live-stream pip install -r ./fusedrug_examples/requirements.txt
                 echo "Installing examples requirements - Done"
             fi
+
+            # install PyTorch
+            if [ $force_cuda_version != "no" ]; then
+                echo "forcing cudatoolkit $force_cuda_version"
+                conda install $env pytorch==2.2.2 torchvision==0.17.2 torchaudio==2.2.2 pytorch-cuda=12.1 -c pytorch -c nvidia
+                echo "forcing cudatoolkit $force_cuda_version - Done"
+            fi
         fi
     ) 873>$lock_filename
 
