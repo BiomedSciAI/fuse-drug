@@ -7,3 +7,4 @@ paccmann_predictor @ git+https://git@github.com/PaccMann/paccmann_predictor#egg=
 modlamp
 biopython
 x_transformers
+# dgl  # Causing issues
