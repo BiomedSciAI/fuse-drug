@@ -10,7 +10,7 @@ import os
 import re
 
 
-class FastModularTokenizer(OpBase):
+class ModularTokenizerOp(OpBase):
     """
     applies a modular tokenizer
     """
@@ -41,7 +41,7 @@ class FastModularTokenizer(OpBase):
 
         if verbose:
             print(
-                f"DEBUG:FastModularTokenizer __init__ called for path {tokenizer_path}"
+                f"DEBUG:{self.__class__.__name__} __init__ called for path {tokenizer_path}"
             )
 
         self._tokenizer_path = tokenizer_path
@@ -285,7 +285,7 @@ class FastModularTokenizer(OpBase):
                 > self._debug_max_tokenized_len_encountered[self._tokenizer_path]
             ):
                 print(
-                    "DEBUG: FastModularTokenizer: encountered new max encoded size:",
+                    f"DEBUG: {self.__class__.__name__} : encountered new max encoded size:",
                     _encoded_len_unpadded,
                     " for tokenizer: ",
                     self._tokenizer_path,
@@ -305,10 +305,10 @@ class FastModularTokenizer(OpBase):
         # overflowing - it's encoded original content that get clipped out due to max length definition
 
         if (
-            len(encoded.overflowing) > 0
+            len(encoded.overflowing) > 0 and verbose > 0
         ):  # note, encoded.overflowing may have multiple items, and each item can contain multiple items
             print(
-                f"Warning: FastModularTokenizer (pid={os.getpid()}, {additional_caller_info_text}) had to truncate sequence: [{overflow_info}]  \
+                f"Warning: {self.__class__.__name__}  (pid={os.getpid()}, {additional_caller_info_text}) had to truncate sequence: [{overflow_info}]  \
                     for tokenizer: {self._tokenizer_path} for sample_id {get_sample_id(sample_dict)}"
             )
 
@@ -328,7 +328,7 @@ class FastModularTokenizer(OpBase):
 
         if (key_out_tokens_ids is None) and (key_out_tokenized_object is None):
             warn(
-                "FastModularTokenizer Op got key_out_tokens_ids=None and key_out_tokenized_object=None, which means it will not modify anything in the sample. Is this intended?"
+                f"{self.__class__.__name__}  Op got key_out_tokens_ids=None and key_out_tokenized_object=None, which means it will not modify anything in the sample. Is this intended?"
             )
 
         return sample_dict

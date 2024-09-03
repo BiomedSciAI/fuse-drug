@@ -30,7 +30,7 @@ create_env() {
     fi
 
     # Python version
-    PYTHON_VER=3.11
+    PYTHON_VER=3.10
     ENV_NAME="fuse-drug_$PYTHON_VER-CUDA-$force_cuda_version-$(echo -n $requirements | sha256sum | awk '{print $1;}')"
     echo $ENV_NAME
 
@@ -67,7 +67,7 @@ create_env() {
             # install PyTorch
             if [ $force_cuda_version != "no" ]; then
                 echo "forcing cudatoolkit $force_cuda_version"
-                conda install $env pytorch torchvision pytorch-cuda=$force_cuda_version -c pytorch -c nvidia
+                conda install $env pytorch torchvision= torchaudio pytorch-cuda=$force_cuda_version -c pytorch -c nvidia
                 echo "forcing cudatoolkit $force_cuda_version - Done"
             fi
 
@@ -86,6 +86,7 @@ create_env() {
                 conda run $env --no-capture-output --live-stream pip install -r ./fusedrug_examples/requirements.txt
                 echo "Installing examples requirements - Done"
             fi
+
         fi
     ) 873>$lock_filename
 

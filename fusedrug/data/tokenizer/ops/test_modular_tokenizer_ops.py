@@ -5,7 +5,7 @@ from omegaconf import DictConfig, OmegaConf
 from typing import Dict, Optional, Any
 import pytorch_lightning as pl
 from fuse.utils import NDict
-from fusedrug.data.tokenizer.ops import FastModularTokenizer as FastTokenizer
+from fusedrug.data.tokenizer.ops.modular_tokenizer_op import ModularTokenizerOp
 from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import TypedInput
 
 
@@ -16,12 +16,12 @@ def seed(seed_value: int) -> int:
 
 
 def test_tokenizer_op(
-    tokenizer_op_inst: FastTokenizer, mode: Optional[str] = ""
+    tokenizer_op_inst: ModularTokenizerOp, mode: Optional[str] = ""
 ) -> None:
     """_summary_
 
     Args:
-        tokenizer_op_inst (FastTokenizer): ModularTokenizer operator instance
+        tokenizer_op_inst (ModularTokenizerOp): ModularTokenizer operator instance
         mode (Optional[str], optional): _description_. Defaults to "".
     """
     max_len = tokenizer_op_inst.get_max_len()
@@ -139,7 +139,7 @@ def main(cfg: DictConfig) -> None:
     cfg_raw: Dict[str, Any] = tmp
 
     global_max_len = 15
-    mod_tokenizer_op = FastTokenizer(
+    mod_tokenizer_op = ModularTokenizerOp(
         tokenizer_path=cfg_raw["data"]["tokenizer"]["out_path"],
         max_size=global_max_len,
         pad_token="<PAD>",
@@ -151,7 +151,7 @@ def main(cfg: DictConfig) -> None:
     )
 
     global_max_len = None
-    mod_tokenizer_op = FastTokenizer(
+    mod_tokenizer_op = ModularTokenizerOp(
         tokenizer_path=cfg_raw["data"]["tokenizer"]["out_path"],
         max_size=global_max_len,
         pad_token="<PAD>",
