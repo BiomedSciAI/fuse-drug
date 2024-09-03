@@ -7,9 +7,10 @@ import pytorch_lightning as pl
 import fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI.models as models
 
 # and described in the paper "Adapting protein language models for rapid DTI prediction": https://www.mlsb.io/papers_2021/MLSB2021_Adapting_protein_language_models.pdf
-from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI.Contrastive_PLM_DTI.src import (
-    architectures as architectures,
-)
+# Commented out since there is a problem with dependency list
+# from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI.Contrastive_PLM_DTI.src import (
+#     architectures as architectures,
+# )
 from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI import (
     metrics,
 )
@@ -31,7 +32,8 @@ class PLM_DTI_Module(pl.LightningModule):
         if cfg.model.model_architecture.lower() == "deepcoembedding":
             model_types = models
         else:
-            model_types = architectures
+            raise Exception("Error: unexpected model type ")
+            # model_types = architectures
         model = getattr(model_types, cfg.model.model_architecture)(
             cfg.model.drug_shape,
             cfg.model.target_shape,
