@@ -5,7 +5,7 @@ from pathlib import Path
 import tempfile
 import shutil
 
-# 'dgl' lib causing issues.
+# 'dgl' lib causing issues - Test disable. Keeping the code commented for now.
 # from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI.runner import (
 #     main,
 # )
