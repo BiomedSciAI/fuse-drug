@@ -67,15 +67,16 @@ class InjectorToModularTokenizerLib:
                 )
             if len(sequence) > 0:
                 if isinstance(sequence[0], TypedInput):
-                    sequence = list_to_tokenizer_string(
+                    sequence_str = list_to_tokenizer_string(
                         sequence
                     )  # currently supporting it in this simple way. Consider optimizing if it causes a bottleneck.
                 else:
                     raise Exception(
                         f"Expected sequence to be either string or a list of TypedInput elements. Got a list, but the first element is of type {type(sequence[0])}"
                     )
-
-        hints_and_subseq = re.split("<@TOKENIZER-TYPE=([^>]*)>", sequence)[
+        else:
+            sequence_str = sequence
+        hints_and_subseq = re.split("<@TOKENIZER-TYPE=([^>]*)>", sequence_str)[
             1:
         ]  # the first element is blank - removing it
         assert (
