@@ -1,5 +1,5 @@
 paths:
-  tokenizers_path: "${oc.env:MY_GIT_REPOS}/fuse-drug/fusedrug/data/tokenizer/modulartokenizer/pretrained_tokenizers/" #tokenizer base work path
+  tokenizers_path: #tokenizer base work path
   AA_tokenizer_json: "t5_tokenizer_AA_special.json"
   SMILES_tokenizer_json: "bpe_tokenizer_trained_on_chembl_zinc_with_aug_4272372_samples_balanced_1_1.json"
   cell_attributes_tokenizer_json: "cell_attributes_tokenizer.json"

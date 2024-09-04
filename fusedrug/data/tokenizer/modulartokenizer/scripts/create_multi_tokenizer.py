@@ -4,7 +4,11 @@ from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import ModularTo
 from typing import Dict, Any
 
 
-@hydra.main(config_path="./configs", config_name="tokenizer_config", version_base=None)
+@hydra.main(
+    config_path="../pretrained_tokenizers/configs",
+    config_name="tokenizer_config",
+    version_base=None,
+)
 def main(cfg: DictConfig) -> None:
     print(str(cfg))
 

@@ -7,7 +7,7 @@ from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import ModularTo
 @click.argument(
     "tokenizer-path",
     # "-p",
-    default="pretrained_tokenizers/bmfm_modular_tokenizer",
+    default="../pretrained_tokenizers/bmfm_modular_tokenizer",
     # help="the directory containing the modular tokenizer",
 )
 @click.option(

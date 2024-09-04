@@ -1,4 +1,4 @@
-from typing import Optional, List, Tuple, Dict
+from typing import Optional, List, Tuple, Dict, Union
 from tokenizers import Encoding
 import torch
 import re
@@ -9,7 +9,7 @@ from fusedrug.data.tokenizer.modulartokenizer.modular_tokenizer import (
 )
 
 
-class InjectorTokenizerHelpers:
+class InjectorToModularTokenizerLib:
     """
     InjectorTokenizer builds on top of ModularTokenizer.
     !!!!
@@ -47,7 +47,7 @@ class InjectorTokenizerHelpers:
     @staticmethod
     def build_placeholder_meta_tokenization(
         *,
-        sequence: str,
+        sequence: Union[str, list, tuple],
         sample_dict: Optional[NDict] = None,
     ) -> Tuple[str, List[str]]:
         """

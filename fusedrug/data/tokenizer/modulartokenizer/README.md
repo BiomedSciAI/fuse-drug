@@ -70,7 +70,7 @@ Saves the underlying adjusted tokenizers as jsons.
 Returns the input token's corresponding ID.
 ## Use example
 ### Creation:
-A script create new modular tokenizer can be found in [ModularTokenizer creation](create_multi_tokenizer.py).
+A script create new modular tokenizer can be found in [ModularTokenizer creation](scripts/create_multi_tokenizer.py).
 Example of configuration file for the script that adds Amino-Acid tokenizer, smiles tokenizer and cell attributes tokenizer can be found here(pretrained_tokenizers/configs/tokenizer_config.yaml).
 Note: this line [path definition](pretrained_tokenizers/configs/tokenizer_config.yaml#L3) needs to be changed so that _your_path_ points to cloned fuse-drug parent directory.
 
@@ -79,7 +79,7 @@ Note: this line [path definition](pretrained_tokenizers/configs/tokenizer_config
 * Run [ModularTokenizer creation](create_multi_tokenizer.py). The script will a. create a new tokenizer that contains all required added tokens and all the sub-tokenizers; and b. Test the resulting tokenizer for consistency.
 
 ### Adding special tokens steps:
-An example of adding special tokens to an existing tokenizer is found here: [ModularTokenizer update](add_multi_tokenizer_special_tokens.py). Note, that these are instructions to add new tokens, not to remove existing ones.
+An example of adding special tokens to an existing tokenizer is found here: [ModularTokenizer update](scripts/add_multi_tokenizer_special_tokens.py). Note, that these are instructions to add new tokens, not to remove existing ones.
 Removing tokens from special_tokens.py will accomplish nothing, since they are already in the saved version of modular tokenizer, and our current strategy only allows building upon an existing tokenizer by adding tokens. The only way to remove a token would be to directly edit tokenizer json files, which must be done with extreme caution, to avoid changing token-ID mapping. Also, removing tokens should be avoided, since we may break models that use them. The steps are as follows:
 
 # Pretrained Modular tokenizers
@@ -101,8 +101,8 @@ The init and load_from_jsons functions both receive a list of dictionaries, each
 *
 ## Adding new tokens
 There are two ways to add new tokens:
-* Adding a list of special tokens (e.g. task-related), by running [add_multi_tokenizer_special_tokens](add_multi_tokenizer_special_tokens.py)
-* Adding a whole new tokenizer, by running [add_tokenizer_to_multi_tokenizer.py](add_tokenizer_to_multi_tokenizer.py)
+* Adding a list of special tokens (e.g. task-related), by running [add_multi_tokenizer_special_tokens](scripts/add_multi_tokenizer_special_tokens.py)
+* Adding a whole new tokenizer, by running [add_tokenizer_to_multi_tokenizer.py](scripts/add_tokenizer_to_multi_tokenizer.py)
   - note - this will also update the special tokens as above.
 
 

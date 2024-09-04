@@ -5,7 +5,7 @@ from typing import Dict, Any
 
 
 @hydra.main(
-    config_path="./configs",
+    config_path="../pretrained_tokenizers/configs",
     config_name="config_add_tokenizer_to_multi_tokenizer",
     version_base=None,
 )
