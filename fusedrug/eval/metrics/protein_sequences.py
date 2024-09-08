@@ -16,6 +16,7 @@ limitations under the License.
 Created on June 30, 2021
 
 """
+
 from typing import List, Dict, Any
 from functools import partial
 import pandas as pd
@@ -65,7 +66,7 @@ def _pairwise_protein_sequence_alignment_score(
 
     penalty_score = 1000
     scores = []
-    for (curr_pred, curr_gt) in zip(preds, target):
+    for curr_pred, curr_gt in zip(preds, target):
         try:
             score = aligner.align(curr_gt, curr_pred)[0].score
         except Exception as e:
@@ -96,7 +97,7 @@ def _pairwise_aligned_score(preds: List[str], target: List[str]) -> List[float]:
     penalty_score = 0.0
 
     scores = []
-    for (curr_pred, curr_gt) in zip(preds, target):
+    for curr_pred, curr_gt in zip(preds, target):
         try:
             sample_indels = compare_strings(curr_gt, curr_pred)
             sample_total = sum(sample_indels.values())

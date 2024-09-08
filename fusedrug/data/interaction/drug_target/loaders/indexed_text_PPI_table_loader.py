@@ -55,8 +55,8 @@ class IndexedTextPPITableLoader(OpBase):
             if key_out_prefix is None:
                 sample_dict[self._rename_columns.get(c, c)] = entry_data[c]
             else:
-                sample_dict[
-                    f"{key_out_prefix}.{self._rename_columns.get(c,c)}"
-                ] = entry_data[c]
+                sample_dict[f"{key_out_prefix}.{self._rename_columns.get(c,c)}"] = (
+                    entry_data[c]
+                )
 
         return sample_dict

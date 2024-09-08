@@ -216,9 +216,9 @@ class FastTokenizer(OpBase):
                     " for tokenizer: ",
                     self._tokenizer_json,
                 )
-                self._debug_max_tokenized_len_encountered[
-                    self._tokenizer_json
-                ] = _encoded_len_unpadded
+                self._debug_max_tokenized_len_encountered[self._tokenizer_json] = (
+                    _encoded_len_unpadded
+                )
 
         # KEEP THIS AS DOC FOR NOW
         # encoded has attributes [ids, type_ids, tokens, offsets, attention_mask, special_tokens_mask, overflowing]

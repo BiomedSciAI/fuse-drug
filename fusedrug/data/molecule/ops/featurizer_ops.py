@@ -63,7 +63,6 @@ class FeaturizeDrug(OpBase):
     def __call__(
         self, sample_dict: NDict, key_out_ligand: str = "data.input.ligand"
     ) -> NDict:
-
         """ """
         if self.debug:
             sample_dict[key_out_ligand] = torch.randint(

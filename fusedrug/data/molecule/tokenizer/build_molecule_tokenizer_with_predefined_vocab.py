@@ -55,6 +55,7 @@ def build_molecule_tokenizer_with_predefined_vocab(
 
 # Split(pattern='.', behavior='isolated').pre_tokenize_str('blah')
 
+
 # TODO delete function? located at: ./fusedrug/data/protein/tokenizer/build_protein_tokenizer_pair_encoding.py
 def _get_raw_vocab_dict(name: str) -> Union[IUPAC_VOCAB, UNIREP_VOCAB]:
     if name == "iupac":

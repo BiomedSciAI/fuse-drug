@@ -480,33 +480,43 @@ class PeptidesDatasets:
             [
                 (
                     "dbaasp",
-                    Dbaasp.load_and_process_df(dbaasp_raw_data_path)
-                    if dbaasp_raw_data_path is not None
-                    else None,
+                    (
+                        Dbaasp.load_and_process_df(dbaasp_raw_data_path)
+                        if dbaasp_raw_data_path is not None
+                        else None
+                    ),
                 ),
                 (
                     "axpep",
-                    Axpep.load_and_process_df(axpep_data_path)
-                    if axpep_data_path is not None
-                    else None,
+                    (
+                        Axpep.load_and_process_df(axpep_data_path)
+                        if axpep_data_path is not None
+                        else None
+                    ),
                 ),
                 (
                     "satpdb",
-                    Satpdb.load_and_process_df(satpdb_data_path)
-                    if satpdb_data_path is not None
-                    else None,
+                    (
+                        Satpdb.load_and_process_df(satpdb_data_path)
+                        if satpdb_data_path is not None
+                        else None
+                    ),
                 ),
                 (
                     "toxin_pred",
-                    ToxinPred.load_and_process_df(toxin_pred_data_path)
-                    if toxin_pred_data_path is not None
-                    else None,
+                    (
+                        ToxinPred.load_and_process_df(toxin_pred_data_path)
+                        if toxin_pred_data_path is not None
+                        else None
+                    ),
                 ),
                 (
                     "uniprot",
-                    Uniprot.load_and_process_df(uniprot_raw_data_path_list)
-                    if None not in uniprot_raw_data_path_list
-                    else None,
+                    (
+                        Uniprot.load_and_process_df(uniprot_raw_data_path_list)
+                        if None not in uniprot_raw_data_path_list
+                        else None
+                    ),
                 ),
             ]
         )
