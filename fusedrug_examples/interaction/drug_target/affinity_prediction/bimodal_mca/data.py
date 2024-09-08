@@ -313,11 +313,9 @@ class AffinityDataModule(pl.LightningDataModule):
         all_sample_ids = np.arange(len(affinity_loader_op.drug_target_affinity_dataset))
 
         train_dataset = DatasetDefault(
-            (
-                all_sample_ids
-                if self.partial_sample_ids is None
-                else self.partial_sample_ids
-            ),
+            all_sample_ids
+            if self.partial_sample_ids is None
+            else self.partial_sample_ids,
             static_pipeline=None,
             dynamic_pipeline=PipelineDefault(
                 name="train_pipeline_affinity_predictor", ops_and_kwargs=pipeline_desc
@@ -352,11 +350,9 @@ class AffinityDataModule(pl.LightningDataModule):
         all_sample_ids = np.arange(len(affinity_loader_op.drug_target_affinity_dataset))
 
         val_dataset = DatasetDefault(
-            (
-                all_sample_ids
-                if self.partial_sample_ids is None
-                else self.partial_sample_ids
-            ),
+            all_sample_ids
+            if self.partial_sample_ids is None
+            else self.partial_sample_ids,
             static_pipeline=None,
             dynamic_pipeline=PipelineDefault(
                 name="val_pipeline_affinity_predictor", ops_and_kwargs=pipeline_desc
@@ -390,11 +386,9 @@ class AffinityDataModule(pl.LightningDataModule):
         all_sample_ids = np.arange(len(affinity_loader_op.drug_target_affinity_dataset))
 
         test_dataset = DatasetDefault(
-            (
-                all_sample_ids
-                if self.partial_sample_ids is None
-                else self.partial_sample_ids
-            ),
+            all_sample_ids
+            if self.partial_sample_ids is None
+            else self.partial_sample_ids,
             static_pipeline=None,
             dynamic_pipeline=PipelineDefault(
                 name="test_pipeline_affinity_predictor", ops_and_kwargs=pipeline_desc

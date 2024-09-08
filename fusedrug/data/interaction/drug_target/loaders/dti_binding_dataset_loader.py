@@ -57,6 +57,7 @@ class DTIBindingDatasetLoader(OpBase):
         key_out_ground_truth_activity_value: str = "data.gt.activity_value",
         key_out_ground_truth_activity_label: str = "data.gt.activity_label",
     ) -> NDict:
+
         """ """
         sid = get_sample_id(sample_dict)
         entry = self.dataset[sid]
@@ -72,15 +73,15 @@ class DTIBindingDatasetLoader(OpBase):
         if not self._force_dummy_constant_ligand_for_debugging:
             sample_dict[key_out_ligand] = entry["ligand_str"]
         else:
-            sample_dict[key_out_ligand] = (
-                "c1cc(NNc2cccc(-c3nn[nH]n3)c2)cc(-c2nn[nH]n2)c1"
-            )
+            sample_dict[
+                key_out_ligand
+            ] = "c1cc(NNc2cccc(-c3nn[nH]n3)c2)cc(-c2nn[nH]n2)c1"
 
         if not self._force_dummy_constant_target_for_debugging:
             sample_dict[key_out_target] = entry["target_str"]
         else:
-            sample_dict[key_out_target] = (
-                "MLLSKINSLAHLRAAPCNDLHATKLAPGKEKEPLESQYQVGPLLGSGGFGSVYSGIRVSDNLPVAIKHVEKDRISDWGELPNGTRVPMEVVLLKKVSSGFSGVIRLLDWFERPDSFVLILERPEPVQDLFDFITERGALQEELARSFFWQVLEAVRHCHNCGVLHRDIKDENILIDLNRGELKLIDFGSGALLKDTVYTDFDGTRVYSPPEWIRYHRYHGRSAAVWSLGILLYDMVCGDIPFEHDEEIIRGQVFFRQRVSSECQHLIRWCLALRPSDRPTFEEIQNHPWMQDVLLPQETAEIHLHSLSPGPSK"
-            )
+            sample_dict[
+                key_out_target
+            ] = "MLLSKINSLAHLRAAPCNDLHATKLAPGKEKEPLESQYQVGPLLGSGGFGSVYSGIRVSDNLPVAIKHVEKDRISDWGELPNGTRVPMEVVLLKKVSSGFSGVIRLLDWFERPDSFVLILERPEPVQDLFDFITERGALQEELARSFFWQVLEAVRHCHNCGVLHRDIKDENILIDLNRGELKLIDFGSGALLKDTVYTDFDGTRVYSPPEWIRYHRYHGRSAAVWSLGILLYDMVCGDIPFEHDEEIIRGQVFFRQRVSSECQHLIRWCLALRPSDRPTFEEIQNHPWMQDVLLPQETAEIHLHSLSPGPSK"
 
         return sample_dict

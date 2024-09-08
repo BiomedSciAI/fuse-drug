@@ -83,9 +83,9 @@ class PytodaStyleDrugTargetAffinityDataset(Dataset):
         self._affinity_df[affinity_pairs_csv_ligand_id_column_name] = self._affinity_df[
             affinity_pairs_csv_ligand_id_column_name
         ].str.rstrip()
-        self._affinity_df[affinity_pairs_csv_protein_id_column_name] = (
-            self._affinity_df[affinity_pairs_csv_protein_id_column_name].str.rstrip()
-        )
+        self._affinity_df[
+            affinity_pairs_csv_protein_id_column_name
+        ] = self._affinity_df[affinity_pairs_csv_protein_id_column_name].str.rstrip()
 
     def __len__(self) -> int:
         return self._affinity_df.shape[0]

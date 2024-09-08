@@ -1,7 +1,6 @@
 """
 PLM-DTI affinity predictor (see https://www.mlsb.io/papers_2021/MLSB2021_Adapting_protein_language_models.pdf)
 """
-
 from fusedrug_examples.interaction.drug_target.affinity_prediction.PLM_DTI import (
     data,
     plm_dti,

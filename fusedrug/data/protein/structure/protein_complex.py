@@ -97,9 +97,9 @@ class ProteinComplex:
             most_frequent_residue_part = d["aatype"].unique(return_counts=True)[
                 1
             ].max() / len(d["aatype"])
-            self.per_chain_most_frequent_residue_part[(pdb_id, k)] = (
-                most_frequent_residue_part.item()
-            )
+            self.per_chain_most_frequent_residue_part[
+                (pdb_id, k)
+            ] = most_frequent_residue_part.item()
             if max_residue_type_part is not None:
 
                 if most_frequent_residue_part > max_residue_type_part:

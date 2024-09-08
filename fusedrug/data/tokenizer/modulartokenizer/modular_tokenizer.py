@@ -163,10 +163,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 min_id = t_info.get("minimal_token_id", 0)
                 next_index = max(min_id, next_index)
                 t_json["added_tokens"] = all_special_token_structs
-                (
-                    t_json["model"]["vocab"],
-                    next_index,
-                ) = ModularTokenizer.remap_vocab(
+                (t_json["model"]["vocab"], next_index,) = ModularTokenizer.remap_vocab(
                     vocab=t_json["model"]["vocab"],
                     special_token_structs=all_special_token_structs,
                     starting_index=next_index,
@@ -195,9 +192,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             self.tokenizers_info[t_type]["tokenizer_inst"] = tokenizer_inst
             self.tokenizers_info[t_type]["json_instance"] = t_json
 
-        self.max_len: Union[int, None] = (
-            None  # determines the final length of the overall encoding (and therefore padding/truncation length)
-        )
+        self.max_len: Union[
+            int, None
+        ] = None  # determines the final length of the overall encoding (and therefore padding/truncation length)
         self._pad_token_id: Union[int, None] = None
 
         self._pad_token_type_id = 0
@@ -1189,11 +1186,9 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
             ]
         else:
             ret_val = [
-                (
-                    self.decoder_dict[id]["token"]
-                    if id in self.decoder_dict
-                    else f"<@TOKEN_MISSING-{id}>"
-                )
+                self.decoder_dict[id]["token"]
+                if id in self.decoder_dict
+                else f"<@TOKEN_MISSING-{id}>"
                 for id in ids
             ]
         return "".join(ret_val)

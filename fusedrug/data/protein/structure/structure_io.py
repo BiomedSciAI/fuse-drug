@@ -136,11 +136,9 @@ def save_structure_file(
 
             flexible_save_pdb_file(
                 xyz=pos_atom14,
-                b_factors=(
-                    b_factors[chain_id]
-                    if b_factors is not None
-                    else torch.tensor([100.0] * pos_atom14.shape[0])
-                ),
+                b_factors=b_factors[chain_id]
+                if b_factors is not None
+                else torch.tensor([100.0] * pos_atom14.shape[0]),
                 sequence=chain_to_aa_index_seq[chain_id],
                 residues_mask=curr_mask,
                 save_path=out_pdb,

@@ -64,6 +64,7 @@ class FeaturizeTarget(OpBase):
         sample_dict: NDict,
         key_out_target: str = "data.input.target",
     ) -> NDict:
+
         """ """
         if self.debug:
             sample_dict[key_out_target] = torch.randn(1024)  # dummy input
