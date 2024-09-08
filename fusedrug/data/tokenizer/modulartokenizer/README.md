@@ -70,7 +70,7 @@ Saves the underlying adjusted tokenizers as jsons.
 Returns the input token's corresponding ID.
 ## Use example
 ### Creation:
-A script create new modular tokenizer can be found in [ModularTokenizer creation](scripts/create_multi_tokenizer.py).
+A script for creating new modular tokenizers can be found in [ModularTokenizer creation](scripts/create_multi_tokenizer.py).
 Example of configuration file for the script that adds Amino-Acid tokenizer, smiles tokenizer and cell attributes tokenizer can be found here(pretrained_tokenizers/configs/tokenizer_config.yaml).
 Note: this line [path definition](pretrained_tokenizers/configs/tokenizer_config.yaml#L3) needs to be changed so that _your_path_ points to cloned fuse-drug parent directory.
 
