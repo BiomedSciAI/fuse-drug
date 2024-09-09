@@ -1,7 +1,7 @@
 #!/bin/bash
 source ~/.bashrc
 
-export CUDA_HOME=/opt/share/cuda-11.8 #to prevent mismatch between cuda runtime and the cuda version used to compile pytorch
+export CUDA_HOME=/opt/share/cuda-12.1 #to prevent mismatch between cuda runtime and the cuda version used to compile pytorch
 
 # check if current env already exist
 find_in_conda_env(){
@@ -30,7 +30,7 @@ create_env() {
     fi
 
     # Python version
-    PYTHON_VER=3.8
+    PYTHON_VER=3.10
     ENV_NAME="fuse-drug_$PYTHON_VER-CUDA-$force_cuda_version-$(echo -n $requirements | sha256sum | awk '{print $1;}')"
     echo $ENV_NAME
 
@@ -86,6 +86,7 @@ create_env() {
                 conda run $env --no-capture-output --live-stream pip install -r ./fusedrug_examples/requirements.txt
                 echo "Installing examples requirements - Done"
             fi
+
         fi
     ) 873>$lock_filename
 

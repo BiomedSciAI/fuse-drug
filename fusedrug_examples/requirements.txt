@@ -1,6 +1,6 @@
 tensorflow
 dscript
-dgl
+#dgl - causing issues with up to date torch
 pysmiles
 deepchem
 mol2vec @ git+https://github.com/samoturk/mol2vec

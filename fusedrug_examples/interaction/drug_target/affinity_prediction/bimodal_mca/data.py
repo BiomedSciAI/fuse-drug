@@ -14,8 +14,8 @@ from fusedrug.data.molecule.tokenizer.pretrained import (
 from fusedrug.data.protein.tokenizer.pretrained import (
     get_path as get_protein_pretrained_tokenizer_path,
 )
-from fusedrug.data.tokenizer.ops import (
-    FastTokenizer,
+from fusedrug.data.tokenizer.ops.tokenizer_op import TokenizerOp
+from fusedrug.data.tokenizer.ops.pytoda_tokenizer import (
     Op_pytoda_SMILESTokenizer,
     Op_pytoda_ProteinTokenizer,
 )
@@ -66,7 +66,7 @@ class AffinityDataModule(pl.LightningDataModule):
             train_shuffle: whether to reshuffle the data in every epoch
             train_augment_molecule_shuffle_atoms: randomize the order of a smiles string representation of a molecule (while preserving the molecule structure)
             train_augment_protein_flip: randomize the order of amino sequences in a protein during training
-            pytoda_wrapped_tokenizer: if true, PyToda tokenizer is used, otherwise HuggingFace based FastTokenizer
+            pytoda_wrapped_tokenizer: if true, PyToda tokenizer is used, otherwise HuggingFace based TokenizerOp
             pytoda_ligand_tokenizer_json: filepath to tokenizer vocab json or directory
             pytoda_target_tokenizer_amino_acid_dict: PyToda tokenization regime for amino acid
                 sequence. 'iupac', 'unirep' or 'human-kinase-alignment'.
@@ -237,7 +237,7 @@ class AffinityDataModule(pl.LightningDataModule):
                 )
             )
         else:
-            ligand_tokenizer_op = FastTokenizer(
+            ligand_tokenizer_op = TokenizerOp(
                 _molecule_tokenizer_path,
                 pad_length=self.ligand_padding_length,
                 pad_id=molecule_pad_id,
@@ -251,7 +251,7 @@ class AffinityDataModule(pl.LightningDataModule):
                 padding_length=self.receptor_padding_length,
             )
         else:
-            protein_tokenizer_op = FastTokenizer(
+            protein_tokenizer_op = TokenizerOp(
                 _protein_tokenizer_path,
                 pad_length=self.receptor_padding_length,
                 pad_id=protein_pad_id,

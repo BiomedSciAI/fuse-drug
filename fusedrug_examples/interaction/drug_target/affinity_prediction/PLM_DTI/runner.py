@@ -73,4 +73,7 @@ def main(cfg: DictConfig) -> None:
 
 
 if __name__ == "__main__":
+    raise Exception(
+        "Error: this example is deprecated due to out of date dependency list"
+    )
     main()

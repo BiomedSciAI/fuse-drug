@@ -7,7 +7,7 @@ tokenizers=("bmfm_modular_tokenizer" "bmfm_extended_modular_tokenizer" "modular_
 
 for tokenizer in "${tokenizers[@]}"; do
     echo "doing "$tokenizer
-    python ../add_multi_tokenizer_special_tokens.py $tokenizer
+    python ../add_multi_tokenizer_special_tokens.py $tokenizer $@
     done;
 
 echo "testing that all tokenizers still match"

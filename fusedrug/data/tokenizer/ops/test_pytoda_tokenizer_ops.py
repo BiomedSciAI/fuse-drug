@@ -4,7 +4,7 @@ import os
 from fuse.utils.ndict import NDict
 from fuse.data.pipelines.pipeline_default import PipelineDefault
 
-from fusedrug.data.tokenizer.ops import (
+from fusedrug.data.tokenizer.ops.pytoda_tokenizer import (
     Op_pytoda_SMILESTokenizer,
     Op_pytoda_ProteinTokenizer,
 )

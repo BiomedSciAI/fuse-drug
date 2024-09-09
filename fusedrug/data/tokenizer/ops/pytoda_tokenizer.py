@@ -10,7 +10,6 @@ from pytoda.transforms import (
     LeftPadding,
     ToTensor,
 )
-import torch
 
 
 class Op_pytoda_SMILESTokenizer(OpBase):
@@ -18,9 +17,10 @@ class Op_pytoda_SMILESTokenizer(OpBase):
         super().__init__(**kwargs)
         self.language = SMILESTokenizer(
             **SMILES_Tokenizer_kwargs,
-            device=torch.device(
-                "cpu"
-            ),  # this is critical for DataLoader multiprocessing to work well !!!
+            # deprecated argument - masking for now
+            # device=torch.device(
+            #     "cpu"
+            # ),  # this is critical for DataLoader multiprocessing to work well !!!
         )
 
     def __call__(
@@ -65,8 +65,8 @@ class Op_pytoda_ProteinTokenizer(OpBase):
             ]
 
         if isinstance(self.protein_language, ProteinLanguage):
-            # transforms += [ToTensor(device=self.device)]
-            transforms += [ToTensor(torch.device("cpu"))]
+            transforms += [ToTensor()]
+            # transforms += [ToTensor(torch.device("cpu"))]
         else:
             # note: ProteinFeatureLanguage supported wasn't transferred here.
             raise TypeError(

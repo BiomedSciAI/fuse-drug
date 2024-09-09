@@ -73,7 +73,7 @@ if __name__ == "__main__":
         RDKitMolToSmiles,
     )
     from fusedrug.data.protein.ops import ProteinRandomFlipOrder
-    from fusedrug.data.tokenizer.ops import FastTokenizer
+    from fusedrug.data.tokenizer.ops.tokenizer_op import TokenizerOp
     from fusedrug.data.molecule.tokenizer.pretrained import (
         get_path as get_molecule_pretrained_tokenizer_path,
     )
@@ -149,7 +149,7 @@ if __name__ == "__main__":
             dict(key_in="data.input.ligand", key_out="data.input.ligand"),
         ),
         (
-            FastTokenizer(
+            TokenizerOp(
                 _molecule_tokenizer_path, pad_length=256, pad_id=molecule_pad_id
             ),
             dict(
@@ -164,7 +164,7 @@ if __name__ == "__main__":
             dict(key_in="data.input.protein", key_out="data.input.protein"),
         ),
         (
-            FastTokenizer(
+            TokenizerOp(
                 _protein_tokenizer_path, pad_length=3000, pad_id=molecule_pad_id
             ),
             dict(

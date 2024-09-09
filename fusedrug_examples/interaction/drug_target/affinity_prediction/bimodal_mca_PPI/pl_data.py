@@ -20,8 +20,8 @@ from fusedrug.data.protein.ops import (
     OpToUpperCase,
     OpKeepOnlyUpperCase,
 )
-from fusedrug.data.tokenizer.ops import (
-    FastTokenizer,
+from fusedrug.data.tokenizer.ops.tokenizer_op import TokenizerOp
+from fusedrug.data.tokenizer.ops.pytoda_tokenizer import (
     Op_pytoda_SMILESTokenizer,
     Op_pytoda_ProteinTokenizer,
 )
@@ -501,7 +501,7 @@ class AffinityDataModule(pl.LightningDataModule):
                     )
                 )
             else:
-                protein_tokenizer_op = FastTokenizer(
+                protein_tokenizer_op = TokenizerOp(
                     _protein_tokenizer_path,
                     pad_length=self.receptor_padding_length,
                     pad_id=protein_pad_id,
@@ -515,7 +515,7 @@ class AffinityDataModule(pl.LightningDataModule):
                     padding_length=self.receptor_padding_length,
                 )
             else:
-                protein_tokenizer_op = FastTokenizer(
+                protein_tokenizer_op = TokenizerOp(
                     _protein_tokenizer_path,
                     pad_length=self.receptor_padding_length,
                     pad_id=protein_pad_id,
@@ -546,7 +546,7 @@ class AffinityDataModule(pl.LightningDataModule):
                     )
                 )
             else:
-                ligand_tokenizer_op = FastTokenizer(
+                ligand_tokenizer_op = TokenizerOp(
                     _peptide_tokenizer_path,
                     pad_length=self.ligand_padding_length,
                     pad_id=peptide_pad_id,
@@ -560,7 +560,7 @@ class AffinityDataModule(pl.LightningDataModule):
                     padding_length=self.ligand_padding_length,
                 )
             else:
-                ligand_tokenizer_op = FastTokenizer(
+                ligand_tokenizer_op = TokenizerOp(
                     _peptide_tokenizer_path,
                     pad_length=self.ligand_padding_length,
                     pad_id=peptide_pad_id,

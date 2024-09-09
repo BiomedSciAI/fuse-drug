@@ -34,7 +34,7 @@ model:
   target_featurizer: ProtBertFeaturizer
   # possible values: SimpleCoembedding, others (not tested): GoldmanCPI, SimpleCosine, AffinityCoembedInner, CosineBatchNorm, LSTMCosine, DeepCosine,
   #                  SimpleConcat, SeparateConcat, AffinityEmbedConcat, AffinityConcatLinear
-  model_architecture: SimpleCoembedding
+  model_architecture: deepcoembedding
   latent_dimension: 1024
   latent_distance: "Cosine"
 
