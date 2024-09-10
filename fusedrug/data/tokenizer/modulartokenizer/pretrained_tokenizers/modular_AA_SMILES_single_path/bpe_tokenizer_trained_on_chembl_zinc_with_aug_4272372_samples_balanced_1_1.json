@@ -2828,6 +2828,33 @@
       "rstrip": false,
       "normalized": false,
       "special": true
+    },
+    {
+      "id": 314,
+      "content": "<BBBP>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 315,
+      "content": "<FDA_APPR>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
+    },
+    {
+      "id": 316,
+      "content": "<HIV_ACTIVITY>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
     }
   ],
   "normalizer": null,
@@ -2842,6 +2869,7 @@
     "end_of_word_suffix": null,
     "fuse_unk": false,
     "byte_fallback": false,
+    "ignore_merges": false,
     "vocab": {
       "<UNK>": 0,
       "<PAD>": 1,
@@ -3157,6 +3185,9 @@
       "<AUTOENCODER_LATENT_SAMPLED_Z>": 311,
       "<AUTOENCODER_TASK>": 312,
       "<DECODED_FROM_LATENT>": 313,
+      "<BBBP>": 314,
+      "<FDA_APPR>": 315,
+      "<HIV_ACTIVITY>": 316,
       "#": 527,
       "%": 528,
       "(": 529,
