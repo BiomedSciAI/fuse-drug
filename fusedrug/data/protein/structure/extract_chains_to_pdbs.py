@@ -4,7 +4,7 @@ from fusedrug.data.protein.structure.structure_io import (
     save_structure_file,
 )
 from typing import Optional
-
+from copy import deepcopy
 
 def main(
     *,
@@ -27,7 +27,7 @@ def main(
 
     orig_name_chains_to_extract = orig_name_chains_to_extract.split("_")
     if output_chain_ids_to_extract is None:
-        output_chain_ids_to_extract = orig_name_chains_to_extract.split("_")
+        output_chain_ids_to_extract = deepcopy(orig_name_chains_to_extract)
     else:
         output_chain_ids_to_extract = output_chain_ids_to_extract.split("_")
 
@@ -61,6 +61,10 @@ def main(
         chain_to_aa_index_seq={
             chain_id: data["aatype"]
             for (chain_id, data) in loaded_chains_mapped.items()
+        },
+        b_factors={
+           chain_id: data['atom14_bfactors'] 
+           for (chain_id, data) in loaded_chains_mapped.items()
         },
         save_cif=False,
         mask=None,  # TODO: check

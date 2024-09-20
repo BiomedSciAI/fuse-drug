@@ -134,11 +134,17 @@ def save_structure_file(
                     f"WARNING: shortening too long chain_id from {chain_id} to {potentially_fixed_chain_id}"
                 )
 
+            if b_factors is not None:
+                use_b_factors = b_factors[chain_id]
+            else:
+                use_b_factors = torch.full(
+                    pos_atom14.shape[:2], 100.0,
+                )
+
+
             flexible_save_pdb_file(
                 xyz=pos_atom14,
-                b_factors=b_factors[chain_id]
-                if b_factors is not None
-                else torch.tensor([100.0] * pos_atom14.shape[0]),
+                b_factors=use_b_factors,
                 sequence=chain_to_aa_index_seq[chain_id],
                 residues_mask=curr_mask,
                 save_path=out_pdb,
@@ -471,7 +477,7 @@ def pdb_to_openfold_protein(
 
 
 def convert_openfold_protein_to_dict(
-    prot: protein_utils.Protein, to_torch: bool = True
+    prot: protein_utils.Protein, to_torch: bool = True,
 ) -> Dict:
     """
     Note: Aligning with the mmcif code expected names
@@ -482,7 +488,7 @@ def convert_openfold_protein_to_dict(
         "aatype": "aatype",
         "atom_mask": "all_atom_mask",
         #'residue_index' :  'residue_index',
-        #'b_factors' : ,
+        'b_factors' : 'all_atom_bfactors',
         #'chain_index' :  ,
         #'remark' :  ,
         #'parents' :  ,
