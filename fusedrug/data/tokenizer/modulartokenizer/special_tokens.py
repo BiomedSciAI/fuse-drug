@@ -74,6 +74,9 @@ task_tokens = [  # pairwise tasks
     # Property predictions:
     "SOLUBILITY",  # Molecule water solubility
     "TOXICITY",  # Binary (quantitative?) toxicity prediction task
+    "FDA_APPR",  # Predict drugs approved by the FDA
+    "BBBP",  # Predict blood-brain barrier penetration (BBBP)
+    "HIV_ACTIVITY",  # Predict HIV activity
     "AB",  # Binary (quantitative?) antibacterial activity predictor
     "ISACTIVE",  # Binary task to predict if first input is an active site of the second input
     "ISSYNTHETIC",  # Binary task to predict if the input protein is natural, or was generated (or filled in) by a model
@@ -330,6 +333,11 @@ task_tokens = [  # pairwise tasks
     "VECTOR",
     "MASKED_SCALAR",
     "MASKED_VECTOR",
+    "AUTOENCODER_TASK",
+    "DECODED_FROM_LATENT",
+    "AUTOENCODER_LATENT_LOG_VARIANCE",
+    "AUTOENCODER_LATENT_MEAN",
+    "AUTOENCODER_LATENT_SAMPLED_Z",
 ]
 
 AA_tokens = [
