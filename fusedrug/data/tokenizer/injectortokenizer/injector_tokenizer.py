@@ -28,17 +28,15 @@ class InjectorTokenizerHelpers:
     supported syntax/format:
 
     for text following <@TOKENIZER-TYPE=SCALARS_LITERALS> supports the following format:
-    ',' separated float values and/or <MASK> tokens -
-        for example: "2.7,3.99,-12.9" or "<MASK><MASK>" or "2.19,<MASK>,3.19,<MASK>"
+    ',' separated float values. For example: "2.7,3.99,-12.9" 
 
     for text following <@TOKENIZER-TYPE=SCALARS_FROM_DICT> is expected to be a key to the sample NDict
-        for example: "blah.boo.banana"  or "data.input.encoder_input"
-        note: in SCALARS_FROM_DICT you can't describe masked scalars (outputs) you can only describe inputs
+        for example: "blah.boo.banana"  or "data.input.encoder_input"        
 
     example usage:
 
     encoder_input:
-    <@TOKENIZER-TYPE=AA><MOLECULAR_WEIGHT_IN_SOME_UNIT><@TOKENIZER-TYPE=SCALARS_LITERALS>0.3<@TOKENIZER-TYPE=AA><BINDING_AFFINITY_NANOMOLAR><@TOKENIZER-TYPE=SCALARS_LITERALS><MASK><@TOKENIZER-TYPE=AA><SEQUENCE_NATURAL_START>ISGGDAIYSSTGRCSLGFNVRSGSTYYFLTAGICTDGATTWWANSARTTVLGTTSGSSFPNNDYGIVRYTNTTIPKDGTVGGQDITSAANATVGMAVTRRGSTTGTISGSVTALNATVNYGGGDVVYGMIRTNVCAEPGDSGGPLYSGTRAIGLTSGGSGNCSSGGTTFFQPVTEALVAYGVSVY<SEQUENCE_NATURAL_END>
+    <@TOKENIZER-TYPE=AA><MOLECULAR_WEIGHT_IN_SOME_UNIT><@TOKENIZER-TYPE=SCALARS_LITERALS>0.3<@TOKENIZER-TYPE=AA><BINDING_AFFINITY_NANOMOLAR><MASK><@TOKENIZER-TYPE=AA><SEQUENCE_NATURAL_START>ISGGDAIYSSTGRCSLGFNVRSGSTYYFLTAGICTDGATTWWANSARTTVLGTTSGSSFPNNDYGIVRYTNTTIPKDGTVGGQDITSAANATVGMAVTRRGSTTGTISGSVTALNATVNYGGGDVVYGMIRTNVCAEPGDSGGPLYSGTRAIGLTSGGSGNCSSGGTTFFQPVTEALVAYGVSVY<SEQUENCE_NATURAL_END>
     labels:
     <@TOKENIZER-TYPE=AA><MOLECULAR_WEIGHT_IN_SOME_UNIT><@TOKENIZER-TYPE=SCALARS_LITERALS>0.3<@TOKENIZER-TYPE=AA><BINDING_AFFINITY_NANOMOLAR><@TOKENIZER-TYPE=SCALARS_LITERALS>12.4<@TOKENIZER-TYPE=AA><SEQUENCE_NATURAL_START>ISGGDAIYSSTGRCSLGFNVRSGSTYYFLTAGICTDGATTWWANSARTTVLGTTSGSSFPNNDYGIVRYTNTTIPKDGTVGGQDITSAANATVGMAVTRRGSTTGTISGSVTALNATVNYGGGDVVYGMIRTNVCAEPGDSGGPLYSGTRAIGLTSGGSGNCSSGGTTFFQPVTEALVAYGVSVY<SEQUENCE_NATURAL_END>
 
@@ -90,19 +88,13 @@ class InjectorTokenizerHelpers:
             if tokenizer_type.startswith("SCALARS_"):
                 with_placeholders.append(
                     "<@TOKENIZER-TYPE=AA>"
-                )  # won't use AA tokens, just an arbitrary one to be able to use a token like <SCALAR>
+                )  # AA tokenizer selection is arbitrary, we only take the special token <SCALAR> from it
 
                 if (
                     tokenizer_type == "SCALARS_LITERALS"
-                ):  # note: masking is only supported in literals (not in "from dict")
+                ):  
                     values = subseq.split(",")
-                    # seq = "<SCALAR>" * len(values)
-                    seq = "".join(
-                        [
-                            "<MASKED_SCALAR>" if x == "<MASK>" else "<SCALAR>"
-                            for x in values
-                        ]
-                    )
+                    seq = "<SCALAR>" * len(values)                    
                 elif tokenizer_type == "SCALARS_FROM_DICT":
                     if sample_dict is None:
                         raise Exception(
@@ -146,13 +138,13 @@ class InjectorTokenizerHelpers:
 
 
         """
-        scalars_indices = []
-        scalars_values = []
-        scalars_masked_indices = []
-        prev_index_end = -1
+        ## both `all_scalars_values` and `all_scalars_valid_mask` will contain torch tensors, which will be concatanated in the end of this function
+        all_scalars_values = [] #one scalar for every element, `scalar_default_unfound_value` is used for elements that aren't scalars
+        all_scalars_valid_mask = [] #for each element, whether it's a scalar or not
+        scalar_default_unfound_value = -1000.0       
 
         for tokenizer_name, curr_str_data, curr_placeholder_encoding in zip(
-            per_meta_tokenizer_data[::2],
+            per_meta_tokenizer_data[::2], 
             per_meta_tokenizer_data[1::2],
             per_meta_encoding_including_placeholders,
         ):
@@ -164,41 +156,19 @@ class InjectorTokenizerHelpers:
                             f"should match expected length. Found length {len(curr_str_data)} but placeholders length was {len(curr_placeholder_encoding.ids)}"
                         )
 
-                    curr_indices = []
-                    curr_data = []
-
-                    for i, val in enumerate(curr_str_data):
-                        if val != "<MASK>":
-                            curr_indices.append(i + prev_index_end + 1)
-                            curr_data.append(float(val))
-                        else:
-                            scalars_masked_indices.append(i + prev_index_end + 1)
-
-                    if len(curr_indices) > 0:
-                        curr_indices = torch.tensor(curr_indices, dtype=torch.int64)
-                        curr_data = torch.tensor(curr_data, dtype=torch.float32)
-
-                        scalars_indices.append(curr_indices)
-                        scalars_values.append(curr_data)
-
-                        assert len(curr_data.shape) == 1
-
-                    prev_index_end += len(curr_str_data)
+                    curr_scalar_values = [float(val) for val in curr_str_data]
+                    curr_scalar_values = torch.tensor(curr_scalar_values , dtype=torch.float32)                                   
+                    all_scalars_values.append(curr_scalar_values)
+                    all_scalars_valid_mask.append(torch.full_like(curr_scalar_values, fill_value=True, dtype=torch.bool))
                 elif "SCALARS_FROM_DICT" == tokenizer_name:
                     if sample_dict is None:
                         raise Exception(
                             "SCALARS_FROM_DICT used but the provided sample_dict is None"
                         )
-                    curr_data = sample_dict[curr_str_data]
-                    assert len(curr_data.shape) == 1
-                    curr_indices = torch.arange(
-                        prev_index_end + 1, prev_index_end + 1 + curr_data.shape[0]
-                    )
-
-                    scalars_indices.append(curr_indices)
-                    scalars_values.append(curr_data)
-
-                    prev_index_end += curr_data.shape[0]
+                    curr_scalar_values = sample_dict[curr_str_data]
+                    assert len(curr_scalar_values.shape) == 1                   
+                    all_scalars_values.append(curr_scalar_values)
+                    all_scalars_valid_mask.append(torch.full_like(curr_scalar_values, fill_value=True, dtype=torch.bool))
 
                 else:
                     raise Exception(
@@ -208,24 +178,16 @@ class InjectorTokenizerHelpers:
             elif tokenizer_name.startswith("VECTORS_"):
                 raise NotImplementedError
             else:
-                prev_index_end += len(curr_placeholder_encoding.ids)
+                #prev_index_end += len(curr_placeholder_encoding.ids)
+                curr_scalar_values = torch.full((len(curr_placeholder_encoding.ids), ), fill_value=scalar_default_unfound_value)
+                all_scalars_values.append(curr_scalar_values)
+                all_scalars_valid_mask.append(torch.full_like(curr_scalar_values, fill_value=False, dtype=torch.bool))
 
-        if len(scalars_indices) > 0:
-            scalars_indices = torch.concat(scalars_indices)
-            scalars_values = torch.concat(scalars_values)
-        else:
-            scalars_indices = None
-            scalars_values = None
-
-        if len(scalars_masked_indices) > 0:
-            scalars_masked_indices = torch.tensor(
-                scalars_masked_indices, dtype=torch.int64
-            )
-        else:
-            scalars_masked_indices = None
-
+        all_scalars_values = torch.concat(all_scalars_values)
+        all_scalars_valid_mask = torch.concat(all_scalars_valid_mask)
+                
+        assert all_scalars_values.shape == all_scalars_valid_mask.shape
         return {
-            "scalars_indices": scalars_indices,  # 1d - its length is the number of actual scalars (provided) found
-            "scalars_values": scalars_values,  # 1d - values of provided scalars
-            "scalars_masked_indices": scalars_masked_indices,  # 1d - indices of masked scalars
+            "scalars_values": all_scalars_values,  # 1d - its length is the number of actual scalars (provided) found
+            "scalars_valid_mask": all_scalars_valid_mask,  # 1d - values of provided scalars
         }
