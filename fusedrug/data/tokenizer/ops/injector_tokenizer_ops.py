@@ -139,14 +139,16 @@ class InjectorTokenizerOp(FastModularTokenizer):
             validate_ends_with_eos=validate_ends_with_eos,
             key_out_encoding_per_meta=key_in
             + ".per_meta_part_encoding",  # using the key_in as base for the name because key_out_* are optional
-        )
+        )        
 
         prepared_data = InjectorTokenizerHelpers.prepare_info_for_model_step(
             per_meta_tokenizer_data=per_meta_orig,
             per_meta_encoding_including_placeholders=sample_dict[
                 key_in + ".per_meta_part_encoding"
             ],
+            token_ids = sample_dict[key_out_tokens_ids],
             sample_dict=sample_dict,
+            
         )
 
         if key_out_scalars is not None:

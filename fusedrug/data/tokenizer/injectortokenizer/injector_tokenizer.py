@@ -121,7 +121,8 @@ class InjectorTokenizerHelpers:
         *,
         per_meta_tokenizer_data: List[str],
         per_meta_encoding_including_placeholders: List[Encoding],
-        sample_dict: Optional[NDict] = None,
+        token_ids: List[int],
+        sample_dict: Optional[NDict] = None,        
     ) -> Dict:
         """
         since we:
@@ -187,6 +188,14 @@ class InjectorTokenizerHelpers:
         all_scalars_valid_mask = torch.concat(all_scalars_valid_mask)
                 
         assert all_scalars_values.shape == all_scalars_valid_mask.shape
+
+        #pad if needed
+        full_query_len =  len(token_ids)
+        if full_query_len > all_scalars_values.shape[0]:
+            pad_len = full_query_len - all_scalars_values.shape[0]
+            all_scalars_values = torch.concat([all_scalars_values, torch.full( (pad_len,), fill_value=scalar_default_unfound_value , dtype=all_scalars_values.dtype)])
+            all_scalars_valid_mask = torch.concat([all_scalars_valid_mask, torch.full( (pad_len,), fill_value=False, dtype=all_scalars_valid_mask.dtype )])
+
         return {
             "scalars_values": all_scalars_values,  # 1d - its length is the number of actual scalars (provided) found
             "scalars_valid_mask": all_scalars_valid_mask,  # 1d - values of provided scalars
