@@ -18,9 +18,6 @@ class Op_pytoda_SMILESTokenizer(OpBase):
         super().__init__(**kwargs)
         self.language = SMILESTokenizer(
             **SMILES_Tokenizer_kwargs,
-            device=torch.device(
-                "cpu"
-            ),  # this is critical for DataLoader multiprocessing to work well !!!
         )
 
     def __call__(
