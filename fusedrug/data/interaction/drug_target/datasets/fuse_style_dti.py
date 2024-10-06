@@ -13,7 +13,7 @@ from fuse.data.utils.samplers import BatchSamplerDefault
 from torch.utils.data import DataLoader
 from fuse.data.ops.ops_cast import OpToTensor
 
-from fusedrug.data.tokenizer.ops import (
+from fusedrug.data.tokenizer.ops.pytoda_tokenizer import (
     Op_pytoda_SMILESTokenizer,
     Op_pytoda_ProteinTokenizer,
 )

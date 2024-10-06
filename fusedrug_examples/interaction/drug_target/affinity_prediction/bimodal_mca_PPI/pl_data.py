@@ -20,8 +20,8 @@ from fusedrug.data.protein.ops import (
     OpToUpperCase,
     OpKeepOnlyUpperCase,
 )
-from fusedrug.data.tokenizer.ops import (
-    FastTokenizer,
+from fusedrug.data.tokenizer.ops import FastTokenizer
+from fusedrug.data.tokenizer.ops.pytoda_tokenizer import (
     Op_pytoda_SMILESTokenizer,
     Op_pytoda_ProteinTokenizer,
 )

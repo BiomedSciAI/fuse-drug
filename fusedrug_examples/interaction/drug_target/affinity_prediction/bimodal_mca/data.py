@@ -14,8 +14,8 @@ from fusedrug.data.molecule.tokenizer.pretrained import (
 from fusedrug.data.protein.tokenizer.pretrained import (
     get_path as get_protein_pretrained_tokenizer_path,
 )
-from fusedrug.data.tokenizer.ops import (
-    FastTokenizer,
+from fusedrug.data.tokenizer.ops import FastTokenizer
+from fusedrug.data.tokenizer.ops.pytoda_tokenizer import (
     Op_pytoda_SMILESTokenizer,
     Op_pytoda_ProteinTokenizer,
 )
