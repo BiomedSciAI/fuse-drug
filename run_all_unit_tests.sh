@@ -65,7 +65,7 @@ create_env() {
             echo "Creating new environment: $env - Done"
             
             echo "pipdeptree after basic env creation step"
-            conda run $env --live-stream pipdeptree
+            conda run -p $env --live-stream pipdeptree
 
             # install PyTorch
             if [ $force_cuda_version != "no" ]; then
@@ -75,14 +75,14 @@ create_env() {
             fi
 
             echo "pipdeptree after install pytorch segment"
-            conda run $env --live-stream pipdeptree
+            conda run -p $env --live-stream pipdeptree
 
             echo "Installing FuseMedML"
             conda run $env --no-capture-output --live-stream pip install git+https://github.com/BiomedSciAI/fuse-med-ml@master
             echo "Installing FuseMedML - Done"
 
             echo "pipdeptree after install FuseMedML segment"
-            conda run $env --live-stream pipdeptree
+            conda run -p $env --live-stream pipdeptree
 
 
             echo "Installing core requirements"
@@ -91,7 +91,7 @@ create_env() {
             echo "Installing core requirements - Done"
 
             echo "pipdeptree after install core requirements segment"
-            conda run $env --live-stream pipdeptree
+            conda run -p $env --live-stream pipdeptree
 
             if [ $mode = "examples" ]; then
                 echo "Installing examples requirements"
