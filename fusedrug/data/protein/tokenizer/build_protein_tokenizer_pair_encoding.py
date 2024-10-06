@@ -13,7 +13,7 @@ from fusedrug.utils.file_formats import IndexedFasta
 from fuse.utils.file_io import change_extension
 from tokenizers.trainers import BpeTrainer
 import click
-
+from tiny_openfold.np.residue_constants import restypes
 # https://github.com/huggingface/tokenizers/issues/547
 # custom components: https://github.com/huggingface/tokenizers/blob/master/bindings/python/examples/custom_components.py
 
@@ -149,9 +149,7 @@ def main(
         special_tokens=special_tokens,  # NOTE:the order here defined the tokens ids !
         min_frequency=2000,
         show_progress=True,
-        initial_alphabet=[
-            k for k in IUPAC_VOCAB.keys() if 1 == len(k) and k >= "A" and k <= "Z"
-        ],
+        initial_alphabet=restypes,
         vocab_size=vocab_size,
     )
 
