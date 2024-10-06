@@ -1,6 +1,6 @@
 click
 pyfastx
-torch
+torch>=2.4
 pytorch-lightning
 torchvision
 tokenizers
