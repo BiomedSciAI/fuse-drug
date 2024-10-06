@@ -14,6 +14,7 @@ from fuse.utils.file_io import change_extension
 from tokenizers.trainers import BpeTrainer
 import click
 from tiny_openfold.np.residue_constants import restypes
+
 # https://github.com/huggingface/tokenizers/issues/547
 # custom components: https://github.com/huggingface/tokenizers/blob/master/bindings/python/examples/custom_components.py
 
