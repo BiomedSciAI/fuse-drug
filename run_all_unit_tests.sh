@@ -1,7 +1,7 @@
 #!/bin/bash
 source ~/.bashrc
 
-export CUDA_HOME=/opt/share/cuda-11.8 #to prevent mismatch between cuda runtime and the cuda version used to compile pytorch
+export CUDA_HOME=/opt/share/cuda-12.1 #to prevent mismatch between cuda runtime and the cuda version used to compile pytorch
 
 # check if current env already exist
 find_in_conda_env(){
@@ -67,7 +67,7 @@ create_env() {
             # install PyTorch
             if [ $force_cuda_version != "no" ]; then
                 echo "forcing cudatoolkit $force_cuda_version"
-                conda install $env pytorch torchvision pytorch-cuda=$force_cuda_version -c pytorch -c nvidia
+                conda install $env pytorch==2.2.2 torchvision==0.17.2 torchaudio==2.2.2 pytorch-cuda=12.1 -c pytorch -c nvidia
                 echo "forcing cudatoolkit $force_cuda_version - Done"
             fi
 
