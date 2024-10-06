@@ -28,10 +28,10 @@ class InjectorTokenizerHelpers:
     supported syntax/format:
 
     for text following <@TOKENIZER-TYPE=SCALARS_LITERALS> supports the following format:
-    ',' separated float values. For example: "2.7,3.99,-12.9" 
+    ',' separated float values. For example: "2.7,3.99,-12.9"
 
     for text following <@TOKENIZER-TYPE=SCALARS_FROM_DICT> is expected to be a key to the sample NDict
-        for example: "blah.boo.banana"  or "data.input.encoder_input"        
+        for example: "blah.boo.banana"  or "data.input.encoder_input"
 
     example usage:
 
@@ -90,11 +90,9 @@ class InjectorTokenizerHelpers:
                     "<@TOKENIZER-TYPE=AA>"
                 )  # AA tokenizer selection is arbitrary, we only take the special token <SCALAR> from it
 
-                if (
-                    tokenizer_type == "SCALARS_LITERALS"
-                ):  
+                if tokenizer_type == "SCALARS_LITERALS":
                     values = subseq.split(",")
-                    seq = "<SCALAR>" * len(values)                    
+                    seq = "<SCALAR>" * len(values)
                 elif tokenizer_type == "SCALARS_FROM_DICT":
                     if sample_dict is None:
                         raise Exception(
@@ -122,7 +120,7 @@ class InjectorTokenizerHelpers:
         per_meta_tokenizer_data: List[str],
         per_meta_encoding_including_placeholders: List[Encoding],
         token_ids: List[int],
-        sample_dict: Optional[NDict] = None,        
+        sample_dict: Optional[NDict] = None,
     ) -> Dict:
         """
         since we:
@@ -140,12 +138,14 @@ class InjectorTokenizerHelpers:
 
         """
         ## both `all_scalars_values` and `all_scalars_valid_mask` will contain torch tensors, which will be concatanated in the end of this function
-        all_scalars_values = [] #one scalar for every element, `scalar_default_unfound_value` is used for elements that aren't scalars
-        all_scalars_valid_mask = [] #for each element, whether it's a scalar or not
-        scalar_default_unfound_value = -1000.0       
+        all_scalars_values = (
+            []
+        )  # one scalar for every element, `scalar_default_unfound_value` is used for elements that aren't scalars
+        all_scalars_valid_mask = []  # for each element, whether it's a scalar or not
+        scalar_default_unfound_value = -1000.0
 
         for tokenizer_name, curr_str_data, curr_placeholder_encoding in zip(
-            per_meta_tokenizer_data[::2], 
+            per_meta_tokenizer_data[::2],
             per_meta_tokenizer_data[1::2],
             per_meta_encoding_including_placeholders,
         ):
@@ -158,18 +158,28 @@ class InjectorTokenizerHelpers:
                         )
 
                     curr_scalar_values = [float(val) for val in curr_str_data]
-                    curr_scalar_values = torch.tensor(curr_scalar_values , dtype=torch.float32)                                   
+                    curr_scalar_values = torch.tensor(
+                        curr_scalar_values, dtype=torch.float32
+                    )
                     all_scalars_values.append(curr_scalar_values)
-                    all_scalars_valid_mask.append(torch.full_like(curr_scalar_values, fill_value=True, dtype=torch.bool))
+                    all_scalars_valid_mask.append(
+                        torch.full_like(
+                            curr_scalar_values, fill_value=True, dtype=torch.bool
+                        )
+                    )
                 elif "SCALARS_FROM_DICT" == tokenizer_name:
                     if sample_dict is None:
                         raise Exception(
                             "SCALARS_FROM_DICT used but the provided sample_dict is None"
                         )
                     curr_scalar_values = sample_dict[curr_str_data]
-                    assert len(curr_scalar_values.shape) == 1                   
+                    assert len(curr_scalar_values.shape) == 1
                     all_scalars_values.append(curr_scalar_values)
-                    all_scalars_valid_mask.append(torch.full_like(curr_scalar_values, fill_value=True, dtype=torch.bool))
+                    all_scalars_valid_mask.append(
+                        torch.full_like(
+                            curr_scalar_values, fill_value=True, dtype=torch.bool
+                        )
+                    )
 
                 else:
                     raise Exception(
@@ -179,22 +189,45 @@ class InjectorTokenizerHelpers:
             elif tokenizer_name.startswith("VECTORS_"):
                 raise NotImplementedError
             else:
-                #prev_index_end += len(curr_placeholder_encoding.ids)
-                curr_scalar_values = torch.full((len(curr_placeholder_encoding.ids), ), fill_value=scalar_default_unfound_value)
+                # prev_index_end += len(curr_placeholder_encoding.ids)
+                curr_scalar_values = torch.full(
+                    (len(curr_placeholder_encoding.ids),),
+                    fill_value=scalar_default_unfound_value,
+                )
                 all_scalars_values.append(curr_scalar_values)
-                all_scalars_valid_mask.append(torch.full_like(curr_scalar_values, fill_value=False, dtype=torch.bool))
+                all_scalars_valid_mask.append(
+                    torch.full_like(
+                        curr_scalar_values, fill_value=False, dtype=torch.bool
+                    )
+                )
 
         all_scalars_values = torch.concat(all_scalars_values)
         all_scalars_valid_mask = torch.concat(all_scalars_valid_mask)
-                
+
         assert all_scalars_values.shape == all_scalars_valid_mask.shape
 
-        #pad if needed
-        full_query_len =  len(token_ids)
+        # pad if needed
+        full_query_len = len(token_ids)
         if full_query_len > all_scalars_values.shape[0]:
             pad_len = full_query_len - all_scalars_values.shape[0]
-            all_scalars_values = torch.concat([all_scalars_values, torch.full( (pad_len,), fill_value=scalar_default_unfound_value , dtype=all_scalars_values.dtype)])
-            all_scalars_valid_mask = torch.concat([all_scalars_valid_mask, torch.full( (pad_len,), fill_value=False, dtype=all_scalars_valid_mask.dtype )])
+            all_scalars_values = torch.concat(
+                [
+                    all_scalars_values,
+                    torch.full(
+                        (pad_len,),
+                        fill_value=scalar_default_unfound_value,
+                        dtype=all_scalars_values.dtype,
+                    ),
+                ]
+            )
+            all_scalars_valid_mask = torch.concat(
+                [
+                    all_scalars_valid_mask,
+                    torch.full(
+                        (pad_len,), fill_value=False, dtype=all_scalars_valid_mask.dtype
+                    ),
+                ]
+            )
 
         return {
             "scalars_values": all_scalars_values,  # 1d - its length is the number of actual scalars (provided) found

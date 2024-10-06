@@ -87,9 +87,9 @@ class InjectorTokenizerOp(FastModularTokenizer):
         on_unknown: Optional[str] = "warn",
         verbose: Optional[int] = 1,
         validate_ends_with_eos: Optional[bool] = None,
-        #key_out_scalars_indices: Optional[str] = None,
-        #key_out_scalars_values: Optional[str] = None,
-        #key_out_masked_scalars_indices: Optional[str] = None,
+        # key_out_scalars_indices: Optional[str] = None,
+        # key_out_scalars_values: Optional[str] = None,
+        # key_out_masked_scalars_indices: Optional[str] = None,
         key_out_scalars: Optional[str] = None,
     ) -> NDict:
         """_summary_
@@ -112,7 +112,7 @@ class InjectorTokenizerOp(FastModularTokenizer):
             key_out_scalars:str optional
                 if provided, will write to:
                         `sample_dict[f'{key_out_scalars}.values]` - a 1D torch tensor with all the scalars values
-                        `sample_dict[f'{key_out_scalars}.valid_mask]` - a 1D torch boolean tensor representing which elements have scalar values            
+                        `sample_dict[f'{key_out_scalars}.valid_mask]` - a 1D torch boolean tensor representing which elements have scalar values
 
         Returns:
             NDict: _description_
@@ -139,20 +139,21 @@ class InjectorTokenizerOp(FastModularTokenizer):
             validate_ends_with_eos=validate_ends_with_eos,
             key_out_encoding_per_meta=key_in
             + ".per_meta_part_encoding",  # using the key_in as base for the name because key_out_* are optional
-        )        
+        )
 
         prepared_data = InjectorTokenizerHelpers.prepare_info_for_model_step(
             per_meta_tokenizer_data=per_meta_orig,
             per_meta_encoding_including_placeholders=sample_dict[
                 key_in + ".per_meta_part_encoding"
             ],
-            token_ids = sample_dict[key_out_tokens_ids],
+            token_ids=sample_dict[key_out_tokens_ids],
             sample_dict=sample_dict,
-            
         )
 
         if key_out_scalars is not None:
-            sample_dict[key_out_scalars+'.values'] = prepared_data['scalars_values']
-            sample_dict[key_out_scalars+'.valid_mask'] = prepared_data['scalars_valid_mask']
-        
+            sample_dict[key_out_scalars + ".values"] = prepared_data["scalars_values"]
+            sample_dict[key_out_scalars + ".valid_mask"] = prepared_data[
+                "scalars_valid_mask"
+            ]
+
         return sample_dict
