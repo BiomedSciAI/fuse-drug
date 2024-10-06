@@ -4,7 +4,6 @@ from tokenizers import Regex
 from tokenizers import pre_tokenizers
 from tokenizers.pre_tokenizers import Split
 from tokenizers import normalizers
-from pytoda.proteins.processing import IUPAC_VOCAB, UNIREP_VOCAB
 from tokenizers import processors, Tokenizer
 from tokenizers.processors import TemplateProcessing
 from torch.utils.data import RandomSampler, BatchSampler
@@ -20,7 +19,7 @@ import click
 
 
 def build_simple_vocab_protein_tokenizer(
-    vocab: Union[str, dict],
+    vocab: str,
     unknown_token: str,
     save_to_json_file: Optional[str] = None,
     override_normalizer: Optional[normalizers.Normalizer] = None,
@@ -43,12 +42,7 @@ def build_simple_vocab_protein_tokenizer(
         override_post_processor:
     """
 
-    if isinstance(vocab, str):
-        vocab = _get_raw_vocab_dict(vocab)
-        if unknown_token is None:
-            raise Exception('"unknown_token" was not provided')
-    else:
-        assert isinstance(vocab, dict)
+    assert isinstance(vocab, dict)
 
     assert unknown_token in vocab
     model = WordLevel(vocab=vocab, unk_token=unknown_token)
@@ -69,20 +63,6 @@ def build_simple_vocab_protein_tokenizer(
     )
 
     return tokenizer
-
-
-# Split(pattern='.', behavior='isolated').pre_tokenize_str('blah')
-
-
-def _get_raw_vocab_dict(name: str) -> Union[IUPAC_VOCAB, UNIREP_VOCAB]:
-    if "iupac" == name:
-        return IUPAC_VOCAB
-    elif "unirep" == name:
-        return UNIREP_VOCAB
-
-    raise Exception(
-        f"unfamiliar vocab name {name} - allowed options are 'iupac' or 'unirep'"
-    )
 
 
 # TODO: add support for providing multiple fasta files

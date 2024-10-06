@@ -2,7 +2,6 @@ from typing import Union, Optional
 from tokenizers.models import WordLevel
 from tokenizers import Regex, Tokenizer, pre_tokenizers, normalizers, processors
 from tokenizers.pre_tokenizers import Split
-from pytoda.proteins.processing import IUPAC_VOCAB, UNIREP_VOCAB
 from fusedrug.data.tokenizer.fast_tokenizer_learn import build_tokenizer
 
 # TODO: make this import and related code below optional
@@ -14,7 +13,7 @@ import click
 
 
 def build_simple_vocab_protein_tokenizer(
-    vocab: Union[str, dict],
+    vocab: dict,
     unknown_token: str,
     save_to_json_file: Optional[str] = None,
     override_normalizer: Optional[normalizers.Normalizer] = None,
@@ -37,12 +36,7 @@ def build_simple_vocab_protein_tokenizer(
         override_post_processor:
     """
 
-    if isinstance(vocab, str):
-        vocab = _get_raw_vocab_dict(vocab)
-        if unknown_token is None:
-            raise Exception('"unknown_token" was not provided')
-    else:
-        assert isinstance(vocab, dict)
+    assert isinstance(vocab, dict)
 
     assert unknown_token in vocab
     model = WordLevel(vocab=vocab, unk_token=unknown_token)
@@ -63,35 +57,6 @@ def build_simple_vocab_protein_tokenizer(
     )
 
     return tokenizer
-
-
-# Split(pattern='.', behavior='isolated').pre_tokenize_str('blah')
-
-
-def _get_raw_vocab_dict(name: str) -> Union[IUPAC_VOCAB, UNIREP_VOCAB]:
-    if "iupac" == name:
-        return IUPAC_VOCAB
-    elif "unirep" == name:
-        return UNIREP_VOCAB
-
-    raise Exception(
-        f"unfamiliar vocab name {name} - allowed options are 'iupac' or 'unirep'"
-    )
-
-
-# def _process_vocab_dict_def(token_str):
-#     if '<' in token_str:
-#         return token_str
-#     return token_str.lower()
-
-
-### NOTE: not serializable (tokenizer.save()) - so dropped it in favor of "Lowercase"
-### see: https://github.com/huggingface/tokenizers/issues/581
-
-# class UppercaseNormalizer:
-#     def normalize(self, normalized: NormalizedString):
-#         normalized.uppercase()
-# running on whi-3
 
 
 @click.command()

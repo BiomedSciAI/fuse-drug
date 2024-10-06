@@ -51,6 +51,7 @@ def build_molecule_tokenizer_with_predefined_vocab(
 
     return tokenizer
 
+
 ### NOTE: not serializable (tokenizer.save()) - so dropped it in favor of "Lowercase"
 ### see: https://github.com/huggingface/tokenizers/issues/581
 
