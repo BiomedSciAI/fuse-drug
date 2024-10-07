@@ -92,11 +92,13 @@ class InjectorTokenizerHelpers:
 
                 if tokenizer_type == "SCALARS_LITERALS":
                     values = subseq.split(",")
-                    #validate that all values can be converted to fload
+                    # validate that all values can be converted to fload
                     try:
                         [float(x) for x in values]
                     except:
-                        raise ValueError(f'expected a string with "," separated values that can each be converted to float. Got {subseq}')
+                        raise ValueError(
+                            f'expected a string with "," separated values that can each be converted to float. Got {subseq}'
+                        )
                     seq = "<SCALAR>" * len(values)
                 elif tokenizer_type == "SCALARS_FROM_DICT":
                     if sample_dict is None:

@@ -63,7 +63,7 @@ create_env() {
             echo "Creating new environment: $env"
             conda create $env python=$PYTHON_VER -y
             echo "Creating new environment: $env - Done"
-            
+
             echo "pipdeptree after basic env creation step"
             conda run -p $env pipdeptree
 
