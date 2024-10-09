@@ -22,8 +22,7 @@ class InjectorTokenizerOp(FastModularTokenizer):
     supported syntax/format:
 
     for text following <@TOKENIZER-TYPE=SCALARS_LITERALS> supports the following format:
-    ',' separated float values and/or <MASK> tokens -
-        for example: "2.7,3.99,-12.9" or "<MASK><MASK>" or "2.19,<MASK>,3.19,<MASK>"
+    ',' separated float values 
 
     for text following <@TOKENIZER-TYPE=SCALARS_FROM_DICT> is expected to be a key to the sample NDict
         for example: "blah.boo.banana"  or "data.input.encoder_input"
