@@ -22,7 +22,7 @@ class InjectorTokenizerOp(FastModularTokenizer):
     supported syntax/format:
 
     for text following <@TOKENIZER-TYPE=SCALARS_LITERALS> supports the following format:
-    ',' separated float values 
+    ',' separated float values
 
     for text following <@TOKENIZER-TYPE=SCALARS_FROM_DICT> is expected to be a key to the sample NDict
         for example: "blah.boo.banana"  or "data.input.encoder_input"
