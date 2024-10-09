@@ -235,7 +235,7 @@ class InjectorTokenizerHelpers:
                     ),
                 ]
             )
-        elif full_query_len > all_scalars_values.shape[0]:
+        elif full_query_len < all_scalars_values.shape[0]:
             print(
                 "warning: scalars sequence had to be cropped. The full (including all subtokenizers) length was {all_scalars_values.shape[0]} after cropping it is {full_query_len}"
             )
