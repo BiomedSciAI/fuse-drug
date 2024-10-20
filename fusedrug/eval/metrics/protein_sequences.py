@@ -155,8 +155,10 @@ def compare_strings(from_text: Any, to_text: Any, return_score: bool = False) ->
 
 
 def _naive_aar_no_indels(preds: List[str], target: List[str]) -> List[float]:
-    # evlauates the edit distance, normalized by the input length, between 2 strings of the same lengths (i.e., no insertions and deletion)
-    # incases where len(preds) != len(target) raises an exception
+    """
+    evlauates the edit distance, normalized by the input length, between 2 strings of the same lengths (i.e., no insertions and deletion)
+    incases where len(preds) != len(target) raises an exception.
+    """
     scores = []
     for s1, s2 in zip(preds, target):
 
