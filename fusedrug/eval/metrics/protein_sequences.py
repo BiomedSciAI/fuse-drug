@@ -152,3 +152,26 @@ def compare_strings(from_text: Any, to_text: Any, return_score: bool = False) ->
         return ans
 
     return counts
+
+
+def naive_aar_no_indels(preds: List[str], target: List[str]) -> List[float]:
+    """
+    evlauates the edit distance, normalized by the input length, between 2 strings of the same lengths (i.e., no insertions and deletion)
+    incases where len(preds) != len(target) raises an exception.
+    """
+    scores = []
+    for s1, s2 in zip(preds, target):
+
+        if len(s1) != len(s2):
+            raise Exception(
+                "Encountered different sequence lengths in prediction and target - can not eval naive AAR which assumes equal length"
+            )
+
+        score = 0.0
+        for c1, c2 in zip(s1, s2):
+            if c1 == c2:
+                score += 1
+        score = score / len(s1)
+        scores.append(score)
+
+    return scores
