@@ -1,2 +1,1 @@
 from .dti_binding_dataset_loader import DTIBindingDatasetLoader
-from .pytoda_style_target_affinity_loader import DrugTargetAffinityLoader
