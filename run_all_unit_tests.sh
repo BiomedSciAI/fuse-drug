@@ -1,7 +1,7 @@
 #!/bin/bash
 source ~/.bashrc
 
-export CUDA_HOME=/opt/share/cuda-11.8 #to prevent mismatch between cuda runtime and the cuda version used to compile pytorch
+export CUDA_HOME=/opt/share/cuda-12.1 #to prevent mismatch between cuda runtime and the cuda version used to compile pytorch
 
 # check if current env already exist
 find_in_conda_env(){
@@ -30,7 +30,7 @@ create_env() {
     fi
 
     # Python version
-    PYTHON_VER=3.8
+    PYTHON_VER=3.9
     ENV_NAME="fuse-drug_$PYTHON_VER-CUDA-$force_cuda_version-$(echo -n $requirements | sha256sum | awk '{print $1;}')"
     echo $ENV_NAME
 
@@ -64,6 +64,9 @@ create_env() {
             conda create $env python=$PYTHON_VER -y
             echo "Creating new environment: $env - Done"
 
+            echo "pipdeptree after basic env creation step"
+            conda run -p $env pipdeptree
+
             # install PyTorch
             if [ $force_cuda_version != "no" ]; then
                 echo "forcing cudatoolkit $force_cuda_version"
@@ -71,9 +74,15 @@ create_env() {
                 echo "forcing cudatoolkit $force_cuda_version - Done"
             fi
 
+            echo "pipdeptree after install pytorch segment"
+            conda run -p $env pipdeptree
+
             echo "Installing FuseMedML"
             conda run $env --no-capture-output --live-stream pip install git+https://github.com/BiomedSciAI/fuse-med-ml@master
             echo "Installing FuseMedML - Done"
+
+            echo "pipdeptree after install FuseMedML segment"
+            conda run -p $env  pipdeptree
 
 
             echo "Installing core requirements"
@@ -81,11 +90,17 @@ create_env() {
             conda run $env --no-capture-output --live-stream pip install -r ./requirements/requirements_dev.txt
             echo "Installing core requirements - Done"
 
+            echo "pipdeptree after install core requirements segment"
+            conda run -p $env  pipdeptree
+
             if [ $mode = "examples" ]; then
                 echo "Installing examples requirements"
                 conda run $env --no-capture-output --live-stream pip install -r ./fusedrug_examples/requirements.txt
                 echo "Installing examples requirements - Done"
             fi
+
+            echo "pipdeptree after install examples segment"
+            conda run $env  pipdeptree
         fi
     ) 873>$lock_filename
 

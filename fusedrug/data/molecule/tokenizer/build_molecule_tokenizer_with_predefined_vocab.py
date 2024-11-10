@@ -3,7 +3,6 @@ from tokenizers.models import WordPiece
 from tokenizers import pre_tokenizers, normalizers, processors, Tokenizer
 import json
 from fusedrug.data.tokenizer.fast_tokenizer_learn import build_tokenizer
-from pytoda.proteins.processing import IUPAC_VOCAB, UNIREP_VOCAB
 
 import click
 
@@ -51,26 +50,6 @@ def build_molecule_tokenizer_with_predefined_vocab(
     )
 
     return tokenizer
-
-
-# Split(pattern='.', behavior='isolated').pre_tokenize_str('blah')
-
-# TODO delete function? located at: ./fusedrug/data/protein/tokenizer/build_protein_tokenizer_pair_encoding.py
-def _get_raw_vocab_dict(name: str) -> Union[IUPAC_VOCAB, UNIREP_VOCAB]:
-    if name == "iupac":
-        return IUPAC_VOCAB
-    elif name == "unirep":
-        return UNIREP_VOCAB
-
-    raise Exception(
-        f"unfamiliar vocab name {name} - allowed options are 'iupac' or 'unirep'"
-    )
-
-
-# def _process_vocab_dict_def(token_str):
-#     if '<' in token_str:
-#         return token_str
-#     return token_str.lower()
 
 
 ### NOTE: not serializable (tokenizer.save()) - so dropped it in favor of "Lowercase"
