@@ -46,6 +46,7 @@ def dti_binding_dataset(
     use_folds: Optional[Union[List, str]] = None,
     pairs_columns_to_extract: Optional[List[str]] = None,
     pairs_rename_columns: Optional[Dict[str, str]] = None,
+    pairs_filters: Optional[Dict[str, Dict]] = None,
     ligands_columns_to_extract: Optional[List[str]] = None,
     ligands_rename_columns: Optional[Dict[str, str]] = None,
     targets_columns_to_extract: Optional[List[str]] = None,
@@ -64,6 +65,14 @@ def dti_binding_dataset(
         use_folds (Union[List, str], optional): A list of folds (as defined in split_tsv) to use. Defaults to None: use all folds.
         pairs_columns_to_extract (_type_, optional): _description_. Defaults to None.
         pairs_rename_columns (_type_, optional): _description_. Defaults to None.
+        pairs_filters: Dictionary with the following content:
+            {
+                column_name: # name of the column to apply filtering to (before renaming)
+                    mode: str # keep/exclude - whether to keep or exclude rows that have the following values in column column_name
+                    values: list # list of values to keep or exclude according to mode
+            }
+            Filtering happens before renaming the columns, i.e. it understands the names defined in benchmark config
+            (naming_conventions). If None, no filtering is applied. Default = None
         ligands_columns_to_extract (_type_, optional): _description_. Defaults to None.
         ligands_rename_columns (_type_, optional): _description_. Defaults to None.
         targets_columns_to_extract (_type_, optional): _description_. Defaults to None.
@@ -102,6 +111,7 @@ def dti_binding_dataset(
                 pairs_df,
                 columns_to_extract=pairs_columns_to_extract,
                 rename_columns=pairs_rename_columns,
+                filters=pairs_filters,
                 key_column=None,
             ),
             {},
@@ -160,6 +170,7 @@ def dti_binding_dataset_combined(
     split_tsv: str = None,
     use_folds: Optional[Union[List, str]] = None,
     pairs_columns_to_extract: Optional[List[str]] = None,
+    pairs_filters: Optional[Dict[str, Dict]] = None,
     pairs_rename_columns: Optional[Dict[str, str]] = None,
     ligands_columns_to_extract: Optional[List[str]] = None,
     ligands_rename_columns: Optional[Dict[str, str]] = None,
@@ -177,6 +188,14 @@ def dti_binding_dataset_combined(
         split_tsv (str, optional): _description_. Defaults to None.
         use_folds (Union[List, str], optional): A list of folds (as defined in split_tsv) to use. Defaults to None: use all folds.
         pairs_columns_to_extract (_type_, optional): _description_. Defaults to None.
+        pairs_filters: Dictionary with the following content:
+            {
+                column_name: # name of the column to apply filtering to (before renaming)
+                    mode: str # keep/exclude - whether to keep or exclude rows that have the following values in column column_name
+                    values: list # list of values to keep or exclude according to mode
+            }
+            Filtering happens before renaming the columns, i.e. it understands the names defined in benchmark config
+            (naming_conventions). If None, no filtering is applied. Default = None
         pairs_rename_columns (_type_, optional): _description_. Defaults to None.
         ligands_columns_to_extract (_type_, optional): _description_. Defaults to None.
         ligands_rename_columns (_type_, optional): _description_. Defaults to None.
@@ -244,6 +263,7 @@ def dti_binding_dataset_combined(
                 pairs_df,
                 columns_to_extract=columns_to_extract,
                 rename_columns=rename_columns,
+                filters=pairs_filters,
                 key_column=None,
             ),
             dict(prefix="data"),
