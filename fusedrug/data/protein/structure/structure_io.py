@@ -57,6 +57,7 @@ def save_structure_file(
     b_factors: Optional[Dict[str, torch.Tensor]] = None,
     reference_cif_filename: Optional[str] = None,
     mask: Optional[Dict[str, List]] = None,
+    shorten_chain_ids_if_needed:bool = True,
 ) -> List[str]:
     """
     A helper function allowing to save single or multi chain structure into pdb and/or mmcif format.
@@ -89,6 +90,21 @@ def save_structure_file(
 
     assert (chain_to_aa_str_seq is not None) or (chain_to_aa_index_seq is not None)
 
+    def fix_too_long_chain_name_if_needed(chain_id):
+        ans = chain_id
+        if len(chain_id) > 1:
+            ans = chain_id[:1]
+            print(
+                f"WARNING: shortening too long chain_id from {chain_id} to {ans}"
+            )
+        return ans
+
+    if shorten_chain_ids_if_needed:
+        chain_to_atom14 = {fix_too_long_chain_name_if_needed(chain_id):val for (chain_id, val) in chain_to_atom14.items()}
+        if b_factors is not None:
+            chain_to_atom14 = {fix_too_long_chain_name_if_needed(chain_id):val for (chain_id, val) in b_factors.items()}
+        chain_to_aa_index_seq = {fix_too_long_chain_name_if_needed(chain_id):val for (chain_id, val) in chain_to_aa_index_seq.items()}        
+
     all_saved_files = []
 
     if save_cif:
@@ -116,6 +132,7 @@ def save_structure_file(
                     f'not writing multimer file because "reference_cif_filename" was not provided for {reference_cif_filename}'
                 )
 
+    all_masks = {}
     for chain_id in sorted_chain_ids:
         pos_atom14 = chain_to_atom14[chain_id]
         if mask is not None:
@@ -123,30 +140,25 @@ def save_structure_file(
         else:
             curr_mask = torch.full((pos_atom14.shape[0],), fill_value=True)
 
-        if save_pdb:
-            out_pdb = output_filename_extensionless + "_chain_" + chain_id + ".pdb"
-            print(f"Saving structure file to {out_pdb}")
+        all_masks[chain_id] = curr_mask
 
-            potentially_fixed_chain_id = chain_id
-            if len(potentially_fixed_chain_id) > 1:
-                potentially_fixed_chain_id = chain_id[:1]
-                print(
-                    f"WARNING: shortening too long chain_id from {chain_id} to {potentially_fixed_chain_id}"
-                )
+        # if save_pdb: #save individual pdb per chain
+        #     out_pdb = output_filename_extensionless + "_chain_" + chain_id + ".pdb"
+        #     print(f"Saving structure file to {out_pdb}")
+          
 
-            flexible_save_pdb_file(
-                xyz=pos_atom14,
-                b_factors=b_factors[chain_id]
-                if b_factors is not None
-                else None,  # torch.tensor([100.0] * pos_atom14.shape[0]),
-                sequence=chain_to_aa_index_seq[chain_id],
-                residues_mask=curr_mask,
-                save_path=out_pdb,
-                init_chain=potentially_fixed_chain_id,
-                model=0,
-            )
+        #     flexible_save_pdb_file(
+        #         xyz=pos_atom14,
+        #         b_factors=b_factors[chain_id]
+        #         if b_factors is not None
+        #         else None,  # torch.tensor([100.0] * pos_atom14.shape[0]),
+        #         sequence=chain_to_aa_index_seq[chain_id],
+        #         residues_mask=curr_mask,
+        #         save_path=out_pdb,                
+        #         model=0,
+        #     )
 
-            all_saved_files.append(out_pdb)
+        #     all_saved_files.append(out_pdb)
 
         if save_cif:
             out_cif = output_filename_extensionless + "_chain_" + chain_id + ".cif"
@@ -165,6 +177,24 @@ def save_structure_file(
                 print(
                     f'not writing chain cif file because no "reference_cif_filename" was provided for {reference_cif_filename}'
                 )
+    
+    
+    if shorten_chain_ids_if_needed:
+        all_masks = {fix_too_long_chain_name_if_needed(chain_id):val for (chain_id, val) in all_masks.items()}
+
+    if save_pdb:
+        #save a pdb with (potentially) multiple chains
+        flexible_save_pdb_file(
+            xyz=chain_to_atom14,
+            b_factors=b_factors,            
+            sequence=chain_to_aa_index_seq,
+            residues_mask=all_masks,
+            save_path=output_filename_extensionless,
+            model=0,
+        )
+
+    all_saved_files.append(output_filename_extensionless)
+    
     return all_saved_files
 
 
@@ -698,14 +728,13 @@ def save_trajectory_to_pdb_file(
 
 def flexible_save_pdb_file(
     *,
-    xyz: torch.Tensor,
-    sequence: torch.Tensor,
-    residues_mask: torch.Tensor,
+    xyz: Dict[str, torch.Tensor], #chain_id to tensor
+    sequence: Dict[str, torch.Tensor], #chain_id to tensor
+    residues_mask: Dict[str, torch.Tensor], #chain_id to tensor
     save_path: str,
     model: int = 0,
-    init_chain: str = "A",
     only_save_backbone: bool = False,
-    b_factors: Optional[torch.Tensor] = None,
+    b_factors: Optional[Union[torch.Tensor, Dict[str, torch.Tensor]]] = None, #chain_id to tensor
 ) -> None:
     """
     saves a PDB file containing the provided coordinates.
@@ -751,70 +780,82 @@ def flexible_save_pdb_file(
 
     """
 
+    #either all are dicts (which supports multiple chains) all or are tensors (which means a single chain)
+    assert isinstance(xyz, dict) and isinstance(sequence, dict) and isinstance(residues_mask ,dict) and  ( (b_factors is None) or isinstance(b_factors, dict))
+
+    assert list(xyz.keys()) == list(sequence.keys())
+    assert list(xyz.keys()) == list(residues_mask.keys())
+    if b_factors is not None:
+        assert list(xyz.keys()) == list(b_factors.keys())
+        
     if only_save_backbone:
         print(
             "flexible_save_pdb_file:: only output backbone requested, will store coordinates only for the first 4 atoms in atom14 convention order."
         )
-        xyz = xyz[:, :4, ...]
+        for k in xyz.keys():        
+            xyz[k] = xyz[k][:, :4, ...]
 
-    assert xyz.shape[1] in [
-        4,
-        14,
-        37,
-    ], f"xyz shape is allowed to be 14 (all heavy atoms) or 4 (only BB), got xyz.shap={xyz.shape}"
+        assert xyz[k].shape[1] in [
+            4,
+            14,
+            37,
+        ], f"xyz shape is allowed to be 14 (all heavy atoms) or 4 (only BB), got xyz.shap={xyz.shape}"
 
     if b_factors is None:
         # b_factors = torch.tensor([100.0] * xyz.shape[0])
-        b_factors = torch.zeros((xyz.shape[:-1]))
+        b_factors = {}
+        for k in xyz.keys():
+            b_factors[k] = torch.zeros((xyz[k].shape[:-1]))
 
     builder = StructureBuilder.StructureBuilder()
     builder.init_structure(0)
     builder.init_model(model)
-    builder.init_chain(init_chain)
-    builder.init_seg("    ")
-    if torch.is_tensor(residues_mask):
-        residues_mask = residues_mask.bool()
+    for chain_id in xyz.keys():
+        builder.init_chain(chain_id)
+        builder.init_seg("    ")
+        if torch.is_tensor(residues_mask[chain_id]):
+            residues_mask[chain_id] = residues_mask[chain_id].bool()
 
-    if torch.is_tensor(xyz):
-        xyz = xyz.clone().detach().cpu()
+        if torch.is_tensor(xyz[chain_id]):
+            xyz[chain_id] = xyz[chain_id].clone().detach().cpu()
 
-    for i, (aa_idx, p_res, b, m_res) in enumerate(
-        zip(sequence, xyz, b_factors, residues_mask)
-    ):
-        if not m_res:
-            continue
-        aa_idx = aa_idx.item()
+        for i, (aa_idx, p_res, b, m_res) in enumerate(
+            zip(sequence[chain_id], xyz[chain_id], b_factors[chain_id], residues_mask[chain_id])
+        ):
+            if not m_res:
+                continue
+            aa_idx = aa_idx.item()
 
-        if aa_idx == 21:  # is this X ? (unknown/special)
-            continue
-        try:
-            three = residx_to_3(aa_idx)
-        except IndexError:
-            continue
-        builder.init_residue(three, " ", int(i), icode=" ")
+            if aa_idx == 21:  # is this X ? (unknown/special)
+                continue
+            try:
+                three = residx_to_3(aa_idx)
+            except IndexError:
+                continue
+            builder.init_residue(three, " ", int(i), icode=" ")
 
-        if xyz.shape[1] == 37:
-            atom_names = rc.atom_types
-        else:
-            atom_names = rc.restype_name_to_atom14_names[three]
+            if xyz[chain_id].shape[1] == 37:
+                atom_names = rc.atom_types
+            else:
+                atom_names = rc.restype_name_to_atom14_names[three]
 
-        residue_atom_names = rc.residue_atoms[three]
+            residue_atom_names = rc.residue_atoms[three]
 
-        for j, (atom_name,) in enumerate(zip(atom_names)):  # why is zip used here?
-            if (
-                (len(atom_name) > 0)
-                and (len(p_res) > j)
-                and atom_name in residue_atom_names
-            ):
-                builder.init_atom(
-                    atom_name,
-                    p_res[j].tolist(),
-                    b[j].item(),
-                    1.0,
-                    " ",
-                    atom_name.join([" ", " "]),
-                    element=atom_name[0],
-                )
+            for j, (atom_name,) in enumerate(zip(atom_names)):  # why is zip used here?
+                if (
+                    (len(atom_name) > 0)
+                    and (len(p_res) > j)
+                    and atom_name in residue_atom_names
+                ):
+                    builder.init_atom(
+                        atom_name,
+                        p_res[j].tolist(),
+                        b[j].item(),
+                        1.0,
+                        " ",
+                        atom_name.join([" ", " "]),
+                        element=atom_name[0],
+                    )
     structure = builder.get_structure()
     io = PDB.PDBIO()
     io.set_structure(structure)
