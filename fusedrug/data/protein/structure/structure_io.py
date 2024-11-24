@@ -137,8 +137,8 @@ def save_structure_file(
             flexible_save_pdb_file(
                 xyz=pos_atom14,
                 b_factors=b_factors[chain_id]
-                if b_factors is not None
-                else torch.tensor([100.0] * pos_atom14.shape[0]),
+                    if b_factors is not None
+                    else None, #torch.tensor([100.0] * pos_atom14.shape[0]),
                 sequence=chain_to_aa_index_seq[chain_id],
                 residues_mask=curr_mask,
                 save_path=out_pdb,
@@ -482,7 +482,7 @@ def convert_openfold_protein_to_dict(
         "aatype": "aatype",
         "atom_mask": "all_atom_mask",
         #'residue_index' :  'residue_index',
-        #'b_factors' : ,
+        'b_factors' : "all_atom_bfactors",
         #'chain_index' :  ,
         #'remark' :  ,
         #'parents' :  ,
