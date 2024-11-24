@@ -338,6 +338,7 @@ task_tokens = [  # pairwise tasks
     "AUTOENCODER_LATENT_LOG_VARIANCE",
     "AUTOENCODER_LATENT_MEAN",
     "AUTOENCODER_LATENT_SAMPLED_Z",
+    "BIOT5_TASK_ID",
 ]
 
 AA_tokens = [

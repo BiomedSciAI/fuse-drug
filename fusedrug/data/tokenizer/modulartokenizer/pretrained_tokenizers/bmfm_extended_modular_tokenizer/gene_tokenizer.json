@@ -2855,6 +2855,15 @@
       "rstrip": false,
       "normalized": false,
       "special": true
+    },
+    {
+      "id": 317,
+      "content": "<BIOT5_TASK_ID>",
+      "single_word": false,
+      "lstrip": false,
+      "rstrip": false,
+      "normalized": false,
+      "special": true
     }
   ],
   "normalizer": null,
@@ -3193,6 +3202,7 @@
       "<BBBP>": 314,
       "<FDA_APPR>": 315,
       "<HIV_ACTIVITY>": 316,
+      "<BIOT5_TASK_ID>": 317,
       "[100130093]": 5000,
       "[100133445]": 5001,
       "[100286793]": 5002,

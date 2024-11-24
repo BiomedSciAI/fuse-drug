@@ -1147,7 +1147,7 @@ class ModularTokenizer(transformers.PreTrainedTokenizerFast):
                 elif verbose == 2:
                     warning_message = f"Encountered {unk_count} unknown tokens in input starting with {typed_input_list[0].input_string[:20]}"
                 elif verbose >= 3:
-                    warning_message = f"Encountered {unk_count} unknown tokens out of {len(merged_encoding.ids)} in input starting with {typed_input_list[0].input_string}"
+                    warning_message = f"Encountered {unk_count} unknown tokens out of {len(merged_encoding.ids)} in input {typed_input_list[0].input_string}"
                 else:
                     ValueError("We shouldn't be here")
                 if warning_message is not None:
