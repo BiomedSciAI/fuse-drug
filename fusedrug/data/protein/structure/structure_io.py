@@ -57,7 +57,7 @@ def save_structure_file(
     b_factors: Optional[Dict[str, torch.Tensor]] = None,
     reference_cif_filename: Optional[str] = None,
     mask: Optional[Dict[str, List]] = None,
-    shorten_chain_ids_if_needed:bool = True,
+    shorten_chain_ids_if_needed: bool = True,
 ) -> List[str]:
     """
     A helper function allowing to save single or multi chain structure into pdb and/or mmcif format.
@@ -90,20 +90,27 @@ def save_structure_file(
 
     assert (chain_to_aa_str_seq is not None) or (chain_to_aa_index_seq is not None)
 
-    def fix_too_long_chain_name_if_needed(chain_id):
+    def fix_too_long_chain_name_if_needed(chain_id: str) -> str:
         ans = chain_id
         if len(chain_id) > 1:
             ans = chain_id[:1]
-            print(
-                f"WARNING: shortening too long chain_id from {chain_id} to {ans}"
-            )
+            print(f"WARNING: shortening too long chain_id from {chain_id} to {ans}")
         return ans
 
     if shorten_chain_ids_if_needed:
-        chain_to_atom14 = {fix_too_long_chain_name_if_needed(chain_id):val for (chain_id, val) in chain_to_atom14.items()}
+        chain_to_atom14 = {
+            fix_too_long_chain_name_if_needed(chain_id): val
+            for (chain_id, val) in chain_to_atom14.items()
+        }
         if b_factors is not None:
-            chain_to_atom14 = {fix_too_long_chain_name_if_needed(chain_id):val for (chain_id, val) in b_factors.items()}
-        chain_to_aa_index_seq = {fix_too_long_chain_name_if_needed(chain_id):val for (chain_id, val) in chain_to_aa_index_seq.items()}        
+            chain_to_atom14 = {
+                fix_too_long_chain_name_if_needed(chain_id): val
+                for (chain_id, val) in b_factors.items()
+            }
+        chain_to_aa_index_seq = {
+            fix_too_long_chain_name_if_needed(chain_id): val
+            for (chain_id, val) in chain_to_aa_index_seq.items()
+        }
 
     all_saved_files = []
 
@@ -145,7 +152,6 @@ def save_structure_file(
         # if save_pdb: #save individual pdb per chain
         #     out_pdb = output_filename_extensionless + "_chain_" + chain_id + ".pdb"
         #     print(f"Saving structure file to {out_pdb}")
-          
 
         #     flexible_save_pdb_file(
         #         xyz=pos_atom14,
@@ -154,7 +160,7 @@ def save_structure_file(
         #         else None,  # torch.tensor([100.0] * pos_atom14.shape[0]),
         #         sequence=chain_to_aa_index_seq[chain_id],
         #         residues_mask=curr_mask,
-        #         save_path=out_pdb,                
+        #         save_path=out_pdb,
         #         model=0,
         #     )
 
@@ -177,21 +183,25 @@ def save_structure_file(
                 print(
                     f'not writing chain cif file because no "reference_cif_filename" was provided for {reference_cif_filename}'
                 )
-    
-    
+
     if shorten_chain_ids_if_needed:
-        all_masks = {fix_too_long_chain_name_if_needed(chain_id):val for (chain_id, val) in all_masks.items()}
+        all_masks = {
+            fix_too_long_chain_name_if_needed(chain_id): val
+            for (chain_id, val) in all_masks.items()
+        }
 
     if save_pdb:
-        #save a pdb with (potentially) multiple chains
-        all_saved_files.append(flexible_save_pdb_file(
-            xyz=chain_to_atom14,
-            b_factors=b_factors,            
-            sequence=chain_to_aa_index_seq,
-            residues_mask=all_masks,
-            save_path=output_filename_extensionless+".pdb",
-            model=0,
-        ))
+        # save a pdb with (potentially) multiple chains
+        all_saved_files.append(
+            flexible_save_pdb_file(
+                xyz=chain_to_atom14,
+                b_factors=b_factors,
+                sequence=chain_to_aa_index_seq,
+                residues_mask=all_masks,
+                save_path=output_filename_extensionless + ".pdb",
+                model=0,
+            )
+        )
 
     return all_saved_files
 
@@ -726,13 +736,15 @@ def save_trajectory_to_pdb_file(
 
 def flexible_save_pdb_file(
     *,
-    xyz: Dict[str, torch.Tensor], #chain_id to tensor
-    sequence: Dict[str, torch.Tensor], #chain_id to tensor
-    residues_mask: Dict[str, torch.Tensor], #chain_id to tensor
+    xyz: Dict[str, torch.Tensor],  # chain_id to tensor
+    sequence: Dict[str, torch.Tensor],  # chain_id to tensor
+    residues_mask: Dict[str, torch.Tensor],  # chain_id to tensor
     save_path: str,
     model: int = 0,
     only_save_backbone: bool = False,
-    b_factors: Optional[Union[torch.Tensor, Dict[str, torch.Tensor]]] = None, #chain_id to tensor
+    b_factors: Optional[
+        Union[torch.Tensor, Dict[str, torch.Tensor]]
+    ] = None,  # chain_id to tensor
 ) -> None:
     """
     saves a PDB file containing the provided coordinates.
@@ -778,19 +790,24 @@ def flexible_save_pdb_file(
 
     """
 
-    #either all are dicts (which supports multiple chains) all or are tensors (which means a single chain)
-    assert isinstance(xyz, dict) and isinstance(sequence, dict) and isinstance(residues_mask ,dict) and  ( (b_factors is None) or isinstance(b_factors, dict))
+    # either all are dicts (which supports multiple chains) all or are tensors (which means a single chain)
+    assert (
+        isinstance(xyz, dict)
+        and isinstance(sequence, dict)
+        and isinstance(residues_mask, dict)
+        and ((b_factors is None) or isinstance(b_factors, dict))
+    )
 
     assert list(xyz.keys()) == list(sequence.keys())
     assert list(xyz.keys()) == list(residues_mask.keys())
     if b_factors is not None:
         assert list(xyz.keys()) == list(b_factors.keys())
-        
+
     if only_save_backbone:
         print(
             "flexible_save_pdb_file:: only output backbone requested, will store coordinates only for the first 4 atoms in atom14 convention order."
         )
-        for k in xyz.keys():        
+        for k in xyz.keys():
             xyz[k] = xyz[k][:, :4, ...]
 
         assert xyz[k].shape[1] in [
@@ -818,7 +835,12 @@ def flexible_save_pdb_file(
             xyz[chain_id] = xyz[chain_id].clone().detach().cpu()
 
         for i, (aa_idx, p_res, b, m_res) in enumerate(
-            zip(sequence[chain_id], xyz[chain_id], b_factors[chain_id], residues_mask[chain_id])
+            zip(
+                sequence[chain_id],
+                xyz[chain_id],
+                b_factors[chain_id],
+                residues_mask[chain_id],
+            )
         ):
             if not m_res:
                 continue
@@ -858,7 +880,7 @@ def flexible_save_pdb_file(
     io = PDB.PDBIO()
     io.set_structure(structure)
     os.makedirs(pathlib.Path(save_path).parent, exist_ok=True)
-    io.save(save_path)    
+    io.save(save_path)
     return save_path
 
 
