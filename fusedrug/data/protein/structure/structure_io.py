@@ -184,17 +184,15 @@ def save_structure_file(
 
     if save_pdb:
         #save a pdb with (potentially) multiple chains
-        flexible_save_pdb_file(
+        all_saved_files.append(flexible_save_pdb_file(
             xyz=chain_to_atom14,
             b_factors=b_factors,            
             sequence=chain_to_aa_index_seq,
             residues_mask=all_masks,
-            save_path=output_filename_extensionless,
+            save_path=output_filename_extensionless+".pdb",
             model=0,
-        )
+        ))
 
-    all_saved_files.append(output_filename_extensionless)
-    
     return all_saved_files
 
 
@@ -860,8 +858,8 @@ def flexible_save_pdb_file(
     io = PDB.PDBIO()
     io.set_structure(structure)
     os.makedirs(pathlib.Path(save_path).parent, exist_ok=True)
-    io.save(save_path)
-    pass
+    io.save(save_path)    
+    return save_path
 
 
 def save_pdb_file(
