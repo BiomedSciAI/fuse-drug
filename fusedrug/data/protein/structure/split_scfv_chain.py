@@ -16,6 +16,7 @@ def main(
     output_pdb_path_extensionless: str,
     output_heavy_chain_id: Optional[str] = 'H',
     output_light_chain_id: Optional[str] = 'L',
+    passthrough_chains: Optional[str] = None,
     cleanup_temp_files:bool = True,
 ) -> None:
     """
@@ -24,8 +25,14 @@ def main(
 
     Args:
     input_pdb_path:    
+
+    passthrough_chains: optional, will be "pass through", '_' separated if you want multiple
     
     """
+
+    if passthrough_chains is not None:
+        passthrough_chains = passthrough_chains.split('_')
+
 
     loaded_scfv = load_pdb_chain_features(
         input_pdb_path, input_scfv_chain_id
@@ -79,26 +86,45 @@ def main(
     light_start = scfv_seq.find(light_chain)
     assert light_start >= 0
 
+    chain_to_atom14={
+            output_heavy_chain_id: loaded_scfv["atom14_gt_positions"][heavy_start:heavy_start+len(heavy_chain)],
+            output_light_chain_id: loaded_scfv["atom14_gt_positions"][light_start:light_start+len(light_chain)],
+        }
+
+    chain_to_aa_str_seq={
+            output_heavy_chain_id: loaded_scfv["aasequence_str"][heavy_start:heavy_start+len(heavy_chain)],
+            output_light_chain_id: loaded_scfv["aasequence_str"][light_start:light_start+len(light_chain)],            
+        }
+
+    chain_to_aa_index_seq={
+            output_heavy_chain_id: loaded_scfv["aatype"][heavy_start:heavy_start+len(heavy_chain)],
+            output_light_chain_id: loaded_scfv["aatype"][light_start:light_start+len(light_chain)],            
+        }
+
+
+    if passthrough_chains is not None:
+        for chain_id in passthrough_chains:
+            curr_loaded_chain_data = load_pdb_chain_features(input_pdb_path, chain_id)
+            
+            chain_to_atom14[chain_id] = curr_loaded_chain_data['atom14_gt_positions']
+            chain_to_aa_str_seq[chain_id] = curr_loaded_chain_data['aasequence_str']
+            chain_to_aa_index_seq[chain_id] = curr_loaded_chain_data['aatype']
+
+
     saved_files = save_structure_file(
         output_filename_extensionless=output_pdb_path_extensionless,
         pdb_id="unknown",
-        chain_to_atom14={
-            output_heavy_chain_id: loaded_scfv["atom14_gt_positions"][heavy_start:heavy_start+len(heavy_chain)],
-            output_light_chain_id: loaded_scfv["atom14_gt_positions"][light_start:light_start+len(light_chain)],
-        },
-        chain_to_aa_str_seq={
-            output_heavy_chain_id: loaded_scfv["aasequence_str"][heavy_start:heavy_start+len(heavy_chain)],
-            output_light_chain_id: loaded_scfv["aasequence_str"][light_start:light_start+len(light_chain)],            
-        },
-        chain_to_aa_index_seq={
-            output_heavy_chain_id: loaded_scfv["aatype"][heavy_start:heavy_start+len(heavy_chain)],
-            output_light_chain_id: loaded_scfv["aatype"][light_start:light_start+len(light_chain)],            
-        },
+        chain_to_atom14=chain_to_atom14,
+        chain_to_aa_str_seq=chain_to_aa_str_seq,
+        chain_to_aa_index_seq=chain_to_aa_index_seq,
         save_cif=False,
         mask=None,  # TODO: check
     )
 
+    assert len(saved_files) == 1    
     print(f"saved {saved_files}")
+
+    return saved_files[0]
 
 
 def split_heavy_light_chain_from_anarci_output(filename: str) -> list[Sequence[str]]:
