@@ -1,0 +1,130 @@
+from jsonargparse import CLI
+from fusedrug.data.protein.structure.structure_io import (
+    load_pdb_chain_features,
+    save_structure_file,
+)
+from typing import Optional, Sequence
+from os.path import isfile, join, dirname, basename
+import os
+import sys
+import subprocess
+
+def main(
+    *,
+    input_pdb_path: str,
+    input_scfv_chain_id: str,
+    output_pdb_path_extensionless: str,
+    output_heavy_chain_id: Optional[str] = 'H',
+    output_light_chain_id: Optional[str] = 'L',
+    cleanup_temp_files:bool = True,
+) -> None:
+    """
+
+    Takes an input PDB files and splits it into separate files, one per describe chain, allowing to rename the chains if desired
+
+    Args:
+    input_pdb_path:    
+    
+    """
+
+    loaded_scfv = load_pdb_chain_features(
+        input_pdb_path, input_scfv_chain_id
+    )
+
+    scfv_seq = loaded_scfv['aasequence_str']
+
+    scfv_sequence_filename = join(
+        dirname(input_pdb_path),
+        f"sequence_info_{input_scfv_chain_id}_"+basename(input_pdb_path)+".txt",
+    )
+
+    if not isfile(scfv_sequence_filename):
+        with open(scfv_sequence_filename, 'wt') as f:
+            f.write(f'>scfv_{input_scfv_chain_id}:...\n{scfv_seq}\n')
+        
+    # run anarci:
+    anarci_executable = join(dirname(sys.executable), "ANARCI")
+    if not isfile(anarci_executable):
+        raise Exception(
+            f"ANARCI binary not found in {dirname(sys.executable)}. check installation"
+        )
+
+    anarci_output_filename = join(
+        dirname(input_pdb_path),
+        f"anarci_output_{input_scfv_chain_id}_"+basename(input_pdb_path)+".txt",
+    )
+
+    if not isfile(anarci_output_filename):
+        subprocess.run(
+            [
+                anarci_executable,
+                "-i",
+                scfv_sequence_filename,
+                "-o",
+                anarci_output_filename,
+            ]
+        )
+    # parse anarci outputs and obtain separate heavy and light chains:
+    heavy_chain, light_chain = split_heavy_light_chain_from_anarci_output(anarci_output_filename)
+    #assert len(heavy_chains) == len(light_chains) == len(sequences)
+    
+    #cleanup
+    if cleanup_temp_files:
+        os.remove(scfv_sequence_filename)
+        os.remove(anarci_output_filename)
+
+    heavy_start = scfv_seq.find(heavy_chain)
+    assert heavy_start >= 0
+
+    light_start = scfv_seq.find(light_chain)
+    assert light_start >= 0
+
+    saved_files = save_structure_file(
+        output_filename_extensionless=output_pdb_path_extensionless,
+        pdb_id="unknown",
+        chain_to_atom14={
+            output_heavy_chain_id: loaded_scfv["atom14_gt_positions"][heavy_start:heavy_start+len(heavy_chain)],
+            output_light_chain_id: loaded_scfv["atom14_gt_positions"][light_start:light_start+len(light_chain)],
+        },
+        chain_to_aa_str_seq={
+            output_heavy_chain_id: loaded_scfv["aasequence_str"][heavy_start:heavy_start+len(heavy_chain)],
+            output_light_chain_id: loaded_scfv["aasequence_str"][light_start:light_start+len(light_chain)],            
+        },
+        chain_to_aa_index_seq={
+            output_heavy_chain_id: loaded_scfv["aatype"][heavy_start:heavy_start+len(heavy_chain)],
+            output_light_chain_id: loaded_scfv["aatype"][light_start:light_start+len(light_chain)],            
+        },
+        save_cif=False,
+        mask=None,  # TODO: check
+    )
+
+    print(f"saved {saved_files}")
+
+
+def split_heavy_light_chain_from_anarci_output(filename: str) -> list[Sequence[str]]:
+    # parses ANARCI output on a fasta file of a single heavy and light chain domains
+    heavy_chain = []
+    light_chain = []
+    with open(filename, "r") as file:
+        for line in file:            
+            if line.startswith("#"):
+                continue
+            else:
+                parts = line.split()
+                residue = parts[-1]
+                if residue == "-":
+                    continue
+                if line.startswith("H"):                   
+                    heavy_chain.append(residue)
+                elif line.startswith("L"):                    
+                    light_chain.append(residue)
+        # last sequence:
+    
+    heavy_chain = "".join(heavy_chain)
+    light_chain = "".join(light_chain)
+        
+    return heavy_chain, light_chain    
+
+
+if __name__ == "__main__":
+    CLI(main, as_positional=False)
