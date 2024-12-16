@@ -83,10 +83,10 @@ def main(
         anarci_output_filename
     )
 
-    if 0==len(heavy_chain):
+    if 0 == len(heavy_chain):
         raise Exception("ANARCI could not find the heavy chain domain")
 
-    if 0==len(light_chain):
+    if 0 == len(light_chain):
         raise Exception("ANARCI could not find the light chain domain")
     # assert len(heavy_chains) == len(light_chains) == len(sequences)
 
