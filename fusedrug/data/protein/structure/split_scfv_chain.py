@@ -8,6 +8,7 @@ from os.path import isfile, join, dirname, basename
 import os
 import sys
 import subprocess
+import threading
 
 def main(
     *,
@@ -40,9 +41,11 @@ def main(
 
     scfv_seq = loaded_scfv['aasequence_str']
 
+    safety = f'_{os.getpid()}_{threading.get_ident()}'
+
     scfv_sequence_filename = join(
         dirname(input_pdb_path),
-        f"sequence_info_{input_scfv_chain_id}_"+basename(input_pdb_path)+".txt",
+        f"sequence_info_{input_scfv_chain_id}_"+basename(input_pdb_path)+safety+".txt",
     )
 
     if not isfile(scfv_sequence_filename):
@@ -58,7 +61,7 @@ def main(
 
     anarci_output_filename = join(
         dirname(input_pdb_path),
-        f"anarci_output_{input_scfv_chain_id}_"+basename(input_pdb_path)+".txt",
+        f"anarci_output_{input_scfv_chain_id}_"+basename(input_pdb_path)+safety+".txt",
     )
 
     if not isfile(anarci_output_filename):
@@ -144,7 +147,7 @@ def split_heavy_light_chain_from_anarci_output(filename: str) -> list[Sequence[s
                     heavy_chain.append(residue)
                 elif line.startswith("L"):                    
                     light_chain.append(residue)
-        # last sequence:
+        
     
     heavy_chain = "".join(heavy_chain)
     light_chain = "".join(light_chain)
