@@ -1,5 +1,6 @@
 from fuse.utils import NDict
-from fuse.data import OpBase, get_sample_id
+from fuse.data import OpBase
+from fuse.data.utils.sample import get_sample_id
 from tokenizers import Tokenizer
 from tokenizers.normalizers import Normalizer
 from tokenizers.pre_tokenizers import PreTokenizer
