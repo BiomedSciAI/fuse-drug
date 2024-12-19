@@ -2,7 +2,7 @@ import unittest
 from fusedrug.data.protein.ops.loaders.fasta_loader import FastaLoader
 import os
 from fusedrug import get_tests_data_dir
-from fuse.data import create_initial_sample
+from fuse.data.utils.sample import create_initial_sample
 
 
 class TestLoaders(unittest.TestCase):
