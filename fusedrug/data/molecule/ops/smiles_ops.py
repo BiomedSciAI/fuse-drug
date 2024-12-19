@@ -2,7 +2,8 @@ from typing import Optional
 from rdkit import Chem
 from rdkit.Chem.rdmolops import SanitizeFlags
 from fuse.utils import NDict
-from fuse.data import OpBase, get_sample_id
+from fuse.data import OpBase
+from fuse.data.utils.sample import get_sample_id
 
 
 class SmilesToRDKitMol(OpBase):
