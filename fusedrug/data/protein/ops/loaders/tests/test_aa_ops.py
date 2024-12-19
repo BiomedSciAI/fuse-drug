@@ -8,11 +8,11 @@ from fusedrug.data.protein.ops.aa_ops import (
 from fuse.data import PipelineDefault
 import os
 from fusedrug import get_tests_data_dir
-from fuse.data import create_initial_sample
+from fuse.data.utils.sample import create_initial_sample
 
 # from transformers import BertTokenizer
 # from fusedrug.data.tokenizer.huggingface_based_tokenizer import HuggingFaceBasedTokenizer
-from fuse.data import OpRepeat
+from fuse.data.ops.ops_common import OpRepeat
 
 
 class TestAAOps(unittest.TestCase):
