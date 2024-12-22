@@ -1,6 +1,7 @@
 from typing import Dict, Optional
 from fuse.utils import NDict
-from fuse.data import OpBase, get_sample_id
+from fuse.data import OpBase
+from fuse.data.utils.sample import get_sample_id
 from fusedrug.utils.file_formats import IndexedFasta, IndexedFastaCustom
 
 """
