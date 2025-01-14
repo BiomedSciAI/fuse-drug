@@ -23,7 +23,10 @@ def main(
 ) -> None:
     """
 
-    Takes an input PDB files and splits it into separate files, one per describe chain, allowing to rename the chains if desired
+    Takes an input PDB file and allows to split scfv within it to 2 separate chains.
+    This is useful for modifying such PDB to be used in follow up steps that assume such separate chains for heavy and light chain.
+
+    It allows also to "passthrough" additional chains to maintain a "full" PDB.
 
     Args:
     input_pdb_path:
@@ -88,7 +91,6 @@ def main(
 
     if 0 == len(light_chain):
         raise Exception("ANARCI could not find the light chain domain")
-    # assert len(heavy_chains) == len(light_chains) == len(sequences)
 
     # cleanup
     if cleanup_temp_files:
