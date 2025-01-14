@@ -60,7 +60,7 @@ def main(
     anarci_executable = join(dirname(sys.executable), "ANARCI")
     if not isfile(anarci_executable):
         raise Exception(
-            f"ANARCI binary not found in {dirname(sys.executable)}. check installation"
+            f"ANARCI binary not found in {dirname(sys.executable)}. check installation. You can install it in your env like this: conda install -c bioconda abnumber"
         )
 
     anarci_output_filename = join(
