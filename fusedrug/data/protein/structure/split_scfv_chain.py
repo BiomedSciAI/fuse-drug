@@ -81,7 +81,7 @@ def main(
                 anarci_output_filename,
             ]
         )
-    # parse anarci outputs and obtain separate heavy and light chains:
+    # parse anarci outputs  and obtain separate heavy and light chains:
     heavy_chain, light_chain = split_heavy_light_chain_from_anarci_output(
         anarci_output_filename
     )
