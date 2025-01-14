@@ -798,10 +798,11 @@ def flexible_save_pdb_file(
         and ((b_factors is None) or isinstance(b_factors, dict))
     )
 
-    assert list(xyz.keys()) == list(sequence.keys())
-    assert list(xyz.keys()) == list(residues_mask.keys())
+    assert set(xyz.keys()) == set(sequence.keys())
+    assert set(xyz.keys()) == set(residues_mask.keys())
+
     if b_factors is not None:
-        assert list(xyz.keys()) == list(b_factors.keys())
+        assert set(xyz.keys()) == set(b_factors.keys())
 
     if only_save_backbone:
         print(
