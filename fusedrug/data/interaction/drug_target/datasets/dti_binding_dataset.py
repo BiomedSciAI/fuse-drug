@@ -97,6 +97,14 @@ def dti_binding_dataset(
     ligands_df = ans_dict["ligands"]
     targets_df = ans_dict["targets"]
 
+    # filter columns:
+    if pairs_filters is not None:
+        for k in pairs_filters:
+            if pairs_filters[k]["mode"].lower() == "keep":
+                pairs_df = pairs_df[pairs_df[k].isin(pairs_filters[k]["values"])]
+            else:
+                pairs_df = pairs_df[~pairs_df[k].isin(pairs_filters[k]["values"])]
+
     if pairs_index_column is not None:
         pairs_df.set_index(
             keys=pairs_index_column,
@@ -111,7 +119,6 @@ def dti_binding_dataset(
                 pairs_df,
                 columns_to_extract=pairs_columns_to_extract,
                 rename_columns=pairs_rename_columns,
-                filters=pairs_filters,
                 key_column=None,
             ),
             {},
@@ -219,6 +226,13 @@ def dti_binding_dataset_combined(
         ans_dict = _load_dataframes(*_args, combine=True, suffixes=suffixes, **kwargs)
 
     pairs_df = ans_dict["pairs"]
+    # filter columns:
+    if pairs_filters is not None:
+        for k in pairs_filters:
+            if pairs_filters[k]["mode"].lower() == "keep":
+                pairs_df = pairs_df[pairs_df[k].isin(pairs_filters[k]["values"])]
+            else:
+                pairs_df = pairs_df[~pairs_df[k].isin(pairs_filters[k]["values"])]
 
     # Since _load_dataframes with combine == True may change some (overlapping) column names, we need to correct the following:
     ligands_columns_to_extract = [
@@ -263,7 +277,6 @@ def dti_binding_dataset_combined(
                 pairs_df,
                 columns_to_extract=columns_to_extract,
                 rename_columns=rename_columns,
-                filters=pairs_filters,
                 key_column=None,
             ),
             dict(prefix="data"),
