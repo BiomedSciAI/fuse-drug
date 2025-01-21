@@ -38,6 +38,16 @@ def itemify(x: Any) -> Any:
     return x
 
 
+def filter_df(pairs_df: pd.DataFrame, pairs_filters: dict) -> pd.DataFrame:
+    if pairs_filters is not None:
+        for k in pairs_filters:
+            if pairs_filters[k]["mode"].lower() == "keep":
+                pairs_df = pairs_df[pairs_df[k].isin(pairs_filters[k]["values"])]
+            else:
+                pairs_df = pairs_df[~pairs_df[k].isin(pairs_filters[k]["values"])]
+    return pairs_df
+
+
 def dti_binding_dataset(
     pairs_tsv: str,
     ligands_tsv: str,
@@ -98,12 +108,7 @@ def dti_binding_dataset(
     targets_df = ans_dict["targets"]
 
     # filter columns:
-    if pairs_filters is not None:
-        for k in pairs_filters:
-            if pairs_filters[k]["mode"].lower() == "keep":
-                pairs_df = pairs_df[pairs_df[k].isin(pairs_filters[k]["values"])]
-            else:
-                pairs_df = pairs_df[~pairs_df[k].isin(pairs_filters[k]["values"])]
+    pairs_df = filter_df(pairs_df=pairs_df, pairs_filters=pairs_filters)
 
     if pairs_index_column is not None:
         pairs_df.set_index(
@@ -227,12 +232,7 @@ def dti_binding_dataset_combined(
 
     pairs_df = ans_dict["pairs"]
     # filter columns:
-    if pairs_filters is not None:
-        for k in pairs_filters:
-            if pairs_filters[k]["mode"].lower() == "keep":
-                pairs_df = pairs_df[pairs_df[k].isin(pairs_filters[k]["values"])]
-            else:
-                pairs_df = pairs_df[~pairs_df[k].isin(pairs_filters[k]["values"])]
+    pairs_df = filter_df(pairs_df=pairs_df, pairs_filters=pairs_filters)
 
     # Since _load_dataframes with combine == True may change some (overlapping) column names, we need to correct the following:
     ligands_columns_to_extract = [
