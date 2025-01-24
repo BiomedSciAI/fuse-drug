@@ -114,7 +114,7 @@ class FastFASTAReader:
         # res.fetchall()
         # print(res)
 
-    def get_sequence(self, seq_id:str) -> str:
+    def get_sequence(self, seq_id: str) -> str:
         """
         Retrieve sequence by ID with O(1) lookup.
 

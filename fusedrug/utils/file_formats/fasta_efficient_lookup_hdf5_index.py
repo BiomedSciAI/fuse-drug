@@ -1,10 +1,6 @@
 import h5py
-
-# import numpy as np
 from Bio import SeqIO
-
-# import mmap
-
+from typing import List
 
 class LargeFASTAConverter:
     def __init__(self, chunk_size: int = 100000):
@@ -54,7 +50,7 @@ class LargeFASTAConverter:
 
             return None
 
-    def _batch_iterator(self, fasta_path: str):
+    def _batch_iterator(self, fasta_path: str) -> List:
         """
         Memory-efficient batch iterator for large FASTA files.
         """
