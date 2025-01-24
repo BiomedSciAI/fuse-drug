@@ -7,11 +7,11 @@ from Bio import SeqIO
 
 
 class LargeFASTAConverter:
-    def __init__(self, chunk_size:int=100000):
+    def __init__(self, chunk_size: int = 100000):
         self.chunk_size = chunk_size
         self.total_seen = 0
 
-    def convert_large_fasta(self, input_fasta:str, output_hdf5:str):
+    def convert_large_fasta(self, input_fasta: str, output_hdf5: str) -> None:
         """
         Convert FASTA to HDF5 using sequence IDs as keys.
 
@@ -35,7 +35,7 @@ class LargeFASTAConverter:
 
         print("Converted FASTA to HDF5 with string keys")
 
-    def lookup_sequence_by_id(self, hdf5_path:str, sequence_id:str):
+    def lookup_sequence_by_id(self, hdf5_path: str, sequence_id: str) -> str:
         """
         Lookup sequence using string ID.
 
@@ -54,7 +54,7 @@ class LargeFASTAConverter:
 
             return None
 
-    def _batch_iterator(self, fasta_path:str):
+    def _batch_iterator(self, fasta_path: str):
         """
         Memory-efficient batch iterator for large FASTA files.
         """
