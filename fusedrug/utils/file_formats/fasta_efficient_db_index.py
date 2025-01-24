@@ -2,6 +2,7 @@ from typing import Optional, Callable
 import mmap
 import os
 import sqlite3
+import threading
 #from Bio import IndexedFastaIO
 
 class FastFASTAReader:
@@ -20,7 +21,13 @@ class FastFASTAReader:
 
         self.entry_id_process_func = entry_id_process_func
 
+        #connection per process+thread combination, to be multi-processing/threading safe in LOOKUP
+        #note - not necessarily multi process/thread safe in building
+        self.connections = {} 
+
         self._create_sqlite_index()
+
+        
     
     def _create_sqlite_index(self):
         """
@@ -29,7 +36,14 @@ class FastFASTAReader:
         # SQLite database to store file offsets
 
         already_found = os.path.isfile(self.index_file_path)
-        self.conn = sqlite3.connect(self.index_file_path)
+
+
+        #sqlite3 does not allow sharing connections between threads (it can result in unexpected behavior)
+        #so we use a separate connection per process+thread combination
+        thread_desc = f"{os.getpid()}@{threading.get_ident()}"
+        if thread_desc not in self.connections:            
+            self.connections[thread_desc] = sqlite3.connect(self.index_file_path)
+        self.conn = self.connections[thread_desc]
         cursor = self.conn.cursor()
 
         if not already_found:
@@ -95,7 +109,8 @@ class FastFASTAReader:
         
         Returns:
             str: DNA/protein sequence
-        """
+        """        
+
         cursor = self.conn.cursor()
         cursor.execute('SELECT offset FROM fasta_index WHERE seq_id = ?', (seq_id,))
         result = cursor.fetchone()
@@ -121,3 +136,23 @@ class FastFASTAReader:
             
             return sequence
 
+
+
+# Example usage
+if __name__ == "__main__":
+    def extract_name(text:str):
+        return text.split('|')[1]
+
+    reader = FastFASTAReader('/somewhere/big_fasta.fasta', 
+                                index_file_path = '/somewhere/big_fasta.fasta.2nd_id_part.sqlite',
+                                entry_id_process_func = extract_name,
+                                )
+    #sequence = reader.get_sequence('tr|A0A7C1X5W1|A0A7C1X5W1_9CREN')
+    sequence = reader.get_sequence('A0A7C1X5W1')
+    print(sequence)
+
+    
+
+
+#pragma COMPILE_OPTIONS
+#https://stackoverflow.com/questions/35717263/how-threadsafe-is-sqlite3
