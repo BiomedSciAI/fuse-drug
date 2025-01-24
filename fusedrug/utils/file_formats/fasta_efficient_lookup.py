@@ -71,13 +71,3 @@ class LargeFASTAConverter:
             if batch:
                 yield batch
 
-if __name__ == "__main__":
-    converter = LargeFASTAConverter(chunk_size=500000)
-
-    is_sample = "" #"_SAMPLE"
-    
-    converter.convert_large_fasta(f'/proj/bmfm/datasets/uniprot/uniprot_trembl{is_sample}.fasta', f'/proj/bmfm/datasets/uniprot/uniprot_trembll{is_sample}.h5')
-    
-    # Lookup a specific sequence
-    seq = converter.lookup_sequence_by_id(f'/proj/bmfm/datasets/uniprot/uniprot_trembl{is_sample}.h5', 'tr|A0A7C1X5W1|A0A7C1X5W1_9CREN')
-    print(seq)
