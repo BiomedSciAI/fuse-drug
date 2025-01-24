@@ -2,6 +2,7 @@ import h5py
 from Bio import SeqIO
 from typing import List
 
+
 class LargeFASTAConverter:
     def __init__(self, chunk_size: int = 100000):
         self.chunk_size = chunk_size
