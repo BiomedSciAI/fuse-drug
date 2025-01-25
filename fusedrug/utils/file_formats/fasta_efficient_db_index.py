@@ -3,9 +3,8 @@ import mmap
 import os
 import sqlite3
 import threading
-
-# from Bio import IndexedFastaIO
-
+import multiprocessing
+g_lock = multiprocessing.Lock()
 
 class FastFASTAReader:
     def __init__(
@@ -32,7 +31,8 @@ class FastFASTAReader:
         # note - not necessarily multi process/thread safe in building
         self.connections = {}
 
-        self._create_sqlite_index()
+        with g_lock:
+            self._create_sqlite_index()
 
     def _create_sqlite_index(self) -> None:
         """
@@ -152,8 +152,6 @@ class FastFASTAReader:
 
             return sequence
 
-
-# Example usage
 if __name__ == "__main__":
 
     def extract_name(text: str) -> str:
@@ -164,10 +162,11 @@ if __name__ == "__main__":
         index_file_path="/somewhere/big_fasta.fasta.2nd_id_part.sqlite",
         entry_id_process_func=extract_name,
     )
+
     # sequence = reader.get_sequence('tr|A0A7C1X5W1|A0A7C1X5W1_9CREN')
-    sequence = reader.get_sequence("A0A7C1X5W1")
+    # sequence = reader.get_sequence("A0A7C1X5W1")
+    # sequence = reader.get_sequence("A0A7C1X5W1_9CREN")
+    sequence = reader.get_sequence("002L_FRG3G") #Q6GZX3
+    
     print(sequence)
 
-
-# pragma COMPILE_OPTIONS
-# https://stackoverflow.com/questions/35717263/how-threadsafe-is-sqlite3
