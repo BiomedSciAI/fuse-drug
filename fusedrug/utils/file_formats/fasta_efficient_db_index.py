@@ -4,7 +4,9 @@ import os
 import sqlite3
 import threading
 import multiprocessing
+
 g_lock = multiprocessing.Lock()
+
 
 class FastFASTAReader:
     def __init__(
@@ -152,6 +154,7 @@ class FastFASTAReader:
 
             return sequence
 
+
 if __name__ == "__main__":
 
     def extract_name(text: str) -> str:
@@ -166,7 +169,6 @@ if __name__ == "__main__":
     # sequence = reader.get_sequence('tr|A0A7C1X5W1|A0A7C1X5W1_9CREN')
     # sequence = reader.get_sequence("A0A7C1X5W1")
     # sequence = reader.get_sequence("A0A7C1X5W1_9CREN")
-    sequence = reader.get_sequence("002L_FRG3G") #Q6GZX3
-    
-    print(sequence)
+    sequence = reader.get_sequence("002L_FRG3G")  # Q6GZX3
 
+    print(sequence)
