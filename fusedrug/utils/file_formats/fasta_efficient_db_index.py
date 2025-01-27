@@ -21,6 +21,13 @@ class FastFASTAReader:
         Args:
             fasta_path (str): Path to FASTA file
             index_file_path (str): Optional. The file path of the index file. If not provided, will defauylt to {fasta_path}.sqlite
+            entry_id_process_func: an optional function that takes as input a string and returns a string.
+                can be used to modify the id of the FASTA entry.
+                For example, if in the FASTA file the entry looks like this: "tr|blah|blah2" but you only want the 3rd part to be used as the entry ID,
+                    so in lookup time you'll be able to use "blah2",
+                    you can provide:
+                    def foo(text: str):
+                        return text.split('|')[2]
         """
         self.fasta_path = fasta_path
         self.index_file_path = index_file_path
