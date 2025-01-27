@@ -8,7 +8,7 @@ class LargeFASTAConverter:
         self.chunk_size = chunk_size
         self.total_seen = 0
 
-    def convert_large_fasta(self, input_fasta: str, output_hdf5: str) -> None:
+    def convert_large_fasta_to_hdf5(self, input_fasta: str, output_hdf5: str) -> None:
         """
         Convert FASTA to HDF5 using sequence IDs as keys.
 
