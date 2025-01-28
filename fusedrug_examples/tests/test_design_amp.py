@@ -7,8 +7,14 @@ import tempfile
 import shutil
 import os
 from fuse.utils.file_io.file_io import create_dir
+import torch
+from fuse.utils.tests.decorators import skipIfMultiple
 
 
+@skipIfMultiple(
+    ("define environment variable 'CINC_TEST_DATA_PATH' to run this test",),
+    (not torch.cuda.is_available(), "No GPU is available"),
+)
 class DesignAMPTestCase(unittest.TestCase):
     def setUp(self) -> None:
         self.root = tempfile.mkdtemp()
