@@ -27,3 +27,4 @@ biopython
 # conda install -c bioconda abnumber
 pipdeptree
 ## dummy
+pipdeptree
