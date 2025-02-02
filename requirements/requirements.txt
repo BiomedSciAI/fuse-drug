@@ -26,4 +26,4 @@ abnumber @ git+https://github.com/prihoda/AbNumber
 biopython
 # conda install -c bioconda abnumber
 pipdeptree
-pandas
+## dummy
