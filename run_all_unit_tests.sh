@@ -30,8 +30,8 @@ create_env() {
     fi
 
     # Python version
-    #PYTHON_VER=3.9
-    PYTHON_VER=3.10
+    PYTHON_VER=3.9
+    #PYTHON_VER=3.10
     ENV_NAME="fuse-drug_$PYTHON_VER-CUDA-$force_cuda_version-$(echo -n $requirements | sha256sum | awk '{print $1;}')"
     echo $ENV_NAME
 
@@ -104,7 +104,8 @@ create_env() {
             conda run $env  pipdeptree
 
             #conda install libgcc=5.2.0 #to fix glibcc error
-            pip install --ignore-installed pandas #to hopefully solve the glibcc error
+            #pip install --ignore-installed pandas #to hopefully solve the glibcc error
+            conda install -c conda-forge gxx_linux-64==11.1.0
         fi
     ) 873>$lock_filename
 
