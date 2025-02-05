@@ -166,6 +166,7 @@ def dti_binding_dataset_combined(
     targets_columns_to_extract: Optional[List[str]] = None,
     targets_rename_columns: Optional[Dict[str, str]] = None,
     pairs_index_column: Optional[Union[str, List[str]]] = None,
+    also_return_dataframes: bool = False,
     **kwargs: Any,
 ) -> DatasetDefault:
     """returns a combined dataset, where pairs, targets, ligands and split information is found in a single dataframe
@@ -189,10 +190,12 @@ def dti_binding_dataset_combined(
     ligand_suffix = "_ligands"
     target_suffix = "_targets"
     suffixes = [ligand_suffix, target_suffix]
-    # load tsvs with opional caching:
+    # load tsvs with optional caching:
     _args = [pairs_tsv, ligands_tsv, targets_tsv, split_tsv, use_folds]
 
-    if "cache_dir" in kwargs and kwargs["cache_dir"] is not None:
+    if (not also_return_dataframes) and (
+        "cache_dir" in kwargs and kwargs["cache_dir"] is not None
+    ):
         ans_dict = run_cached_func(
             kwargs["cache_dir"], _load_dataframes, *_args, **kwargs
         )
@@ -255,6 +258,15 @@ def dti_binding_dataset_combined(
         sample_ids=pairs_df.index, dynamic_pipeline=dynamic_pipeline
     )
     dataset.create()
+
+    if also_return_dataframes:
+        ans = dict(
+            dataset=dataset,
+            pairs_df=pairs_df,
+            targets_df=ans_dict["targets"],
+            ligands_df=ans_dict["ligands"],
+        )
+        return ans
 
     return dataset
 
