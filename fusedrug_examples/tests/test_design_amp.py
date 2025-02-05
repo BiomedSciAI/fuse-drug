@@ -14,6 +14,7 @@ from fuse.utils.tests.decorators import skipIfMultiple
 @skipIfMultiple(
     ("define environment variable 'CINC_TEST_DATA_PATH' to run this test",),
     (not torch.cuda.is_available(), "No GPU is available"),
+    (True, "removing this test until we solve the GLIBCXX_3.4.29 not found issue"),
 )
 class DesignAMPTestCase(unittest.TestCase):
     def setUp(self) -> None:
