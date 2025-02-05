@@ -166,6 +166,7 @@ def dti_binding_dataset_combined(
     targets_columns_to_extract: Optional[List[str]] = None,
     targets_rename_columns: Optional[Dict[str, str]] = None,
     pairs_index_column: Optional[Union[str, List[str]]] = None,
+    return_dataframe: bool = False,
     **kwargs: Any,
 ) -> DatasetDefault:
     """returns a combined dataset, where pairs, targets, ligands and split information is found in a single dataframe
@@ -182,7 +183,7 @@ def dti_binding_dataset_combined(
         ligands_rename_columns (_type_, optional): _description_. Defaults to None.
         targets_columns_to_extract (_type_, optional): _description_. Defaults to None.
         targets_rename_columns (_type_, optional): _description_. Defaults to None.
-
+        return_dataframe: (bool): optionally return the raw dataframe without creating a pipeline
     Returns:
         DatasetDefault: _description_
     """
@@ -200,6 +201,9 @@ def dti_binding_dataset_combined(
         ans_dict = _load_dataframes(*_args, combine=True, suffixes=suffixes, **kwargs)
 
     pairs_df = ans_dict["pairs"]
+    
+    if return_dataframe:
+        return pairs_df
 
     # Since _load_dataframes with combine == True may change some (overlapping) column names, we need to correct the following:
     ligands_columns_to_extract = [
