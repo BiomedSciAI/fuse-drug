@@ -429,9 +429,7 @@ def _load_dataframes(
     keep_activity_labels: List[str] = None,
     combine: Optional[bool] = False,
     suffixes: Optional[List[str]] = ["_ligands", "_targets"],
-    require_non_null_ligand_columns: Optional[List[str]] = [
-        "canonical_smiles",
-    ],
+    require_non_null_ligand_columns: Optional[List[str]] = [],
     **kwargs: Any,
 ) -> dict:
     """
