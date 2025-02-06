@@ -52,6 +52,7 @@ def dti_binding_dataset(
     targets_rename_columns: Optional[Dict[str, str]] = None,
     get_indices_per_class: bool = False,
     pairs_index_column: Optional[Union[str, List[str]]] = None,
+    return_dataframes: bool = False,
     **kwargs: Any,
 ) -> DatasetDefault:
     """_summary_
@@ -69,6 +70,7 @@ def dti_binding_dataset(
         targets_columns_to_extract (_type_, optional): _description_. Defaults to None.
         targets_rename_columns (_type_, optional): _description_. Defaults to None.
         pairs_index_column (str, optional): if not None, this column will be used as index for pairs df
+        return_dataframes: (bool): optionally return the raw dataframes without creating a pipeline
 
     Returns:
         DatasetDefault: _description_
@@ -87,6 +89,9 @@ def dti_binding_dataset(
     pairs_df = ans_dict["pairs"]
     ligands_df = ans_dict["ligands"]
     targets_df = ans_dict["targets"]
+    if return_dataframes:
+        # in this case (combined dataset), only return the pairs_df (since it contains all info)
+        return ans_dict
 
     if pairs_index_column is not None:
         pairs_df.set_index(
@@ -166,7 +171,7 @@ def dti_binding_dataset_combined(
     targets_columns_to_extract: Optional[List[str]] = None,
     targets_rename_columns: Optional[Dict[str, str]] = None,
     pairs_index_column: Optional[Union[str, List[str]]] = None,
-    return_dataframe: bool = False,
+    return_dataframes: bool = False,
     **kwargs: Any,
 ) -> DatasetDefault:
     """returns a combined dataset, where pairs, targets, ligands and split information is found in a single dataframe
@@ -183,7 +188,7 @@ def dti_binding_dataset_combined(
         ligands_rename_columns (_type_, optional): _description_. Defaults to None.
         targets_columns_to_extract (_type_, optional): _description_. Defaults to None.
         targets_rename_columns (_type_, optional): _description_. Defaults to None.
-        return_dataframe: (bool): optionally return the raw dataframe without creating a pipeline
+        return_dataframes: (bool): optionally return the raw dataframes without creating a pipeline
     Returns:
         DatasetDefault: _description_
     """
@@ -202,7 +207,8 @@ def dti_binding_dataset_combined(
 
     pairs_df = ans_dict["pairs"]
     
-    if return_dataframe:
+    if return_dataframes:
+        # in this case (combined dataset), only return the pairs_df (since it contains all info)
         return pairs_df
 
     # Since _load_dataframes with combine == True may change some (overlapping) column names, we need to correct the following:
