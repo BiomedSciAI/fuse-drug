@@ -31,6 +31,7 @@ create_env() {
 
     # Python version
     PYTHON_VER=3.9
+    #PYTHON_VER=3.10
     ENV_NAME="fuse-drug_$PYTHON_VER-CUDA-$force_cuda_version-$(echo -n $requirements | sha256sum | awk '{print $1;}')"
     echo $ENV_NAME
 
