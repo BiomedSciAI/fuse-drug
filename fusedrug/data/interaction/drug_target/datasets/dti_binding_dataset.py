@@ -206,7 +206,7 @@ def dti_binding_dataset_combined(
         ans_dict = _load_dataframes(*_args, combine=True, suffixes=suffixes, **kwargs)
 
     pairs_df = ans_dict["pairs"]
-    
+
     if return_dataframes:
         # in this case (combined dataset), only return the pairs_df (since it contains all info)
         return pairs_df
