@@ -63,6 +63,7 @@ def dti_binding_dataset(
     targets_rename_columns: Optional[Dict[str, str]] = None,
     get_indices_per_class: bool = False,
     pairs_index_column: Optional[Union[str, List[str]]] = None,
+    return_dataframes: bool = False,
     **kwargs: Any,
 ) -> DatasetDefault:
     """_summary_
@@ -88,6 +89,7 @@ def dti_binding_dataset(
         targets_columns_to_extract (_type_, optional): _description_. Defaults to None.
         targets_rename_columns (_type_, optional): _description_. Defaults to None.
         pairs_index_column (str, optional): if not None, this column will be used as index for pairs df
+        return_dataframes: (bool): optionally return the raw dataframes without creating a pipeline
 
     Returns:
         DatasetDefault: _description_
@@ -106,9 +108,9 @@ def dti_binding_dataset(
     pairs_df = ans_dict["pairs"]
     ligands_df = ans_dict["ligands"]
     targets_df = ans_dict["targets"]
-
-    # filter columns:
-    pairs_df = filter_df(pairs_df=pairs_df, pairs_filters=pairs_filters)
+    if return_dataframes:
+        # in this case (combined dataset), only return the pairs_df (since it contains all info)
+        return ans_dict
 
     if pairs_index_column is not None:
         pairs_df.set_index(
@@ -189,7 +191,7 @@ def dti_binding_dataset_combined(
     targets_columns_to_extract: Optional[List[str]] = None,
     targets_rename_columns: Optional[Dict[str, str]] = None,
     pairs_index_column: Optional[Union[str, List[str]]] = None,
-    also_return_dataframes: bool = False,
+    return_dataframes: bool = False,
     **kwargs: Any,
 ) -> DatasetDefault:
     """returns a combined dataset, where pairs, targets, ligands and split information is found in a single dataframe
@@ -214,7 +216,7 @@ def dti_binding_dataset_combined(
         ligands_rename_columns (_type_, optional): _description_. Defaults to None.
         targets_columns_to_extract (_type_, optional): _description_. Defaults to None.
         targets_rename_columns (_type_, optional): _description_. Defaults to None.
-
+        return_dataframes: (bool): optionally return the raw dataframes without creating a pipeline
     Returns:
         DatasetDefault: _description_
     """
@@ -224,9 +226,7 @@ def dti_binding_dataset_combined(
     # load tsvs with optional caching:
     _args = [pairs_tsv, ligands_tsv, targets_tsv, split_tsv, use_folds]
 
-    if (not also_return_dataframes) and (
-        "cache_dir" in kwargs and kwargs["cache_dir"] is not None
-    ):
+    if "cache_dir" in kwargs and kwargs["cache_dir"] is not None:
         ans_dict = run_cached_func(
             kwargs["cache_dir"], _load_dataframes, *_args, **kwargs
         )
@@ -236,6 +236,10 @@ def dti_binding_dataset_combined(
     pairs_df = ans_dict["pairs"]
     # filter columns:
     pairs_df = filter_df(pairs_df=pairs_df, pairs_filters=pairs_filters)
+
+    if return_dataframes:
+        # in this case (combined dataset), only return the pairs_df (since it contains all info)
+        return pairs_df
 
     # Since _load_dataframes with combine == True may change some (overlapping) column names, we need to correct the following:
     ligands_columns_to_extract = [
@@ -291,15 +295,6 @@ def dti_binding_dataset_combined(
         sample_ids=pairs_df.index, dynamic_pipeline=dynamic_pipeline
     )
     dataset.create()
-
-    if also_return_dataframes:
-        ans = dict(
-            dataset=dataset,
-            pairs_df=pairs_df,
-            targets_df=ans_dict["targets"],
-            ligands_df=ans_dict["ligands"],
-        )
-        return ans
 
     return dataset
 
@@ -470,9 +465,7 @@ def _load_dataframes(
     keep_activity_labels: List[str] = None,
     combine: Optional[bool] = False,
     suffixes: Optional[List[str]] = ["_ligands", "_targets"],
-    require_non_null_ligand_columns: Optional[List[str]] = [
-        "canonical_smiles",
-    ],
+    require_non_null_ligand_columns: Optional[List[str]] = [],
     **kwargs: Any,
 ) -> dict:
     """
