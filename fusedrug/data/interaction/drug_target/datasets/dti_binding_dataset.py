@@ -38,6 +38,16 @@ def itemify(x: Any) -> Any:
     return x
 
 
+def filter_df(pairs_df: pd.DataFrame, pairs_filters: dict) -> pd.DataFrame:
+    if pairs_filters is not None:
+        for k in pairs_filters:
+            if pairs_filters[k]["mode"].lower() == "keep":
+                pairs_df = pairs_df[pairs_df[k].isin(pairs_filters[k]["values"])]
+            else:
+                pairs_df = pairs_df[~pairs_df[k].isin(pairs_filters[k]["values"])]
+    return pairs_df
+
+
 def dti_binding_dataset(
     pairs_tsv: str,
     ligands_tsv: str,
@@ -46,6 +56,7 @@ def dti_binding_dataset(
     use_folds: Optional[Union[List, str]] = None,
     pairs_columns_to_extract: Optional[List[str]] = None,
     pairs_rename_columns: Optional[Dict[str, str]] = None,
+    pairs_filters: Optional[Dict[str, Dict]] = None,
     ligands_columns_to_extract: Optional[List[str]] = None,
     ligands_rename_columns: Optional[Dict[str, str]] = None,
     targets_columns_to_extract: Optional[List[str]] = None,
@@ -65,6 +76,14 @@ def dti_binding_dataset(
         use_folds (Union[List, str], optional): A list of folds (as defined in split_tsv) to use. Defaults to None: use all folds.
         pairs_columns_to_extract (_type_, optional): _description_. Defaults to None.
         pairs_rename_columns (_type_, optional): _description_. Defaults to None.
+        pairs_filters: Dictionary with the following content:
+            {
+                column_name: # name of the column to apply filtering to (before renaming)
+                    mode: str # keep/exclude - whether to keep or exclude rows that have the following values in column column_name
+                    values: list # list of values to keep or exclude according to mode
+            }
+            Filtering happens before renaming the columns, i.e. it understands the names defined in benchmark config
+            (naming_conventions). If None, no filtering is applied. Default = None
         ligands_columns_to_extract (_type_, optional): _description_. Defaults to None.
         ligands_rename_columns (_type_, optional): _description_. Defaults to None.
         targets_columns_to_extract (_type_, optional): _description_. Defaults to None.
@@ -165,6 +184,7 @@ def dti_binding_dataset_combined(
     split_tsv: str = None,
     use_folds: Optional[Union[List, str]] = None,
     pairs_columns_to_extract: Optional[List[str]] = None,
+    pairs_filters: Optional[Dict[str, Dict]] = None,
     pairs_rename_columns: Optional[Dict[str, str]] = None,
     ligands_columns_to_extract: Optional[List[str]] = None,
     ligands_rename_columns: Optional[Dict[str, str]] = None,
@@ -183,6 +203,14 @@ def dti_binding_dataset_combined(
         split_tsv (str, optional): _description_. Defaults to None.
         use_folds (Union[List, str], optional): A list of folds (as defined in split_tsv) to use. Defaults to None: use all folds.
         pairs_columns_to_extract (_type_, optional): _description_. Defaults to None.
+        pairs_filters: Dictionary with the following content:
+            {
+                column_name: # name of the column to apply filtering to (before renaming)
+                    mode: str # keep/exclude - whether to keep or exclude rows that have the following values in column column_name
+                    values: list # list of values to keep or exclude according to mode
+            }
+            Filtering happens before renaming the columns, i.e. it understands the names defined in benchmark config
+            (naming_conventions). If None, no filtering is applied. Default = None
         pairs_rename_columns (_type_, optional): _description_. Defaults to None.
         ligands_columns_to_extract (_type_, optional): _description_. Defaults to None.
         ligands_rename_columns (_type_, optional): _description_. Defaults to None.
@@ -195,7 +223,7 @@ def dti_binding_dataset_combined(
     ligand_suffix = "_ligands"
     target_suffix = "_targets"
     suffixes = [ligand_suffix, target_suffix]
-    # load tsvs with opional caching:
+    # load tsvs with optional caching:
     _args = [pairs_tsv, ligands_tsv, targets_tsv, split_tsv, use_folds]
 
     if "cache_dir" in kwargs and kwargs["cache_dir"] is not None:
@@ -206,6 +234,8 @@ def dti_binding_dataset_combined(
         ans_dict = _load_dataframes(*_args, combine=True, suffixes=suffixes, **kwargs)
 
     pairs_df = ans_dict["pairs"]
+    # filter columns:
+    pairs_df = filter_df(pairs_df=pairs_df, pairs_filters=pairs_filters)
 
     if return_dataframes:
         # in this case (combined dataset), only return the pairs_df (since it contains all info)
