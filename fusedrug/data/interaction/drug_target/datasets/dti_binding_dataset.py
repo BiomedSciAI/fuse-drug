@@ -108,9 +108,6 @@ def dti_binding_dataset(
     pairs_df = ans_dict["pairs"]
     ligands_df = ans_dict["ligands"]
     targets_df = ans_dict["targets"]
-    if return_dataframes:
-        # in this case (combined dataset), only return the pairs_df (since it contains all info)
-        return ans_dict
 
     if pairs_index_column is not None:
         pairs_df.set_index(
@@ -120,12 +117,28 @@ def dti_binding_dataset(
             verify_integrity=True,
         )
 
+    if pairs_columns_to_extract is not None:
+        pairs_df = pairs_df[pairs_columns_to_extract]
+    if ligands_columns_to_extract is not None:
+        ligands_df = ligands_df[ligands_columns_to_extract]
+    if targets_columns_to_extract is not None:
+        targets_df = targets_df[targets_columns_to_extract]
+    if pairs_rename_columns is not None:
+        pairs_df = pairs_df.rename(pairs_rename_columns, axis=1)
+    if ligands_rename_columns is not None:
+        ligands_df = ligands_df.rename(ligands_rename_columns, axis=1)
+    if targets_rename_columns is not None:
+        targets_df = targets_df.rename(targets_rename_columns, axis=1)
+
+    if return_dataframes:
+        return {"pairs": pairs_df, "ligands": ligands_df, "targets": targets_df}
+
     dynamic_pipeline = [
         (
             OpReadDataframe(
                 pairs_df,
-                columns_to_extract=pairs_columns_to_extract,
-                rename_columns=pairs_rename_columns,
+                columns_to_extract=None,
+                rename_columns=None,
                 key_column=None,
             ),
             {},
@@ -133,8 +146,8 @@ def dti_binding_dataset(
         (
             OpReadDataframe(
                 ligands_df,
-                columns_to_extract=ligands_columns_to_extract,
-                rename_columns=ligands_rename_columns,
+                columns_to_extract=None,
+                rename_columns=None,
                 key_column=None,
                 key_name="ligand_id",
             ),
@@ -143,8 +156,8 @@ def dti_binding_dataset(
         (
             OpReadDataframe(
                 targets_df,
-                columns_to_extract=targets_columns_to_extract,
-                rename_columns=targets_rename_columns,
+                columns_to_extract=None,
+                rename_columns=None,
                 key_column=None,
                 key_name="target_id",
             ),
@@ -237,10 +250,6 @@ def dti_binding_dataset_combined(
     # filter columns:
     pairs_df = filter_df(pairs_df=pairs_df, pairs_filters=pairs_filters)
 
-    if return_dataframes:
-        # in this case (combined dataset), only return the pairs_df (since it contains all info)
-        return pairs_df
-
     # Since _load_dataframes with combine == True may change some (overlapping) column names, we need to correct the following:
     ligands_columns_to_extract = [
         c if c in pairs_df.columns else c + ligand_suffix
@@ -278,12 +287,21 @@ def dti_binding_dataset_combined(
             verify_integrity=True,
         )
 
+    if columns_to_extract is not None and len(columns_to_extract) > 0:
+        pairs_df = pairs_df[columns_to_extract]
+    if rename_columns is not None and len(rename_columns) > 0:
+        pairs_df = pairs_df.rename(rename_columns, axis=1)
+
+    if return_dataframes:
+        # in this case (combined dataset), only return the pairs_df (since it contains all info)
+        return pairs_df
+
     dynamic_pipeline = [
         (
             OpReadDataframe(
                 pairs_df,
-                columns_to_extract=columns_to_extract,
-                rename_columns=rename_columns,
+                columns_to_extract=None,
+                rename_columns=None,
                 key_column=None,
             ),
             dict(prefix="data"),
