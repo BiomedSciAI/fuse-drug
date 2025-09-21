@@ -42,6 +42,13 @@ def get_chain_ids(*, description: str, author_chain_id: bool) -> List[str]:
     """
     author_chain_id: if True will return the author chain id, if False will return the pdb_chain_id
     TODO: add support for chain ids that have more than one character
+
+    args:
+        description: the description line from the fasta file, for example:
+            '9DH2_1|Chains A, C[auth G], E[auth K], H[auth P]|Fab heavy chain|Homo sapiens (9606)'
+        author_chain_id: whether to return the author chain id or the pdb chain id
+    returns:
+        list of chain ids, for example: ['A', 'C', 'E']
     """
     loc1 = description.find(" ")
     assert loc1 >= 0

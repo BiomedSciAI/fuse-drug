@@ -32,14 +32,11 @@ def _get_author_assigned_pdb_id_to_pdb_assigned_pdb_id_convertor_helper(
     """Entry point, parses an mmcif_string.
 
     Args:
-      file_id: A string identifier for this file. Should be unique within the
-        collection of files being processed.
       mmcif_string: Contents of an mmCIF file.
-      catch_all_errors: If True, all exceptions are caught and error messages are
-        returned as part of the ParsingResult. If False exceptions will be allowed
-        to propagate
+      handle_residue_id_duplication: If True, will handle cases where residue ids are duplicated
+      quiet_parsing: If True, will suppress messages during parsing.
     Returns:
-      A ParsingResult.
+      A dictionary mapping author assigned chain ids to pdb assigned chain ids
     """
 
     # errors = {}
@@ -122,3 +119,5 @@ def _get_all_chains(
     for struct_asym in struct_asyms:
         chain_id = struct_asym["_struct_asym.id"]
         all_seen_chain_ids.append(chain_id)
+
+    return all_seen_chain_ids
