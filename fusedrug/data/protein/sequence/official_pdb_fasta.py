@@ -71,7 +71,7 @@ def get_chain_ids(*, description: str, author_chain_id: bool) -> List[str]:
     return ans
 
 
-# BLAH BLAH BLAH | Chains A[auth L], B[auth K], C[auth G]| banana phone |
+# examples for reference:
 
 # >6N25_1|Chains A, B, C, D, E|Bestrophin homolog|Gallus gallus (9031)
 #
